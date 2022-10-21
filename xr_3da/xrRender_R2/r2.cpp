@@ -1108,7 +1108,7 @@ HRESULT	CRender::shader_compile(
 		{
 			Log("! ", file_name);
 			if (pErrorBuf)
-				Log("! error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
+				Log("! Error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg("Can't compile shader hr=0x%08x", _result);
 		}

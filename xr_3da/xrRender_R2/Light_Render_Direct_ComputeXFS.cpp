@@ -71,6 +71,9 @@ void CLight_Compute_XFORM_and_VIS::compute_xf_spot	(light* L)
 	//float	g_alpha		= 2*rad2deg		(alpha);
 	//float	g_beta		= 2*rad2deg		(atanf(tan_beta));
 	//Msg				("x(%f) : a(%f), b(%f)",x,g_alpha,g_beta);
-	L->X.S.project.build_projection		(L->cone + deg2rad(3.5f), 1.f,SMAP_near_plane,L->range+EPS_S);
-	L->X.S.combine.mul					(L->X.S.project,L->X.S.view);
+/*************************************************** added by Ray Twitty (aka Shadows) END ***************************************************/
+	float tan_shift = deg2rad(3.5f);
+	//L->X.S.project.build_projection		(L->cone + tan_shift, 1.f,/*SMAP_near_plane*/L->virtual_size,L->range+EPS_S);
+	L->X.S.project.build_projection(L->cone + /*deg2rad(3.5f)*/tan_shift, 1.f, SMAP_near_plane, L->range + EPS_S);
+	L->X.S.combine.mul(L->X.S.project, L->X.S.view);
 }

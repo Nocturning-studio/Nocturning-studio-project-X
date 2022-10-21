@@ -745,6 +745,8 @@ void CCustomMonster::net_Destroy()
 	sound().unload				();
 	movement().net_Destroy		();
 	
+	Actor()->SetActorVisibility(ID(), 0.f); //Исправление проблемы с зависающей шкалой заметности при уходе НПС в оффлайн (Взял из кода Kondr48/gz_team_engine)
+
 	Device.remove_from_seq_parallel	(
 		fastdelegate::FastDelegate0<>(
 			this,
