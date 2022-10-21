@@ -44,7 +44,7 @@ void CRender::level_Load(IReader *fs)
 	}
 
 	// Components
-
+	g_pGamePersistent->LoadTitle("st_loading_components");
 	L_Shadows					= xr_new<CLightShadows>		();
 	L_Projector					= xr_new<CLightProjector>	();
 	L_DB						= xr_new<CLight_DB>			();
@@ -81,10 +81,11 @@ void CRender::level_Load(IReader *fs)
 	LoadSectors					(fs);
 
 	// HOM
+	g_pGamePersistent->LoadTitle("st_loading_hom");
 	HOM.Load					();
 
 	// Lights
-	//pApp->LoadTitle				("Loading lights...");
+	g_pGamePersistent->LoadTitle("st_loading_lights");
 	LoadLights					(fs);
 
 	// End
@@ -102,6 +103,7 @@ void CRender::level_Unload		()
 	u32							I;
 
 	// HOM
+	g_pGamePersistent->LoadTitle("st_unloading_hom");
 	HOM.Unload					();
 
 	//*** Details
@@ -110,6 +112,7 @@ void CRender::level_Unload		()
 
 	//*** Sectors
 	// 1.
+	g_pGamePersistent->LoadTitle("st_unloading_sectors_portals");
 	xr_delete					(rmPortals);
 	pLastSector					= 0;
 	vLastCameraPos.set			(flt_max,flt_max,flt_max);
@@ -123,6 +126,7 @@ void CRender::level_Unload		()
 	Portals.clear_and_free		();
 
 	//*** Lights
+	g_pGamePersistent->LoadTitle("st_unloading_lights");
 	L_Glows->Unload				();
 	L_DB->Unload				();
 
@@ -140,6 +144,7 @@ void CRender::level_Unload		()
 	SWIs.clear					();
 
 	//*** VB/IB
+	g_pGamePersistent->LoadTitle("st_unloading_geometry");
 	for (I=0; I<VB.size(); I++)	_RELEASE(VB[I]);
 	for (I=0; I<IB.size(); I++)	_RELEASE(IB[I]);
 	DCL.clear_and_free			();
@@ -147,6 +152,7 @@ void CRender::level_Unload		()
 	IB.clear_and_free			();
 
 	//*** Components
+	g_pGamePersistent->LoadTitle("st_unloading_components");
 	xr_delete					(Details);
 	xr_delete					(Wallmarks);
 	xr_delete					(L_Glows);

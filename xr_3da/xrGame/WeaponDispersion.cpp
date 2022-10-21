@@ -31,7 +31,16 @@ float CWeapon::GetFireDispersion	(bool with_cartridge)
 float CWeapon::GetFireDispersion	(float cartridge_k) 
 {
 	//учет базовой дисперсии, состояние оружия и влияение патрона
-	float fire_disp = fireDispersionBase*cartridge_k*GetConditionDispersionFactor();
+	float fire_disp;
+	if (ParentIsActor() && Actor() && Actor()->IsZoomAimingMode() && g_SingleGameDifficulty < egdMaster) //Если оружие принадлежит гг, Actor() не вернул 0 и актор находится в режиме прицеливания, а также уровень сложности не "Мастер" (Спасибо Maks0 и Skyloader за помощь)
+		fire_disp = zoom_fireDispersionBase * cartridge_k * GetConditionDispersionFactor(); //То используем параметр разброса в прицеливании
+	else //Иначе
+		fire_disp = fireDispersionBase * cartridge_k * GetConditionDispersionFactor(); //Используем обычный разброс
+
+	if (ParentIsActor() && g_SingleGameDifficulty == egdNovice) //Если орудие принадлежит гг и уровень сложности новичковый
+		fire_disp /= 1.5;//То делим разброс на 1.5 чтобы облегчить игроку стрельбу
+	//Здесь был Джок... Deathman
+
 	
 	//вычислить дисперсию, вносимую самим стрелком
 	const CInventoryOwner* pOwner	=	smart_cast<const CInventoryOwner*>(H_Parent());

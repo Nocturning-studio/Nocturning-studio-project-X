@@ -1,4 +1,6 @@
 #pragma once
+#include "../../../xrSound/Sound.h"
+#include "../../SH_Texture.h"
 
 class CUIWindow;
 class CUIStatic;
@@ -120,7 +122,7 @@ public:
 class CUISequenceVideoItem: public CUISequenceItem
 {
 	typedef CUISequenceItem	inherited;
-	ref_sound				m_sound[2];
+	ref_sound				m_sound;
 	CTexture*				m_texture;
 	enum {	
 		etiPlaying			= (1<<(eti_last+0)),

@@ -16,6 +16,14 @@ class	ENGINE_API	CGammaControl;
 #include "xr_effgamma.h"
 #include "shader.h"
 #include "R_Backend.h"
+#include <mutex>
+
+//Thread Id's
+extern DWORD gMainThreadId;
+extern DWORD gSecondaryThreadId;
+
+ENGINE_API bool IsMainThread();
+ENGINE_API bool IsSecondaryThread();
 
 #define VIEWPORT_NEAR  0.2f
 
@@ -159,9 +167,9 @@ public:
 	}
 
 	// Multi-threading
-	xrCriticalSection	mt_csEnter;
-	xrCriticalSection	mt_csLeave;
-	volatile BOOL		mt_bMustExit;
+	std::recursive_mutex	mt_csEnter;
+	std::recursive_mutex	mt_csLeave;
+	volatile BOOL			mt_bMustExit;
 
 	ICF		void			remove_from_seq_parallel(const fastdelegate::FastDelegate0<>& delegate)
 	{

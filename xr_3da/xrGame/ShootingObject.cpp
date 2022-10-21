@@ -94,6 +94,14 @@ void CShootingObject::LoadFireParams	(LPCSTR section, LPCSTR prefix)
 	string256	full_name;
 	string32	buffer;
 	shared_str	s_sHitPower;
+
+	//Разброс в прицеле
+	if (pSettings->line_exist(section, "zoom_fire_dispersion_base")) //Если нашли секцию то читаем ее
+	{
+		zoom_fireDispersionBase = pSettings->r_float(section, "zoom_fire_dispersion_base");
+		zoom_fireDispersionBase = deg2rad(zoom_fireDispersionBase);
+	}
+
 	//базовая дисперсия оружия
 	fireDispersionBase	= pSettings->r_float	(section,"fire_dispersion_base"	);
 	fireDispersionBase	= deg2rad				(fireDispersionBase);

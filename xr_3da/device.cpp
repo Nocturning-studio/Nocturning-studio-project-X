@@ -21,6 +21,21 @@ ENGINE_API BOOL g_bRendering = FALSE;
 
 BOOL		g_bLoaded = FALSE;
 ref_light	precache_light = 0;
+/////////////////////////////////////
+DWORD gMainThreadId = 0xFFFFFFFF;
+DWORD gSecondaryThreadId = 0xFFFFFFFF;
+/////////////////////////////////////
+
+
+ENGINE_API bool IsMainThread()
+{
+	return GetCurrentThreadId() == gMainThreadId;
+}
+
+ENGINE_API bool IsSecondaryThread()
+{
+	return GetCurrentThreadId() == gSecondaryThreadId;
+}
 
 BOOL CRenderDevice::Begin()
 {
@@ -108,30 +123,36 @@ void CRenderDevice::End(void)
 }
 
 volatile u32	mt_Thread_marker = 0x12345678;
-void 			mt_Thread(void* ptr) {
-	while (true) {
+void 			mt_Thread(void* ptr)
+{
+	gSecondaryThreadId = GetCurrentThreadId();
+
+	while (true)
+	{
 		// waiting for Device permission to execute
-		Device.mt_csEnter.Enter();
+		Device.mt_csEnter.lock();
 
 		if (Device.mt_bMustExit) {
 			Device.mt_bMustExit = FALSE;				// Important!!!
-			Device.mt_csEnter.Leave();					// Important!!!
+			Device.mt_csEnter.unlock();					// Important!!!
 			return;
 		}
 		// we has granted permission to execute
 		mt_Thread_marker = Device.dwFrame;
 
-		for (u32 pit = 0; pit < Device.seqParallel.size(); pit++)
-			Device.seqParallel[pit]();
-		Device.seqParallel.clear_not_free();
+		for (fastdelegate::FastDelegate0<>& pit : Device.seqParallel)
+		{
+			pit();
+		}
+		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);
 
 		// now we give control to device - signals that we are ended our work
-		Device.mt_csEnter.Leave();
+		Device.mt_csEnter.unlock();
 		// waits for device signal to continue - to start again
-		Device.mt_csLeave.Enter();
+		Device.mt_csLeave.lock();
 		// returns sync signal to device
-		Device.mt_csLeave.Leave();
+		Device.mt_csLeave.unlock();
 	}
 }
 
@@ -182,7 +203,7 @@ void CRenderDevice::Run()
 	// Start all threads
 //	InitializeCriticalSection	(&mt_csEnter);
 //	InitializeCriticalSection	(&mt_csLeave);
-	mt_csEnter.Enter();
+	mt_csEnter.lock();
 	mt_bMustExit = FALSE;
 	thread_spawn(mt_Thread, "X-RAY Secondary thread", 0, 0);
 
@@ -241,8 +262,8 @@ void CRenderDevice::Run()
 				// *** Resume threads
 				// Capture end point - thread must run only ONE cycle
 				// Release start point - allow thread to run
-				mt_csLeave.Enter();
-				mt_csEnter.Leave();
+				mt_csLeave.lock();
+				mt_csEnter.unlock();
 				Sleep(0);
 
 #ifndef DEDICATED_SERVER
@@ -263,8 +284,8 @@ void CRenderDevice::Run()
 				// *** Suspend threads
 				// Capture startup point
 				// Release end point - allow thread to wait for startup point
-				mt_csEnter.Enter();
-				mt_csLeave.Leave();
+				mt_csEnter.lock();
+				mt_csLeave.unlock();
 
 				// Ensure, that second thread gets chance to execute anyway
 				if (dwFrame != mt_Thread_marker) {
@@ -314,7 +335,7 @@ void CRenderDevice::Run()
 
 	// Stop Balance-Thread
 	mt_bMustExit = TRUE;
-	mt_csEnter.Leave();
+	mt_csEnter.unlock();
 	while (mt_bMustExit)	Sleep(0);
 	//	DeleteCriticalSection	(&mt_csEnter);
 	//	DeleteCriticalSection	(&mt_csLeave);

@@ -8,6 +8,7 @@
 #include "..\SkeletonCustom.h"
 #include "..\xrRender\LightTrack.h"
 #include <boost/crc.hpp>
+#include "../r_constants.h"
 
 CRender	RImplementation;
 
@@ -65,6 +66,16 @@ static class cl_parallax : public R_constant_setup {
 		RCache.set_c(C, h, -h / 2.f, 1.f / r_dtex_range, 1.f / r_dtex_range);
 	}
 }	binder_parallax;
+//////////////////////////////////////////////////////////////////////////
+static class cl_rain_density : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor& E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E.rain_density;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_rain_density;
 
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
@@ -244,6 +255,7 @@ void CRender::create()
 
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax", &binder_parallax);
+	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";

@@ -70,6 +70,7 @@ protected:
 
 	//рассеивание во время стрельбы
 	float					fireDispersionBase;
+	float					zoom_fireDispersionBase;
 
 	//счетчик времени, затрачиваемого на выстрел
 	float					fTime;

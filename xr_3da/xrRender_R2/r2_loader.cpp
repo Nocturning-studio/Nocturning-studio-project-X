@@ -7,6 +7,7 @@
 #include "../x_ray.h"
 #include "../IGame_Persistent.h"
 #include "../xrCore/stream_reader.h"
+#include "../xr_ioconsole.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -46,6 +47,7 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Components
+	g_pGamePersistent->LoadTitle("st_loading_components");
 	Wallmarks					= xr_new<CWallmarksEngine>	();
 	Details						= xr_new<CDetailManager>	();
 
@@ -84,10 +86,11 @@ void CRender::level_Load(IReader* fs)
 	LoadSectors					(fs);
 
 	// HOM
+	g_pGamePersistent->LoadTitle("st_loading_hom");
 	HOM.Load					();
 
 	// Lights
-	g_pGamePersistent->LoadTitle("st_loading_lights...");
+	g_pGamePersistent->LoadTitle("st_loading_lights");
 	LoadLights					(fs);
 
 	// End
@@ -137,7 +140,7 @@ void CRender::level_Unload()
 	Portals.clear			();
 
 	//*** Lights
-	g_pGamePersistent->LoadTitle("st_unloading_lights...");
+	g_pGamePersistent->LoadTitle("st_unloading_lights");
 	// Glows.Unload			();
 	Lights.Unload			();
 
@@ -161,6 +164,7 @@ void CRender::level_Unload()
 	nDC.clear(); xDC.clear();
 
 	//*** Components
+	g_pGamePersistent->LoadTitle("st_unloading_components");
 	xr_delete					(Details);
 	xr_delete					(Wallmarks);
 
@@ -171,6 +175,8 @@ void CRender::level_Unload()
 	// End
 //	pApp->LoadEnd();
 	b_loaded					= FALSE;
+
+	Console->Execute("vid_restart");
 }
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
