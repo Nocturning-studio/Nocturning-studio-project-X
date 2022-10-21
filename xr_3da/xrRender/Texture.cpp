@@ -475,7 +475,9 @@ _BUMP:
 	*/
 _BUMP_from_base:
 	{
+#ifdef DEBUG
 		Msg			("! auto-generated bump map: %s",fname);
+#endif
 //////////////////
 		if (strstr(fname,"_bump#"))			
 		{

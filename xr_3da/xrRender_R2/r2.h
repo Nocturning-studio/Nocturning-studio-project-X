@@ -271,6 +271,8 @@ public:
 	virtual void					rmNear						();
 	virtual void					rmFar						();
 	virtual void					rmNormal					();
+	
+	BOOL							is_sun();
 
 	// Constructor/destructor/loader
 	CRender							();

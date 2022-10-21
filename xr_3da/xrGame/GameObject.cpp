@@ -194,6 +194,7 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 		break;
 	case GE_DESTROY:
 		{
+#ifdef DEBUG
 			if(H_Parent())
 			{
 				Msg("GE_DESTROY arrived, but H_Parent() exist. object[%d][%s] parent[%d][%s] [%d]", 
@@ -201,6 +202,7 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 					H_Parent()->ID(), H_Parent()->cName().c_str(),
 					Device.dwFrame);
 			}
+#endif
 			setDestroy		(TRUE);
 		}
 		break;

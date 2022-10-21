@@ -64,6 +64,13 @@ xr_token blur_type_token[] = {
 	{"dof", 2},
 	{0, 0} };
 
+u32 ps_shadow_filter_quality = 0;
+xr_token shadow_filter_quality_token[] = {
+	{"low", 0},
+	{"default", 1},
+	{"high", 2},
+	{0, 0} };
+
 u32 ps_debug_frame_layers = 0;
 xr_token debug_frame_layers_token[] = {
 	{"off", 0},
@@ -359,11 +366,16 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
 
+	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
+	
+
 	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
 
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 
 	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
+	CMD3(CCC_Mask, "r2_vignette", &ps_r2_ls_flags, R2FLAG_VIGNETTE);
+	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_ls_flags, R2FLAG_CHROMATIC_ABBERATION);
 
 	// Common
 	CMD1(CCC_Screenshot, "screenshot");
@@ -447,13 +459,13 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_ls_flags, R2FLAG_R1LIGHTS);
 
 	//- Mad Max
-	CMD4(CCC_Float, "r2_gloss_factor", &ps_r2_gloss_factor, .0f, 3.f);
+	CMD4(CCC_Float, "r2_gloss_factor", &ps_r2_gloss_factor, 1.f, 3.f);
 	//- Mad Max
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	CMD3(CCC_Mask, "r2_use_nvdbt", &ps_r2_ls_flags, R2FLAG_USE_NVDBT);
 	CMD3(CCC_Mask, "r2_mt", &ps_r2_ls_flags, R2FLAG_EXP_MT_CALC);
-#endif // DEBUG
+//#endif // DEBUG
 
 	CMD3(CCC_Mask, "r2_sun", &ps_r2_ls_flags, R2FLAG_SUN);
 	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_ls_flags, R2FLAG_SUN_DETAILS);

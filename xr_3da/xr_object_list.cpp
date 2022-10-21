@@ -112,11 +112,13 @@ void	CObjectList::SingleUpdate(CObject* O)
 			//				destroy_queue.push_back	(O);
 		}
 	}
+#ifdef DEBUG
 	if (O->getDestroy() && (Device.dwFrame != O->dwFrame_UpdateCL))
 	{
 		//		destroy_queue.push_back(O);
 		Msg("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]", O->cName().c_str(), O->ID(), Device.dwFrame);
 	}
+#endif
 }
 
 void clear_crow_vec(xr_vector<CObject*>& o)

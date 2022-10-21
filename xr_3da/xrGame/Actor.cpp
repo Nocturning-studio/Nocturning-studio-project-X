@@ -154,6 +154,7 @@ CActor::CActor() : CEntityAlive()
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
+#pragma todo("Deathman to Deathman: заметка для NSBMP")
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 

@@ -263,7 +263,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				contrib[i].n = 0;
 				contrib[i].p = (CONTRIB*)xr_malloc((int)(width * 2 + 1) * sizeof(CONTRIB));
 				ZeroMemory(contrib[i].p, (int)(width * 2 + 1) * sizeof(CONTRIB));
-				center = float(i) / xscale;
+				center = double(i) / xscale;
 				left = ceil(center - width);
 				right = floor(center + width);
 				for (j = int(left); j <= int(right); ++j)
@@ -296,7 +296,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				contrib[i].n = 0;
 				contrib[i].p = (CONTRIB*)xr_malloc((int)(fwidth * 2 + 1) * sizeof(CONTRIB));
 				ZeroMemory(contrib[i].p, (int)(fwidth * 2 + 1) * sizeof(CONTRIB));
-				center = float(i) / xscale;
+				center = double(i) / xscale;
 				left = ceil(center - fwidth);
 				right = floor(center + fwidth);
 				for (j = int(left); j <= int(right); ++j)
@@ -375,7 +375,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				contrib[i].n = 0;
 				contrib[i].p = (CONTRIB*)xr_malloc((int)(width * 2 + 1) * sizeof(CONTRIB));
 				ZeroMemory(contrib[i].p, (int)(width * 2 + 1) * sizeof(CONTRIB));
-				center = (float)i / yscale;
+				center = (double)i / yscale;
 				left = ceil(center - width);
 				right = floor(center + width);
 				for (j = int(left); j <= int(right); ++j)
@@ -406,7 +406,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				contrib[i].n = 0;
 				contrib[i].p = (CONTRIB*)xr_malloc((int)(fwidth * 2 + 1) * sizeof(CONTRIB));
 				ZeroMemory(contrib[i].p, (int)(fwidth * 2 + 1) * sizeof(CONTRIB));
-				center = (float)i / yscale;
+				center = (double)i / yscale;
 				left = ceil(center - fwidth);
 				right = floor(center + fwidth);
 				for (j = int(left); j <= int(right); ++j) {

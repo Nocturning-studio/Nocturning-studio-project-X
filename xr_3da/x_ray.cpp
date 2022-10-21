@@ -44,9 +44,9 @@ static int days_in_month[12] = {
 	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 
-static int start_day = 31;	// 31
-static int start_month = 1;	// January
-static int start_year = 1999;	// 1999
+static int start_day = 24;	//Was 31
+static int start_month = 8;	//Was January
+static int start_year = 2022;	//Was 1999
 
 #ifdef NDEBUG
 namespace std {
@@ -77,7 +77,7 @@ void compute_build_id()
 		break;
 	}
 
-	build_id = (years - start_year) * 365 + days - start_day;
+	build_id = (years - start_year) * 365 + (days - start_day);
 
 	for (int i = 0; i < months; ++i)
 		build_id += days_in_month[i];
@@ -1279,8 +1279,8 @@ u32 calc_progress_color(u32 idx, u32 total, int stage, int max_stage)
 	if (idx > (total / 2))
 		idx = total - idx;
 
-	float kk = (float(stage + 1) / float(max_stage)) * (total / 2.0f);
-	float f = 1 / (exp((float(idx) - kk) * 0.5f) + 1.0f);
+	double kk = (float(stage + 1) / double(max_stage)) * (total / 2.0f);
+	double f = 1 / (exp((double(idx) - kk) * 0.5f) + 1.0f);
 
 	return color_argb_f(f, 1.0f, 1.0f, 1.0f);
 }

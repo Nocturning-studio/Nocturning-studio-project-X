@@ -6,7 +6,7 @@ const	float	tweak_COP_initial_offs			= 1200.f	;
 const	float	tweak_ortho_xform_initial_offs	= 1000.f	;	//. ?
 const	float	tweak_guaranteed_range			= 20.f		;	//. ?
 
-float			OLES_SUN_LIMIT_27_01_07			= 180.f		;
+float			OLES_SUN_LIMIT_27_01_07			= 360.f		;
 
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
@@ -17,10 +17,11 @@ static Fvector3		corners [8]			= {
 	{ +1, +1, +1 },		{ +1, +1,  0},
 	{ +1, -1, +1},		{ +1, -1,  0}
 };
-static int			facetable[6][4]		= {
-	{ 0, 3, 5, 7 },		{ 1, 2, 3, 0 },
-	{ 6, 7, 5, 4 },		{ 4, 2, 1, 6 },
-	{ 3, 2, 4, 5 },		{ 1, 0, 7, 6 },
+static int			facetable[6][4] = {
+	{ 6, 7, 5, 4 },		{ 1, 0, 7, 6 },
+	{ 1, 2, 3, 0 },		{ 3, 2, 4, 5 },
+	// near and far planes
+	{ 0, 3, 5, 7 },		{  1, 6, 4, 2 },
 };
 //////////////////////////////////////////////////////////////////////////
 #define DW_AS_FLT(DW) (*(FLOAT*)&(DW))
@@ -861,6 +862,8 @@ void CRender::render_sun				()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0);
+			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))
+				Details->Render();
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{
 				fuckingsun->X.D.transluent			= TRUE;
@@ -1060,7 +1063,7 @@ void CRender::render_sun_near	()
 		bool	bNormal							= mapNormal[0].size() || mapMatrix[0].size();
 		bool	bSpecial						= mapNormal[1].size() || mapMatrix[1].size() || mapSorted.size();
 		if ( bNormal || bSpecial)	{
-			Target->phase_smap_direct			(fuckingsun	, SE_SUN_NEAR	);
+			Target->phase_smap_direct			(fuckingsun	, SE_SUN_NEAR);
 			RCache.set_xform_world				(Fidentity					);
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	

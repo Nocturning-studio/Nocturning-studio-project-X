@@ -132,7 +132,9 @@ enum
 	R2FLAG_MBLUR							= (1 << 24),
 	R2FLAG_GLOSS_RGB						= (1 << 25),
 	R2FLAG_AA_EDGE_DETECT					= (1 << 26),
-	R2FLAG_WET_SURFACES						= (1 << 27)
+	R2FLAG_WET_SURFACES						= (1 << 27),
+	R2FLAG_VIGNETTE							= (1 << 28),
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 29)
 };
 
 extern void						xrRender_initconsole	();

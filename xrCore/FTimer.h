@@ -164,6 +164,7 @@ public:
 	u64			accum;
 	float		result;
 	u32			count;
+	u32			cycles;
 public:
 				CStatTimer		();
 	void		FrameStart		();

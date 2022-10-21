@@ -404,25 +404,33 @@ void CALifeUpdateManager::add_restriction	(ALife::_OBJECT_ID id, ALife::_OBJECT_
 {
 	CSE_ALifeDynamicObject					*object = objects().object(id,true);
 	if (!object) {
+#ifdef DEBUG
 		Msg									("! cannot add restriction with id %d to the entity with id %d, because there is no creature with the specified id",restriction_id,id);
+#endif
 		return;
 	}
 	
 	CSE_ALifeDynamicObject					*object_restrictor = objects().object(restriction_id,true);
 	if (!object_restrictor) {
+#ifdef DEBUG
 		Msg									("! cannot add restriction with id %d to the entity with id %d, because there is no space restrictor with the specified id",restriction_id,id);
+#endif
 		return;
 	}
 
 	CSE_ALifeCreatureAbstract				*creature = smart_cast<CSE_ALifeCreatureAbstract*>(object);
 	if (!creature) {
+#ifdef DEBUG
 		Msg									("! cannot add restriction with id %d to the entity with id %d, because there is an object with the specified id, but it is not a creature",restriction_id,id);
+#endif
 		return;
 	}
 	
 	CSE_ALifeSpaceRestrictor				*restrictor = smart_cast<CSE_ALifeSpaceRestrictor*>(object_restrictor);
 	if (!restrictor) {
+#ifdef DEBUG
 		Msg									("! cannot add restriction with id %d to the entity with id %d, because there is an object with the specified id, but it is not a space restrictor",restriction_id,id);
+#endif
 		return;
 	}
 
@@ -462,25 +470,33 @@ void CALifeUpdateManager::remove_restriction(ALife::_OBJECT_ID id, ALife::_OBJEC
 {
 	CSE_ALifeDynamicObject					*object = objects().object(id,true);
 	if (!object) {
+#ifdef DEBUG
 		Msg									("! cannot remove restriction with id %d to the entity with id %d, because there is no creature with the specified id",restriction_id,id);
+#endif	
 		return;
 	}
 	
 	CSE_ALifeDynamicObject					*object_restrictor = objects().object(restriction_id,true);
 	if (!object_restrictor) {
+#ifdef DEBUG
 		Msg									("! cannot remove restriction with id %d to the entity with id %d, because there is no space restrictor with the specified id",restriction_id,id);
+#endif
 		return;
 	}
 
 	CSE_ALifeCreatureAbstract				*creature = smart_cast<CSE_ALifeCreatureAbstract*>(object);
 	if (!creature) {
+#ifdef DEBUG
 		Msg									("! cannot remove restriction with id %d to the entity with id %d, because there is an object with the specified id, but it is not a creature",restriction_id,id);
+#endif
 		return;
 	}
 	
 	CSE_ALifeSpaceRestrictor				*restrictor = smart_cast<CSE_ALifeSpaceRestrictor*>(object_restrictor);
 	if (!restrictor) {
+#ifdef DEBUG
 		Msg									("! cannot remove restriction with id %d to the entity with id %d, because there is an object with the specified id, but it is not a space restrictor",restriction_id,id);
+#endif
 		return;
 	}
 
@@ -488,7 +504,9 @@ void CALifeUpdateManager::remove_restriction(ALife::_OBJECT_ID id, ALife::_OBJEC
 		case RestrictionSpace::eRestrictorTypeOut : {
 			xr_vector<ALife::_OBJECT_ID>::iterator	I = std::find(creature->m_dynamic_out_restrictions.begin(),creature->m_dynamic_out_restrictions.end(),restriction_id);
 			if (I == creature->m_dynamic_out_restrictions.end()) {
+#ifdef DEBUG
 				Msg							("~ cannot remove restriction with id [%d][%s] to the entity with id [%d][%s], because it is not added",restriction_id,object_restrictor->name_replace(),id,object->name_replace());
+#endif
 				return;
 			}
 
@@ -499,7 +517,9 @@ void CALifeUpdateManager::remove_restriction(ALife::_OBJECT_ID id, ALife::_OBJEC
 		case RestrictionSpace::eRestrictorTypeIn : {
 			xr_vector<ALife::_OBJECT_ID>::iterator	I = std::find(creature->m_dynamic_in_restrictions.begin(),creature->m_dynamic_in_restrictions.end(),restriction_id);
 			if (I == creature->m_dynamic_in_restrictions.end()) {
+#ifdef DEBUG
 				Msg							("~ cannot remove restriction with id [%d][%s] to the entity with id [%d][%s], because it is not added",restriction_id,object_restrictor->name_replace(),id,object->name_replace());
+#endif
 				return;
 			}
 
@@ -518,13 +538,17 @@ void CALifeUpdateManager::remove_all_restrictions	(ALife::_OBJECT_ID id, const R
 {
 	CSE_ALifeDynamicObject					*object = objects().object(id,true);
 	if (!object) {
+#ifdef DEBUG
 		Msg									("! cannot remove restrictions to the entity with id %d, because there is no creature with the specified id",id);
+#endif
 		return;
 	}
 
 	CSE_ALifeCreatureAbstract				*creature = smart_cast<CSE_ALifeCreatureAbstract*>(object);
 	if (!creature) {
+#ifdef DEBUG
 		Msg									("! cannot remove restriction to the entity with id %d, because there is an object with the specified id, but it is not a creature",id);
+#endif
 		return;
 	}
 

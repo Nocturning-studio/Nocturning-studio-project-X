@@ -21,6 +21,7 @@ extern u32 ps_debug_frame_layers;
 extern u32 ps_sun_quality;
 extern u32 ps_blur_type;
 extern u32 ps_bump_mode;
+extern u32 ps_shadow_filter_quality;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
 {
@@ -97,10 +98,10 @@ void CRender::create()
 
 	switch (ps_sun_quality) {
 	case 0:
-		o.smapsize = 1536;
+		o.smapsize = 2048;
 		break;
 	case 1:
-		o.smapsize = 2048;
+		o.smapsize = 3072;
 		break;
 	case 2:
 		o.smapsize = 4096;
@@ -322,15 +323,7 @@ void CRender::reset_end()
 
 	xrRender_apply_tf();
 }
-/*
-void CRender::OnFrame()
-{
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
-}*/
+
 void CRender::OnFrame()
 {
 	Models->DeleteQueue();
@@ -345,6 +338,12 @@ void CRender::OnFrame()
 	}
 }
 
+BOOL CRender::is_sun()
+{
+	if (o.sunstatic)		return FALSE;
+	Fcolor					sun_color = ((light*)Lights.sun_adapted._get())->color;
+	return					(ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
+}
 
 // Implementation
 IRender_ObjectSpecific* CRender::ros_create(IRenderable* parent) { return xr_new<CROS_impl>(); }
@@ -630,6 +629,7 @@ HRESULT	CRender::shader_compile(
 	char c_aa_quality[32];
 	char c_aa[32];
 	char c_debug_frame_layers[32];
+	char c_ps_shadow_filter_quality[32];
 
 	char sh_name[MAX_PATH] = "";
 	size_t len = 0;
@@ -921,6 +921,38 @@ HRESULT	CRender::shader_compile(
 	}
 	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_WET_SURFACES) ? '1' : '0';;
 	++len;
+
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE)) {
+		defines[def_it].Name = "USE_VIGNETTE";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_VIGNETTE) ? '1' : '0';;
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION)) {
+		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION) ? '1' : '0';;
+	++len;
+	//////////////////////////////////////////////////////////////////////////
+	// Filter types
+	//////////////////////////////////////////////////////////////////////////
+	if (RImplementation.o.advancedpp && ps_shadow_filter_quality)
+	{
+		sprintf(c_ps_shadow_filter_quality, "%d", ps_shadow_filter_quality);
+		defines[def_it].Name = "SHADOW_FILTER_TYPE";
+		defines[def_it].Definition = c_ps_shadow_filter_quality;
+		def_it++;
+		strcat(sh_name, c_ps_shadow_filter_quality);
+		len += 4;
+	}
+	sh_name[len] = '0' + char(ps_shadow_filter_quality);
+	++len;
+
+
 	//////////////////////////////////////////////////////////////////////////
 	// Bump types
 	//////////////////////////////////////////////////////////////////////////
