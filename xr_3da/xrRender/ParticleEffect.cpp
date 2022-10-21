@@ -9,6 +9,27 @@ using namespace PS;
 const u32	PS::uDT_STEP 	= 33;
 const float	PS::fDT_STEP 	= float(uDT_STEP)/1000.f;
 
+static void ApplyTexgen(const Fmatrix& mVP)
+{
+	Fmatrix mTexgen;
+
+
+	float	_w = float(Device.dwWidth);
+	float	_h = float(Device.dwHeight);
+	float	o_w = (.5f / _w);
+	float	o_h = (.5f / _h);
+	Fmatrix			mTexelAdjust =
+	{
+		0.5f,				0.0f,				0.0f,			0.0f,
+		0.0f,				-0.5f,				0.0f,			0.0f,
+		0.0f,				0.0f,				1.0f,			0.0f,
+		0.5f + o_w,			0.5f + o_h,			0.0f,			1.0f
+	};
+
+	mTexgen.mul(mTexelAdjust, mVP);
+	RCache.set_c("mVPTexgen", mTexgen);
+}
+
 void PS::OnEffectParticleBirth(void* owner, u32 , PAPI::Particle& m, u32 )
 {
 	CParticleEffect* PE = static_cast<CParticleEffect*>(owner); VERIFY(PE);

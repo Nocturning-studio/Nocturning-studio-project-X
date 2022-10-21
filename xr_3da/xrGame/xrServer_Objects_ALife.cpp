@@ -27,6 +27,9 @@
 #	include "..\render.h"
 #endif
 
+#pragma warning(push)
+#pragma warning(disable : 4702)
+
 bool SortStringsByAlphabetPred (const shared_str& s1, const shared_str& s2)
 {
 	R_ASSERT(s1.size());

@@ -126,15 +126,12 @@ enum
 	R2FLAG_SOFT_WATER						= (1 << 18),
 	R2FLAG_SOFT_PARTICLES					= (1 << 19),
 	R2FLAG_GRASS_WAVE						= (1 << 20),
-	R2FLAG_SUN_MASK							= (1 << 21),
-	R2FLAG_BLOOM_OLD						= (1 << 22),
-	R2FLAG_DOF								= (1 << 23),
-	R2FLAG_MBLUR							= (1 << 24),
-	R2FLAG_GLOSS_RGB						= (1 << 25),
-	R2FLAG_AA_EDGE_DETECT					= (1 << 26),
-	R2FLAG_WET_SURFACES						= (1 << 27),
-	R2FLAG_VIGNETTE							= (1 << 28),
-	R2FLAG_CHROMATIC_ABBERATION				= (1 << 29)
+	R2FLAG_GLOSS_RGB						= (1 << 21),
+	R2FLAG_AA_EDGE_DETECT					= (1 << 22),
+	R2FLAG_WET_SURFACES						= (1 << 23),
+	R2FLAG_VIGNETTE							= (1 << 24),
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 25),
+	R2FLAG_BLOOM							= (1 << 26)
 };
 
 extern void						xrRender_initconsole	();

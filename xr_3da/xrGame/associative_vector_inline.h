@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 5037)
 
 #define TEMPLATE_SPECIALIZATION	\
 	template <\

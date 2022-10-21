@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 4589)
 
 IC	CALifeSwitchManager::CALifeSwitchManager		(xrServer *server, LPCSTR section) :
 	inherited		(server,section)

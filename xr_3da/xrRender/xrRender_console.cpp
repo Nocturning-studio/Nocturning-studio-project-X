@@ -88,7 +88,7 @@ xr_token debug_frame_layers_token[] = {
 
 u32 ps_bump_mode = 2;
 xr_token bump_mode_token[] = {
-	//{"off", 0},
+	{"off", 0},
 	{"parallax", 1},
 	{"steep_parallax", 2},
 	{0, 0} };
@@ -193,6 +193,9 @@ float		ps_r2_sun_lumscale_amb = 1.0f;
 float		ps_r2_gmaterial = 0.f;				// 
 float		ps_r2_zfill = 0.1f;				// .1f
 
+float		ps_r2_dhemi_sky_scale = 0.08f;				// 1.5f
+float		ps_r2_dhemi_light_scale = 0.2f;
+float		ps_r2_dhemi_light_flow = 0.1f;
 float		ps_r2_dhemi_scale = 1.f;				// 1.5f
 int			ps_r2_dhemi_count = 5;				// 5
 int			ps_r2_wait_sleep = 0;
@@ -340,42 +343,29 @@ void		xrRender_initconsole()
 		//msolopov0 CMDS		 
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
-
-	CMD3(CCC_Mask, "r2_grass_wave", &ps_r2_ls_flags, R2FLAG_GRASS_WAVE);
-
-	CMD3(CCC_Mask, "r2_bloom_old", &ps_r2_ls_flags, R2FLAG_BLOOM_OLD);
-	CMD3(CCC_Mask, "r2_sun_mask", &ps_r2_ls_flags, R2FLAG_SUN_MASK);
-
-	//CMD3(CCC_Mask, "r2_dof_enabled", &ps_r2_ls_flags, R2FLAG_DOF);
-	//CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_ls_flags, R2FLAG_MBLUR);
-
 	CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
-
-
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
+	CMD3(CCC_Mask, "r2_aa_edge_detect", &ps_r2_ls_flags, R2FLAG_AA_EDGE_DETECT);
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
-	CMD3(CCC_Mask, "r2_aa_edge_detect", &ps_r2_ls_flags, R2FLAG_AA_EDGE_DETECT);
 
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
+	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
 
 	CMD3(CCC_Token, "r2_blur_type", &ps_blur_type, blur_type_token);
-
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
-
-	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
-	
-
-	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
-
-	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 
 	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
 	CMD3(CCC_Mask, "r2_vignette", &ps_r2_ls_flags, R2FLAG_VIGNETTE);
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_ls_flags, R2FLAG_CHROMATIC_ABBERATION);
+	CMD3(CCC_Mask, "r2_bloom", &ps_r2_ls_flags, R2FLAG_BLOOM);
+
+	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
+
+	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 
 	// Common
 	CMD1(CCC_Screenshot, "screenshot");

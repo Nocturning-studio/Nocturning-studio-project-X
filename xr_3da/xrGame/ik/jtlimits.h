@@ -40,7 +40,7 @@
 //
 
 // -Pi/2 to  Pi/2 (quadrants IV,I)
-inline float asin1(float x)
+inline double asin1(double x)
 {
     if (_abs(x) > 1.0f)
     {
@@ -51,7 +51,7 @@ inline float asin1(float x)
 }
 
 //  Pi/2 to -Pi/2 (quadrants II,III)
-inline float asin2(float x)
+inline double asin2(double x)
 {   
     if (_abs(x) > 1.0f)
     {
@@ -63,7 +63,7 @@ inline float asin2(float x)
 
 
 //  0 to Pi   (quadrants I,II)
-inline float acos1(float x)
+inline double acos1(double x)
 {
     if (_abs(x) > 1.0f)
     {
@@ -74,7 +74,7 @@ inline float acos1(float x)
 }
 
 //  Pi to 2Pi (quadrants III,IV)
-inline float acos2(float x)
+inline double acos2(double x)
 {
     if (_abs(x) > 1.0f)
     {

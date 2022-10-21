@@ -1,5 +1,9 @@
 #ifndef PH_ITEM_LIST_H
 #define PH_ITEM_LIST_H
+
+#pragma warning(push)
+#pragma warning(disable : 4091)
+
 /*
 #define DECLARE_PHLIST_ITEM(class_name)			public:\
 												class CPHListItem\

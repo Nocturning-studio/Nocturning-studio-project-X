@@ -625,11 +625,22 @@ HRESULT	CRender::shader_compile(
 	int def_it = 0;
 	char c_smapsize[32];
 	char c_gloss[32];
+	char c_ao[32];
 	char c_ao_quality[32];
 	char c_aa_quality[32];
 	char c_aa[32];
+	char c_aa_edge_detect[32];
 	char c_debug_frame_layers[32];
 	char c_ps_shadow_filter_quality[32];
+
+	char c_vignette[32];
+	char c_chroma_abb[32];
+	char c_soft_water[32];
+	char c_soft_particles[32];
+	char c_gloss_rgb[32];
+	char c_wet_surfaces[32];
+	char c_bloom[32];
+
 
 	char sh_name[MAX_PATH] = "";
 	size_t len = 0;
@@ -739,26 +750,38 @@ HRESULT	CRender::shader_compile(
 	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
 
 	/********************************************TYPES*********************************************/
-	if (RImplementation.o.advancedpp && ps_ao == 1) {
-		defines[def_it].Name = "USE_SSAO";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_ao;
-	++len;
+//	if (RImplementation.o.advancedpp && ps_ao == 1) {
+//		defines[def_it].Name = "USE_SSAO";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + (char)ps_ao;
+//	++len;
 
-	if (RImplementation.o.advancedpp && ps_ao == 2) {
-		defines[def_it].Name = "USE_HDAO";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_ao;
-	++len;
+//	if (RImplementation.o.advancedpp && ps_ao == 2) {
+//		defines[def_it].Name = "USE_HDAO";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + (char)ps_ao;
+//	++len;
 
-	if (RImplementation.o.advancedpp && ps_ao == 3) {
-		defines[def_it].Name = "USE_HBAO";
-		defines[def_it].Definition = "1";
+//	if (RImplementation.o.advancedpp && ps_ao == 3) {
+//		defines[def_it].Name = "USE_HBAO";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + (char)ps_ao;
+//	++len;
+
+	if (RImplementation.o.advancedpp && ps_ao)
+	{
+		sprintf(c_ao, "%d", ps_ao);
+		defines[def_it].Name = "AO_TYPE";
+		defines[def_it].Definition = c_ao;
 		def_it++;
+		strcat(sh_name, c_ao);
+		len += 3;
 	}
 	sh_name[len] = '0' + (char)ps_ao;
 	++len;
@@ -832,46 +855,43 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + (char)ps_aa_quality;
 	++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT)) {
+//	if (ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT)) {
+//		defines[def_it].Name = "USE_EDGE_DETECT";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT) ? '1' : '0';
+//	++len;
+
+	int aa_edge_detect = ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT))
+	{
+		sprintf(c_aa_edge_detect, "%d", aa_edge_detect);
 		defines[def_it].Name = "USE_EDGE_DETECT";
-		defines[def_it].Definition = "1";
+		defines[def_it].Definition = c_aa_edge_detect;
 		def_it++;
+		strcat(sh_name, c_aa_edge_detect);
+		len += 1;
 	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT) ? '1' : '0';
+	sh_name[len] = '0' + char(aa_edge_detect);
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER)) {
-		defines[def_it].Name = "USE_SOFT_WATER";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_WATER) ? '1' : '0';
-	++len;
+//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER)) {
+//		defines[def_it].Name = "USE_SOFT_WATER";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_WATER) ? '1' : '0';
+//	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES)) {
-		defines[def_it].Name = "USE_SOFT_PARTICLES";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES) ? '1' : '0';
-	++len;
-
-	if (ps_r2_ls_flags.test(R2FLAG_GRASS_WAVE)) {
-		defines[def_it].Name = "GRASS_WAVE";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_GRASS_WAVE) ? '1' : '0';
-	++len;
-
-	if (ps_r2_ls_flags.test(R2FLAG_SUN_MASK)) {
-		defines[def_it].Name = "USE_SUNMASK";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SUN_MASK) ? '1' : '0';
-	++len;
+//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES)) {
+//		defines[def_it].Name = "USE_SOFT_PARTICLES";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES) ? '1' : '0';
+//	++len;
 
 	if (o.sunfilter) {
 		defines[def_it].Name = "USE_SUNFILTER";
@@ -898,45 +918,135 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.forcegloss);
 	++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB)) {
-		defines[def_it].Name = "USE_RGB_GLOSS";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB) ? '1' : '0';;
-	++len;
+//	if (ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB)) {
+//		defines[def_it].Name = "USE_RGB_GLOSS";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB) ? '1' : '0';
+//	++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_BLOOM_OLD)) {
-		defines[def_it].Name = "USE_BLOOM_OLD";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_BLOOM_OLD) ? '1' : '0';
-	++len;
+//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES)) {
+//		defines[def_it].Name = "USE_WET_SURFACES";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_WET_SURFACES) ? '1' : '0';
+//	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES)) {
-		defines[def_it].Name = "USE_WET_SURFACES";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_WET_SURFACES) ? '1' : '0';;
-	++len;
+//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE)) {
+//		defines[def_it].Name = "USE_VIGNETTE";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_VIGNETTE) ? '1' : '0';
+//	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE)) {
+//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION)) {
+//		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
+//		defines[def_it].Definition = "1";
+//		def_it++;
+//	}
+//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION) ? '1' : '0';
+//	++len;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Дорогие ревьюеры - главный вопрос этого ревью: "Наху... Извините. Зачем это нужно?"
+//Ответ - ни флаги, ни "рулетки" с разными дефайнами с кешем шейдеров НЕ РА БО ТА ЮТ. Почему? Я не знаю, я пытался это исправить, но мои навыки не позволили найти суть проблемы.
+//Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	int vignette = ps_r2_ls_flags.test(R2FLAG_VIGNETTE);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE))
+	{
+		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "USE_VIGNETTE";
-		defines[def_it].Definition = "1";
+		defines[def_it].Definition = c_vignette;
 		def_it++;
+		strcat(sh_name, c_vignette);
+		len += 1;
 	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_VIGNETTE) ? '1' : '0';;
+	sh_name[len] = '0' + char(vignette);
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION)) {
+	int chroma_abb = ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION))
+	{
+		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
-		defines[def_it].Definition = "1";
+		defines[def_it].Definition = c_chroma_abb;
 		def_it++;
+		strcat(sh_name, c_chroma_abb);
+		len += 1;
 	}
-	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION) ? '1' : '0';;
+	sh_name[len] = '0' + char(chroma_abb);
 	++len;
+
+	int soft_water = ps_r2_ls_flags.test(R2FLAG_SOFT_WATER);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER))
+	{
+		sprintf(c_soft_water, "%d", soft_water);
+		defines[def_it].Name = "USE_SOFT_WATER";
+		defines[def_it].Definition = c_soft_water;
+		def_it++;
+		strcat(sh_name, c_soft_water);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(soft_water);
+	++len;
+
+	int soft_particles = ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES))
+	{
+		sprintf(c_soft_particles, "%d", soft_particles);
+		defines[def_it].Name = "USE_SOFT_PARTICLES";
+		defines[def_it].Definition = c_soft_particles;
+		def_it++;
+		strcat(sh_name, c_soft_particles);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(soft_particles);
+	++len;
+
+	int gloss_rgb = ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB))
+	{
+		sprintf(c_gloss_rgb, "%d", gloss_rgb);
+		defines[def_it].Name = "USE_RGB_GLOSS";
+		defines[def_it].Definition = c_gloss_rgb;
+		def_it++;
+		strcat(sh_name, c_gloss_rgb);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(gloss_rgb);
+	++len;
+
+	int wet_surfaces = ps_r2_ls_flags.test(R2FLAG_WET_SURFACES);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES))
+	{
+		sprintf(c_wet_surfaces, "%d", wet_surfaces);
+		defines[def_it].Name = "USE_WET_SURFACES";
+		defines[def_it].Definition = c_wet_surfaces;
+		def_it++;
+		strcat(sh_name, c_wet_surfaces);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(wet_surfaces);
+	++len;
+
+	int bloom = ps_r2_ls_flags.test(R2FLAG_BLOOM);
+	if (ps_r2_ls_flags.test(R2FLAG_BLOOM))
+	{
+		sprintf(c_bloom, "%d", bloom);
+		defines[def_it].Name = "USE_BLOOM";
+		defines[def_it].Definition = c_bloom;
+		def_it++;
+		strcat(sh_name, c_bloom);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(bloom);
+	++len;
+
 	//////////////////////////////////////////////////////////////////////////
 	// Filter types
 	//////////////////////////////////////////////////////////////////////////

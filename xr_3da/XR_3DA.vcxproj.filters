@@ -504,6 +504,12 @@
     <ClInclude Include="perlin.h">
       <Filter>Engine\Noise</Filter>
     </ClInclude>
+    <ClInclude Include="R_Backend_hemi.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Backend_tree.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -877,6 +883,12 @@
     </ClCompile>
     <ClCompile Include="perlin.cpp">
       <Filter>Engine\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Backend_hemi.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Backend_tree.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

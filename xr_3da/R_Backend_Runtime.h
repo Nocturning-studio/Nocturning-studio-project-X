@@ -8,6 +8,7 @@
 #include "sh_rt.h"
 
 IC void		R_xforms::set_c_w(R_constant* C) { c_w = C;	RCache.set_c(C, m_w); };
+IC void		R_xforms::set_c_invw(R_constant* C) { c_invw = C;	apply_invw(); };
 IC void		R_xforms::set_c_v(R_constant* C) { c_v = C;	RCache.set_c(C, m_v); };
 IC void		R_xforms::set_c_p(R_constant* C) { c_p = C;	RCache.set_c(C, m_p); };
 IC void		R_xforms::set_c_wv(R_constant* C) { c_wv = C;	RCache.set_c(C, m_wv); };

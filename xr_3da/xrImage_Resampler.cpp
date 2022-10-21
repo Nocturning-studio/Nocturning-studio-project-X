@@ -231,8 +231,8 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 	float	xscale = 0, yscale = 0;/* zoom scale factors */
 	int		i, j, k;				/* loop variables */
 	int		n;						/* pixel number */
-	float	center, left, right;	/* filter calculation variables */
-	float	width, fscale, weight;	/* filter calculation variables */
+	double	center, left, right;	/* filter calculation variables */
+	double	width, fscale, weight;	/* filter calculation variables */
 	Pixel* raster = 0;			/* a row or column of pixels */
 	CLIST* contrib = 0;			/* array of contribution lists */
 
@@ -268,7 +268,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				right = floor(center + width);
 				for (j = int(left); j <= int(right); ++j)
 				{
-					weight = center - float(j);
+					weight = center - double(j);
 					weight = filterf(weight / fscale) / fscale;
 					if (j < 0) {
 						n = -j;
@@ -301,7 +301,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				right = floor(center + fwidth);
 				for (j = int(left); j <= int(right); ++j)
 				{
-					weight = center - (float)j;
+					weight = center - (double)j;
 					weight = (*filterf)(weight);
 					if (j < 0) {
 						n = -j;
@@ -380,7 +380,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				right = floor(center + width);
 				for (j = int(left); j <= int(right); ++j)
 				{
-					weight = center - (float)j;
+					weight = center - (double)j;
 					weight = filterf(weight / fscale) / fscale;
 					if (j < 0) {
 						n = -j;
@@ -410,7 +410,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				left = ceil(center - fwidth);
 				right = floor(center + fwidth);
 				for (j = int(left); j <= int(right); ++j) {
-					weight = center - (float)j;
+					weight = center - (double)j;
 					weight = (*filterf)(weight);
 					if (j < 0) {
 						n = -j;
