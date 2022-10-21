@@ -129,11 +129,12 @@ void CSoundRender_Source::load(LPCSTR name)
 	strconcat			(sizeof(fn),fn,N,".ogg");
 	if (!FS.exist("$level$",fn))	FS.update_path	(fn,"$game_sounds$",fn);
 
-#ifdef _EDITOR
+//#ifdef _EDITOR
 	if (!FS.exist(fn)){ 
+		Msg	("! WARNING: Can't open wave, file: %s",fn);
 		FS.update_path	(fn,"$game_sounds$","$no_sound.ogg");
     }
-#endif
+//#endif
 	LoadWave			(fn);		//.R_ASSERT(wave);
 	SoundRender->cache.cat_create	(CAT, dwBytesTotal);
 

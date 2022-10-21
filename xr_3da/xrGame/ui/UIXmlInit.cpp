@@ -217,6 +217,12 @@ bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path,
 	bool bComplexMode = xml_doc.ReadAttribInt(path, index, "complex_mode",0)?true:false;
 	if(bComplexMode)
 		pWnd->SetTextComplexMode(bComplexMode);
+
+	LPCSTR text_hint = xml_doc.ReadAttrib(path, index, "hint", NULL);
+	if (text_hint) {
+		pWnd->m_hint_text = CStringTable().translate(text_hint);
+		//Msg("Hint found:%s", text_hint);
+	}
 	
 	return true;
 }

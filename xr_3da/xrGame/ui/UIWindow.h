@@ -78,6 +78,8 @@ public:
 	//инициализация
 	virtual void			Init				(Frect* pRect);
 
+	void UpdateHintShow();
+
 	////////////////////////////////////
 	//работа с дочерними и родительскими окнами
 	virtual void			AttachChild			(CUIWindow* pChild);

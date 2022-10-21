@@ -628,6 +628,7 @@ HRESULT	CRender::shader_compile(
 	char c_gloss[32];
 	char c_ao_quality[32];
 	char c_aa_quality[32];
+	char c_aa[32];
 	char c_debug_frame_layers[32];
 
 	char sh_name[MAX_PATH] = "";
@@ -781,7 +782,7 @@ HRESULT	CRender::shader_compile(
 	////////////////////////////////////////////ANTIALISING//////////////////////////////////////////
 
 	/********************************************TYPES*********************************************/
-	if (RImplementation.o.advancedpp && ps_aa == 3) {
+/*	if (RImplementation.o.advancedpp && ps_aa == 3) {
 		defines[def_it].Name = "USE_FXAA";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -801,6 +802,19 @@ HRESULT	CRender::shader_compile(
 		defines[def_it].Name = "USE_EDGE_SAMPLING";
 		defines[def_it].Definition = "1";
 		def_it++;
+	}
+	sh_name[len] = '0' + (char)ps_aa;
+	++len;
+*/
+
+	if (RImplementation.o.advancedpp && ps_aa)
+	{
+		sprintf(c_aa, "%d", ps_aa);
+		defines[def_it].Name = "AA_TYPE";
+		defines[def_it].Definition = c_aa;
+		def_it++;
+		strcat(sh_name, c_aa);
+		len += 3;
 	}
 	sh_name[len] = '0' + (char)ps_aa;
 	++len;

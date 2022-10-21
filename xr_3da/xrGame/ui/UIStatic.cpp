@@ -8,6 +8,7 @@
 #include "uilines.h"
 #include "../string_table.h"
 #include "../ui_base.h"
+#include "UIBtnHint.h"
 
 const char * const	clDefault	= "default";
 #define CREATE_LINES if (!m_pLines) {m_pLines = xr_new<CUILines>(); m_pLines->SetTextAlignment(CGameFont::alLeft);}
@@ -259,6 +260,40 @@ void CUIStatic::Update()
 			EnableHeading_int	( !!m_lanim_xform.m_lanimFlags.test(1<<4) );
 			SetWndSize			(Fvector2().set(m_xxxRect.width(),m_xxxRect.height()));
 		}
+	}
+	UpdateHintShow();
+}
+
+//Thaks Hrust for this function. Now don't work, fix it if you can 
+bool is_in2(const Frect& b1, const Frect& b2);
+void  CUIStatic::UpdateHintShow()
+{
+
+	if (CursorOverWindow() && m_hint_text.size() && !g_btnHint->Owner() /*&& Device.dwTimeGlobal > m_dwFocusReceiveTime  + 500 - don't work in pause mode*/)
+	{
+		//Msg("UpdateHintShow - CursorOverWindow() && m_hint_text.size() && !g_btnHint->Owner()");
+
+		g_btnHint->SetHintText(this, *m_hint_text);
+
+		Fvector2 c_pos = GetUICursor()->GetCursorPosition();
+		Frect vis_rect;
+		vis_rect.set(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
+
+		//select appropriate position
+		Frect r;
+		r.set(0.0f, 0.0f, g_btnHint->GetWidth(), g_btnHint->GetHeight());
+		r.add(c_pos.x, c_pos.y);
+
+		r.sub(0.0f, r.height());
+		if (false == is_in2(vis_rect, r))
+			r.sub(r.width(), 0.0f);
+		if (false == is_in2(vis_rect, r))
+			r.add(0.0f, r.height());
+
+		if (false == is_in2(vis_rect, r))
+			r.add(r.width(), 45.0f);
+
+		g_btnHint->SetWndPos(r.lt);
 	}
 }
 

@@ -34,6 +34,8 @@ public:
 					CUIStatic				();
 	virtual			~CUIStatic				();
 
+	shared_str				m_hint_text;
+
 	// IUISimpleWindow--------------------------------------------------------------------------------------
 	virtual void	Init					(float x, float y, float width, float height);
 	virtual void	Draw					();
@@ -73,6 +75,7 @@ public:
 			void		SetClrLightAnim				(LPCSTR lanim, bool bCyclic, bool bOnlyAlpha, bool bTextColor, bool bTextureColor);
 			void		SetXformLightAnim			(LPCSTR lanim, bool bCyclic);
 			void		ResetClrAnimation			();
+			void		UpdateHintShow();
 			void		ResetXformAnimation			();
 			bool		IsClrAnimStoped				();
 			void		SetClrAnimDelay				(float delay);
