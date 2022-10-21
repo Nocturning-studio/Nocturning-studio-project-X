@@ -207,7 +207,7 @@ void CAI_Stalker::LoadSounds		(LPCSTR section)
 	sound().add						(pSettings->r_string(section,"sound_humming"),						100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskHumming),					eStalkerSoundHumming,					head_bone_name, 0);
 	sound().add						(pSettings->r_string(section,"sound_need_backup"),					100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskNeedBackup),				eStalkerSoundNeedBackup,				head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_running_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundRunningInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
-//	sound().add						(pSettings->r_string(section,"sound_walking_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundWalkingInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
+	sound().add						(pSettings->r_string(section,"sound_walking_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundWalkingInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_kill_wounded"),					100, SOUND_TYPE_MONSTER_TALKING,	5, u32(eStalkerSoundMaskKillWounded),				eStalkerSoundKillWounded,				head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_critically_wounded"),		100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskEnemyCriticallyWounded),	eStalkerSoundEnemyCriticallyWounded,	head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_killed_or_wounded"),		100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskEnemyKilledOrWounded),		eStalkerSoundEnemyKilledOrWounded,		head_bone_name, xr_new<CStalkerSoundData>(this));
@@ -670,7 +670,7 @@ void CAI_Stalker::UpdateCL()
 				sound().play	(eStalkerSoundRunningInDanger);
 			}
 			else {
-//				sound().play	(eStalkerSoundWalkingInDanger);
+				sound().play	(eStalkerSoundWalkingInDanger);
 			}
 		}
 	}

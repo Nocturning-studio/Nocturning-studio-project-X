@@ -311,7 +311,7 @@ public:
 	}
 };
 
-#ifndef MASTER_GOLD
+//#ifndef MASTER_GOLD
 class CCC_TimeFactor : public IConsole_Command {
 public:
 					CCC_TimeFactor	(LPCSTR N) : IConsole_Command(N) {}
@@ -322,7 +322,7 @@ public:
 		Device.time_factor	(time_factor);
 	}
 };
-#endif // MASTER_GOLD
+//#endif // MASTER_GOLD
 
 //-----------------------------------------------------------------------
 class CCC_DemoRecord : public IConsole_Command
@@ -331,13 +331,13 @@ public:
 
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		if (GameID() != GAME_SINGLE) 
-		{
-			Msg("For this game type Demo Record is disabled.");
-			return;
-		};
-		#endif
+		/*#ifndef DEBUG
+				if (GameID() != GAME_SINGLE)
+				{
+					Msg("For this game type Demo Play is disabled.");
+					return;
+				};
+		#endif*/
 		Console->Hide	();
 		string_path		fn_; 
 		strconcat		(sizeof(fn_),fn_, args, ".xrdemo");
@@ -354,13 +354,13 @@ public:
 	  IConsole_Command(N) 
 	  { bEmptyArgsHandled = TRUE; };
 	  virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		if (GameID() != GAME_SINGLE) 
-		{
-			Msg("For this game type Demo Play is disabled.");
-			return;
-		};
-		#endif
+		  /*#ifndef DEBUG
+				  if (GameID() != GAME_SINGLE)
+				  {
+					  Msg("For this game type Demo Play is disabled.");
+					  return;
+				  };
+		  #endif*/
 		  if (0==g_pGameLevel)
 		  {
 			  Msg	("! There are no level(s) started");
@@ -1373,21 +1373,16 @@ void CCC_RegisterCommands()
 	CMD1(CCC_FlushLog,			"flush"					);		// flush log
 	CMD1(CCC_ClearLog,			"clear_log"					);
 
-#ifndef MASTER_GOLD
 	CMD1(CCC_ALifeTimeFactor,		"al_time_factor"		);		// set time factor
 	CMD1(CCC_ALifeSwitchDistance,	"al_switch_distance"	);		// set switch distance
 	CMD1(CCC_ALifeProcessTime,		"al_process_time"		);		// set process time
 	CMD1(CCC_ALifeObjectsPerUpdate,	"al_objects_per_update"	);		// set process time
 	CMD1(CCC_ALifeSwitchFactor,		"al_switch_factor"		);		// set switch factor
-#endif // MASTER_GOLD
 
 
 	CMD3(CCC_Mask,				"hud_weapon",			&psHUD_Flags,	HUD_WEAPON);
 	CMD3(CCC_Mask,				"hud_info",				&psHUD_Flags,	HUD_INFO);
-
-#ifndef MASTER_GOLD
 	CMD3(CCC_Mask,				"hud_draw",				&psHUD_Flags,	HUD_DRAW);
-#endif // MASTER_GOLD
 	// hud
 	psHUD_Flags.set(HUD_CROSSHAIR,		true);
 	psHUD_Flags.set(HUD_WEAPON,			true);
@@ -1397,10 +1392,8 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask,				"hud_crosshair",		&psHUD_Flags,	HUD_CROSSHAIR);
 	CMD3(CCC_Mask,				"hud_crosshair_dist",	&psHUD_Flags,	HUD_CROSSHAIR_DIST);
 
-#ifdef DEBUG
-	CMD4(CCC_Float,				"hud_fov",				&psHUD_FOV,		0.1f,	1.0f);
-	CMD4(CCC_Float,				"fov",					&g_fov,			5.0f,	180.0f);
-#endif // DEBUG
+	CMD4(CCC_Float, "hud_fov", &psHUD_FOV, 0.1f, 1.0f);
+	CMD4(CCC_Float, "fov", &g_fov, 30.0f, 105.0f);
 
 	// Demo
 	CMD1(CCC_DemoPlay,			"demo_play"				);
@@ -1505,9 +1498,10 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask,			"g_god",			&psActorFlags,	AF_GODMODE	);
 	CMD3(CCC_Mask,			"g_unlimitedammo",	&psActorFlags,	AF_UNLIMITEDAMMO);
 	CMD1(CCC_Script,		"run_script");
-	CMD1(CCC_ScriptCommand,	"run_string");
-	CMD1(CCC_TimeFactor,	"time_factor");		
+	CMD1(CCC_ScriptCommand,	"run_string");	
 #endif // MASTER_GOLD
+
+	CMD1(CCC_TimeFactor, "time_factor");
 
 	CMD3(CCC_Mask,		"g_autopickup",			&psActorFlags,	AF_AUTOPICKUP);
 
@@ -1583,10 +1577,8 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask,			"cl_dynamiccrosshair",	&psHUD_Flags,	HUD_CROSSHAIR_DYNAMIC);
 	CMD1(CCC_MainMenu,		"main_menu"				);
 
-#ifndef MASTER_GOLD
 	CMD1(CCC_StartTimeSingle,	"start_time_single");
 	CMD4(CCC_TimeFactorSingle,	"time_factor_single", &g_fTimeFactor, 0.f,flt_max);
-#endif // MASTER_GOLD
 
 
 	g_uCommonFlags.zero();

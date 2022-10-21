@@ -172,11 +172,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	switch (key) {
 	case DIK_NUMPAD5: 
 		{
-			if (GameID() != GAME_SINGLE) 
-			{
-				Msg("For this game type Demo Record is disabled.");
-///				return;
-			};
 			Console->Hide	();
 			Console->Execute("demo_record 1");
 		}

@@ -63,6 +63,8 @@
 #include "script_callback_ex.h"
 #include "InventoryBox.h"
 #include "location_manager.h"
+#include "../xr_ioc_cmd.h"
+#include "../XR_IOConsole.h"
 
 const u32		patch_frames	= 50;
 const float		respawn_delay	= 1.f;
@@ -93,7 +95,8 @@ CActor::CActor() : CEntityAlive()
 	cameras[eacFirstEye]	= xr_new<CCameraFirstEye>				(this);
 	cameras[eacFirstEye]->Load("actor_firsteye_cam");
 
-	if(strstr(Core.Params,"-psp"))
+	//if (strstr(Core.Params, "-psp"))
+	if (ps_psp_ls_flags.test(PSP_VIEW))
 		psActorFlags.set(AF_PSP, TRUE);
 	else
 		psActorFlags.set(AF_PSP, FALSE);
@@ -370,9 +373,10 @@ if(!g_dedicated_server)
 		m_BloodSnd.create		(pSettings->r_string(section,"heavy_blood_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 	}
 }
-	if( psActorFlags.test(AF_PSP) )
-		cam_Set					(eacLookAt);
-	else
+#pragma todo("Deathman to Deathman : Разобраться с небоходимостью перезапуска игры после изменения состояния cam_psp")
+//if (psActorFlags.test(AF_PSP))
+//	cam_Set(eacLookAt);
+//else
 		cam_Set					(eacFirstEye);
 
 	// sheduler

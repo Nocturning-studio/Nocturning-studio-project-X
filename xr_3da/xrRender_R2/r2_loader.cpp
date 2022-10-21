@@ -87,7 +87,7 @@ void CRender::level_Load(IReader* fs)
 	HOM.Load					();
 
 	// Lights
-	// pApp->LoadTitle			("Loading lights...");
+	g_pGamePersistent->LoadTitle("st_loading_lights...");
 	LoadLights					(fs);
 
 	// End
@@ -107,16 +107,25 @@ void CRender::level_Unload()
 	if (0==g_pGameLevel)		return;
 	if (!b_loaded)				return;
 
+	// Begin
+//	pApp->LoadBegin();
+
+	g_pGamePersistent->LoadTitle("st_unloading_textures");
+	Device.Resources->DeferredUnload();
+
 	u32 I;
 
 	// HOM
+	g_pGamePersistent->LoadTitle("st_unloading_hom");
 	HOM.Unload				();
 
 	//*** Details
+	g_pGamePersistent->LoadTitle("st_unloading_details");
 	Details->Unload			();
 
 	//*** Sectors
 	// 1.
+	g_pGamePersistent->LoadTitle("st_unloading_sectors_portals");
 	xr_delete				(rmPortals);
 	pLastSector				= 0;
 	vLastCameraPos.set		(0,0,0);
@@ -128,10 +137,12 @@ void CRender::level_Unload()
 	Portals.clear			();
 
 	//*** Lights
+	g_pGamePersistent->LoadTitle("st_unloading_lights...");
 	// Glows.Unload			();
 	Lights.Unload			();
 
 	//*** Visuals
+	g_pGamePersistent->LoadTitle("st_unloading_spatial_db");
 	for (I=0; I<Visuals.size(); I++)
 	{
 		Visuals[I]->Release();
@@ -140,6 +151,7 @@ void CRender::level_Unload()
 	Visuals.clear			();
 
 	//*** VB/IB
+	g_pGamePersistent->LoadTitle("st_unloading_geometry");
 	for (I=0; I<nVB.size(); I++)	_RELEASE(nVB[I]);
 	for (I=0; I<xVB.size(); I++)	_RELEASE(xVB[I]);
 	nVB.clear(); xVB.clear();
@@ -153,7 +165,11 @@ void CRender::level_Unload()
 	xr_delete					(Wallmarks);
 
 	//*** Shaders
+	g_pGamePersistent->LoadTitle("st_unloading_shaders");
 	Shaders.clear_and_free		();
+
+	// End
+//	pApp->LoadEnd();
 	b_loaded					= FALSE;
 }
 

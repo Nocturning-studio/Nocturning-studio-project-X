@@ -8,8 +8,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-int		rsDVB_Size = 512 + 1024;
-int		rsDIB_Size = 512;
+int rsDVB_Size = 32768;//512 + 1024;
+int rsDIB_Size = 512 + 2048;
 
 void _VertexStream::Create()
 {
@@ -40,7 +40,7 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 #endif
 
 	// Ensure there is enough space in the VB for this data
-	u32	bytes_need = vl_Count * Stride;
+	u32 bytes_need = vl_Count * Stride;
 	R_ASSERT((bytes_need <= mSize) && vl_Count);
 
 	// Vertex-local info
@@ -58,7 +58,8 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 
 		pVB->Lock(mPosition, bytes_need, (void**)&pData, LOCKFLAGS_FLUSH);
 	}
-	else {
+	else
+	{
 		// APPEND-LOCK
 		mPosition = vl_mPosition * Stride;
 		vOffset = vl_mPosition;
@@ -70,7 +71,7 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 	return LPVOID(pData);
 }
 
-void	_VertexStream::Unlock(u32 Count, u32 Stride)
+void _VertexStream::Unlock(u32 Count, u32 Stride)
 {
 #ifdef DEBUG
 	PGO(Msg("PGO:VB_UNLOCK:%d", Count));
@@ -83,19 +84,19 @@ void	_VertexStream::Unlock(u32 Count, u32 Stride)
 	pVB->Unlock();
 }
 
-void	_VertexStream::reset_begin()
+void _VertexStream::reset_begin()
 {
 	old_pVB = pVB;
 	Destroy();
 }
-void	_VertexStream::reset_end()
+void _VertexStream::reset_end()
 {
 	Create();
 	//old_pVB				= NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void	_IndexStream::Create()
+void _IndexStream::Create()
 {
 	Device.Resources->Evict();
 
@@ -109,7 +110,7 @@ void	_IndexStream::Create()
 	Msg("* DIB created: %dK", mSize / 1024);
 }
 
-void	_IndexStream::Destroy()
+void _IndexStream::Destroy()
 {
 	_RELEASE(pIB);
 	_clear();
@@ -130,8 +131,8 @@ u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 	u32 dwFlags = LOCKFLAGS_APPEND;
 	if (2 * (Count + mPosition) >= mSize)
 	{
-		mPosition = 0;						// clear position
-		dwFlags = LOCKFLAGS_FLUSH;			// discard it's contens
+		mPosition = 0;			   // clear position
+		dwFlags = LOCKFLAGS_FLUSH; // discard it's contens
 		mDiscardID++;
 	}
 	pIB->Lock(mPosition * 2, Count * 2, (void**)&pLockedData, dwFlags);
@@ -139,10 +140,10 @@ u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 
 	vOffset = mPosition;
 
-	return					LPWORD(pLockedData);
+	return LPWORD(pLockedData);
 }
 
-void	_IndexStream::Unlock(u32 RealCount)
+void _IndexStream::Unlock(u32 RealCount)
 {
 	PGO(Msg("PGO:IB_UNLOCK:%d", RealCount));
 	mPosition += RealCount;
@@ -150,12 +151,12 @@ void	_IndexStream::Unlock(u32 RealCount)
 	pIB->Unlock();
 }
 
-void	_IndexStream::reset_begin()
+void _IndexStream::reset_begin()
 {
 	old_pIB = pIB;
 	Destroy();
 }
-void	_IndexStream::reset_end()
+void _IndexStream::reset_end()
 {
 	Create();
 	//old_pIB				= NULL;

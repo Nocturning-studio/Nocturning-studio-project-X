@@ -508,10 +508,10 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph, 
 			CLevelGraph::CHeader	header;
 			reader->r				(&header,sizeof(header));
 			FS.r_close				(reader);
-			if (header.version() != XRAI_CURRENT_VERSION) {
-				Msg					("! AI-map for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
-				continue;
-			}
+		//	if (header.version() != XRAI_CURRENT_VERSION) {
+		//		Msg					("! AI-map for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
+		//		continue;
+		//	}
 		}
 
 #ifndef PRIQUEL
@@ -540,10 +540,10 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph, 
 			CGameGraph::CHeader	header;
 			header.load			(reader);
 			FS.r_close			(reader);
-			if (header.version() != XRAI_CURRENT_VERSION) {
-				Msg				("! Graph for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
-				continue;
-			}
+			//if (header.version() != XRAI_CURRENT_VERSION) {
+			//	Msg				("! Graph for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
+			//	continue;
+			//}
 		}
 
 		// cross table
@@ -566,10 +566,10 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph, 
 			chunk->r			(&header,sizeof(header));
 			chunk->close		();
 			FS.r_close			(reader);
-			if (header.version() != XRAI_CURRENT_VERSION) {
-				Msg				("! Cross table for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
-				continue;
-			}
+			//if (header.version() != XRAI_CURRENT_VERSION) {
+			//	Msg				("! Cross table for the level %s is incompatible (version mismatch)! (level is not included into the game graph)",S);
+			//	continue;
+			//}
 		}
 #endif // PRIQUEL
 		

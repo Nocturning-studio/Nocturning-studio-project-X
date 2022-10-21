@@ -9722,4 +9722,7 @@
       <Filter>Physics\Colliders\RayMotions-Collider</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
 </Project>

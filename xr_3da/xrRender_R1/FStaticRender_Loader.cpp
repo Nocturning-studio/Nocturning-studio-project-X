@@ -97,12 +97,15 @@ void CRender::level_Unload		()
 	if (0==g_pGameLevel)		return;
 	if (!b_loaded)				return;
 
+	Device.Resources->DeferredUnload();
+
 	u32							I;
 
 	// HOM
 	HOM.Unload					();
 
 	//*** Details
+	g_pGamePersistent->LoadTitle("st_unloading_details");
 	Details->Unload				();
 
 	//*** Sectors
@@ -124,6 +127,7 @@ void CRender::level_Unload		()
 	L_DB->Unload				();
 
 	//*** Visuals
+	g_pGamePersistent->LoadTitle("st_unloading_spatial_db");
 	for (I=0; I<Visuals.size(); I++)	{
 		Visuals[I]->Release();
 		xr_delete(Visuals[I]);
@@ -131,6 +135,7 @@ void CRender::level_Unload		()
 	Visuals.clear_and_free		();
 
 	//*** SWI
+	g_pGamePersistent->LoadTitle("st_unloading_geometry");
 	for (I=0; I<SWIs.size();I++)xr_free	(SWIs[I].sw);
 	SWIs.clear					();
 
@@ -150,6 +155,7 @@ void CRender::level_Unload		()
 	xr_delete					(L_Shadows);
 
 	//*** Shaders
+	g_pGamePersistent->LoadTitle("st_unloading_shaders");
 	Shaders.clear_and_free		();
 
 	//. dbg

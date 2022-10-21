@@ -186,6 +186,17 @@ class cl_hemi_color : public R_constant_setup {
 	}
 };	static cl_hemi_color		binder_hemi_color;
 
+class cl_screen_res : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		float w = (float)HW.DevPP.BackBufferWidth;
+		float h = (float)HW.DevPP.BackBufferHeight;
+		RCache.set_c(C, w, h, 1.0f / w, 1.0f / h);
+	}
+};
+
+static cl_screen_res binder_screen_res;
+
 // Standart constant-binding
 void	CBlender_Compile::SetMapping()
 {
@@ -196,6 +207,8 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("m_WV", &binder_wv);
 	r_Constant("m_VP", &binder_vp);
 	r_Constant("m_WVP", &binder_wvp);
+
+	r_Constant("screen_res", &binder_screen_res);
 
 	// fog-params
 	r_Constant("fog_plane", &binder_fog_plane);

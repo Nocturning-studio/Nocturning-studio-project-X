@@ -150,7 +150,7 @@ void CEnvironment::SetWeather(shared_str name, bool forced)
 	}
 	else {
 #ifndef _EDITOR
-		FATAL("! Empty weather name");
+		//FATAL("! Empty weather name");
 #endif
 	}
 }

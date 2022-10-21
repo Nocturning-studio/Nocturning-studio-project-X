@@ -3,6 +3,7 @@
 #pragma once
 
 // Common
+extern ENGINE_API	BOOL		r2_advanced_pp;
 extern ENGINE_API	int			ps_r__Supersample;
 extern ECORE_API	int			ps_r__LightSleepFrames;
 
@@ -99,28 +100,38 @@ extern ECORE_API int			ps_r2_wait_sleep;
 
 enum
 {
-	R2FLAG_SUN					= (1<<0),
-	R2FLAG_SUN_FOCUS			= (1<<1),
-	R2FLAG_SUN_TSM				= (1<<2),
-	R2FLAG_SUN_DETAILS			= (1<<3),
-	R2FLAG_TONEMAP				= (1<<4),
-	R2FLAG_AA					= (1<<5),
-	R2FLAG_GI					= (1<<6),
-	R2FLAG_FASTBLOOM			= (1<<7),
-	R2FLAG_GLOBALMATERIAL		= (1<<8),
-	R2FLAG_ZFILL				= (1<<9),
-	R2FLAG_R1LIGHTS				= (1<<10),
-	R2FLAG_SUN_IGNORE_PORTALS	= (1<<11),
+	R2FLAG_SUN								= (1<<0),
+	R2FLAG_SUN_FOCUS						= (1<<1),
+	R2FLAG_SUN_TSM							= (1<<2),
+	R2FLAG_SUN_DETAILS						= (1<<3),
+	R2FLAG_TONEMAP							= (1<<4),
+	R2FLAG_AA								= (1<<5),
+	R2FLAG_GI								= (1<<6),
+	R2FLAG_FASTBLOOM						= (1<<7),
+	R2FLAG_GLOBALMATERIAL					= (1<<8),
+	R2FLAG_ZFILL							= (1<<9),
+	R2FLAG_R1LIGHTS							= (1<<10),
+	R2FLAG_SUN_IGNORE_PORTALS				= (1<<11),
 
-//	R2FLAG_SUN_STATIC			= (1<<12),
+//	R2FLAG_SUN_STATIC						= (1<<12),
 	
 	R2FLAG_EXP_SPLIT_SCENE					= (1<<13),
 	R2FLAG_EXP_DONT_TEST_UNSHADOWED			= (1<<14),
 
-	R2FLAG_USE_NVDBT			= (1<<15),
-	R2FLAG_USE_NVSTENCIL		= (1<<16),
+	R2FLAG_USE_NVDBT						= (1<<15),
+	R2FLAG_USE_NVSTENCIL					= (1<<16),
 
-	R2FLAG_EXP_MT_CALC			= (1<<17),
+	R2FLAG_EXP_MT_CALC						= (1<<17),
+
+	R2FLAG_SOFT_WATER						= (1 << 18),
+	R2FLAG_SOFT_PARTICLES					= (1 << 19),
+	R2FLAG_GRASS_WAVE						= (1 << 20),
+	R2FLAG_SUN_MASK							= (1 << 21),
+	R2FLAG_BLOOM_OLD						= (1 << 22),
+	R2FLAG_DOF								= (1 << 23),
+	R2FLAG_MBLUR							= (1 << 24),
+	R2FLAG_GLOSS_RGB						= (1 << 25),
+	R2FLAG_AA_EDGE_DETECT					= (1 << 26)
 };
 
 extern void						xrRender_initconsole	();

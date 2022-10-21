@@ -97,10 +97,10 @@ void	CResourceManager::OnDeviceCreate(IReader* F)
 			}
 			else
 			{
-				if (B->getDescription().version != desc.version)
-				{
-					Msg("! Version conflict in shader '%s'", desc.cName);
-				}
+				//if (B->getDescription().version != desc.version)
+				//{
+				//	Msg("! Version conflict in shader '%s'", desc.cName);
+				//}
 
 				chunk->seek(0);
 				B->Load(*chunk, desc.version);
@@ -180,11 +180,12 @@ void CResourceManager::StoreNecessaryTextures()
 	{
 		LPCSTR texture_name = it->first;
 		if (strstr(texture_name, "\\levels\\"))	continue;
-		if (!strchr(texture_name, '\\'))			continue;
+		if (!strchr(texture_name, '\\'))		continue;
 
 		ref_texture				T;
 		T.create(texture_name);
 		m_necessary.push_back(T);
+
 	}
 }
 

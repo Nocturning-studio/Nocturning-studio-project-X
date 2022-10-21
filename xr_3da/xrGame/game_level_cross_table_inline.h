@@ -28,7 +28,7 @@ IC CGameLevelCrossTable::CGameLevelCrossTable	()
 	chunk->r			(&m_tCrossTableHeader,sizeof(m_tCrossTableHeader));
 	chunk->close		();
 	
-	R_ASSERT2			(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION,"Cross table version mismatch!");
+	//R_ASSERT2			(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION,"Cross table version mismatch!");
 
 	m_chunk				= m_tpCrossTableVFS->open_chunk(CROSS_TABLE_CHUNK_DATA);
 	R_ASSERT2			(m_chunk,"Cross table is corrupted!");

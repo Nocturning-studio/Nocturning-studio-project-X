@@ -54,8 +54,12 @@ void CEngineAPI::Initialize(void)
 
 		Log("Loading DLL:", r1_name);
 		hRender = LoadLibrary(r1_name);
-		if (0 == hRender)	R_CHK(GetLastError());
-		R_ASSERT(hRender);
+		//if (0 == hRender)	R_CHK(GetLastError());
+		//R_ASSERT(hRender);
+		if (0 == hRender) {
+			// try to load without
+			Msg("...Failed - library not exist.");
+		}
 	}
 
 	// game

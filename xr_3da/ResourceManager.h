@@ -168,9 +168,9 @@ public:
 	SGeometry* CreateGeom(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
 	SGeometry* CreateGeom(u32 FVF, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
 	void			DeleteGeom(const SGeometry* VS);
-	void			DeferredLoad(BOOL E) { bDeferredLoad = E; }
+	void			DeferredLoad(BOOL E) {bDeferredLoad = E;}
 	void			DeferredUpload();
-	//.	void			DeferredUnload			();
+	void			DeferredUnload();
 	void			Evict();
 	void			StoreNecessaryTextures();
 	void			DestroyNecessaryTextures();

@@ -15,6 +15,8 @@
 
 #include "xr_object.h"
 
+extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
+
 xr_token							snd_freq_token[] = {
 	{ "22khz",						sf_22K										},
 	{ "44khz",						sf_44K										},
@@ -34,6 +36,7 @@ xr_token							vid_quality_token[] = {
 	{ "renderer_r1",				0											},
 	{ "renderer_r2a",				1											},
 	{ "renderer_r2",				2											},
+	{ "renderer_r2.5",				3											},
 	{ 0,							0											}
 };
 
@@ -452,7 +455,8 @@ public:
 	virtual void	Save(IWriter* F) {};
 };
 
-ENGINE_API BOOL r2_sun_static = TRUE;
+ENGINE_API BOOL r2_sun_static  = FALSE;
+ENGINE_API BOOL r2_advanced_pp = FALSE;
 
 u32				renderer_value = 0;
 class CCC_r2 : public CCC_Token
@@ -470,7 +474,8 @@ public:
 #endif // DEDICATED_SERVER
 
 		psDeviceFlags.set(rsR2, (renderer_value > 0));
-		r2_sun_static = (renderer_value != 2);
+		r2_sun_static  = (renderer_value < 2);
+		r2_advanced_pp = (renderer_value > 2);
 	}
 
 	virtual void	Save(IWriter* F) {
@@ -585,8 +590,8 @@ void CCC_Register()
 	// Sound
 	CMD2(CCC_Float, "snd_volume_eff", &psSoundVEffects);
 	CMD2(CCC_Float, "snd_volume_music", &psSoundVMusic);
-	//.	CMD3(CCC_Token,		"snd_freq",				&psSoundFreq,		snd_freq_token			);
-	//.	CMD3(CCC_Token,		"snd_model",			&psSoundModel,		snd_model_token			);
+		CMD3(CCC_Token,		"snd_freq",				&psSoundFreq,		snd_freq_token			);
+		CMD3(CCC_Token,		"snd_model",			&psSoundModel,		snd_model_token			);
 	CMD1(CCC_SND_Restart, "snd_restart");
 	CMD3(CCC_Mask, "snd_acceleration", &psSoundFlags, ss_Hardware);
 	CMD3(CCC_Mask, "snd_efx", &psSoundFlags, ss_EAX);
@@ -612,6 +617,7 @@ void CCC_Register()
 	// Camera
 	CMD2(CCC_Float, "cam_inert", &psCamInert);
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
+	CMD3(CCC_Mask, "cam_psp", &ps_psp_ls_flags, PSP_VIEW);
 
 	CMD1(CCC_r2, "renderer");
 	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);
@@ -622,14 +628,14 @@ void CCC_Register()
 	CMD4(CCC_Integer, "net_dbg_dump_export_obj", &g_Dump_Export_Obj, 0, 1);
 	CMD4(CCC_Integer, "net_dbg_dump_import_obj", &g_Dump_Import_Obj, 0, 1);
 
-	if (strstr(Core.Params, "designer"))
-	{
+//	if (strstr(Core.Params, "designer"))
+//	{
 		CMD1(CCC_DR_TakePoint, "demo_record_take_point");
 		CMD1(CCC_DR_ClearPoint, "demo_record_clear_points");
 		CMD4(CCC_DR_UsePoints, "demo_record_use_points", &g_bDR_LM_UsePointsBBox, 0, 1);
 		CMD4(CCC_DR_UsePoints, "demo_record_4step", &g_bDR_LM_4Steps, 0, 1);
 		CMD4(CCC_DR_UsePoints, "demo_record_step", &g_iDR_LM_Step, 0, 3);
-	}
+//	}
 	CMD1(CCC_DumpResources, "dump_resources");
 	CMD1(CCC_DumpOpenFiles, "dump_open_files");
 	//#endif

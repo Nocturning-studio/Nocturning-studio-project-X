@@ -32,7 +32,7 @@ CLevelGraph::CLevelGraph		()
 
 	// m_header & data
 	m_header					= (CHeader*)m_reader->pointer();
-	R_ASSERT					(header().version() == XRAI_CURRENT_VERSION);
+	//R_ASSERT					(header().version() == XRAI_CURRENT_VERSION);
 	m_reader->advance			(sizeof(CHeader));
 	m_nodes						= (CVertex*)m_reader->pointer();
 	m_row_length				= iFloor((header().box().max.z - header().box().min.z)/header().cell_size() + EPS_L + 1.5f);

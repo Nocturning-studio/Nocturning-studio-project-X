@@ -109,40 +109,40 @@ float CUITextureMaster::GetTextureHeight(const char* texture_name){
 	xr_map<shared_str, TEX_INFO>::iterator	it;
 	it = m_textures.find(texture_name);
 
-	if (it != m_textures.end())
+	//if (it != m_textures.end())
 		return (*it).second.rect.height();
-	R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
-	return 0;
+	//R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
+	//return 0;
 }
 
 Frect CUITextureMaster::GetTextureRect(const char* texture_name){
 	xr_map<shared_str, TEX_INFO>::iterator	it;
 	it = m_textures.find(texture_name);
-	if (it != m_textures.end())
+	//if (it != m_textures.end())
 		return (*it).second.rect;
 
-	R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
-	return Frect();
+	//R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
+	//return Frect();
 }
 
 float CUITextureMaster::GetTextureWidth(const char* texture_name){
 	xr_map<shared_str, TEX_INFO>::iterator	it;
 	it = m_textures.find(texture_name);
 
-	if (it != m_textures.end())
+	//if (it != m_textures.end())
 		return (*it).second.rect.width();
-	R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
-	return 0;
+	//R_ASSERT3(false,"CUITextureMaster::GetTextureHeight Can't find texture", texture_name);
+	//return 0;
 }
 
 LPCSTR CUITextureMaster::GetTextureFileName(const char* texture_name){
 	xr_map<shared_str, TEX_INFO>::iterator	it;
 	it = m_textures.find(texture_name);
 
-	if (it != m_textures.end())
+	//if (it != m_textures.end())
 		return *((*it).second.file);
-	R_ASSERT3(false,"CUITextureMaster::GetTextureFileName Can't find texture", texture_name);
-	return 0;
+	//R_ASSERT3(false,"CUITextureMaster::GetTextureFileName Can't find texture", texture_name);
+	//return 0;
 }
 
 TEX_INFO CUITextureMaster::FindItem(LPCSTR texture_name, LPCSTR def_texture_name)
@@ -162,7 +162,7 @@ void CUITextureMaster::GetTextureShader(LPCSTR texture_name, ref_shader& sh){
 	xr_map<shared_str, TEX_INFO>::iterator	it;
 	it = m_textures.find(texture_name);
 
-	R_ASSERT3(it != m_textures.end(), "can't find texture", texture_name);
+	//R_ASSERT3(it != m_textures.end(), "can't find texture", texture_name);
 
 	sh.create("hud\\default", *((*it).second.file));	
 }

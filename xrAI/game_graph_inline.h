@@ -25,7 +25,7 @@ IC CGameGraph::CGameGraph											()
 	m_reader						= FS.r_open(file_name);
 	VERIFY							(m_reader);
 	m_header.load					(m_reader);
-	R_ASSERT2						(header().version() == XRAI_CURRENT_VERSION,"Graph version mismatch!");
+	//R_ASSERT2						(header().version() == XRAI_CURRENT_VERSION,"Graph version mismatch!");
 	m_nodes							= (CVertex*)m_reader->pointer();
 	m_current_level_some_vertex_id	= _GRAPH_ID(-1);
 	m_enabled.assign				(header().vertex_count(),true);

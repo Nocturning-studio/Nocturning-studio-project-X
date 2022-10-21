@@ -365,6 +365,17 @@ public:
 	float					camMaxAngleHorz;
 	float					camStepAngleHorz;
 
+#pragma todo("Deathman to all: «амените пожалуйста мой дебилизм на нормальную реализацию из зова ѕрип€ти")
+
+	float					zoom_camMaxAngle;
+	float					zoom_camRelaxSpeed;
+	float					zoom_camRelaxSpeed_AI;
+	float					zoom_camDispersion;
+	float					zoom_camDispersionInc;
+	float					zoom_camDispertionFrac;
+	float					zoom_camMaxAngleHorz;
+	float					zoom_camStepAngleHorz;
+
 protected:
 	//фактор увеличени€ дисперсии при максимальной изношености 
 	//(на сколько процентов увеличитс€ дисперси€)

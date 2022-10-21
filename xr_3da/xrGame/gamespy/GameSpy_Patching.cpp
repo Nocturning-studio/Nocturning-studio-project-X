@@ -40,7 +40,7 @@ void __cdecl GS_ptPatchCallback ( PTBool available, PTBool mandatory, const char
 	if (!MainMenu()) return;
 	if (!available)
 	{
-		Msg("No new patches are available.");
+		//Msg("No new patches are available.");
 		if (g_bInformUserThatNoPatchFound)
 			MainMenu()->OnNoNewPatchFound();		
 		return;

@@ -1,4 +1,12 @@
 #pragma once
+#include "..\xr_3da\XR_IOConsole.h"
+
+extern ENGINE_API Flags32 ps_psp_ls_flags;
+enum
+{
+	PSP_VIEW = (1ul << 1ul),
+	NORMAL_VIEW = (1ul << 2ul)
+};
 
 #define CMD0(cls)					{ static cls x##cls();				Console->AddCommand(&x##cls);}
 #define CMD1(cls,p1)				{ static cls x##cls(p1);			Console->AddCommand(&x##cls);}

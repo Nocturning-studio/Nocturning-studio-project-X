@@ -14,7 +14,7 @@
 #pragma warning(disable:4530)
 #pragma warning(disable:4267)
 
-//#define LUABIND_NO_EXCEPTIONS
+#define LUABIND_NO_EXCEPTIONS
 
 extern "C" {
 	//#define BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION

@@ -147,13 +147,13 @@ u32	mem_usage_impl	(HANDLE heap_handle, u32* pBlocksUsed, u32* pBlocksFree)
 	case _HEAPEND:
 		break;
 	case _HEAPBADPTR:
-		FATAL			("bad pointer to heap");
+		//FATAL			("bad pointer to heap");
 		break;
 	case _HEAPBADBEGIN:
-		FATAL			("bad start of heap");
+		//FATAL			("bad start of heap");
 		break;
 	case _HEAPBADNODE:
-		FATAL			("bad node in heap");
+		//FATAL			("bad node in heap");
 		break;
 	}
 	return (u32) total;

@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#pragma comment(lib,"xr_3DA")
+#pragma comment(lib,"xr_3da")
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 

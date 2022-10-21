@@ -328,6 +328,56 @@ void CWeapon::Load		(LPCSTR section)
 	camStepAngleHorz	= pSettings->r_float		(section,"cam_step_angle_horz"	); 
 	camStepAngleHorz	= deg2rad					(camStepAngleHorz);	
 	camDispertionFrac			= READ_IF_EXISTS(pSettings, r_float, section, "cam_dispertion_frac",	0.7f);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//(Deathman, подглядев у Morrey) дисперсия стрельбы в прицеле
+#pragma todo("Deathman to all: Замените пожалуйста мой дебилизм на нормальную реализацию из зова Припяти")
+
+	zoom_camMaxAngle		= camMaxAngle;
+	zoom_camRelaxSpeed		= camRelaxSpeed;
+	zoom_camRelaxSpeed_AI	= camRelaxSpeed_AI;
+	zoom_camDispersion		= camDispersion;
+	zoom_camDispersionInc	= camDispersionInc;
+	zoom_camDispertionFrac	= camDispertionFrac;
+	zoom_camMaxAngleHorz	= camMaxAngleHorz;
+	zoom_camStepAngleHorz	= camStepAngleHorz;
+
+	//подбрасывание камеры в прицеле во время отдачи
+	if (pSettings->line_exist(section, "zoom_cam_max_angle")) {
+		zoom_camMaxAngle = pSettings->r_float(section, "zoom_cam_max_angle");
+		zoom_camMaxAngle = deg2rad(zoom_camMaxAngle);
+	}
+
+	if (pSettings->line_exist(section, "zoom_cam_relax_speed")) {
+		zoom_camRelaxSpeed = pSettings->r_float(section, "zoom_cam_relax_speed");
+		zoom_camRelaxSpeed = deg2rad(zoom_camRelaxSpeed);
+	}
+
+	if (pSettings->line_exist(section, "zoom_cam_relax_speed_ai"))
+	{
+		zoom_camRelaxSpeed_AI = pSettings->r_float(section, "zoom_cam_relax_speed_ai");
+		zoom_camRelaxSpeed_AI = deg2rad(zoom_camRelaxSpeed_AI);
+	}
+	else
+	{
+		zoom_camRelaxSpeed_AI = zoom_camRelaxSpeed;
+	}
+
+	if (pSettings->line_exist(section, "zoom_cam_max_angle_horz")) {
+		zoom_camMaxAngleHorz = pSettings->r_float(section, "zoom_cam_max_angle_horz");
+		zoom_camMaxAngleHorz = deg2rad(zoom_camMaxAngleHorz);
+	}
+
+	if (pSettings->line_exist(section, "zoom_cam_step_angle_horz")) {
+		zoom_camStepAngleHorz = pSettings->r_float(section, "zoom_cam_step_angle_horz");
+		zoom_camStepAngleHorz = deg2rad(zoom_camStepAngleHorz);
+	}
+
+	if (pSettings->line_exist(section, "zoom_cam_dispertion_frac")) {
+		zoom_camDispertionFrac = READ_IF_EXISTS(pSettings, r_float, section, "zoom_cam_dispertion_frac", 0.7f);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	//  [8/2/2005]
 	//m_fParentDispersionModifier = READ_IF_EXISTS(pSettings, r_float, section, "parent_dispersion_modifier",1.0f);
 	m_fPDM_disp_base			= READ_IF_EXISTS(pSettings, r_float, section, "PDM_disp_base",	1.0f);

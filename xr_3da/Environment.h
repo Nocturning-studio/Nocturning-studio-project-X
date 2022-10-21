@@ -195,6 +195,9 @@ protected:
 
 	float					fGameTime;
 public:
+
+	shared_str m_FirstWeather;
+
 	float					wind_strength_factor;
 	float					wind_gust_factor;
 	// Environments

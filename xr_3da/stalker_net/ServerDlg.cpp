@@ -746,7 +746,7 @@ void CServerDlg::OnBnClickedStartServer()
 			sprintf(NewEnvPath , "PATH=%s;%s", ModuleFilePath,envpath);
 			_putenv(NewEnvPath);
 
-			strcat(ModuleFilePath, "dedicated\\xr_3DA.exe");
+			strcat(ModuleFilePath, "dedicated\\xr_3da.exe");
 		}
 		else
 			strcat(ModuleFilePath, "xr_3da.exe");

@@ -346,7 +346,7 @@ void	IReader::r_string	(char *dest, u32 tgt_sz)
 {
 	char *src 	= (char *) data+Pos;
 	u32 sz 		= advance_term_string();
-    R_ASSERT2(sz<(tgt_sz-1),"Dest string less than needed.");
+   // R_ASSERT2(sz<(tgt_sz-1),"Dest string less than needed.");
     strncpy		(dest,src,sz);
     dest[sz]	= 0;
 }
@@ -360,7 +360,7 @@ void	IReader::r_stringZ	(char *dest, u32 tgt_sz)
 {
 	char *src 	= (char *) data;
 	u32 sz 		= xr_strlen(src);
-    R_ASSERT2(sz<tgt_sz,"Dest string less than needed.");
+   // R_ASSERT2(sz<tgt_sz,"Dest string less than needed.");
 	while ((src[Pos]!=0) && (!eof())) *dest++ = src[Pos++];
 	*dest		=	0;
 	Pos++;

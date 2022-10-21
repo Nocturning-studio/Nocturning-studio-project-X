@@ -183,17 +183,31 @@ void	CActor::HitSector(CObject* who, CObject* weapon)
 
 void CActor::on_weapon_shot_start		(CWeapon *weapon)
 {	
+	#pragma todo("Deathman to all: Замените пожалуйста мой дебилизм на нормальную реализацию из зова Припяти")
 	CWeaponMagazined* pWM = smart_cast<CWeaponMagazined*> (weapon);
 	//*
 	CCameraShotEffector				*effector = smart_cast<CCameraShotEffector*>	(Cameras().GetCamEffector(eCEShot)); 
 	if (!effector) {
-		effector					= 
-			(CCameraShotEffector*)Cameras().AddCamEffector(
-			xr_new<CCameraShotEffector>(weapon->camMaxAngle,
-			weapon->camRelaxSpeed,
-			weapon->camMaxAngleHorz,
-			weapon->camStepAngleHorz,
-			weapon->camDispertionFrac)	);
+		if (IsZoomAimingMode()) {
+			effector =
+				(CCameraShotEffector*)Cameras().AddCamEffector(
+					xr_new<CCameraShotEffector>(
+						weapon->zoom_camMaxAngle,
+						weapon->zoom_camRelaxSpeed,
+						weapon->zoom_camMaxAngleHorz,
+						weapon->zoom_camStepAngleHorz,
+						weapon->zoom_camDispertionFrac));
+		}
+		else {
+			effector =
+				(CCameraShotEffector*)Cameras().AddCamEffector(
+					xr_new<CCameraShotEffector>(
+						weapon->camMaxAngle,
+						weapon->camRelaxSpeed,
+						weapon->camMaxAngleHorz,
+						weapon->camStepAngleHorz,
+						weapon->camDispertionFrac));
+		}
 	}
 	R_ASSERT						(effector);
 
