@@ -900,6 +900,13 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_BLOOM_OLD) ? '1' : '0';
 	++len;
 
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES)) {
+		defines[def_it].Name = "USE_WET_SURFACES";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_WET_SURFACES) ? '1' : '0';;
+	++len;
 	//////////////////////////////////////////////////////////////////////////
 	// Bump types
 	//////////////////////////////////////////////////////////////////////////

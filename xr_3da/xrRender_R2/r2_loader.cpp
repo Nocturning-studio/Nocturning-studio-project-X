@@ -63,6 +63,7 @@ void CRender::level_Load(IReader* fs)
 		}
 
 		//...and alternate/fast geometry
+		g_pGamePersistent->LoadTitle("st_loading_fast_geometry");
 		{
 			CStreamReader			*geom = FS.rs_open("$level$","level.geomx");
 			R_ASSERT2				(geom, "level.geomX");

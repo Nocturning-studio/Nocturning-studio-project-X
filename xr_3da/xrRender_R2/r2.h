@@ -20,6 +20,7 @@
 
 #include "../irenderable.h"
 #include "../fmesh.h"
+#include "../xrRender/xrRender_console.h"
 
 // definition
 class CRender													:	public R_dsgraph_structure

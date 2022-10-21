@@ -131,7 +131,8 @@ enum
 	R2FLAG_DOF								= (1 << 23),
 	R2FLAG_MBLUR							= (1 << 24),
 	R2FLAG_GLOSS_RGB						= (1 << 25),
-	R2FLAG_AA_EDGE_DETECT					= (1 << 26)
+	R2FLAG_AA_EDGE_DETECT					= (1 << 26),
+	R2FLAG_WET_SURFACES						= (1 << 27)
 };
 
 extern void						xrRender_initconsole	();

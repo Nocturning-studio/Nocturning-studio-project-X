@@ -17,7 +17,7 @@ xr_token							qpreset_token[] = {
 
 u32 ps_aa = 1;
 xr_token aa_token[] = {
-	{"off", 0},
+//	{"off", 0},
 	{"edge_sampling", 1},
 	{"dlaa", 2},
 	{"fxaa", 3},
@@ -362,6 +362,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
 
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
+
+	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
 
 	// Common
 	CMD1(CCC_Screenshot, "screenshot");
