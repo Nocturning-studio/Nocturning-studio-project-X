@@ -14,7 +14,9 @@
 
 #pragma once
 
+#ifdef USE_PLACER_NEW
 #include "InPlaceNew.h"
+#endif
 #include "StrHolder.h"
 #include "StrStream.h"
 

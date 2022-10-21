@@ -16,14 +16,14 @@ class ENGINE_API CDemoRecord :
 {
 private:
 	int			iCount;
-	IWriter*	file;
+	IWriter* file;
 	Fvector		m_HPB;
 	Fvector		m_Position;
 	Fmatrix		m_Camera;
 	u32			m_Stage;
 
 	Fvector		m_vT;
-    Fvector		m_vR;
+	Fvector		m_vR;
 	Fvector		m_vVelocity;
 	Fvector		m_vAngularVelocity;
 
@@ -41,24 +41,24 @@ private:
 	float		m_fAngSpeed2;
 	float		m_fAngSpeed3;
 
-	void		MakeCubeMapFace			(Fvector &D, Fvector &N);
-	void		MakeLevelMapProcess		();
-	void		MakeScreenshotFace		();
-	void		RecordKey				();
-	void		MakeCubemap				();
-	void		MakeScreenshot			();
-	void		MakeLevelMapScreenshot	();
+	void		MakeCubeMapFace(Fvector& D, Fvector& N);
+	void		MakeLevelMapProcess();
+	void		MakeScreenshotFace();
+	void		RecordKey();
+	void		MakeCubemap();
+	void		MakeScreenshot();
+	void		MakeLevelMapScreenshot();
 public:
-				CDemoRecord				(const char *name, float life_time=60*60*1000);
+	CDemoRecord(const char* name, float life_time = 60 * 60 * 1000);
 	virtual		~CDemoRecord();
 
-	virtual void IR_OnKeyboardPress		(int dik);
-	virtual void IR_OnKeyboardHold		(int dik);
-	virtual void IR_OnMouseMove			(int dx, int dy);
-	virtual void IR_OnMouseHold			(int btn);
-	
-	virtual BOOL Overlapped				(){return m_bOverlapped;}
-	virtual	BOOL Process				(Fvector &p, Fvector &d, Fvector &n, float& fFov, float& fFar, float& fAspect);
+	virtual void IR_OnKeyboardPress(int dik);
+	virtual void IR_OnKeyboardHold(int dik);
+	virtual void IR_OnMouseMove(int dx, int dy);
+	virtual void IR_OnMouseHold(int btn);
+
+	virtual BOOL Overlapped() { return m_bOverlapped; }
+	virtual	BOOL Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar, float& fAspect);
 };
 
 #endif // !defined(AFX_FDEMORECORD_H__D7638760_FB61_11D3_B4E3_4854E82A090D__INCLUDED_)

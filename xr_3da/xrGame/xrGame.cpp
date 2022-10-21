@@ -17,10 +17,10 @@
 
 #ifdef NDEBUG
 namespace std {
-	void terminate()
+	/*void terminate()
 	{
 		abort();
-	}
+	}*/
 }
 #endif // #ifdef NDEBUG
 

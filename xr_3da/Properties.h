@@ -13,7 +13,7 @@
 
 enum	xrProperties
 {
-	xrPID_MARKER	= 0,
+	xrPID_MARKER = 0,
 	xrPID_MATRIX,		// really only name(stringZ) is written into stream
 	xrPID_CONSTANT,		// really only name(stringZ) is written into stream
 	xrPID_TEXTURE,		// really only name(stringZ) is written into stream
@@ -25,7 +25,7 @@ enum	xrProperties
 	xrPID_OBJECT,		// really only name(stringZ) is written into stream
 	xrPID_STRING,		// really only name(stringZ) is written into stream
 	xrPID_MARKER_TEMPLATE,
-	xrPID_FORCEDWORD=u32(-1)
+	xrPID_FORCEDWORD = u32(-1)
 };
 
 struct	xrP_Integer
@@ -34,7 +34,7 @@ struct	xrP_Integer
 	int					min;
 	int					max;
 
-	xrP_Integer() : value(0), min(0), max(255)	{}
+	xrP_Integer() : value(0), min(0), max(255) {}
 };
 
 struct	xrP_Float
@@ -43,13 +43,13 @@ struct	xrP_Float
 	float				min;
 	float				max;
 
-	xrP_Float()	: value(0), min(0), max(1)		{}
+	xrP_Float() : value(0), min(0), max(1) {}
 };
 
 struct	xrP_BOOL
 {
 	BOOL				value;
-	xrP_BOOL() : value(FALSE)					{}
+	xrP_BOOL() : value(FALSE) {}
 };
 
 struct	xrP_TOKEN
@@ -64,7 +64,7 @@ struct	xrP_TOKEN
 
 	//--- elements:		(ID,string64)
 
-	xrP_TOKEN()	: IDselected(0), Count(0)		{}
+	xrP_TOKEN() : IDselected(0), Count(0) {}
 };
 
 struct	xrP_CLSID
@@ -73,7 +73,7 @@ struct	xrP_CLSID
 	u32				Count;
 	//--- elements:		(...)
 
-	xrP_CLSID()	: Selected(0), Count(0)			{}
+	xrP_CLSID() : Selected(0), Count(0) {}
 };
 
 struct	xrP_Template
@@ -88,23 +88,23 @@ class ENGINE_API	CPropertyBase
 protected:
 
 public:
-	virtual 	LPCSTR		getName			()								= 0;
-	virtual		LPCSTR		getComment		()								= 0;
+	virtual 	LPCSTR		getName() = 0;
+	virtual		LPCSTR		getComment() = 0;
 
-	virtual		void		Save			(IWriter&	fs)					= 0;
-	virtual		void		Load			(IReader&	fs, u16 version)	= 0;
+	virtual		void		Save(IWriter& fs) = 0;
+	virtual		void		Load(IReader& fs, u16 version) = 0;
 };
 
 // Writers
-IC void		xrPWRITE		(IWriter& fs, u32 ID, LPCSTR name, LPCVOID data, u32 size )
+IC void		xrPWRITE(IWriter& fs, u32 ID, LPCSTR name, LPCVOID data, u32 size)
 {
-	fs.w_u32			(ID);
-	fs.w_stringZ		(name);
-	if (data && size)	fs.w(data,size);
+	fs.w_u32(ID);
+	fs.w_stringZ(name);
+	if (data && size)	fs.w(data, size);
 }
-IC void		xrPWRITE_MARKER	(IWriter& fs, LPCSTR name)
+IC void		xrPWRITE_MARKER(IWriter& fs, LPCSTR name)
 {
-	xrPWRITE	(fs,xrPID_MARKER,name,0,0);
+	xrPWRITE(fs, xrPID_MARKER, name, 0, 0);
 }
 
 #define xrPWRITE_PROP(FS,name,ID,data)\
@@ -113,15 +113,15 @@ IC void		xrPWRITE_MARKER	(IWriter& fs, LPCSTR name)
 }
 
 // Readers
-IC u32	xrPREAD			(IReader& fs)
+IC u32	xrPREAD(IReader& fs)
 {
-	u32 T		= fs.r_u32();
-	fs.skip_stringZ	();
+	u32 T = fs.r_u32();
+	fs.skip_stringZ();
 	return		T;
 }
-IC void		xrPREAD_MARKER	(IReader& fs)
+IC void		xrPREAD_MARKER(IReader& fs)
 {
-	R_ASSERT(xrPID_MARKER==xrPREAD(fs));
+	R_ASSERT(xrPID_MARKER == xrPREAD(fs));
 }
 
 #define xrPREAD_PROP(fs,ID,data) \

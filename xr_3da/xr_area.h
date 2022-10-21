@@ -27,45 +27,45 @@ public:
 #ifdef DEBUG
 	ref_shader							sh_debug;
 	clQueryCollision					q_debug;			// MT: dangerous
-	xr_vector<std::pair<Fsphere,u32> >	dbg_S;				// MT: dangerous
+	xr_vector<std::pair<Fsphere, u32> >	dbg_S;				// MT: dangerous
 #endif
 
 private:
-	BOOL								_RayTest			( const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object);
-	BOOL								_RayPick			( const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::rq_result& R, CObject* ignore_object );
-	BOOL								_RayQuery			( collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
-	BOOL								_RayQuery2			( collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
-	BOOL								_RayQuery3			( collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
+	BOOL								_RayTest(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object);
+	BOOL								_RayPick(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt, collide::rq_result& R, CObject* ignore_object);
+	BOOL								_RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
+	BOOL								_RayQuery2(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
+	BOOL								_RayQuery3(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
 public:
-										CObjectSpace		( );
-										~CObjectSpace		( );
+	CObjectSpace();
+	~CObjectSpace();
 
-	void								Load				( );
+	void								Load();
 
 	// Occluded/No
-	BOOL								RayTest				( const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object);
+	BOOL								RayTest(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object);
 
 	// Game raypick (nearest) - returns object and addititional params
-	BOOL								RayPick				( const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::rq_result& R, CObject* ignore_object );
+	BOOL								RayPick(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt, collide::rq_result& R, CObject* ignore_object);
 
 	// General collision query
-	BOOL								RayQuery			( collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
-	BOOL								RayQuery			( collide::rq_results& dest, ICollisionForm* target, const collide::ray_defs& rq);
+	BOOL								RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object);
+	BOOL								RayQuery(collide::rq_results& dest, ICollisionForm* target, const collide::ray_defs& rq);
 	// void								BoxQuery			( collide::rq_results& dest, const Fbox& B, const Fmatrix& M, u32 flags=clGET_TRIS|clGET_BOXES|clQUERY_STATIC|clQUERY_DYNAMIC);
 
-	int									GetNearest			( xr_vector<CObject*>&	q_nearest, ICollisionForm *obj, float range );
-	int									GetNearest			( xr_vector<CObject*>&	q_nearest, const Fvector &point, float range, CObject* ignore_object );
+	int									GetNearest(xr_vector<CObject*>& q_nearest, ICollisionForm* obj, float range);
+	int									GetNearest(xr_vector<CObject*>& q_nearest, const Fvector& point, float range, CObject* ignore_object);
 
-	CDB::TRI*							GetStaticTris		() { return Static.get_tris();	}
-	Fvector*							GetStaticVerts		() { return Static.get_verts(); }
-	CDB::MODEL*							GetStaticModel		() { return &Static;			}
+	CDB::TRI* GetStaticTris() { return Static.get_tris(); }
+	Fvector* GetStaticVerts() { return Static.get_verts(); }
+	CDB::MODEL* GetStaticModel() { return &Static; }
 
-	const Fbox&							GetBoundingVolume	() { return m_BoundingVolume;}
+	const Fbox& GetBoundingVolume() { return m_BoundingVolume; }
 
 	// Debugging
 #ifdef DEBUG
-	void								dbgRender			();
-	ref_shader							dbgGetShader		()	{ return sh_debug;	}
+	void								dbgRender();
+	ref_shader							dbgGetShader() { return sh_debug; }
 #endif
 };
 

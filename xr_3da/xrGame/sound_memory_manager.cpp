@@ -88,7 +88,7 @@ IC	void CSoundMemoryManager::update_sound_threshold			()
 	VERIFY		(!fis_zero(m_decrease_factor));
 	VERIFY		(m_sound_decrease_quant);
 	// t = max(t*f^((tc - tl)/tq),min_threshold)
-	m_sound_threshold		= _max(
+	m_sound_threshold		= _max<float>(
 		m_self_sound_factor*
 		m_sound_threshold*
 		exp(

@@ -13,10 +13,8 @@ ENGINE_API xrXRC XRC;
 
 xrXRC::xrXRC()
 {
-
 }
 
 xrXRC::~xrXRC()
 {
-
 }

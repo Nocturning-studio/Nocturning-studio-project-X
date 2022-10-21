@@ -3,7 +3,7 @@
 
 #include "soundrender_coreD.h"
 #include "soundrender_targetD.h"
-#include <eax.h>
+#include <eax\eax.h>
 
 CSoundRender_CoreD*	SoundRenderD= 0;
 
@@ -60,8 +60,8 @@ void CSoundRender_CoreD::_initialize	(u64 window)
 	bPresent			= FALSE;
 
 	// DirectX device
-	if( FAILED			( EAXDirectSoundCreate8( NULL, &pDevice, NULL ) ) )
-		if( FAILED		( DirectSoundCreate8( NULL, &pDevice, NULL ) ) )	return;
+	if( FAILED			( EAXDirectSoundCreate( NULL, &pDevice, NULL ) ) )
+		if( FAILED		( DirectSoundCreate( NULL, &pDevice, NULL ) ) )	return;
 	if( FAILED			( pDevice->SetCooperativeLevel(  (HWND)window, DSSCL_PRIORITY ) ) )	
 	{
 		_destroy();
@@ -103,7 +103,7 @@ void CSoundRender_CoreD::_initialize	(u64 window)
 	R_CHK(pBuffer->Play			(0,0,DSBPLAY_LOOPING));
 
 	// Get listener interface.
-	R_CHK(pBuffer->QueryInterface( IID_IDirectSound3DListener8, (VOID**)&pListener ));
+	R_CHK(pBuffer->QueryInterface( IID_IDirectSound3DListener, (VOID**)&pListener ));
 	R_ASSERT					(pListener);
 
     // Create property set

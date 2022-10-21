@@ -17,27 +17,27 @@ ENGINE_API extern Flags32		psHUD_Flags;
 class ENGINE_API IRender_Visual;
 class CUI;
 
-class ENGINE_API CCustomHUD:
+class ENGINE_API CCustomHUD :
 	public DLL_Pure,
-	public IEventReceiver	
+	public IEventReceiver
 {
 public:
-					CCustomHUD				();
-	virtual			~CCustomHUD				();
+	CCustomHUD();
+	virtual			~CCustomHUD();
 
-	virtual		void		Load					(){;}
-	
-	virtual		void		Render_First			(){;}
-	virtual		void		Render_Last				(){;}
-	
-	virtual		void		OnFrame					(){;}
-	virtual		void		OnEvent					(EVENT E, u64 P1, u64 P2){;}
+	virtual		void		Load() { ; }
 
-	virtual IC	CUI*		GetUI					()=0;
-	virtual void			OnScreenRatioChanged	()=0;
-	virtual void			OnDisconnected			()=0;
-	virtual void			OnConnected				()=0;
-	virtual void			net_Relcase				(CObject *object) = 0;
+	virtual		void		Render_First() { ; }
+	virtual		void		Render_Last() { ; }
+
+	virtual		void		OnFrame() { ; }
+	virtual		void		OnEvent(EVENT E, u64 P1, u64 P2) { ; }
+
+	virtual IC	CUI* GetUI() = 0;
+	virtual void			OnScreenRatioChanged() = 0;
+	virtual void			OnDisconnected() = 0;
+	virtual void			OnConnected() = 0;
+	virtual void			net_Relcase(CObject* object) = 0;
 };
 
 extern ENGINE_API CCustomHUD* g_hud;

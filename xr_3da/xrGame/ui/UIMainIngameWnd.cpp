@@ -57,6 +57,7 @@ void test_key	(int dik);
 void test_update();
 #endif
 
+#include <functional>
 
 using namespace InventoryUtilities;
 

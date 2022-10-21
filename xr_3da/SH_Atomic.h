@@ -6,40 +6,39 @@
 
 #pragma pack(push,4)
 
-
 //////////////////////////////////////////////////////////////////////////
 // Atomic resources
 //////////////////////////////////////////////////////////////////////////
-struct	ENGINE_API		SVS				: public xr_resource_named							{
-	IDirect3DVertexShader9*				vs;
+struct	ENGINE_API		SVS : public xr_resource_named {
+	IDirect3DVertexShader9* vs;
 	R_constant_table					constants;
-	~SVS			();
+	~SVS();
 };
-typedef	resptr_core<SVS,resptr_base<SVS> >													ref_vs;
+typedef	resptr_core<SVS, resptr_base<SVS> >													ref_vs;
 
 //////////////////////////////////////////////////////////////////////////
-struct	ENGINE_API		SPS				: public xr_resource_named							{
-	IDirect3DPixelShader9*				ps;
+struct	ENGINE_API		SPS : public xr_resource_named {
+	IDirect3DPixelShader9* ps;
 	R_constant_table					constants;
-	~SPS			();
+	~SPS();
 };
-typedef	resptr_core<SPS,resptr_base<SPS> >													ref_ps;
+typedef	resptr_core<SPS, resptr_base<SPS> >													ref_ps;
 
 //////////////////////////////////////////////////////////////////////////
-struct	ENGINE_API		SState			: public xr_resource_flagged						{
-	IDirect3DStateBlock9*				state;
+struct	ENGINE_API		SState : public xr_resource_flagged {
+	IDirect3DStateBlock9* state;
 	SimulatorStates						state_code;
-	~SState			();
+	~SState();
 };
-typedef	resptr_core<SState,resptr_base<SState> >											ref_state;
+typedef	resptr_core<SState, resptr_base<SState> >											ref_state;
 
 //////////////////////////////////////////////////////////////////////////
-struct	ENGINE_API		SDeclaration	: public xr_resource_flagged						{
-	IDirect3DVertexDeclaration9*		dcl;
+struct	ENGINE_API		SDeclaration : public xr_resource_flagged {
+	IDirect3DVertexDeclaration9* dcl;
 	xr_vector<D3DVERTEXELEMENT9>		dcl_code;
-	~SDeclaration	();
+	~SDeclaration();
 };
-typedef	resptr_core<SDeclaration,resptr_base<SDeclaration> >								ref_declaration;
+typedef	resptr_core<SDeclaration, resptr_base<SDeclaration> >								ref_declaration;
 
 #pragma pack(pop)
 #endif //sh_atomicH

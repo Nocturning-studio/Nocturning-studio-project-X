@@ -2,10 +2,8 @@ function printf(fmt,...)
 	log(string.format(fmt,unpack(arg)))
 end
 
+--[[
 t_point_att 	= "internal\\internal_light_attpoint"
-t_rt 		= "$user$rendertarget"
-t_distort	= "$user$distort"
-t_noise		= "fx\\fx_noise2"
 
 function r1_lspot	(shader, t_base, vs, aref)
 	shader:begin	(vs,"add_spot")
@@ -37,3 +35,4 @@ function r1_lpoint	(shader, t_base, vs, aref)
 			: clamp		()
 			: f_linear	()
 end
+]]--

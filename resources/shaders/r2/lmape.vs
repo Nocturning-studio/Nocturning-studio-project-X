@@ -1,5 +1,12 @@
 #include "common.h"
 
+struct 	v_lmap
+{
+	float4 	pos		: POSITION;		// (float,float,float,1)
+	float4	norm	: NORMAL;		// (nx,ny,nz,hemi occlusion)
+	float2 	tc0		: TEXCOORD0;	// (base)
+	float2	tc1		: TEXCOORD1;	// (lmap/compressed)
+};
 struct vf
 {
 	float4 hpos	: POSITION;
@@ -12,17 +19,16 @@ struct vf
 	float  fog	: FOG;
 };
 
-vf main (v_lmap v)
+vf main_vs_2_0 	(v_static v)
 {
 	vf 		o;
 
 	float3 	pos_w	= v.P;
-	float3 	norm_w	= normalize		(unpack_normal(v.N));
+	float3 	norm_w	= normalize(unpack_normal(v.Nh));
 	
-	o.hpos 		= mul			(m_VP, v.P);			// xform, input in world coords
-	o.tc0		= unpack_tc_base	(v.uv0,v.T.w,v.B.w);		// copy tc
-//	o.tc0		= unpack_tc_base	(v.tc0);			// copy tc
-	o.tc1		= unpack_tc_lmap	(v.uv1);			// copy tc 
+	o.hpos 		= mul				(m_VP, v.P);			// xform, input in world coords
+	o.tc0		= unpack_tc_base	(v.tc,v.T.w,v.B.w);		// copy tc
+	o.tc1		= unpack_tc_lmap	(v.lmh);			// copy tc 
 	o.tch 		= o.tc1;
 	o.tc2		= calc_reflection	(pos_w, norm_w);
 	o.c0		= v_hemi(norm_w);	// just hemisphere

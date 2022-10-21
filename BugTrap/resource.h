@@ -2,6 +2,10 @@
 // Microsoft Visual C++ generated include file.
 // Used by BugTrap.rc
 //
+#ifndef IDC_STATIC
+#define IDC_STATIC              -1
+#endif
+
 #define IDD_MAIN_DLG                    101
 #define IDD_ABOUT_BUGTRAP_DLG           102
 #define IDD_MACHINE_INFO_DLG            103

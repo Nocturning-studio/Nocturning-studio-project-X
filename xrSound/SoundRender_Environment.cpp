@@ -5,7 +5,7 @@
 #include "soundrender_environment.h"
 #pragma warning(push)
 #pragma warning(disable:4995)
-#include <eax.h>
+#include <eax\eax.h>
 #pragma warning(pop)
 
 CSoundRender_Environment::CSoundRender_Environment(void)

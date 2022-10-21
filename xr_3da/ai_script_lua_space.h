@@ -14,4 +14,3 @@ namespace Lua {
 
 	int __cdecl LuaOut(ELuaMessageType tLuaMessageType, LPCSTR caFormat, ...);
 }
-

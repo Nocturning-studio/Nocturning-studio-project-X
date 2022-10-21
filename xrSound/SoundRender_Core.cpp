@@ -7,7 +7,7 @@
 #include "soundrender_emitter.h"
 #pragma warning(push)
 #pragma warning(disable:4995)
-#include <eax.h>
+#include <eax\eax.h>
 #pragma warning(pop)
 
 int		psSoundTargets			= 16;

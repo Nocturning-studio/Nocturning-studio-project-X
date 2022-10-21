@@ -12,12 +12,12 @@ vf   _main (v_model v)
 {
   vf     o;
 
-  o.hpos     = mul      (m_WVP, v.pos);    // xform, input in world coords
-  o.tc0    = v.tc.xy;          // copy tc
+  o.hpos     	= mul      (m_WVP, v.P);    // xform, input in world coords
+  o.tc0    	= v.tc.xy;          // copy tc
 
   // calculate fade
-  float3  dir_v   = normalize    (mul(m_WV,v.pos));
-  float3   norm_v   = normalize     (mul(m_WV,v.norm));
+	float3  dir_v   = normalize    (mul(m_WV,v.P));
+	float3  norm_v  = normalize    (mul(m_WV,v.N));
   float   fade   = 1-abs      (dot(dir_v,norm_v));
   o.c0    = fade;
 

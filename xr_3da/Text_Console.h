@@ -5,15 +5,15 @@
 class ENGINE_API CTextConsole :
 	public CConsole
 {
-	typedef CConsole inherited ;
+	typedef CConsole inherited;
 private:
-	HWND*	m_pMainWnd;
+	HWND* m_pMainWnd;
 
 	HWND	m_hConsoleWnd;
-	void	CreateConsoleWnd	();
-	
-	HWND	m_hLogWnd;	
-	void	CreateLogWnd		();
+	void	CreateConsoleWnd();
+
+	HWND	m_hLogWnd;
+	void	CreateLogWnd();
 
 	bool	m_bScrollLog;
 	u32		m_dwStartLine;
@@ -37,16 +37,16 @@ public:
 	CTextConsole();
 	virtual ~CTextConsole();
 
-	virtual	void	Initialize	();
-	virtual	void	Destroy		();
+	virtual	void	Initialize();
+	virtual	void	Destroy();
 
-	void	AddString	(LPCSTR string);
-	void	OnPaint		();
+	void	AddString(LPCSTR string);
+	void	OnPaint();
 
-	virtual void	OnRender			(void);
-	virtual void	OnFrame				(void);
+	virtual void	OnRender(void);
+	virtual void	OnFrame(void);
 
-	virtual void	IR_OnKeyboardPress		(int dik);
+	virtual void	IR_OnKeyboardPress(int dik);
 };
 
 //extern ENGINE_API CTextConsole* TextConsole;

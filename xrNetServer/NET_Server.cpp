@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "dxerr9.h"
+#include "dxerr.h"
 #include "NET_Common.h"
 #include "net_server.h"
 
@@ -9,6 +9,14 @@
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
+
+// {DA825E1B-6830-43d7-835D-0B5AD82956A2}
+const GUID CLSID_DirectPlay8Server =
+{ 0xda825e1b, 0x6830, 0x43d7, { 0x83, 0x5d, 0x0b, 0x5a, 0xd8, 0x29, 0x56, 0xa2 } };
+
+// {5102DACE-241B-11d3-AEA7-006097B01411}
+const GUID IID_IDirectPlay8Server =
+{ 0x5102dace, 0x241b, 0x11d3, { 0xae, 0xa7, 0x00, 0x60, 0x97, 0xb0, 0x14, 0x11 } };
 
 static	INetLog* pSvNetLog = NULL; 
 

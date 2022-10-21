@@ -4,33 +4,33 @@
 #pragma once
 
 #ifdef _EDITOR
-	#include "..\editors\ECore\stdafx.h"
+#include "..\editors\ECore\stdafx.h"
 #else
 
 #include "../xrCore/xrCore.h"
 
 #ifdef _DEBUG
-	#define D3D_DEBUG_INFO
+#define D3D_DEBUG_INFO
 #endif
 
 #pragma warning(disable:4995)
 #include <d3d9.h>
-#include <dplay8.h>
+#include <DPlay\dplay8.h>
 #pragma warning(default:4995)
 
 // you must define ENGINE_BUILD then building the engine itself
 // and not define it if you are about to build DLL
 #ifndef NO_ENGINE_API
-	#ifdef	ENGINE_BUILD
-		#define DLL_API			__declspec(dllimport)
-		#define ENGINE_API		__declspec(dllexport)
-	#else
-		#define DLL_API			__declspec(dllexport)
-		#define ENGINE_API		__declspec(dllimport)
-	#endif
+#ifdef	ENGINE_BUILD
+#define DLL_API			__declspec(dllimport)
+#define ENGINE_API		__declspec(dllexport)
 #else
-	#define ENGINE_API
-	#define DLL_API
+#define DLL_API			__declspec(dllexport)
+#define ENGINE_API		__declspec(dllimport)
+#endif
+#else
+#define ENGINE_API
+#define DLL_API
 #endif // NO_ENGINE_API
 
 #define ECORE_API
@@ -48,7 +48,7 @@
 
 #include "../xrSound/sound.h"
 
-extern ENGINE_API CInifile *pGameIni;
+extern ENGINE_API CInifile* pGameIni;
 
 #pragma comment( lib, "xrCore.lib"	)
 #pragma comment( lib, "xrCDB.lib"	)
@@ -66,11 +66,11 @@ extern ENGINE_API CInifile *pGameIni;
 #endif
 
 #if	!defined(DEBUG) || defined(FORCE_NO_EXCEPTIONS)
-	// release: no error checking, no exceptions
-	#define LUABIND_NO_EXCEPTIONS
-	#define BOOST_THROW_EXCEPTION_HPP_INCLUDED
-	namespace std	{	class exception; }
-	namespace boost {	ENGINE_API	void throw_exception(const std::exception &A);	};
+// release: no error checking, no exceptions
+#define LUABIND_NO_EXCEPTIONS
+#define BOOST_THROW_EXCEPTION_HPP_INCLUDED
+namespace std { class exception; }
+namespace boost { ENGINE_API	void throw_exception(const std::exception& A); };
 #endif
 #define LUABIND_DONT_COPY_STRINGS
 

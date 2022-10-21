@@ -17,6 +17,8 @@
 #define		R_R2	2
 #define		RENDER	R_R1
 
+#include "../../xrCore/xrCore.h"
+
 #include "..\resourcemanager.h"
 #include "..\vis_common.h"
 #include "..\render.h"

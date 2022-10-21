@@ -530,6 +530,8 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		append_path		("$app_root$",Core.ApplicationPath,0,FALSE);
     }
 
+	append_path("$work_dir$", Core.WorkingPath, 0, FALSE);
+
 	if (m_Flags.is(flTargetFolderOnly))
 		append_path	("$fs_root$", "", 0, FALSE);
 	else
@@ -537,8 +539,14 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		fs_ltx					= (fs_name && fs_name[0])?fs_name:FSLTX;
 		pFSltx						= r_open(fs_ltx); 
 		
-		if (!pFSltx && m_Flags.is(flScanAppRoot) )
-			pFSltx			= r_open("$app_root$",fs_ltx); 
+		if (!pFSltx && m_Flags.is(flScanAppRoot) && strstr(Core.Params, "-fsbindir"))
+		{
+			pFSltx = r_open("$app_root$", fs_ltx);
+		}
+		else if (!pFSltx && m_Flags.is(flScanAppRoot))
+		{
+			pFSltx = r_open("$work_dir$", fs_ltx);
+		}
 
 		if (!pFSltx)
 		{

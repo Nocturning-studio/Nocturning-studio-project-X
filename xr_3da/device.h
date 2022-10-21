@@ -22,25 +22,25 @@ class	ENGINE_API	CGammaControl;
 #define DEVICE_RESET_PRECACHE_FRAME_COUNT 10
 
 // refs
-class ENGINE_API CRenderDevice 
+class ENGINE_API CRenderDevice
 {
 private:
-    // Main objects used for creating and rendering the 3D scene
-    u32										m_dwWindowStyle;
-    RECT									m_rcWindowBounds;
-    RECT									m_rcWindowClient;
+	// Main objects used for creating and rendering the 3D scene
+	u32										m_dwWindowStyle;
+	RECT									m_rcWindowBounds;
+	RECT									m_rcWindowClient;
 
 	u32										Timer_MM_Delta;
 	CTimer_paused							Timer;
 	CTimer_paused							TimerGlobal;
 	CTimer									TimerMM;
 
-	void									_Create		(LPCSTR shName);
-	void									_Destroy	(BOOL	bKeepTextures);
+	void									_Create(LPCSTR shName);
+	void									_Destroy(BOOL	bKeepTextures);
 	void									_SetupStates();
 public:
-    HWND									m_hWnd;
-	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
+	HWND									m_hWnd;
+	LRESULT									MsgProc(HWND, UINT, WPARAM, LPARAM);
 
 	u32										dwFrame;
 	u32										dwPrecacheFrame;
@@ -56,16 +56,17 @@ public:
 	ref_shader								m_SelectionShader;
 
 	BOOL									m_bNearer;
-	void									SetNearer	(BOOL enabled)
+	void									SetNearer(BOOL enabled)
 	{
-		if (enabled&&!m_bNearer){
-			m_bNearer						= TRUE;
-			mProject._43					-= EPS_L;
-		}else if (!enabled&&m_bNearer){
-			m_bNearer						= FALSE;
-			mProject._43					+= EPS_L;
+		if (enabled && !m_bNearer) {
+			m_bNearer = TRUE;
+			mProject._43 -= EPS_L;
 		}
-		RCache.set_xform_project			(mProject);
+		else if (!enabled && m_bNearer) {
+			m_bNearer = FALSE;
+			mProject._43 += EPS_L;
+		}
+		RCache.set_xform_project(mProject);
 	}
 public:
 	// Registrators
@@ -80,8 +81,8 @@ public:
 	xr_vector		<fastdelegate::FastDelegate0<> >	seqParallel;
 
 	// Dependent classes
-	CResourceManager*						Resources;	  
-	CStats*									Statistic;
+	CResourceManager* Resources;
+	CStats* Statistic;
 	CGammaControl							Gamma;
 
 	// Engine flow-control
@@ -102,58 +103,58 @@ public:
 	Fmatrix									mInvFullTransform;
 	float									fFOV;
 	float									fASPECT;
-	
-	CRenderDevice			()
-		#ifdef PROFILE_CRITICAL_SECTIONS
-			: mt_csEnter(MUTEX_PROFILE_ID(CRenderDevice::mt_csEnter))
-			,mt_csLeave(MUTEX_PROFILE_ID(CRenderDevice::mt_csLeave))
-		#endif // PROFILE_CRITICAL_SECTIONS
+
+	CRenderDevice()
+#ifdef PROFILE_CRITICAL_SECTIONS
+		: mt_csEnter(MUTEX_PROFILE_ID(CRenderDevice::mt_csEnter))
+		, mt_csLeave(MUTEX_PROFILE_ID(CRenderDevice::mt_csLeave))
+#endif // PROFILE_CRITICAL_SECTIONS
 	{
-	    m_hWnd              = NULL;
-		b_is_Active			= FALSE;
-		b_is_Ready			= FALSE;
-		Timer.Start			();
-		m_bNearer			= FALSE;
+		m_hWnd = NULL;
+		b_is_Active = FALSE;
+		b_is_Ready = FALSE;
+		Timer.Start();
+		m_bNearer = FALSE;
 	};
 
-	void	Pause							(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
-	BOOL	Paused							();
+	void	Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
+	BOOL	Paused();
 
 	// Scene control
-	void PreCache							(u32 frames);
-	BOOL Begin								();
-	void Clear								();
-	void End								();
-	void FrameMove							();
-	
-	void overdrawBegin						();
-	void overdrawEnd						();
+	void PreCache(u32 frames);
+	BOOL Begin();
+	void Clear();
+	void End();
+	void FrameMove();
+
+	void overdrawBegin();
+	void overdrawEnd();
 
 	// Mode control
-	void DumpFlags							();
-	IC	 CTimer_paused* GetTimerGlobal		()	{ return &TimerGlobal;								}
-	u32	 TimerAsync							()	{ return TimerGlobal.GetElapsed_ms();				}
-	u32	 TimerAsync_MMT						()	{ return TimerMM.GetElapsed_ms() +	Timer_MM_Delta; }
+	void DumpFlags();
+	IC	 CTimer_paused* GetTimerGlobal() { return &TimerGlobal; }
+	u32	 TimerAsync() { return TimerGlobal.GetElapsed_ms(); }
+	u32	 TimerAsync_MMT() { return TimerMM.GetElapsed_ms() + Timer_MM_Delta; }
 
 	// Creation & Destroying
-	void Create								(void);
-	void Run								(void);
-	void Destroy							(void);
-	void Reset								(bool precache = true);
+	void Create(void);
+	void Run(void);
+	void Destroy(void);
+	void Reset(bool precache = true);
 
-	void Initialize							(void);
-	void ShutDown							(void);
+	void Initialize(void);
+	void ShutDown(void);
 
 public:
-	void time_factor						(const float &time_factor)
+	void time_factor(const float& time_factor)
 	{
-		Timer.time_factor		(time_factor);
-		TimerGlobal.time_factor	(time_factor);
+		Timer.time_factor(time_factor);
+		TimerGlobal.time_factor(time_factor);
 	}
-	
-	IC	const float &time_factor			() const
+
+	IC	const float& time_factor() const
 	{
-		VERIFY					(Timer.time_factor() == TimerGlobal.time_factor());
+		VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
 		return					(Timer.time_factor());
 	}
 
@@ -162,7 +163,7 @@ public:
 	xrCriticalSection	mt_csLeave;
 	volatile BOOL		mt_bMustExit;
 
-	ICF		void			remove_from_seq_parallel	(const fastdelegate::FastDelegate0<> &delegate)
+	ICF		void			remove_from_seq_parallel(const fastdelegate::FastDelegate0<>& delegate)
 	{
 		xr_vector<fastdelegate::FastDelegate0<> >::iterator I = std::find(
 			seqParallel.begin(),
@@ -170,7 +171,7 @@ public:
 			delegate
 		);
 		if (I != seqParallel.end())
-			seqParallel.erase	(I);
+			seqParallel.erase(I);
 	}
 };
 

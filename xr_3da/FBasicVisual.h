@@ -13,27 +13,27 @@ class	ENGINE_API				CKinematicsAnimated;
 class	ENGINE_API				CKinematics;
 class	ENGINE_API				IParticleCustom;
 
-struct	ENGINE_API				IRender_Mesh	
+struct	ENGINE_API				IRender_Mesh
 {
 	// format
 	ref_geom					rm_geom;
 
 	// verts
-	IDirect3DVertexBuffer9*		p_rm_Vertices;
+	IDirect3DVertexBuffer9* p_rm_Vertices;
 	u32							vBase;
 	u32							vCount;
 
 	// indices
-	IDirect3DIndexBuffer9*		p_rm_Indices;
+	IDirect3DIndexBuffer9* p_rm_Indices;
 	u32							iBase;
 	u32							iCount;
 	u32							dwPrimitives;
 
-	IRender_Mesh				()				{ p_rm_Vertices=0; p_rm_Indices=0;						}
-	virtual ~IRender_Mesh		();
+	IRender_Mesh() { p_rm_Vertices = 0; p_rm_Indices = 0; }
+	virtual ~IRender_Mesh();
 private:
-	IRender_Mesh				(const IRender_Mesh& other);
-	void	operator=			( const IRender_Mesh& other);
+	IRender_Mesh(const IRender_Mesh& other);
+	void	operator=			(const IRender_Mesh& other);
 };
 
 // The class itself
@@ -41,30 +41,30 @@ class	ENGINE_API				IRender_Visual
 {
 public:
 #ifdef _EDITOR
-    ogf_desc					desc		;
+	ogf_desc					desc;
 #endif
 #ifdef DEBUG
-	shared_str					dbg_name	;
+	shared_str					dbg_name;
 #endif
 public:
 	// Common data for rendering
-	u32							Type		;				// visual's type
-	vis_data					vis			;				// visibility-data
-	ref_shader					shader		;				// pipe state, shared
+	u32							Type;				// visual's type
+	vis_data					vis;				// visibility-data
+	ref_shader					shader;				// pipe state, shared
 
-	virtual void				Render						(float LOD)		{};		// LOD - Level Of Detail  [0..1], Ignored
-	virtual void				Load						(const char* N, IReader *data, u32 dwFlags);
-	virtual void				Release						();						// Shared memory release
-	virtual void				Copy						(IRender_Visual* from);
-	virtual void				Spawn						()				{};
-	virtual void				Depart						()				{};
+	virtual void				Render(float LOD) {};		// LOD - Level Of Detail  [0..1], Ignored
+	virtual void				Load(const char* N, IReader* data, u32 dwFlags);
+	virtual void				Release();						// Shared memory release
+	virtual void				Copy(IRender_Visual* from);
+	virtual void				Spawn() {};
+	virtual void				Depart() {};
 
-	virtual	CKinematics*		dcast_PKinematics			()				{ return 0;	}
-	virtual	CKinematicsAnimated*dcast_PKinematicsAnimated	()				{ return 0;	}
-	virtual IParticleCustom*	dcast_ParticleCustom		()				{ return 0;	}
+	virtual	CKinematics* dcast_PKinematics() { return 0; }
+	virtual	CKinematicsAnimated* dcast_PKinematicsAnimated() { return 0; }
+	virtual IParticleCustom* dcast_ParticleCustom() { return 0; }
 
-	IRender_Visual				();
-	virtual ~IRender_Visual		();
+	IRender_Visual();
+	virtual ~IRender_Visual();
 };
 
 #endif // !FBasicVisualH

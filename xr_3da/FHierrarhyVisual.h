@@ -15,12 +15,12 @@ public:
 	xr_vector<IRender_Visual*>		children;
 	BOOL							bDontDelete;
 public:
-    				FHierrarhyVisual();
+	FHierrarhyVisual();
 	virtual 		~FHierrarhyVisual();
 
-	virtual void	Load			(const char* N, IReader *data, u32 dwFlags);
-	virtual void	Copy			(IRender_Visual *pFrom);
-	virtual void	Release			();
+	virtual void	Load(const char* N, IReader* data, u32 dwFlags);
+	virtual void	Copy(IRender_Visual* pFrom);
+	virtual void	Release();
 };
 
 #endif //FHierrarhyVisualH

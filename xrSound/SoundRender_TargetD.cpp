@@ -57,8 +57,8 @@ BOOL CSoundRender_TargetD::_initialize	()
 	// Create
 	bDX7				= FALSE;
 	R_CHK	(SoundRenderD->pDevice->CreateSoundBuffer(&dsBD, &pBuffer_base, NULL));
-	R_CHK	(pBuffer_base->QueryInterface(IID_IDirectSoundBuffer8,(void **)&pBuffer));
-	R_CHK	(pBuffer->QueryInterface(IID_IDirectSound3DBuffer8,	(void **)&pControl));
+	R_CHK	(pBuffer_base->QueryInterface(IID_IDirectSoundBuffer,(void **)&pBuffer));
+	R_CHK	(pBuffer->QueryInterface(IID_IDirectSound3DBuffer,	(void **)&pControl));
 	R_ASSERT(pBuffer_base && pBuffer && pControl);
 
 	R_CHK	(pControl->SetConeAngles		(DS3D_DEFAULTCONEANGLE,DS3D_DEFAULTCONEANGLE,DS3D_DEFERRED));

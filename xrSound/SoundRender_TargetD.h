@@ -10,8 +10,8 @@ class CSoundRender_TargetD: public CSoundRender_Target
 	typedef CSoundRender_Target	inherited;
 
 	IDirectSoundBuffer*			pBuffer_base;
-	IDirectSoundBuffer8*		pBuffer;
-	IDirectSound3DBuffer8*		pControl;
+	IDirectSoundBuffer*			pBuffer;
+	IDirectSound3DBuffer*		pControl;
 
 	BOOL						bDX7;
 

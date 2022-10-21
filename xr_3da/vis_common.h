@@ -12,15 +12,15 @@ struct	vis_data
 	u32			hom_frame;			// when to perform test - shedule
 	u32			hom_tested;			// when it was last time tested
 
-	IC void		clear			()
+	IC void		clear()
 	{
-		sphere.P.set	(0,0,0);
-		sphere.R		= 0;
-		box.invalidate	();
-		marker			= 0;
-		accept_frame	= 0;
-		hom_frame		= 0;
-		hom_tested		= 0;
+		sphere.P.set(0, 0, 0);
+		sphere.R = 0;
+		box.invalidate();
+		marker = 0;
+		accept_frame = 0;
+		hom_frame = 0;
+		hom_tested = 0;
 	}
 };
 #pragma pack(pop)

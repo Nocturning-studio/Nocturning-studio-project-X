@@ -3,6 +3,8 @@
 
 using namespace luabind;
 
+typedef void(xr_vector<SZoneMapEntityData>::* zone_vector_push)(const xr_vector<SZoneMapEntityData>::value_type&);
+
 #pragma optimize("s",on)
 void SZoneMapEntityData::script_register(lua_State *L)
 {
@@ -14,8 +16,7 @@ void SZoneMapEntityData::script_register(lua_State *L)
 			.def_readwrite("color",				&SZoneMapEntityData::color	),
 
 			luabind::class_< xr_vector<SZoneMapEntityData> >("ZoneMapEntities")
-				.def("push_back",				(void (xr_vector<SZoneMapEntityData>::*)(SZoneMapEntityData&))(&xr_vector<SZoneMapEntityData>::push_back))
-			
+				.def("push_back", (void (xr_vector<SZoneMapEntityData>::*)(SZoneMapEntityData&))((zone_vector_push)&xr_vector<SZoneMapEntityData>::push_back))
 		];
 }
 

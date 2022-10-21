@@ -29,9 +29,9 @@ class CSoundRender_CoreD: public CSoundRender_Core
 	BOOL 				EAXTestSupport			(BOOL bDeferred);
 public:
 	// DSound interface
-	IDirectSound8*				pDevice;		// The device itself
+	IDirectSound*				pDevice;		// The device itself
 	IDirectSoundBuffer*			pBuffer;		// The primary buffer (mixer destination)
-	IDirectSound3DListener8*	pListener;
+	IDirectSound3DListener*		pListener;
 	LPKSPROPERTYSET				pExtensions;
 	DSCAPS						dsCaps;
 	SListener					Listener;
