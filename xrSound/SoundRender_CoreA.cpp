@@ -129,7 +129,7 @@ void CSoundRender_CoreA::_initialize(u64 window)
 	A_CHK(alListenerf(AL_GAIN, 1.f));
 
 	// Check for EAX extension
-	bEAX = deviceDesc.eax && !deviceDesc.eax_unwanted;
+	bEAX = true;//deviceDesc.eax && !deviceDesc.eax_unwanted;
 	eaxSet = (EAXSet)alGetProcAddress((const ALchar *)"EAXSet");
 	if (eaxSet == NULL)
 		bEAX = false;
@@ -141,6 +141,13 @@ void CSoundRender_CoreA::_initialize(u64 window)
 	{
 		bDeferredEAX = EAXTestSupport(TRUE);
 		bEAX = EAXTestSupport(FALSE);
+
+		if (bEAX)
+			Msg("- SOUND: OpenAL: EAX Supported");
+		else
+			Msg("! SOUND: OpenAL: EAX Unsupported");
+		if (bDeferredEAX)
+			Msg("! SOUND: OpenAL: EAX Deffered");
 	}
 
 	// inherited initialize
