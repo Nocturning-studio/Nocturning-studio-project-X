@@ -37,6 +37,8 @@ private:
 	int m_filterIndex;
 	void Enumerate();
 
+	LPCSTR GetDeviceName(u32 index);
+
 public:
 	ALDeviceList();
 	~ALDeviceList();
