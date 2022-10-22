@@ -22,6 +22,7 @@ protected:
 
 	IC	bool		check_file			(LPCSTR fname);
 	ref_sound		m_music;
+	ref_sound		m_music_stereo;
 	ref_sound		m_whell;
 	ref_sound		m_whell_click;
 	bool			m_bRandom;

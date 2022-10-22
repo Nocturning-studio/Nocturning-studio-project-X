@@ -63,23 +63,25 @@ void CMMSound::music_Play() {
 
 	int i = Random.randI(m_play_list.size());
 
-#pragma todo("Deathman to Deathman - Добавить нормальное стерео, а не этот бред с одним каналом с двух сторон")
-
 	string_path		_path;
 	strconcat(sizeof(_path), _path, m_play_list[i].c_str(), ".ogg");
 	VERIFY(FS.exist("$game_sounds$", _path));
-	m_music.create(_path, st_Music, sg_SourceType);
-	m_music.play_at_pos(NULL, Fvector().set(0.f, 0.f, 0.3f), sm_2D);
+
+	m_music_stereo.create(_path, st_Music, sg_SourceType);
+	m_music_stereo.play(NULL, sm_2D);
 }
 
-void CMMSound::music_Update() {
+void CMMSound::music_Update()
+{
 	if (Device.Paused()) return;
-	if (0 == m_music._feedback())
+
+	if ( 0==m_music_stereo._feedback() )
 		music_Play();
 }
 
-void CMMSound::music_Stop() {
-	m_music.stop();
+void CMMSound::music_Stop()
+{
+	m_music_stereo.stop();
 }
 
 void CMMSound::all_Stop() {

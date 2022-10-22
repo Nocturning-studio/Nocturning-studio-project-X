@@ -26,9 +26,6 @@ CUISequenceVideoItem::CUISequenceVideoItem(CUISequencer* owner) :CUISequenceItem
 
 CUISequenceVideoItem::~CUISequenceVideoItem()
 {
-	//m_sound[0].stop			();
-	//m_sound[1].stop			();
-
 	m_sound.stop();
 	delete_data(m_wnd);
 }
@@ -85,10 +82,13 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 
 		m_wnd->SetWndSize(wnd_size);
 	}
-	LPCSTR m_snd_name = xml->Read("sound", 0, "");
+	LPCSTR snd_name = xml->Read("sound", 0, "");
 
-#pragma todo("Deathman to Deathman - Добавить нормальное стерео, а не этот бред с одним каналом с двух сторон")
-	if (m_snd_name) { m_sound.create(m_snd_name, st_Effect, sg_Undefined);	VERIFY(m_sound._handle()); }
+	if (snd_name && snd_name[0])
+	{
+		m_sound.create(snd_name, st_Effect, sg_Undefined);
+		VERIFY(m_sound._handle());
+	}
 	xml->SetLocalRoot(_stored_root);
 }
 

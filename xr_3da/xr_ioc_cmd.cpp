@@ -17,19 +17,6 @@
 
 extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
 
-xr_token							snd_freq_token[] = {
-	{ "22khz",						sf_22K										},
-	{ "44khz",						sf_44K										},
-	{ 0,							0											}
-};
-xr_token							snd_model_token[] = {
-	{ "Default",					0											},
-	{ "Normal",						1											},
-	{ "Light",						2											},
-	{ "High",						3											},
-	{ 0,							0											}
-};
-
 extern xr_token* vid_mode_token;
 
 xr_token							vid_quality_token[] = {
@@ -591,8 +578,6 @@ void CCC_Register()
 	// Sound
 	CMD2(CCC_Float, "snd_volume_eff", &psSoundVEffects);
 	CMD2(CCC_Float, "snd_volume_music", &psSoundVMusic);
-		CMD3(CCC_Token,		"snd_freq",				&psSoundFreq,		snd_freq_token			);
-		CMD3(CCC_Token,		"snd_model",			&psSoundModel,		snd_model_token			);
 	CMD1(CCC_SND_Restart, "snd_restart");
 	CMD3(CCC_Mask, "snd_acceleration", &psSoundFlags, ss_Hardware);
 	CMD3(CCC_Mask, "snd_efx", &psSoundFlags, ss_EAX);
