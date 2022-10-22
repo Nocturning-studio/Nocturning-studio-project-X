@@ -412,7 +412,7 @@ CSoundRender_Environment*	CSoundRender_Core::get_environment			( const Fvector& 
 
 void						CSoundRender_Core::env_apply		()
 {
-/*
+
 	// Force all sounds to change their environment
 	// (set their positions to signal changes in environment)
 	for (u32 it=0; it<s_emitters.size(); it++)
@@ -421,7 +421,7 @@ void						CSoundRender_Core::env_apply		()
 		const CSound_params*	pParams		= pEmitter->get_params	();
 		pEmitter->set_position	(pParams->position);
 	}
-*/
+
     bListenerMoved			= TRUE;
 }
 

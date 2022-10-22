@@ -45,6 +45,7 @@ BOOL CLevel::Load_GameSpecific_After()
 	string_path fn_game;
 	if (FS.exist(fn_game, "$level$", "level.ps_static"))
 	{
+		g_pGamePersistent->LoadTitle("st_loading_static_particles");
 		IReader* F = FS.r_open(fn_game);
 		CParticlesObject* pStaticParticles;
 		u32 chunk = 0;
@@ -73,6 +74,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		// loading sound environment
 		if (FS.exist(fn_game, "$level$", "level.snd_env"))
 		{
+			g_pGamePersistent->LoadTitle("st_loading_sound_environment");
 			IReader* F = FS.r_open(fn_game);
 			::Sound->set_geometry_env(F);
 			FS.r_close(F);
@@ -80,6 +82,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		// loading SOM
 		if (FS.exist(fn_game, "$level$", "level.som"))
 		{
+			g_pGamePersistent->LoadTitle("st_loading_som");
 			IReader* F = FS.r_open(fn_game);
 			::Sound->set_geometry_som(F);
 			FS.r_close(F);
