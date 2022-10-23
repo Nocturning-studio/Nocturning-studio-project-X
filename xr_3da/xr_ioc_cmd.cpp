@@ -84,6 +84,44 @@ public:
 	virtual void Execute(LPCSTR args) { g_pStringContainer->dump(); }
 };
 
+#ifndef DEDICATED_SERVER
+class CCC_soundDevice : public CCC_Token
+{
+	typedef CCC_Token inherited;
+public:
+	CCC_soundDevice(LPCSTR N) :inherited(N, &snd_device_id, NULL) {};
+	virtual			~CCC_soundDevice()
+	{}
+
+	virtual void Execute(LPCSTR args)
+	{
+		GetToken();
+		if (!tokens)				return;
+		inherited::Execute(args);
+	}
+
+	virtual void	Status(TStatus& S)
+	{
+		GetToken();
+		if (!tokens)				return;
+		inherited::Status(S);
+	}
+
+	virtual xr_token* GetToken()
+	{
+		tokens = snd_devices_token;
+		return inherited::GetToken();
+	}
+
+	virtual void Save(IWriter* F)
+	{
+		GetToken();
+		if (!tokens)				return;
+		inherited::Save(F);
+	}
+};
+#endif
+
 //-----------------------------------------------------------------------
 class CCC_MotionsStat : public IConsole_Command
 {
@@ -604,6 +642,10 @@ void CCC_Register()
 	CMD2(CCC_Float, "cam_inert", &psCamInert);
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
 	CMD3(CCC_Mask, "cam_psp", &ps_psp_ls_flags, PSP_VIEW);
+
+#ifndef DEDICATED_SERVER
+	CMD1(CCC_soundDevice, "snd_device");
+#endif
 
 	CMD1(CCC_r2, "renderer");
 	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);

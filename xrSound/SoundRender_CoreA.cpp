@@ -83,9 +83,9 @@ void CSoundRender_CoreA::_initialize(u64 window)
 
 	pDeviceList->SelectBestDevice();
 
-	int defaultIdx = pDeviceList->GetDefaultDevice();
-	R_ASSERT(defaultIdx >= 0 && defaultIdx < pDeviceList->GetNumDevices());
-	const ALDeviceDesc &deviceDesc = pDeviceList->GetDeviceDesc(defaultIdx);
+	pDeviceList->SelectBestDevice();
+	R_ASSERT(snd_device_id >= 0 && snd_device_id < pDeviceList->GetNumDevices());
+	const ALDeviceDesc& deviceDesc = pDeviceList->GetDeviceDesc(snd_device_id);
 
 	// OpenAL device
 	pDevice = alcOpenDevice(deviceDesc.name.c_str());
