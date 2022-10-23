@@ -41,7 +41,6 @@ CGamePersistent::CGamePersistent(void)
 {
 	m_game_params.m_e_game_type	= GAME_ANY;
 	// ambient particles
-	CParticlesObject* ambient_particles;
 	ambient_effect_next_time = 0;
 	ambient_effect_stop_time = 0;
 	ambient_particles = 0;
@@ -243,7 +242,7 @@ void CGamePersistent::WeathersUpdate()
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
 				}
 				else
-					if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
+					//if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
 					{
 						ref_sound& snd = ch.get_rnd_sound();
 
@@ -264,7 +263,7 @@ void CGamePersistent::WeathersUpdate()
 						VERIFY(snd._handle());
 						u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
 						ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
-						//					Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
+						Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
 					}
 			}
 			// start effect
