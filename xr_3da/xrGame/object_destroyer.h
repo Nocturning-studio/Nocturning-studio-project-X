@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <queue>
 
 struct CDestroyer {
 	IC	static void delete_data(LPCSTR data)
