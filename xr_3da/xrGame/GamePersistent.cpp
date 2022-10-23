@@ -51,6 +51,8 @@ CGamePersistent::CGamePersistent(void)
 	ambient_effect_wind_out_time = 0.f;
 	ambient_effect_wind_on = false;
 
+	ZeroMemory(ambient_sound_next_time, sizeof(ambient_sound_next_time));
+
 	m_pUI_core					= NULL;
 	m_pMainMenu					= NULL;
 	m_intro						= NULL;
@@ -242,7 +244,7 @@ void CGamePersistent::WeathersUpdate()
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
 				}
 				else
-					//if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
+					if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
 					{
 						ref_sound& snd = ch.get_rnd_sound();
 
