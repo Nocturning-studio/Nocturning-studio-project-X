@@ -7,6 +7,8 @@
 #include "rain.h"
 #include "resourcemanager.h"
 
+#include "../xrSE_Factory/object_broker.h"
+
 //-----------------------------------------------------------------------------
 // Environment modifier
 //-----------------------------------------------------------------------------
@@ -42,43 +44,121 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 //-----------------------------------------------------------------------------
 // Environment ambient
 //-----------------------------------------------------------------------------
-void CEnvAmbient::load(const shared_str& sect)
+void CEnvAmbient::SSndChannel::load(CInifile& config, LPCSTR sect)
 {
-	section = sect;
+	m_load_section = sect;
+
+	m_sound_dist.x = config.r_float(m_load_section, "min_distance");
+	m_sound_dist.y = config.r_float(m_load_section, "max_distance");
+	m_sound_period.x = config.r_s32(m_load_section, "period0");
+	m_sound_period.y = config.r_s32(m_load_section, "period1");
+	m_sound_period.z = config.r_s32(m_load_section, "period2");
+	m_sound_period.w = config.r_s32(m_load_section, "period3");
+
+	//	m_sound_period			= config.r_ivector4(sect,"sound_period");
+	R_ASSERT(m_sound_period.x <= m_sound_period.y && m_sound_period.z <= m_sound_period.w);
+	//	m_sound_period.mul		(1000);// now in ms
+	//	m_sound_dist			= config.r_fvector2(sect,"sound_dist"); 
+	R_ASSERT2(m_sound_dist.y > m_sound_dist.x, sect);
+
+	LPCSTR snds = config.r_string(sect, "sounds");
+	u32 cnt = _GetItemCount(snds);
+	string_path				tmp;
+	R_ASSERT3(cnt, "sounds empty", sect);
+
+	m_sounds.resize(cnt);
+
+	for (u32 k = 0; k < cnt; ++k)
+	{
+		_GetItem(snds, k, tmp);
+		m_sounds[k].create(tmp, st_Effect, sg_SourceType);
+	}
+}
+
+CEnvAmbient::SEffect* CEnvAmbient::create_effect(CInifile& config, LPCSTR id)
+{
+	SEffect* result = new SEffect();
+	result->life_time = iFloor(config.r_float(id, "life_time") * 1000.f);
+	result->particles = config.r_string(id, "particles");
+	VERIFY(result->particles.size());
+	result->offset = config.r_fvector3(id, "offset");
+	result->wind_gust_factor = config.r_float(id, "wind_gust_factor");
+
+	if (config.line_exist(id, "sound"))
+		result->sound.create(config.r_string(id, "sound"), st_Effect, sg_SourceType);
+
+	if (config.line_exist(id, "wind_blast_strength")) {
+		result->wind_blast_strength = config.r_float(id, "wind_blast_strength");
+		result->wind_blast_direction.setHP(deg2rad(config.r_float(id, "wind_blast_longitude")), 0.f);
+		result->wind_blast_in_time = config.r_float(id, "wind_blast_in_time");
+		result->wind_blast_out_time = config.r_float(id, "wind_blast_out_time");
+		return							(result);
+	}
+
+	result->wind_blast_strength = 0.f;
+	result->wind_blast_direction.set(0.f, 0.f, 1.f);
+	result->wind_blast_in_time = 0.f;
+	result->wind_blast_out_time = 0.f;
+
+	return								(result);
+}
+
+CEnvAmbient::SSndChannel* CEnvAmbient::create_sound_channel(CInifile& config, LPCSTR id)
+{
+	SSndChannel* result = new SSndChannel();
+	result->load(config, id);
+	return					(result);
+}
+
+CEnvAmbient::~CEnvAmbient()
+{
+	destroy();
+}
+
+void CEnvAmbient::destroy()
+{
+	delete_data(m_effects);
+	delete_data(m_sound_channels);
+}
+
+void CEnvAmbient::load(
+	CInifile& ambients_config,
+	CInifile& sound_channels_config,
+	CInifile& effects_config,
+	const shared_str& sect
+)
+{
+	m_ambients_config_filename = ambients_config.fname();
+	m_load_section = sect;
 	string_path			tmp;
+
 	// sounds
-	if (pSettings->line_exist(sect, "sounds")) {
-		Fvector2 t = pSettings->r_fvector2(sect, "sound_period");
-		sound_period.set(iFloor(t.x * 1000.f), iFloor(t.y * 1000.f));
-		sound_dist = pSettings->r_fvector2(sect, "sound_dist"); if (sound_dist[0] > sound_dist[1]) std::swap(sound_dist[0], sound_dist[1]);
-		LPCSTR snds = pSettings->r_string(sect, "sounds");
-		u32 cnt = _GetItemCount(snds);
-		if (cnt) {
-			sounds.resize(cnt);
-			for (u32 k = 0; k < cnt; ++k)
-				sounds[k].create(_GetItem(snds, k, tmp), st_Effect, sg_SourceType);
-		}
-	}
+	LPCSTR channels = ambients_config.r_string(sect, "sound_channels");
+	u32 cnt = _GetItemCount(channels);
+	//	R_ASSERT3				(cnt,"sound_channels empty", sect.c_str());
+	m_sound_channels.resize(cnt);
+
+	for (u32 i = 0; i < cnt; ++i)
+		m_sound_channels[i] = create_sound_channel(sound_channels_config, _GetItem(channels, i, tmp));
+
 	// effects
-	if (pSettings->line_exist(sect, "effects")) {
-		Fvector2 t = pSettings->r_fvector2(sect, "effect_period");
-		effect_period.set(iFloor(t.x * 1000.f), iFloor(t.y * 1000.f));
-		LPCSTR effs = pSettings->r_string(sect, "effects");
-		u32 cnt = _GetItemCount(effs);
-		if (cnt) {
-			effects.resize(cnt);
-			for (u32 k = 0; k < cnt; ++k) {
-				_GetItem(effs, k, tmp);
-				effects[k].life_time = iFloor(pSettings->r_float(tmp, "life_time") * 1000.f);
-				effects[k].particles = pSettings->r_string(tmp, "particles");		VERIFY(effects[k].particles.size());
-				effects[k].offset = pSettings->r_fvector3(tmp, "offset");
-				effects[k].wind_gust_factor = pSettings->r_float(tmp, "wind_gust_factor");
-				if (pSettings->line_exist(tmp, "sound"))
-					effects[k].sound.create(pSettings->r_string(tmp, "sound"), st_Effect, sg_SourceType);
-			}
-		}
-	}
-	VERIFY(!sounds.empty() || !effects.empty());
+	m_effect_period.set(
+		iFloor(
+			ambients_config.r_float(sect, "min_effect_period") * 1000.f
+		),
+		iFloor(
+			ambients_config.r_float(sect, "max_effect_period") * 1000.f
+		)
+	);
+	LPCSTR effs = ambients_config.r_string(sect, "effects");
+	cnt = _GetItemCount(effs);
+	//	R_ASSERT3				(cnt,"effects empty", sect.c_str());
+
+	m_effects.resize(cnt);
+	for (u32 k = 0; k < cnt; ++k)
+		m_effects[k] = create_effect(effects_config, _GetItem(effs, k, tmp));
+
+	R_ASSERT(!m_sound_channels.empty() || !m_effects.empty());
 }
 
 //-----------------------------------------------------------------------------
@@ -275,10 +355,17 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 CEnvAmbient* CEnvironment::AppendEnvAmb(const shared_str& sect)
 {
 	for (EnvAmbVecIt it = Ambients.begin(); it != Ambients.end(); it++)
-		if ((*it)->name().equal(sect)) return *it;
-	Ambients.push_back(xr_new<CEnvAmbient>());
-	Ambients.back()->load(sect);
-	return Ambients.back();
+		if ((*it)->name().equal(sect))
+			return						(*it);
+
+	Ambients.push_back(new CEnvAmbient());
+	Ambients.back()->load(
+		*m_ambients_config,
+		*m_sound_channels_config,
+		*m_effects_config,
+		sect
+	);
+	return					(Ambients.back());
 }
 
 void	CEnvironment::mods_load()

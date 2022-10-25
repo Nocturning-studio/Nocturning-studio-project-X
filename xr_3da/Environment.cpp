@@ -36,7 +36,8 @@ static const float			MAX_NOISE_FREQ = 0.03f;
 
 //////////////////////////////////////////////////////////////////////////
 // environment
-CEnvironment::CEnvironment()
+CEnvironment::CEnvironment() :
+	m_ambients_config(0)
 {
 	bWFX = false;
 	Current[0] = 0;
@@ -57,6 +58,12 @@ CEnvironment::CEnvironment()
 	wind_strength_factor = 0.f;
 	wind_gust_factor = 0.f;
 
+	wind_blast_strength = 0.f;
+	wind_blast_direction.set(1.f, 0.f, 0.f);
+
+	wind_blast_strength_start_value = 0.f;
+	wind_blast_strength_stop_value = 0.f;
+
 	// fill clouds hemi verts & faces
 	const Fvector* verts;
 	CloudsVerts.resize(xrHemisphereVertices(2, verts));
@@ -72,9 +79,56 @@ CEnvironment::CEnvironment()
 
 	tsky0 = Device.Resources->_CreateTexture("$user$sky0");
 	tsky1 = Device.Resources->_CreateTexture("$user$sky1");
+
+	string_path				file_name;
+	m_ambients_config =
+		new CInifile(
+			FS.update_path(
+				file_name,
+				"$game_config$",
+				"weathers\\ambients.ltx"
+			),
+			TRUE,
+			TRUE,
+			FALSE
+		);
+	m_sound_channels_config =
+		new CInifile(
+			FS.update_path(
+				file_name,
+				"$game_config$",
+				"weathers\\sound_channels.ltx"
+			),
+			TRUE,
+			TRUE,
+			FALSE
+		);
+	m_effects_config =
+		new CInifile(
+			FS.update_path(
+				file_name,
+				"$game_config$",
+				"weathers\\effects.ltx"
+			),
+			TRUE,
+			TRUE,
+			FALSE
+		);
 }
 CEnvironment::~CEnvironment()
 {
+	VERIFY(m_ambients_config);
+	CInifile::Destroy(m_ambients_config);
+	m_ambients_config = 0;
+
+	VERIFY(m_sound_channels_config);
+	CInifile::Destroy(m_sound_channels_config);
+	m_sound_channels_config = 0;
+
+	VERIFY(m_effects_config);
+	CInifile::Destroy(m_effects_config);
+	m_effects_config = 0;
+
 	xr_delete(PerlinNoise1D);
 	OnDeviceDestroy();
 }
