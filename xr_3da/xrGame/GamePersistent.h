@@ -28,6 +28,9 @@ class CGamePersistent:
 	CUISequencer*		m_intro;
 	EVENT				eQuickLoad;
 
+	bool				m_bPickableDOF;
+	Fvector				m_dof[4];	// 0-dest 1-current 2-from 3-original
+
 	fastdelegate::FastDelegate0<> m_intro_event;
 
 	void xr_stdcall		start_logo_intro		();
@@ -41,6 +44,7 @@ class CGamePersistent:
 #endif
 
 	void				WeathersUpdate			();
+	void				UpdateDof				();
 
 public:
 	ui_core*			m_pUI_core;
@@ -76,6 +80,13 @@ public:
 	virtual	void		LoadTitle				(LPCSTR str);
 
 	virtual bool		CanBePaused				();
+
+			void		SetPickableEffectorDOF	(bool bSet);
+			void		SetEffectorDOF			(const Fvector& needed_dof);
+			void		RestoreEffectorDOF		();
+
+	virtual void		GetCurrentDof			(Fvector3& dof);
+	virtual void		SetBaseDof				(const Fvector3& dof);
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent);			}

@@ -43,7 +43,7 @@ public:
 	LPCSTR			Name() { return cName; }
 	void			InvalidSyntax() {
 		TInfo I; Info(I);
-		Msg("~ Invalid syntax in call to '%s'", cName);
+	//	Msg("~ Invalid syntax in call to '%s'", cName);
 		Msg("~ Valid arguments: %s", I);
 	}
 	virtual void	Execute(LPCSTR args) = 0;
@@ -73,6 +73,8 @@ public:
 		else if (EQ(args, "off"))	value->set(mask, FALSE);
 		else if (EQ(args, "1"))		value->set(mask, TRUE);
 		else if (EQ(args, "0"))		value->set(mask, FALSE);
+		else if (EQ(args, "true"))	value->set(mask, TRUE);
+		else if (EQ(args, "false"))	value->set(mask, FALSE);
 		else InvalidSyntax();
 	}
 	virtual void	Status(TStatus& S)
@@ -81,7 +83,7 @@ public:
 	}
 	virtual void	Info(TInfo& I)
 	{
-		strcpy_s(I, "'on/off' or '1/0'");
+		strcpy_s(I, "'on/off', '1/0' or 'true/false'");
 	}
 };
 
@@ -212,6 +214,7 @@ public:
 		min.set(_min);
 		max.set(_max);
 	};
+	Fvector* GetValuePtr() const { return value; };
 
 	virtual void	Execute(LPCSTR args)
 	{

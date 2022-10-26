@@ -73,6 +73,7 @@ public:
 	int				GetInteger(LPCSTR cmd, int& val, int& min, int& max);
 	char* GetToken(LPCSTR cmd);
 	xr_token* GetXRToken(LPCSTR cmd);
+	Fvector* GetFVectorPtr(LPCSTR cmd);
 	//	char *			GetNextValue		(LPCSTR cmd);
 	//	char *			GetPrevValue		(LPCSTR cmd);
 

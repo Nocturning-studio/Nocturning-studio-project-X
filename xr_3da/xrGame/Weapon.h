@@ -234,6 +234,10 @@ protected:
 	//мы перемещаем HUD  
 	float			m_fZoomRotationFactor;
 	bool			m_bHideCrosshairInZoom;
+	//dof
+	bool			m_bZoomDofEnabled;
+	Fvector			m_ZoomDof;
+	Fvector4		m_ReloadDof;
 public:
 
 	IC bool					IsZoomEnabled		()	const	{return m_bZoomEnabled;}
@@ -322,6 +326,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 protected:
 	virtual void			SetDefaults			();
+
+	virtual void			OnStateSwitch		(u32 S);
 
 	//трассирование полета пули
 			void			FireTrace			(const Fvector& P, const Fvector& D);
