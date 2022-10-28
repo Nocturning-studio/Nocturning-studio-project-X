@@ -33,6 +33,7 @@ using namespace InventoryUtilities;
 #include "UIDragDropListEx.h"
 #include "UIOutfitSlot.h"
 #include "UI3tButton.h"
+#include "../GamePersistent.h"
 
 #define				INVENTORY_ITEM_XML		"inventory_item.xml"
 #define				INVENTORY_XML			"inventory_new.xml"
@@ -319,6 +320,8 @@ void CUIInventoryWnd::Show()
 
 	Update								();
 	PlaySnd								(eInvSndOpen);
+
+	GamePersistent().SetPickableEffectorDOF(true);
 }
 
 void CUIInventoryWnd::Hide()
@@ -345,6 +348,8 @@ void CUIInventoryWnd::Hide()
 
 		pActor->SetWeaponHideState(INV_STATE_INV_WND, false);
 	}
+
+	GamePersistent().SetPickableEffectorDOF(false);
 }
 
 void CUIInventoryWnd::AttachAddon(PIItem item_to_upgrade)

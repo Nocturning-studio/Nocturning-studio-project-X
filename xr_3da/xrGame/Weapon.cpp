@@ -1275,7 +1275,7 @@ void CWeapon::OnZoomIn()
 	StopHudInertion();
 
 	if (m_bZoomDofEnabled && !IsScopeAttached())
-		GamePersistent().SetEffectorDOF(m_ZoomDof);
+		GamePersistent().SetPickableEffectorDOF(true);//GamePersistent().SetEffectorDOF(m_ZoomDof);
 }
 
 void CWeapon::OnZoomOut()
@@ -1284,7 +1284,7 @@ void CWeapon::OnZoomOut()
 	m_fZoomFactor = g_fov;
 
 	StartHudInertion();
-	GamePersistent().RestoreEffectorDOF();
+	GamePersistent().SetPickableEffectorDOF(false);//GamePersistent().RestoreEffectorDOF();
 }
 
 CUIStaticItem* CWeapon::ZoomTexture()

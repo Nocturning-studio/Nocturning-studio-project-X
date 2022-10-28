@@ -19,6 +19,8 @@
 #include "ui/UICarBodyWnd.h"
 #include "ui/UIMessageBox.h"
 
+#include "GamePersistent.h"
+
 CUIGameSP::CUIGameSP()
 {
 	m_game			= NULL;
@@ -249,11 +251,15 @@ void CChangeLevelWnd::Show()
 	g_block_pause							= true;
 	Device.Pause							(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
 	bShowPauseString						= FALSE;
+
+	GamePersistent().SetPickableEffectorDOF(true);
 }
 
 void CChangeLevelWnd::Hide()
 {
 	g_block_pause							= false;
 	Device.Pause							(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+
+	GamePersistent().SetPickableEffectorDOF(false);
 }
 
