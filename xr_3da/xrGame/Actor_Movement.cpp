@@ -301,7 +301,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 	//-------------------------------------------------------------------------------	
 	
 
-	if (IsGameTypeSingle() && cam_eff_factor > EPS)
+	//if (IsGameTypeSingle() && cam_eff_factor > EPS)	
+	if (cam_eff_factor > EPS)
 	{
 		LPCSTR state_anm = NULL;
 
