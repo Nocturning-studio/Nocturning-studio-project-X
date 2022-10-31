@@ -88,9 +88,9 @@ xr_token debug_frame_layers_token[] = {
 
 u32 ps_bump_mode = 2;
 xr_token bump_mode_token[] = {
-	{"off", 0},
-	{"parallax", 1},
-	{"steep_parallax", 2},
+	{"normal_mapping", 1},
+	{"parallax_mapping", 2},
+	{"steep_parallax_mapping", 3},
 	{0, 0} };
 
 // Common

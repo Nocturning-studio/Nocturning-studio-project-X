@@ -640,6 +640,9 @@ HRESULT	CRender::shader_compile(
 	char c_gloss_rgb[32];
 	char c_wet_surfaces[32];
 	char c_bloom[32];
+	char c_normal_mapping[32];
+	char c_parallax_mapping[32];
+	char c_steep_parallax_mapping[32];
 
 
 	char sh_name[MAX_PATH] = "";
@@ -1067,7 +1070,16 @@ HRESULT	CRender::shader_compile(
 	// Bump types
 	//////////////////////////////////////////////////////////////////////////
 
-	if (!RImplementation.o.advancedpp || ps_bump_mode == 1) {
+	/*
+	if (RImplementation.o.sunstatic || ps_bump_mode == 1) {
+		defines[def_it].Name = "USE_NORMAL_MAPPING";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + (char)ps_bump_mode;
+	++len;
+
+	if (!RImplementation.o.advancedpp || ps_bump_mode == 2) {
 		defines[def_it].Name = "ALLOW_PARALLAX";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -1075,14 +1087,50 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + (char)ps_bump_mode;
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_bump_mode == 2) {
+	if (RImplementation.o.advancedpp && ps_bump_mode == 3) {
 		defines[def_it].Name = "ALLOW_STEEP_PARALLAX";
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
 	sh_name[len] = '0' + (char)ps_bump_mode;
 	++len;
+	*/
 
+	if (RImplementation.o.sunstatic || ps_bump_mode == 1)
+	{
+		sprintf(c_normal_mapping, "%d", 1);
+		defines[def_it].Name = "USE_NORMAL_MAPPING";
+		defines[def_it].Definition = c_normal_mapping;
+		def_it++;
+		strcat(sh_name, c_normal_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_bump_mode);
+	++len;
+
+	if (!RImplementation.o.advancedpp || ps_bump_mode == 2)
+	{
+		sprintf(c_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_PARALLAX";
+		defines[def_it].Definition = c_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_bump_mode);
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_bump_mode == 3)
+	{
+		sprintf(c_steep_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_STEEP_PARALLAX";
+		defines[def_it].Definition = c_steep_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_steep_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_bump_mode);
+	++len;
 	//////////////////////////////////////////////////////////////////////////
 
 	if (o.forceskinw) {

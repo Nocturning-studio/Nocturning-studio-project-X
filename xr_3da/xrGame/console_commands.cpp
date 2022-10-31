@@ -318,7 +318,7 @@ public:
 	virtual void	Execute			(LPCSTR args)
 	{
 		float				time_factor = (float)atof(args);
-		clamp				(time_factor,.001f,1000.f);
+		clamp				(time_factor,.000000000000001f,100000000.f);
 		Device.time_factor	(time_factor);
 	}
 };
