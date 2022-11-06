@@ -299,6 +299,8 @@ public:
 	void					mods_load();
 	void					mods_unload();
 
+	void					load_level_specific_ambients();
+
 	void					OnFrame();
 
 	void					RenderSky();
