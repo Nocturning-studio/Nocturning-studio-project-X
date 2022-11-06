@@ -270,8 +270,9 @@ void CGamePersistent::WeathersUpdate()
 #endif // DEBUG
 
 						VERIFY(snd._handle());
-						u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
-						ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
+						//u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
+						//ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
+						ambient_sound_next_time[idx] = Device.dwTimeGlobal + iFloor(snd.get_length_sec() * 1000.0f) + ch.get_rnd_sound_time();
 							//	Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
 					}
 			}

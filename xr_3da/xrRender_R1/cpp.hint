@@ -2,3 +2,15 @@
 // (например, имена функций и макросов).
 // Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
 #define CMD3(cls, p1, p2, p3) { static cls x##cls(p1,p2,p3); Console->AddCommand(&x##cls);}
+// Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
+// (например, имена функций и макросов).
+// Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
+#define ENGINE_API
+#define ENGINE_API __declspec(dllexport)
+#define ENGINE_API __declspec(dllimport)
+// Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
+// (например, имена функций и макросов).
+// Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
+#define ENGINE_API
+#define ENGINE_API __declspec(dllexport)
+#define ENGINE_API __declspec(dllimport)

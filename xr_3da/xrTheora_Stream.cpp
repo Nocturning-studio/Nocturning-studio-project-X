@@ -97,8 +97,8 @@ BOOL CTheoraStream::ParseHeaders()
 	if (0 == header_count)		return FALSE;
 
 	// we're expecting more header packets.
+	int ret;
 	while ((header_count && header_count < 3)) {
-		int ret;
 
 		// look for further theora headers
 		while (header_count && (header_count < 3) && 0 != (ret = ogg_stream_packetout(&o_stream_state, &o_packet))) {
@@ -120,7 +120,8 @@ BOOL CTheoraStream::ParseHeaders()
 			ogg_stream_pagein(&o_stream_state, &o_page);
 		}
 		else {
-			int ret = ReadData(); // someone needs more data
+			//int ret = ReadData(); // someone needs more data
+			ret = ReadData(); // someone needs more data
 			if (ret == 0) FATAL("End of file while searching for codec headers.");
 		}
 	}
