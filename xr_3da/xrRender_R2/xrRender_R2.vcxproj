@@ -234,6 +234,7 @@
     <ClInclude Include="blender_deffer_flat.h" />
     <ClInclude Include="blender_deffer_model.h" />
     <ClInclude Include="blender_light_direct.h" />
+    <ClInclude Include="blender_light_direct_cascade.h" />
     <ClInclude Include="blender_light_mask.h" />
     <ClInclude Include="blender_light_occq.h" />
     <ClInclude Include="blender_light_point.h" />
@@ -322,6 +323,7 @@
     <ClCompile Include="blender_deffer_flat.cpp" />
     <ClCompile Include="blender_deffer_model.cpp" />
     <ClCompile Include="blender_light_direct.cpp" />
+    <ClCompile Include="blender_light_direct_cascade.cpp" />
     <ClCompile Include="blender_light_mask.cpp" />
     <ClCompile Include="blender_light_occq.cpp" />
     <ClCompile Include="blender_light_point.cpp" />

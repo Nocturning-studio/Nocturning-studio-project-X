@@ -17,6 +17,7 @@
 #include "..\xrRender\light_db.h"
 #include "light_render_direct.h"
 #include "..\xrRender\LightTrack.h"
+#include "..\xrRender\r_sun_cascades.h"
 
 #include "../irenderable.h"
 #include "../fmesh.h"
@@ -120,6 +121,11 @@ public:
 	float														o_sun			;
 	IDirect3DQuery9*											q_sync_point[2]	;
 	u32															q_sync_count	;
+
+	bool														m_bFirstFrameAfterReset;	// Determines weather the frame is the first after resetting device.
+
+	xr_vector<sun::cascade>										m_sun_cascades;
+
 private:
 	// Loading / Unloading
 	void							LoadBuffers					(CStreamReader	*fs,	BOOL	_alternative);
@@ -145,6 +151,10 @@ public:
 	void							render_sun_near				();
 	void							render_sun_filtered			();
 	void							render_menu					();
+	void							render_sun_cascade			(u32 cascade_ind);
+	void							init_cacades				();
+	void							render_sun_cascades			();
+
 public:
 	ShaderElement*					rimp_select_sh_static		(IRender_Visual	*pVisual, float cdist_sq);
 	ShaderElement*					rimp_select_sh_dynamic		(IRender_Visual	*pVisual, float cdist_sq);
@@ -156,6 +166,7 @@ public:
 	IRender_Sector*					getSectorActive				();
 	IRender_Visual*					model_CreatePE				(LPCSTR name);
 	IRender_Sector*					detectSector				(const Fvector& P, Fvector& D);
+	int								translateSector				(IRender_Sector* pSector);
 
 	// HW-occlusion culling
 	IC u32							occq_begin					(u32&	ID		)	{ return HWOCC.occq_begin	(ID);	}

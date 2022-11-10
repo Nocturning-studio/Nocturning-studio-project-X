@@ -54,6 +54,7 @@ extern ECORE_API	float		ps_r2_tf_Mipbias;
 
 // R2-specific
 extern ECORE_API Flags32		ps_r2_ls_flags;				// r2-only
+extern ECORE_API Flags32		ps_r2_ls_flags_ext;				// r2-only
 extern ECORE_API float			ps_r2_df_parallax_h;		// r2-only
 extern ECORE_API float			ps_r2_df_parallax_range;	// r2-only
 extern ECORE_API float			ps_r2_gmaterial;			// r2-only
@@ -137,6 +138,12 @@ enum
 	R2FLAG_VIGNETTE							= (1 << 24),
 	R2FLAG_CHROMATIC_ABBERATION				= (1 << 25),
 	R2FLAG_BLOOM							= (1 << 26)
+};
+
+enum
+{
+	R2FLAGEXT_SUN_ZCULLING					= (1 << 0),
+	R2FLAGEXT_SUN_OLD						= (1 << 1),
 };
 
 extern void						xrRender_initconsole	();

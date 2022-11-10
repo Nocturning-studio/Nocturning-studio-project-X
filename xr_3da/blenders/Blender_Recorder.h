@@ -86,6 +86,7 @@ public:
 	void				i_Texture(u32 s, LPCSTR	name);
 	void				i_Projective(u32 s, bool	b);
 	void				i_Address(u32 s, u32		address);
+	void				i_BorderColor(u32 s, u32 color);
 	void				i_Filter_Min(u32 s, u32		f);
 	void				i_Filter_Mip(u32 s, u32		f);
 	void				i_Filter_Mag(u32 s, u32		f);

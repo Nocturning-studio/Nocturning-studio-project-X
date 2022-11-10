@@ -195,6 +195,13 @@ void CRender::Render		()
 		return					;
 	};
 	if( !(g_pGameLevel && g_pGameLevel->pHUD) )	return;
+
+	if (m_bFirstFrameAfterReset)
+	{
+		m_bFirstFrameAfterReset = false;
+		return;
+	}
+
 //.	VERIFY					(g_pGameLevel && g_pGameLevel->pHUD);
 
 	// Configure
@@ -381,9 +388,15 @@ void CRender::Render		()
 	// Directional light - fucking sun
 	if (bSUN)	{
 		RImplementation.stats.l_visible		++;
-		render_sun_near						();
-		render_sun							();
-		render_sun_filtered					();
+		if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+			render_sun_cascades					();
+		else
+		{
+			render_sun_near						();
+			render_sun							();
+			render_sun_filtered					();
+		}
+
 		Target->accum_direct_blend			();
 	}
 

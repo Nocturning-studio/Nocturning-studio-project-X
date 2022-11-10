@@ -89,31 +89,32 @@ void CRender::create()
 	m_skinning = -1;
 
 	// hardware
-	//if (ps_r2_ls_flags.test(R2FLAG_ULTRA_SHADOWS)){ //(o.ultra_shadows) {
-	//	o.smapsize = 4096;
-	//}
-	//else{
-	//	o.smapsize = 2048;
-	//}
-
-	switch (ps_sun_quality) {
-	case 0:
-		o.smapsize = 2048;
-		break;
-	case 1:
-		o.smapsize = 3072;
-		break;
-	case 2:
-		o.smapsize = 4096;
-		break;
-	case 3:
-		o.smapsize = 6144;
-		break;
-	case 4:
-		o.smapsize = 8192;
-		break;
-	}
-
+	///////////////////////////////////////////////////
+		//Shadow filter choosing
+		switch (ps_sun_quality)
+		{
+		case 0:
+			ps_shadow_filter_quality = 0;
+			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
+			o.smapsize = 1024;
+			break;
+		case 1:
+			ps_shadow_filter_quality = 0;
+			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
+			o.smapsize = 1536;
+			break;
+		case 2:
+			ps_shadow_filter_quality = 1;
+			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
+			o.smapsize = 2048;
+			break;
+		case 3:
+			ps_shadow_filter_quality = 2;
+			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
+			o.smapsize = 2048;
+			break;
+		}
+	///////////////////////////////////////////////////
 
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
@@ -322,6 +323,10 @@ void CRender::reset_end()
 	Target = xr_new<CRenderTarget>();
 
 	xrRender_apply_tf();
+
+	// Set this flag true to skip the first render frame,
+	// that some data is not ready in the first frame (for example device camera position)
+	m_bFirstFrameAfterReset = true;
 }
 
 void CRender::OnFrame()
@@ -467,7 +472,9 @@ void					CRender::rmNormal()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 CRender::CRender()
+:m_bFirstFrameAfterReset(false)
 {
+	init_cacades();
 }
 
 CRender::~CRender()

@@ -9,9 +9,9 @@ xr_token							qpreset_token[] = {
 	{ "Low",						1											},
 	{ "Default",					2											},
 	{ "High",						3											},
-	{"Maximum",						4											},
-	{"Extreme",						5											},
-	{"Ultra",						6											},
+	{ "Maximum",					4											},
+	{ "Extreme",					5											},
+	{ "Ultra",						6											},
 	{ 0,							0											}
 };
 
@@ -53,8 +53,7 @@ xr_token sun_quality_token[] = {
 	{"low", 0},
 	{"default", 1},
 	{"high", 2},
-	{"extreme", 3},
-	{"ultra", 4},
+	{"ultra", 3},
 	{0, 0} };
 
 u32 ps_blur_type = 0;
@@ -153,6 +152,8 @@ Flags32 ps_r2_ls_flags =
 	R2FLAG_SUN_FOCUS				|
 	R2FLAG_SUN_TSM
 }; // r2-only
+
+Flags32		ps_r2_ls_flags_ext = { 0 };
 
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
@@ -492,7 +493,7 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
 
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
-	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
+//	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
 
 	CMD3(CCC_Token, "r2_blur_type", &ps_blur_type, blur_type_token);
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
@@ -642,6 +643,9 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_dhemi_scale", &ps_r2_dhemi_scale, .5f, 3.f);
 	CMD4(CCC_Float, "r2_dhemi_smooth", &ps_r2_lt_smooth, 0.f, 10.f);
 #endif // DEBUG
+
+	CMD3(CCC_Mask, "r2_shadow_cascede_zcul", &ps_r2_ls_flags_ext, R2FLAGEXT_SUN_ZCULLING);
+	CMD3(CCC_Mask, "r2_shadow_cascede_old", &ps_r2_ls_flags_ext, R2FLAGEXT_SUN_OLD);
 
 	CMD4(CCC_Float, "r2_ls_depth_scale", &ps_r2_ls_depth_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
