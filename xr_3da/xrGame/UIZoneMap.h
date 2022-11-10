@@ -37,5 +37,6 @@ public:
 
 	CUIStatic&					Background		()									{return m_background;};
 	void						SetupCurrentMap	();
+	void						OnSectorChanged (int sector);
 };
 

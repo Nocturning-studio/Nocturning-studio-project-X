@@ -103,20 +103,32 @@ bool CUIZoneMap::ZoomOut()
 
 void CUIZoneMap::SetupCurrentMap()
 {
-	CInifile* pLtx				= pGameIni;
+	CInifile* pLtx = pGameIni;
 
-	if(!pLtx->section_exist(Level().name()))
-		pLtx							= Level().pLevel;
+	if (!pLtx->section_exist(Level().name()))
+		pLtx = Level().pLevel;
 
-	m_activeMap->Init				(Level().name(),*pLtx,"hud\\default");
+	m_activeMap->Init(Level().name(), *pLtx, "hud\\default");
 
 	Frect r;
-	m_clipFrame.GetAbsoluteRect		(r);
-	m_activeMap->SetClipRect		(r);
-	
+	m_clipFrame.GetAbsoluteRect(r);
+	m_activeMap->SetClipRect(r);
+
 	Fvector2						wnd_size;
-	float zoom_factor				= float(m_clipFrame.GetWndRect().width())/100.0f;
-	wnd_size.x						= m_activeMap->BoundRect().width()*zoom_factor;
-	wnd_size.y						= m_activeMap->BoundRect().height()*zoom_factor;
-	m_activeMap->SetWndSize			(wnd_size);
+	float zoom_factor = float(m_clipFrame.GetWndRect().width()) / 100.0f;
+
+	LPCSTR ln = Level().name().c_str();
+	if (pGameIni->section_exist(ln))
+	{
+		if (pGameIni->line_exist(ln, "minimap_zoom"))
+			zoom_factor *= pGameIni->r_float(ln, "minimap_zoom");
+	}
+	else
+		if (g_pGameLevel->pLevel->section_exist("minimap_zoom"))
+		{
+			zoom_factor *= g_pGameLevel->pLevel->r_float("minimap_zoom", "value");
+		}
+	wnd_size.x = m_activeMap->BoundRect().width() * zoom_factor;
+	wnd_size.y = m_activeMap->BoundRect().height() * zoom_factor;
+	m_activeMap->SetWndSize(wnd_size);
 }
