@@ -6,7 +6,7 @@ const	float	tweak_COP_initial_offs			= 1200.f	;
 const	float	tweak_ortho_xform_initial_offs	= 1000.f	;	//. ?
 const	float	tweak_guaranteed_range			= 20.f		;	//. ?
 
-float			OLES_SUN_LIMIT_27_01_07			= 360.f		;
+extern  float	ps_r2_sun_far;
 
 const	float	MAP_SIZE_START = 6.f;
 const	float	MAP_GROW_FACTOR = 4.f;
@@ -729,7 +729,7 @@ void CRender::render_sun				()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		float _far_	= min(OLES_SUN_LIMIT_27_01_07, g_pGamePersistent->Environment().CurrentEnv.far_plane);
+		float _far_	= min(ps_r2_sun_far, g_pGamePersistent->Environment().CurrentEnv.far_plane);
 		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,ps_r2_sun_near,_far_);
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
@@ -1389,14 +1389,25 @@ void CRender::init_cacades()
 {
 	extern u32 ps_sun_quality;
 	u32 cascade_count;
-	if (ps_sun_quality == 3)	cascade_count = 13;
-	else						cascade_count = 3;
+	if (ps_sun_quality < 3)	cascade_count = 3;
+	else					cascade_count = 21;
 	m_sun_cascades.resize(cascade_count);
 
 	float fBias = -0.0000025f;
 	//	float size = MAP_SIZE_START;
 
-	if (ps_sun_quality == 3) {
+	if (ps_sun_quality < 3) {
+		m_sun_cascades[0].reset_chain = true;
+		m_sun_cascades[0].size = 10;
+		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
+
+		m_sun_cascades[1].size = 50;
+		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
+
+		m_sun_cascades[2].size = 100;
+		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
+	}
+	else {
 		m_sun_cascades[0].reset_chain = true;
 		m_sun_cascades[0].size = 5;
 		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
@@ -1410,43 +1421,56 @@ void CRender::init_cacades()
 		m_sun_cascades[3].size = 20;
 		m_sun_cascades[3].bias = m_sun_cascades[3].size * fBias;
 
-		m_sun_cascades[4].size = 30;
+		m_sun_cascades[4].size = 25;
 		m_sun_cascades[4].bias = m_sun_cascades[4].size * fBias;
 
-		m_sun_cascades[5].size = 40;
+		m_sun_cascades[5].size = 30;
 		m_sun_cascades[5].bias = m_sun_cascades[5].size * fBias;
 
-		m_sun_cascades[6].size = 50;
+		m_sun_cascades[6].size = 35;
 		m_sun_cascades[6].bias = m_sun_cascades[6].size * fBias;
 
-		m_sun_cascades[7].size = 70;
+		m_sun_cascades[7].size = 40;
 		m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
 
-		m_sun_cascades[8].size = 90;
+		m_sun_cascades[8].size = 45;
 		m_sun_cascades[8].bias = m_sun_cascades[8].size * fBias;
 
-		m_sun_cascades[9].size = 120;
+		m_sun_cascades[9].size = 50;
 		m_sun_cascades[9].bias = m_sun_cascades[9].size * fBias;
 
-		m_sun_cascades[10].size = 150;
+		m_sun_cascades[10].size = 60;
 		m_sun_cascades[10].bias = m_sun_cascades[10].size * fBias;
 
-		m_sun_cascades[11].size = 190;
+		m_sun_cascades[11].size = 70;
 		m_sun_cascades[11].bias = m_sun_cascades[11].size * fBias;
 
-		m_sun_cascades[12].size = 240;
+		m_sun_cascades[12].size = 80;
 		m_sun_cascades[12].bias = m_sun_cascades[12].size * fBias;
-	}
-	else {
-		m_sun_cascades[0].reset_chain = true;
-		m_sun_cascades[0].size = 10;
-		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
-		m_sun_cascades[1].size = 50;
-		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
+		m_sun_cascades[13].size = 90;
+		m_sun_cascades[13].bias = m_sun_cascades[13].size * fBias;
 
-		m_sun_cascades[2].size = 100;
-		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
+		m_sun_cascades[14].size = 100;
+		m_sun_cascades[14].bias = m_sun_cascades[14].size * fBias;
+
+		m_sun_cascades[15].size = 120;
+		m_sun_cascades[15].bias = m_sun_cascades[15].size * fBias;
+
+		m_sun_cascades[16].size = 140;
+		m_sun_cascades[16].bias = m_sun_cascades[16].size * fBias;
+
+		m_sun_cascades[17].size = 180;
+		m_sun_cascades[17].bias = m_sun_cascades[17].size * fBias;
+
+		m_sun_cascades[18].size = 220;
+		m_sun_cascades[18].bias = m_sun_cascades[18].size * fBias;
+
+		m_sun_cascades[19].size = 260;
+		m_sun_cascades[19].bias = m_sun_cascades[19].size * fBias;
+
+		m_sun_cascades[20].size = 300;
+		m_sun_cascades[20].bias = m_sun_cascades[20].size * fBias;
 	}
 
 	// 	for( u32 i = 0; i < cascade_count; ++i )

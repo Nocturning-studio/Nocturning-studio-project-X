@@ -183,6 +183,7 @@ float		ps_r2_ls_squality = 1.0f;				// 1.00f
 float		ps_r2_sun_tsm_projection = 0.18f;			// 0.18f
 float		ps_r2_sun_tsm_bias = -0.05f;			// 
 float		ps_r2_sun_near = 12.f;				// 12.0f
+float		ps_r2_sun_far = 150.f;
 float		ps_r2_sun_near_border = 1.0f;			// 1.0f
 float		ps_r2_sun_depth_far_scale = 1.00000f;			// 1.00001f
 float		ps_r2_sun_depth_far_bias = 0.00000f;			// -0.0000f
@@ -483,6 +484,7 @@ void		xrRender_initconsole()
 		//msolopov0 CMDS		 
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
+	CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
 	CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
@@ -617,6 +619,7 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_sun_tsm_proj", &ps_r2_sun_tsm_projection, .001f, 0.8f);
 	CMD4(CCC_Float, "r2_sun_tsm_bias", &ps_r2_sun_tsm_bias, -0.5, +0.5);
 	CMD4(CCC_Float, "r2_sun_near", &ps_r2_sun_near, 1.f, 50.f);
+	CMD4(CCC_Float, "r2_sun_far", &ps_r2_sun_far, 100.f, 360.f);
 	CMD4(CCC_Float, "r2_sun_near_border", &ps_r2_sun_near_border, .5f, 1.0f);
 	CMD4(CCC_Float, "r2_sun_depth_far_scale", &ps_r2_sun_depth_far_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_sun_depth_far_bias", &ps_r2_sun_depth_far_bias, -0.5, +0.5);

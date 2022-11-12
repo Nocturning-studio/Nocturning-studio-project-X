@@ -82,6 +82,7 @@ extern ECORE_API float			ps_r2_ls_depth_scale;		// 1.0f
 extern ECORE_API float			ps_r2_ls_depth_bias;		// -0.0001f
 extern ECORE_API float			ps_r2_ls_squality;			// 1.0f
 extern ECORE_API float			ps_r2_sun_near;				// 10.0f
+extern ECORE_API float			ps_r2_sun_far;
 extern ECORE_API float			ps_r2_sun_near_border;		// 1.0f
 extern ECORE_API float			ps_r2_sun_tsm_projection;	// 0.2f
 extern ECORE_API float			ps_r2_sun_tsm_bias;			// 0.0001f
@@ -131,7 +132,7 @@ enum
 
 	R2FLAG_SOFT_WATER						= (1 << 18),
 	R2FLAG_SOFT_PARTICLES					= (1 << 19),
-	R2FLAG_GRASS_WAVE						= (1 << 20),
+	R2FLAG_SOFT_SHADOWS						= (1 << 20),
 	R2FLAG_GLOSS_RGB						= (1 << 21),
 	R2FLAG_AA_EDGE_DETECT					= (1 << 22),
 	R2FLAG_WET_SURFACES						= (1 << 23),

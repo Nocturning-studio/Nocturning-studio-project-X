@@ -22,6 +22,7 @@ extern u32 ps_sun_quality;
 extern u32 ps_blur_type;
 extern u32 ps_bump_mode;
 extern u32 ps_shadow_filter_quality;
+extern float ps_r2_sun_far;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
 {
@@ -96,21 +97,25 @@ void CRender::create()
 		case 0:
 			ps_shadow_filter_quality = 0;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
+			ps_r2_sun_far = 100;
 			o.smapsize = 1024;
 			break;
 		case 1:
 			ps_shadow_filter_quality = 0;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
+			ps_r2_sun_far = 150;
 			o.smapsize = 1536;
 			break;
 		case 2:
 			ps_shadow_filter_quality = 1;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
-			o.smapsize = 2048;
+			ps_r2_sun_far = 200;
+			o.smapsize = 1536;
 			break;
 		case 3:
 			ps_shadow_filter_quality = 2;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
+			ps_r2_sun_far = 250;
 			o.smapsize = 2048;
 			break;
 		}
@@ -644,6 +649,7 @@ HRESULT	CRender::shader_compile(
 	char c_chroma_abb[32];
 	char c_soft_water[32];
 	char c_soft_particles[32];
+	char c_soft_shadows[32];
 	char c_gloss_rgb[32];
 	char c_wet_surfaces[32];
 	char c_bloom[32];
@@ -1072,7 +1078,18 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_shadow_filter_quality);
 	++len;
 
-
+	int soft_shadows = ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS && ps_sun_quality >= 2))
+	{
+		sprintf(c_soft_shadows, "%d", soft_shadows);
+		defines[def_it].Name = "USE_SOFT_SHADOWS";
+		defines[def_it].Definition = c_soft_shadows;
+		def_it++;
+		strcat(sh_name, c_soft_shadows);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(soft_shadows);
+	++len;
 	//////////////////////////////////////////////////////////////////////////
 	// Bump types
 	//////////////////////////////////////////////////////////////////////////

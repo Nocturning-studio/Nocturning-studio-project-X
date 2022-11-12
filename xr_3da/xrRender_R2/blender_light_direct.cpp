@@ -19,6 +19,7 @@ void	CBlender_accum_direct::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case SE_SUN_NEAR:		// near pass - enable Z-test to perform depth-clipping
+	case SE_SUN_MIDDLE:
 		C.r_Pass			("null",			"accum_sun_near",	false,	TRUE,	FALSE,blend,D3DBLEND_ONE,dest);
 		C.PassSET_ZB		(TRUE,FALSE,TRUE	);	// force inverted Z-Buffer
 		C.r_Sampler_rtf		("s_position",		r2_RT_P			);

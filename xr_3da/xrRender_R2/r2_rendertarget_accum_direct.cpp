@@ -179,9 +179,9 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			zMin = 0;
 			zMax = ps_r2_sun_near;
 		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
+			extern float	ps_r2_sun_far;
 			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r2_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
 		zMin = center_pt.z	;
@@ -419,9 +419,9 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 			zMax = ps_r2_sun_near;
 		}
 		else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
+			extern float	ps_r2_sun_far;
 			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r2_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition, Device.vCameraDirection, zMin);	Device.mFullTransform.transform(center_pt);
 		zMin = center_pt.z;
