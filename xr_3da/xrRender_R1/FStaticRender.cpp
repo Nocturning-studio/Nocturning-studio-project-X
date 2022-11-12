@@ -118,14 +118,9 @@ void					CRender::reset_end				()
 void					CRender::OnFrame				()
 {
 	Models->DeleteQueue	();
-
-	// MT-details (@front)
-	//Device.seqParallel.insert(Device.seqParallel.begin(),
-	//	fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
-
-	// MT-HOM (@front)
-	//Device.seqParallel.insert(Device.seqParallel.begin(),
-	//	fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
+		// MT-details (@front)
+		Device.seqParallel.insert(Device.seqParallel.begin(),
+			fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 }
 
 // Implementation
