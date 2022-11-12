@@ -78,6 +78,15 @@ static class cl_rain_density : public R_constant_setup
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
 }	binder_rain_density;
+//////////////////////////////////////////////////////////////////////////
+static class cl_sun_far : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		float fValue = ps_r2_sun_far;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_sun_far;
 
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
@@ -263,6 +272,7 @@ void CRender::create()
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax", &binder_parallax);
 	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
+	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
