@@ -50,10 +50,11 @@ xr_token ao_quality_token[] = {
 
 u32 ps_sun_quality = 1;
 xr_token sun_quality_token[] = {
-	{"low", 0},
+	{"low",		0},
 	{"default", 1},
-	{"high", 2},
-	{"ultra", 3},
+	{"high",	2},
+	{"extreme", 3},
+	{"ultra",	4},
 	{0, 0} };
 
 u32 ps_blur_type = 0;

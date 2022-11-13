@@ -100,7 +100,7 @@ void CRender::create()
 
 	// hardware
 	///////////////////////////////////////////////////
-		//Shadow filter choosing
+	//Shadow filter, smap res, render type and sun far choosing
 		switch (ps_sun_quality)
 		{
 		case 0:
@@ -112,20 +112,26 @@ void CRender::create()
 		case 1:
 			ps_shadow_filter_quality = 0;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
-			ps_r2_sun_far = 150;
+			ps_r2_sun_far = 100;
 			o.smapsize = 1536;
 			break;
 		case 2:
 			ps_shadow_filter_quality = 1;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
-			ps_r2_sun_far = 200;
-			o.smapsize = 1536;
+			ps_r2_sun_far = 100;
+			o.smapsize = 2048;
 			break;
 		case 3:
 			ps_shadow_filter_quality = 2;
 			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
-			ps_r2_sun_far = 250;
-			o.smapsize = 2048;
+			ps_r2_sun_far = 100;
+			o.smapsize = 2560;
+			break;
+		case 4:
+			ps_shadow_filter_quality = 2;
+			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
+			ps_r2_sun_far = 100;
+			o.smapsize = 3072;
 			break;
 		}
 	///////////////////////////////////////////////////
