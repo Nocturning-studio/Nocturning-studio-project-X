@@ -16,7 +16,12 @@
 #else
 	const int	dm_max_decompress	= 7;
 #endif
-const int		dm_size				= 40;//24;								//!
+
+#if RENDER==R_R2
+	const int		dm_size				= 40;//24;								//!
+#else
+	const int		dm_size = 24;								//!
+#endif
 const int 		dm_cache1_count		= 4;								// 
 const int 		dm_cache1_line		= dm_size*2/dm_cache1_count;		//! dm_size*2 must be div dm_cache1_count
 const int		dm_max_objects		= 64;
