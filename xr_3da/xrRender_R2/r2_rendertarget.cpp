@@ -217,7 +217,7 @@ CRenderTarget::CRenderTarget		()
 		if (RImplementation.o.mrtmixdepth)	
 		{
 			// NV50
-			rt_Color.create			(r2_RT_albedo,	w,h,D3DFMT_A8B8G8R8F);
+			rt_Color.create			(r2_RT_albedo,	w,h,D3DFMT_A8R8G8B8);
 			rt_Accumulator.create	(r2_RT_accum,	w,h,D3DFMT_A16B16G16R16F);
 		}
 		else		
@@ -230,7 +230,7 @@ CRenderTarget::CRenderTarget		()
 			} else {
 				// R4xx, no-fp-blend,-> albedo_wo
 				VERIFY						(RImplementation.o.albedo_wo);
-				rt_Color.create				(r2_RT_albedo,		w,h,D3DFMT_A8B8G8R8F);	// normal
+				rt_Color.create				(r2_RT_albedo,		w,h,D3DFMT_A8R8G8B8);	// normal
 				rt_Accumulator.create		(r2_RT_accum,		w,h,D3DFMT_A16B16G16R16F);
 				rt_Accumulator_temp.create	(r2_RT_accum_temp,	w,h,D3DFMT_A16B16G16R16F);
 			}
