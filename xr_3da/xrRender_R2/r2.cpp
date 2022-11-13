@@ -87,7 +87,16 @@ static class cl_sun_far : public R_constant_setup
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
 }	binder_sun_far;
-
+//////////////////////////////////////////////////////////////////////////
+static class cl_water_intensity : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor& E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E.m_fWaterIntensity;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_water_intensity;
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -277,6 +286,7 @@ void CRender::create()
 
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax", &binder_parallax);
+	::Device.Resources->RegisterConstantSetup("water_intensity", &binder_water_intensity);
 	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
 

@@ -160,6 +160,8 @@ public:
 	Fvector3			sun_color;
 	Fvector3			sun_dir;
 
+	float				m_fWaterIntensity;
+
 	int					lens_flare_id;
 	int					tb_id;
 
