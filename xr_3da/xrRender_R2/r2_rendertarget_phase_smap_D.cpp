@@ -25,19 +25,19 @@ void	CRenderTarget::phase_smap_direct(light* L, u32 sub_phase)
 	RCache.set_Stencil(FALSE);
 
 	//(Deathman, за мат извени) Вот сука где была ебаная собака зарыта - в тч для первого и второго каскадов используются разные режимы occlusion culling, а как оказалось зп система использует far режим и я до этого не додумался и переносил каскады зп без этого, от чего и были просветы сквозь геометрию, заставившие меня бомбить на протяжении двух месяцев
-//	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD)) {
-//		// Misc		- draw only front/back-faces
-//		if (SE_SUN_NEAR == sub_phase)			
-//			RCache.set_CullMode(CULL_CCW);	// near
-//		else {
-//			if (RImplementation.o.HW_smap)	RCache.set_CullMode(CULL_CW);	// far, reversed
-//			else							RCache.set_CullMode(CULL_CCW);	// far, front-faces
-//		}
-//	}
-//	else {
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD)) {
+		// Misc		- draw only front/back-faces
+		if (SE_SUN_NEAR == sub_phase)			
+			RCache.set_CullMode(CULL_CCW);	// near
+		else {
+			if (RImplementation.o.HW_smap)	RCache.set_CullMode(CULL_CW);	// far, reversed
+			else							RCache.set_CullMode(CULL_CCW);	// far, front-faces
+		}
+	}
+	else {
 		//	Cull always CCW. If you want to revert to previouse solution, please, revert bias setup/
 		RCache.set_CullMode(CULL_CCW);	// near
-//	}
+	}
 
 	if (RImplementation.o.HW_smap)		RCache.set_ColorWriteEnable(FALSE);
 	else								RCache.set_ColorWriteEnable();
