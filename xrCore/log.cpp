@@ -47,10 +47,12 @@ void AddOne				(const char *split)
 
 	logCS.Enter			();
 
-#ifdef DEBUG
-	OutputDebugString	(split);
-	OutputDebugString	("\n");
-#endif
+//#ifdef DEBUG
+	if (IsDebuggerPresent()) {
+		OutputDebugString(split);
+		OutputDebugString("\n");
+	}
+//#endif
 
 //	DUMP_PHASE;
 	{
