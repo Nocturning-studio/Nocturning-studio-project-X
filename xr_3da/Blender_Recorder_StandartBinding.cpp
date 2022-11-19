@@ -279,6 +279,19 @@ static class cl_screen_res : public R_constant_setup
 	}
 }	binder_screen_res;
 
+static class cl_screen_params : public R_constant_setup
+{
+	u32 marker;
+	Fvector4 result;
+	void setup(R_constant* C) override
+	{
+		if (marker != Device.dwFrame) {
+			result.set(Device.fFOV, Device.fASPECT, tan(deg2rad(Device.fFOV) / 2), g_pGamePersistent->Environment().CurrentEnv.far_plane * 0.75f);
+		}
+		RCache.set_c(C, result);
+	}
+} binder_screen_params;
+
 // Standart constant-binding
 void	CBlender_Compile::SetMapping()
 {
@@ -332,7 +345,9 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("L_hemi_color", &binder_hemi_color);
 	r_Constant("L_ambient", &binder_amb_color);
 #endif
+
 	r_Constant("screen_res", &binder_screen_res);
+	r_Constant("ogse_c_screen", &binder_screen_params);
 
 	// detail
 	//if (bDetail	&& detail_scaler)

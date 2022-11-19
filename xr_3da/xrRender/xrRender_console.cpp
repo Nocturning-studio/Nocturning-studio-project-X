@@ -38,6 +38,7 @@ xr_token ao_token[] = {
 	{"ssao", 1},
 	{"hdao", 2},
 	{"hbao", 3},
+	{"gtao", 4},
 	{0, 0} };
 
 u32 ps_ao_quality = 2;

@@ -61,6 +61,7 @@ ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdi
 	}
 	return pVisual->shader->E[id]._get();
 }
+//////////////////////////////////////////////////////////////////////////
 static class cl_parallax : public R_constant_setup {
 	virtual void setup(R_constant* C)
 	{
@@ -97,6 +98,7 @@ static class cl_water_intensity : public R_constant_setup
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
 }	binder_water_intensity;
+//////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -659,26 +661,34 @@ HRESULT	CRender::shader_compile(
 	DWORD Flags,
 	void*& result)
 {
-	D3DXMACRO defines[128]{};
+	D3DXMACRO defines[512]{};
 	int def_it = 0;
+
 	char c_smapsize[32];
 	char c_gloss[32];
+	char c_gloss_rgb[32];
+
 	char c_ao[32];
 	char c_ao_quality[32];
-	char c_aa_quality[32];
+
 	char c_aa[32];
+	char c_aa_quality[32];
 	char c_aa_edge_detect[32];
+
 	char c_debug_frame_layers[32];
+
 	char c_ps_shadow_filter_quality[32];
 
 	char c_vignette[32];
 	char c_chroma_abb[32];
+	char c_bloom[32];
+
 	char c_soft_water[32];
 	char c_soft_particles[32];
 	char c_soft_shadows[32];
-	char c_gloss_rgb[32];
+
 	char c_wet_surfaces[32];
-	char c_bloom[32];
+
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
 	char c_steep_parallax_mapping[32];
@@ -792,29 +802,6 @@ HRESULT	CRender::shader_compile(
 	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
 
 	/********************************************TYPES*********************************************/
-//	if (RImplementation.o.advancedpp && ps_ao == 1) {
-//		defines[def_it].Name = "USE_SSAO";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + (char)ps_ao;
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_ao == 2) {
-//		defines[def_it].Name = "USE_HDAO";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + (char)ps_ao;
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_ao == 3) {
-//		defines[def_it].Name = "USE_HBAO";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + (char)ps_ao;
-//	++len;
 
 	if (RImplementation.o.advancedpp && ps_ao)
 	{
@@ -823,9 +810,9 @@ HRESULT	CRender::shader_compile(
 		defines[def_it].Definition = c_ao;
 		def_it++;
 		strcat(sh_name, c_ao);
-		len += 3;
+		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_ao;
+	sh_name[len] = '0' + char(ps_ao);
 	++len;
 
 	/********************************************QUALITY********************************************/
@@ -847,30 +834,6 @@ HRESULT	CRender::shader_compile(
 	////////////////////////////////////////////ANTIALISING//////////////////////////////////////////
 
 	/********************************************TYPES*********************************************/
-/*	if (RImplementation.o.advancedpp && ps_aa == 3) {
-		defines[def_it].Name = "USE_FXAA";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_aa;;
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_aa == 2) {
-		defines[def_it].Name = "USE_DLAA";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_aa;
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_aa == 1) {
-		defines[def_it].Name = "USE_EDGE_SAMPLING";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_aa;
-	++len;
-*/
 
 	if (RImplementation.o.advancedpp && ps_aa)
 	{
@@ -897,14 +860,6 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + (char)ps_aa_quality;
 	++len;
 
-//	if (ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT)) {
-//		defines[def_it].Name = "USE_EDGE_DETECT";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT) ? '1' : '0';
-//	++len;
-
 	int aa_edge_detect = ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT);
 	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT))
 	{
@@ -918,22 +873,6 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(aa_edge_detect);
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-
-//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER)) {
-//		defines[def_it].Name = "USE_SOFT_WATER";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_WATER) ? '1' : '0';
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES)) {
-//		defines[def_it].Name = "USE_SOFT_PARTICLES";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES) ? '1' : '0';
-//	++len;
 
 	if (o.sunfilter) {
 		defines[def_it].Name = "USE_SUNFILTER";
@@ -959,38 +898,6 @@ HRESULT	CRender::shader_compile(
 	}
 	sh_name[len] = '0' + char(o.forcegloss);
 	++len;
-
-//	if (ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB)) {
-//		defines[def_it].Name = "USE_RGB_GLOSS";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB) ? '1' : '0';
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES)) {
-//		defines[def_it].Name = "USE_WET_SURFACES";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_WET_SURFACES) ? '1' : '0';
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE)) {
-//		defines[def_it].Name = "USE_VIGNETTE";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_VIGNETTE) ? '1' : '0';
-//	++len;
-
-//	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION)) {
-//		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
-//		defines[def_it].Definition = "1";
-//		def_it++;
-//	}
-//	sh_name[len] = '0' + ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION) ? '1' : '0';
-//	++len;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Дорогие ревьюеры - главный вопрос этого ревью: "Наху... Извините. Зачем это нужно?"
@@ -1119,32 +1026,6 @@ HRESULT	CRender::shader_compile(
 	//////////////////////////////////////////////////////////////////////////
 	// Bump types
 	//////////////////////////////////////////////////////////////////////////
-
-	/*
-	if (RImplementation.o.sunstatic || ps_bump_mode == 1) {
-		defines[def_it].Name = "USE_NORMAL_MAPPING";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_bump_mode;
-	++len;
-
-	if (!RImplementation.o.advancedpp || ps_bump_mode == 2) {
-		defines[def_it].Name = "ALLOW_PARALLAX";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_bump_mode;
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_bump_mode == 3) {
-		defines[def_it].Name = "ALLOW_STEEP_PARALLAX";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + (char)ps_bump_mode;
-	++len;
-	*/
 
 	if (RImplementation.o.sunstatic || ps_bump_mode == 1)
 	{
