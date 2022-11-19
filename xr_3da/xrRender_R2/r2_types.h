@@ -22,6 +22,11 @@
 #define		r2_RT_bloom1		"$user$bloom1"			// ---
 #define		r2_RT_bloom2		"$user$bloom2"			// ---
 
+#define		r2_RT_ao1			"$user$ao1"				// ---
+#define		r2_RT_ao2			"$user$ao2"				// ---
+#define		r2_RT_ao3			"$user$ao3"				// ---
+#define		r2_RT_blurred_position "$user$blurred_position"// ---
+
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
 #define		r2_RT_luminance_t8	"$user$lum_t8"			// --- temp
 

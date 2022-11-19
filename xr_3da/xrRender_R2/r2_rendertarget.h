@@ -24,6 +24,7 @@ public:
 	IBlender*					b_accum_spot;
 	IBlender*					b_accum_reflected;
 	IBlender*					b_bloom;
+	IBlender*					b_ao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
 #ifdef DEBUG
@@ -55,6 +56,12 @@ public:
 	ref_rt						rt_LUM_pool	[4]	;	// 1xfp32,1x1,		exp-result -> scaler
 	ref_texture					t_LUM_src		;	// source
 	ref_texture					t_LUM_dest		;	// destination & usage for current frame
+
+	// ao
+	ref_rt						rt_ao;
+	ref_rt						rt_ao_blurred1;
+	ref_rt						rt_ao_blurred2;
+	ref_rt						rt_blurred_position;
 
 	// env
 	ref_texture					t_envmap_0		;	// env-0
@@ -103,6 +110,9 @@ private:
 	ref_shader					s_bloom_dbg_2;
 	ref_shader					s_bloom;
 	float						f_bloom_factor;
+
+	// AO
+	ref_shader					s_ao;
 
 	// Luminance
 	ref_shader					s_luminance;
@@ -188,6 +198,7 @@ public:
 	void						accum_spot				(light* L);
 	void						accum_reflected			(light* L);
 	void						phase_bloom				();
+	void						phase_ao				();
 	void						phase_luminance			();
 	void						phase_combine			();
 	void						phase_pp				();

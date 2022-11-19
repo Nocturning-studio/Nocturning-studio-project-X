@@ -9,6 +9,7 @@
 #include "blender_light_reflected.h"
 #include "blender_combine.h"
 #include "blender_bloom_build.h"
+#include "blender_ao_build.h"
 #include "blender_luminance.h"
 
 void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -204,6 +205,7 @@ CRenderTarget::CRenderTarget		()
 	b_accum_spot					= xr_new<CBlender_accum_spot>			();
 	b_accum_reflected				= xr_new<CBlender_accum_reflected>		();
 	b_bloom							= xr_new<CBlender_bloom_build>			();
+	b_ao							= xr_new<CBlender_ao_build>				();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 
@@ -306,6 +308,22 @@ CRenderTarget::CRenderTarget		()
 		s_bloom_dbg_2.create		("effects\\screen_set",		r2_RT_bloom2);
 		s_bloom.create				(b_bloom,					"r2\\bloom");
 		f_bloom_factor				= 0.5f;
+	}
+
+	//AO
+	{
+		u32 w = Device.dwWidth, h = Device.dwHeight;
+
+		//Create rendertarget
+		rt_ao.create(r2_RT_ao1, w, h, D3DFMT_A16B16G16R16F);
+		rt_ao_blurred1.create(r2_RT_ao2, w, h, D3DFMT_A16B16G16R16F);
+		rt_ao_blurred2.create(r2_RT_ao3, w, h, D3DFMT_A16B16G16R16F);
+
+		rt_blurred_position.create(r2_RT_blurred_position, w, h, D3DFMT_A16B16G16R16F);
+
+		//Create shader resource
+		b_ao = xr_new<CBlender_ao_build>();
+		s_ao.create(b_ao, "r2\\ao");
 	}
 
 	// TONEMAP
@@ -507,6 +525,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_combine				);
 	xr_delete					(b_luminance			);
 	xr_delete					(b_bloom				);
+	xr_delete					(b_ao					);
 	xr_delete					(b_accum_reflected		);
 	xr_delete					(b_accum_spot			);
 	xr_delete					(b_accum_point			);

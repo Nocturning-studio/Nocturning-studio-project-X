@@ -139,6 +139,8 @@ void	CRenderTarget::phase_combine	()
 	RCache.set_Stencil	(FALSE);
 	phase_bloom			( );												// HDR RT invalidated here
 
+	phase_ao();
+
 	// Distortion filter
 	BOOL	bDistort	= RImplementation.o.distortion_enabled;				// This can be modified
 	{
