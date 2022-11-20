@@ -323,7 +323,7 @@ CRenderTarget::CRenderTarget		()
 		rt_blurred_position.create(r2_RT_blurred_position, w, h, D3DFMT_A16B16G16R16F);
 
 		//Create shader resource
-		b_ao = xr_new<CBlender_ao_build>();
+		//b_ao = xr_new<CBlender_ao_build>();
 		s_ao.create(b_ao, "r2\\ao");
 	}
 

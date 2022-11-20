@@ -60,6 +60,9 @@ void	CRenderTarget::phase_combine	()
 		m_blur_scale.set	(scale,-scale).div(12.f);
 	}
 
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
+		phase_ao();
+
 	// Draw full-screen quad textured with our scene image
 	if (!_menu_pp)
 	{
@@ -138,9 +141,6 @@ void	CRenderTarget::phase_combine	()
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil	(FALSE);
 	phase_bloom			( );												// HDR RT invalidated here
-
-	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
-	phase_ao();
 
 	// Distortion filter
 	BOOL	bDistort	= RImplementation.o.distortion_enabled;				// This can be modified
