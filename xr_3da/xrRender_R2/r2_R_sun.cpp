@@ -1392,7 +1392,7 @@ void CRender::init_cacades()
 	switch (ps_sun_quality)
 	{
 	case 0:
-		cascade_count = 2;
+		cascade_count = 3;
 		break;
 	case 1:
 		cascade_count = 4;
@@ -1419,8 +1419,11 @@ void CRender::init_cacades()
 		m_sun_cascades[0].size = 15;
 		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
-		m_sun_cascades[1].size = ps_r2_sun_far;
+		m_sun_cascades[1].size = 30;
 		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
+
+		m_sun_cascades[2].size = ps_r2_sun_far;
+		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
 		break;
 	case 1:
 		m_sun_cascades[0].reset_chain = true;
