@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\igame_persistent.h"
-#include "..\environment.h"
+#include "..\environment.h""
 
 #define STENCIL_CULL 0
 
@@ -139,6 +139,7 @@ void	CRenderTarget::phase_combine	()
 	RCache.set_Stencil	(FALSE);
 	phase_bloom			( );												// HDR RT invalidated here
 
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
 	phase_ao();
 
 	// Distortion filter

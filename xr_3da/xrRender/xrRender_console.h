@@ -145,6 +145,7 @@ enum
 {
 	R2FLAGEXT_SUN_ZCULLING					= (1 << 0),
 	R2FLAGEXT_SUN_OLD						= (1 << 1),
+	R2FLAGEXT_AO_BLUR						= (1 << 2),
 };
 
 extern void						xrRender_initconsole	();

@@ -58,6 +58,15 @@ xr_token sun_quality_token[] = {
 	{"ultra",	4},
 	{0, 0} };
 
+u32 ps_shadow_quality = 1;
+xr_token shadow_quality_token[] = {
+	{"low",		1},
+	{"default", 2},
+	{"high",	3},
+	{"extreme", 4},
+	{"ultra",	5},
+	{0, 0} };
+
 u32 ps_blur_type = 0;
 xr_token blur_type_token[] = {
 	{"off", 0},
@@ -155,7 +164,7 @@ Flags32 ps_r2_ls_flags =
 	R2FLAG_SUN_TSM
 }; // r2-only
 
-Flags32		ps_r2_ls_flags_ext = { 0 };
+Flags32		ps_r2_ls_flags_ext = { R2FLAGEXT_AO_BLUR };
 
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
@@ -495,9 +504,10 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
+	CMD3(CCC_Mask,  "r2_ao_blur", &ps_r2_ls_flags_ext, R2FLAGEXT_AO_BLUR);
 
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
-//	CMD3(CCC_Token, "r2_shadow_filter_quality", &ps_shadow_filter_quality, shadow_filter_quality_token);
+	CMD3(CCC_Token, "r2_shadow_quality", &ps_shadow_quality, shadow_quality_token);
 
 	CMD3(CCC_Token, "r2_blur_type", &ps_blur_type, blur_type_token);
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);

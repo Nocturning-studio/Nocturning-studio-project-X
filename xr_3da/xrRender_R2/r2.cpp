@@ -21,7 +21,7 @@ extern u32 ps_debug_frame_layers;
 extern u32 ps_sun_quality;
 extern u32 ps_blur_type;
 extern u32 ps_bump_mode;
-extern u32 ps_shadow_filter_quality;
+extern u32 ps_shadow_quality;
 extern float ps_r2_sun_far;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
@@ -111,36 +111,26 @@ void CRender::create()
 
 	// hardware
 	///////////////////////////////////////////////////
-	//Shadow filter, smap res, render type and sun far choosing
+	//Shadow filter, smap res and sun far choosing
 		switch (ps_sun_quality)
 		{
 		case 0:
-			ps_shadow_filter_quality = 0;
-			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
 			ps_r2_sun_far = 100;
 			o.smapsize = 1024;
 			break;
 		case 1:
-			ps_shadow_filter_quality = 0;
-			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 1);
 			ps_r2_sun_far = 100;
 			o.smapsize = 1536;
 			break;
 		case 2:
-			ps_shadow_filter_quality = 1;
-			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
 			ps_r2_sun_far = 100;
 			o.smapsize = 2048;
 			break;
 		case 3:
-			ps_shadow_filter_quality = 2;
-			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
 			ps_r2_sun_far = 100;
 			o.smapsize = 2560;
 			break;
 		case 4:
-			ps_shadow_filter_quality = 2;
-			ps_r2_ls_flags_ext.set(R2FLAGEXT_SUN_OLD, 0);
 			ps_r2_sun_far = 100;
 			o.smapsize = 3072;
 			break;
@@ -670,6 +660,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_ao[32];
 	char c_ao_quality[32];
+	char c_ao_blur[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
@@ -677,7 +668,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_debug_frame_layers[32];
 
-	char c_ps_shadow_filter_quality[32];
+	char c_ps_shadow_quality[32];
 
 	char c_vignette[32];
 	char c_chroma_abb[32];
@@ -829,6 +820,20 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + (char)ps_ao_quality;
 	++len;
 
+	/********************************************BLUR**********************************************/
+
+	int ao_blur = ps_r2_ls_flags_ext.test(R2FLAGEXT_AO_BLUR);
+	if (RImplementation.o.advancedpp && ao_blur)
+	{
+		sprintf(c_ao_blur, "%d", ao_blur);
+		defines[def_it].Name = "USE_AO_BLUR";
+		defines[def_it].Definition = c_ao_blur;
+		def_it++;
+		strcat(sh_name, c_ao_blur);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ao_blur);
+	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	////////////////////////////////////////////ANTIALISING//////////////////////////////////////////
@@ -999,20 +1004,20 @@ HRESULT	CRender::shader_compile(
 	//////////////////////////////////////////////////////////////////////////
 	// Filter types
 	//////////////////////////////////////////////////////////////////////////
-	if (RImplementation.o.advancedpp && ps_shadow_filter_quality)
+	if (ps_shadow_quality)
 	{
-		sprintf(c_ps_shadow_filter_quality, "%d", ps_shadow_filter_quality);
-		defines[def_it].Name = "SHADOW_FILTER_TYPE";
-		defines[def_it].Definition = c_ps_shadow_filter_quality;
+		sprintf(c_ps_shadow_quality, "%d", ps_shadow_quality);
+		defines[def_it].Name = "SHADOW_QUALITY";
+		defines[def_it].Definition = c_ps_shadow_quality;
 		def_it++;
-		strcat(sh_name, c_ps_shadow_filter_quality);
+		strcat(sh_name, c_ps_shadow_quality);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_shadow_filter_quality);
+	sh_name[len] = '0' + char(ps_shadow_quality);
 	++len;
 
 	int soft_shadows = ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS && ps_sun_quality >= 2))
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS))
 	{
 		sprintf(c_soft_shadows, "%d", soft_shadows);
 		defines[def_it].Name = "USE_SOFT_SHADOWS";

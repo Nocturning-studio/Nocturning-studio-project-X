@@ -311,6 +311,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//AO
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
 	{
 		u32 w = Device.dwWidth, h = Device.dwHeight;
 

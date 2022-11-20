@@ -1392,9 +1392,13 @@ void CRender::init_cacades()
 	switch (ps_sun_quality)
 	{
 	case 0:
+		cascade_count = 2;
+		break;
 	case 1:
-	case 2:
 		cascade_count = 4;
+		break;
+	case 2:
+		cascade_count = 9;
 		break;
 	case 3:
 		cascade_count = 15;
@@ -1411,8 +1415,14 @@ void CRender::init_cacades()
 	switch (ps_sun_quality) 
 	{
 	case 0:
+		m_sun_cascades[0].reset_chain = true;
+		m_sun_cascades[0].size = 15;
+		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
+
+		m_sun_cascades[1].size = ps_r2_sun_far;
+		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
+		break;
 	case 1:
-	case 2:
 		m_sun_cascades[0].reset_chain = true;
 		m_sun_cascades[0].size = 15;
 		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
@@ -1423,8 +1433,37 @@ void CRender::init_cacades()
 		m_sun_cascades[2].size = 60;
 		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
 
-		m_sun_cascades[3].size = 100;
+		m_sun_cascades[3].size = ps_r2_sun_far;
 		m_sun_cascades[3].bias = m_sun_cascades[3].size * fBias;
+		break;
+	case 2:
+		m_sun_cascades[0].reset_chain = true;
+		m_sun_cascades[0].size = 10;
+		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
+
+		m_sun_cascades[1].size = 20;
+		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
+
+		m_sun_cascades[2].size = 30;
+		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
+
+		m_sun_cascades[3].size = 40;
+		m_sun_cascades[3].bias = m_sun_cascades[3].size * fBias;
+
+		m_sun_cascades[4].size = 50;
+		m_sun_cascades[4].bias = m_sun_cascades[4].size * fBias;
+
+		m_sun_cascades[5].size = 60;
+		m_sun_cascades[5].bias = m_sun_cascades[5].size * fBias;
+
+		m_sun_cascades[6].size = 70;
+		m_sun_cascades[6].bias = m_sun_cascades[6].size * fBias;
+
+		m_sun_cascades[7].size = 80;
+		m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
+
+		m_sun_cascades[8].size = ps_r2_sun_far;
+		m_sun_cascades[8].bias = m_sun_cascades[8].size * fBias;
 		break;
 	case 3:
 		m_sun_cascades[0].reset_chain = true;
@@ -1470,7 +1509,7 @@ void CRender::init_cacades()
 		m_sun_cascades[13].size = 90;
 		m_sun_cascades[13].bias = m_sun_cascades[13].size * fBias;
 
-		m_sun_cascades[14].size = 100;
+		m_sun_cascades[14].size = ps_r2_sun_far;
 		m_sun_cascades[14].bias = m_sun_cascades[14].size * fBias;
 		break;
 	case 4:
@@ -1607,7 +1646,7 @@ void CRender::init_cacades()
 		m_sun_cascades[43].size = 90;
 		m_sun_cascades[43].bias = m_sun_cascades[43].size * fBias;
 
-		m_sun_cascades[44].size = 100;
+		m_sun_cascades[44].size = ps_r2_sun_far;
 		m_sun_cascades[44].bias = m_sun_cascades[44].size * fBias;
 		break;
 	}
