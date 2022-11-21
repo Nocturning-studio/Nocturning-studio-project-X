@@ -2,16 +2,34 @@
 
 void CRenderTarget::phase_ao()
 {
-///////////////////////////////////////////////////////////////////////////////////////////////
-//Downsample s_position for optimization 
+	//Constants
+	u32 Offset = 0;
+	u32 C = color_rgba(0, 0, 0, 255);
 
-	//Set output RT
-	u_setrt(rt_blurred_position, nullptr, nullptr, nullptr);
+	float w = float(Device.dwWidth);
+	float h = float(Device.dwHeight);
+
+	float d_Z = EPS_S;
+	float d_W = 1.f;
+
+	Fvector2 p0, p1;
+	p0.set(0.5f / w, 0.5f / h);
+	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//Downsample s_position for optimization 
+
+		//Set output RT
+	u_setrt(rt_blurred_position, nullptr, nullptr, HW.pBaseZB);
+
+	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
 	//Fill vertex buffer
-	pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
 	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
 	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
@@ -27,32 +45,22 @@ void CRenderTarget::phase_ao()
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//AO Build		(Here we build rt_ao)
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//AO Build		(Here we build rt_ao)
 
-	//Constants
-	u32 Offset = 0;
-	u32 C = color_rgba(0, 0, 0, 255);
+		//Here we draw AO to new RT (rt_ao)
 
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+		//Set output RT
+	u_setrt(rt_ao, nullptr, nullptr, HW.pBaseZB);
 
-	float d_Z = EPS_S;
-	float d_W = 1.f;
+	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
 
-	Fvector2 p0, p1;
-	p0.set(0.5f / w, 0.5f / h);
-	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
-
-	//Here we draw AO to new RT (rt_ao)
-
-	//Set output RT
-	u_setrt(rt_ao, nullptr, nullptr, nullptr);
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
 	//Fill vertex buffer
-	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
 	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
 	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
@@ -68,11 +76,15 @@ void CRenderTarget::phase_ao()
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//AO Filter	pt.1	(Here we sample rt_ao, and blur it (then output to rt_ao_blurred))
- 
-	//Set output RT
-	u_setrt(rt_ao_blurred1, nullptr, nullptr, nullptr);
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//AO Filter	pt.1	(Here we sample rt_ao, and blur it (then output to rt_ao_blurred))
+
+		//Set output RT
+	u_setrt(rt_ao_blurred1, nullptr, nullptr, HW.pBaseZB);
+
+	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
@@ -93,11 +105,15 @@ void CRenderTarget::phase_ao()
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//AO Filter pt.2		(Here we sample rt_ao_blurred, and blur it again)
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//AO Filter pt.2		(Here we sample rt_ao_blurred, and blur it again)
 
-	//Set output RT
-	u_setrt(rt_ao_blurred2, nullptr, nullptr, nullptr);
+		//Set output RT
+	u_setrt(rt_ao_blurred2, nullptr, nullptr, HW.pBaseZB);
+
+	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 

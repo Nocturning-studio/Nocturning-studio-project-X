@@ -19,6 +19,9 @@ void	CRenderTarget::phase_combine	()
 		t_LUM_dest->surface_set		(rt_LUM_pool[gpu_id*2+1]->pSurface);
 	}
 
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
+		phase_ao();
+
 	// low/hi RTs
 	u_setrt				( rt_Generic_0,rt_Generic_1,0,HW.pBaseZB );
 	RCache.set_CullMode	( CULL_NONE );
@@ -59,9 +62,6 @@ void	CRenderTarget::phase_combine	()
 		float	scale		= ps_r2_mblur/2.f;
 		m_blur_scale.set	(scale,-scale).div(12.f);
 	}
-
-	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
-		phase_ao();
 
 	// Draw full-screen quad textured with our scene image
 	if (!_menu_pp)

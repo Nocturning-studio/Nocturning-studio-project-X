@@ -1388,7 +1388,7 @@ void CRender::render_sun_filtered	()
 void CRender::init_cacades()
 {
 	extern u32 ps_sun_quality;
-	u32 cascade_count;
+	u32 cascade_count = 0;
 	switch (ps_sun_quality)
 	{
 	case 0:
