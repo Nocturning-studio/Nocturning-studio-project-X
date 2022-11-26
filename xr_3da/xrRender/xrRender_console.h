@@ -7,6 +7,9 @@ extern ENGINE_API	BOOL		r2_advanced_pp;
 extern ENGINE_API	int			ps_r__Supersample;
 extern ECORE_API	int			ps_r__LightSleepFrames;
 
+extern ECORE_API	u32			ps_r_sun_shafts;	//=	0;
+extern ECORE_API	xr_token	qsun_shafts_token[];
+
 extern ECORE_API	float		ps_r__Detail_l_ambient;
 extern ECORE_API	float		ps_r__Detail_l_aniso;
 extern ECORE_API	float		ps_r__Detail_density;

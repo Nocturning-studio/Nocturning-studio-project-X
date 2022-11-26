@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "r2_rendertarget.h"
 
 void	CRenderTarget::phase_accumulator()
 {
@@ -32,4 +33,22 @@ void	CRenderTarget::phase_accumulator()
 		RCache.set_CullMode					(CULL_NONE);
 		RCache.set_ColorWriteEnable			();
 	}
+}
+
+void	CRenderTarget::phase_vol_accumulator()
+{
+	if (!m_bHasActiveVolumetric)
+	{
+		m_bHasActiveVolumetric = true;
+
+		u_setrt(rt_Generic_2, NULL, NULL, HW.pBaseZB);
+		u32		clr4clearVol = color_rgba(0, 0, 0, 0);	// 0x00
+		CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, clr4clearVol, 1.0f, 0L));
+	}
+	else
+		u_setrt(rt_Generic_2, NULL, NULL, HW.pBaseZB);
+
+	RCache.set_Stencil(FALSE);
+	RCache.set_CullMode(CULL_NONE);
+	RCache.set_ColorWriteEnable();
 }

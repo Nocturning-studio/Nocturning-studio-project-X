@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\igame_persistent.h"
 #include "..\environment.h"
+#include "r2_rendertarget.h"
 
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
@@ -215,6 +216,10 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		// disable depth bounds
 		u_DBT_disable	();
+
+		//	Igor: draw volumetric here
+		if (RImplementation.o.advancedpp && (ps_r_sun_shafts > 0))
+			accum_direct_volumetric(sub_phase, Offset, m_shadow);
 	}
 }
 
@@ -471,9 +476,8 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 		u_DBT_disable();
 
 		//	Igor: draw volumetric here
-		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
-		//if (RImplementation.o.advancedpp && (ps_r_sun_shafts > 0) && sub_phase == SE_SUN_FAR)
-		//	accum_direct_volumetric(sub_phase, Offset, m_shadow);
+		if (RImplementation.o.advancedpp && (ps_r_sun_shafts > 0) && sub_phase == SE_SUN_FAR)
+			accum_direct_volumetric(sub_phase, Offset, m_shadow);
 	}
 }
 
@@ -719,4 +723,167 @@ void CRenderTarget::accum_direct_lum	()
 		// setup stencil
 		RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
+}
+
+void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, const Fmatrix& mShadow)
+{
+	if ((sub_phase != SE_SUN_NEAR) && (sub_phase != SE_SUN_MIDDLE) && (sub_phase != SE_SUN_FAR)) return;
+
+	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts))
+		return;
+
+	{
+		CEnvDescriptor& E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E.m_fSunShaftsIntensity;
+		//	TODO: add multiplication by sun color here
+		if (fValue < 0.0001) return;
+	}
+
+	//	Test. draw only for near part
+//	if (sub_phase!=SE_SUN_N/EAR) return;
+//	if (sub_phase!=SE_SUN_FAR) return;
+
+	phase_vol_accumulator();
+
+	RCache.set_ColorWriteEnable();
+
+	//	Assume everything was recalculated before this call by accum_direct
+
+	//	Set correct depth surface
+	//	It's slow. Make this when shader is created
+	{
+		char* pszSMapName;
+		BOOL		b_HW_smap = RImplementation.o.HW_smap;
+		BOOL		b_HW_PCF = RImplementation.o.HW_smap_PCF;
+		if (b_HW_smap) {
+			if (b_HW_PCF)	pszSMapName = r2_RT_smap_depth;
+			else			pszSMapName = r2_RT_smap_depth;
+		}
+		else				pszSMapName = r2_RT_smap_surf;
+		//s_smap
+
+		STextureList* _T = &*s_accum_direct_volumetric_cascade->E[0]->passes[0]->T;
+
+		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+			_T = &*s_accum_direct_volumetric->E[0]->passes[0]->T;
+
+		STextureList::iterator	_it = _T->begin();
+		STextureList::iterator	_end = _T->end();
+		for (; _it != _end; _it++)
+		{
+			std::pair<u32, ref_texture>& loader = *_it;
+			u32			load_id = loader.first;
+			//	Shadowmap texture always uses 0 texture unit
+			if (load_id == 0)
+			{
+				//	Assign correct texture
+				loader.second.create(pszSMapName);
+			}
+		}
+	}
+
+	// Perform lighting
+	{
+
+		// *** assume accumulator setted up ***
+		light* fuckingsun = (light*)RImplementation.Lights.sun_adapted._get();
+
+		// Common constants (light-related)
+		Fvector		L_clr;
+		L_clr.set(fuckingsun->color.r, fuckingsun->color.g, fuckingsun->color.b);
+
+		//	Use g_combine_2UV that was set up by accum_direct
+		//	RCache.set_Geometry			(g_combine_2UV);
+
+		// setup
+
+
+
+		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+			RCache.set_Element(s_accum_direct_volumetric->E[0]);
+		else
+		{
+			RCache.set_Element(s_accum_direct_volumetric_cascade->E[0]);
+			RCache.set_CullMode(CULL_CCW);
+		}
+
+		//		RCache.set_c				("Ldynamic_dir",		L_dir.x,L_dir.y,L_dir.z,0 );
+		RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, 0);
+		RCache.set_c("m_shadow", mShadow);
+		Fmatrix			m_Texgen;
+		m_Texgen.identity();
+		RCache.xforms.set_W(m_Texgen);
+		RCache.xforms.set_V(Device.mView);
+		RCache.xforms.set_P(Device.mProject);
+		u_compute_texgen_screen(m_Texgen);
+
+		RCache.set_c("m_texgen", m_Texgen);
+		//		RCache.set_c				("m_sunmask",			m_clouds_shadow);
+
+				// nv-DBT
+		float zMin, zMax;
+		if (SE_SUN_NEAR == sub_phase) {
+			zMin = 0;
+			zMax = ps_r2_sun_near;
+		}
+		else {
+			extern float	ps_r2_sun_far;
+			if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+				zMin = ps_r2_sun_near;
+			else
+				zMin = 0; /////*****************************************************************************************
+
+			zMax = ps_r2_sun_far;
+		}
+
+		RCache.set_c("volume_range", zMin, zMax, 0, 0);
+
+		Fvector	center_pt;
+		center_pt.mad(Device.vCameraPosition, Device.vCameraDirection, zMin);
+		Device.mFullTransform.transform(center_pt);
+		zMin = center_pt.z;
+
+		center_pt.mad(Device.vCameraPosition, Device.vCameraDirection, zMax);
+		Device.mFullTransform.transform(center_pt);
+		zMax = center_pt.z;
+
+
+		if (u_DBT_enable(zMin, zMax)) {
+			// z-test always
+			HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+			HW.pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		}
+		else
+		{
+			if (SE_SUN_NEAR == sub_phase)
+				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_GREATER);
+			else
+				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+		}
+
+		// Fetch4 : enable
+		if (RImplementation.o.HW_smap_FETCH4) {
+			//. we hacked the shader to force smap on S0
+#			define FOURCC_GET4  MAKEFOURCC('G','E','T','4') 
+			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4);
+		}
+
+		// setup stencil: we have to draw to both lit and unlit pixels
+		//RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
+
+		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+		else
+			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 8, 0, 16);
+
+		// Fetch4 : disable
+		if (RImplementation.o.HW_smap_FETCH4) {
+			//. we hacked the shader to force smap on S0
+#			define FOURCC_GET1  MAKEFOURCC('G','E','T','1') 
+			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET1);
+		}
+
+		// disable depth bounds
+		u_DBT_disable();
+	}
 }

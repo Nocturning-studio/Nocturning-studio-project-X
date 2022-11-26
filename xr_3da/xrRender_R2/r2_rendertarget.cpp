@@ -11,6 +11,7 @@
 #include "blender_bloom_build.h"
 #include "blender_ao_build.h"
 #include "blender_luminance.h"
+#include "r2_rendertarget.h"
 
 void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
 {
@@ -241,6 +242,8 @@ CRenderTarget::CRenderTarget		()
 		// generic(LDR) RTs
 		rt_Generic_0.create			(r2_RT_generic0,w,h,D3DFMT_A16B16G16R16F		);
 		rt_Generic_1.create			(r2_RT_generic1,w,h,D3DFMT_A16B16G16R16F		);
+		if (RImplementation.o.advancedpp)
+			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A16B16G16R16F);
 	}
 
 	// OCCLUSION
@@ -261,6 +264,11 @@ CRenderTarget::CRenderTarget		()
 		s_accum_mask.create			(b_accum_mask,				"r2\\accum_mask");
 		s_accum_direct.create		(b_accum_direct,			"r2\\accum_direct");
 		s_accum_direct_cascade.create(b_accum_direct_cascade,	"r2\\accum_direct_cascade");
+		if (RImplementation.o.advancedpp)
+		{
+			s_accum_direct_volumetric.create("accum_volumetric_sun");
+			s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
+		}
 	}
 	else
 	{
@@ -271,6 +279,11 @@ CRenderTarget::CRenderTarget		()
 		s_accum_mask.create			(b_accum_mask,				"r2\\accum_mask");
 		s_accum_direct.create		(b_accum_direct,			"r2\\accum_direct");
 		s_accum_direct_cascade.create(b_accum_direct_cascade,	"r2\\accum_direct_cascade");
+		if (RImplementation.o.advancedpp)
+		{
+			s_accum_direct_volumetric.create("accum_volumetric_sun");
+			s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
+		}
 	}
 
 	// POINT
@@ -356,6 +369,7 @@ CRenderTarget::CRenderTarget		()
 			D3DDECL_END()
 		};
 		s_combine.create					(b_combine,					"r2\\combine");
+		s_combine_volumetric.create			("combine_volumetric");
 		s_combine_dbg_0.create				("effects\\screen_set",		r2_RT_smap_surf		);	
 		s_combine_dbg_1.create				("effects\\screen_set",		r2_RT_luminance_t8	);
 		s_combine_dbg_Accumulator.create	("effects\\screen_set",		r2_RT_accum			);
@@ -589,4 +603,19 @@ void CRenderTarget::increment_light_marker()
 	//if (dwLightMarkerID>10)
 	if (dwLightMarkerID > 255)
 		reset_light_marker(true);
+}
+
+bool CRenderTarget::need_to_render_sunshafts()
+{
+	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts))
+		return false;
+
+	{
+		CEnvDescriptor& E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E.m_fSunShaftsIntensity;
+		//	TODO: add multiplication by sun color here
+		if (fValue < 0.0001) return false;
+	}
+
+	return true;
 }

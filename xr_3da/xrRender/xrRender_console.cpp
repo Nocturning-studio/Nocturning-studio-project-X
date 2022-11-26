@@ -103,6 +103,15 @@ xr_token bump_mode_token[] = {
 	{"steep_parallax_mapping", 3},
 	{0, 0} };
 
+u32			ps_r_sun_shafts = 2;
+xr_token							qsun_shafts_token[] = {
+	{ "st_opt_off",					0												},
+	{ "st_opt_low",					1												},
+	{ "st_opt_medium",				2												},
+	{ "st_opt_high",				3												},
+	{ 0,							0												}
+};
+
 // Common
 //int		ps_r__Supersample			= 1		;
 int			ps_r__LightSleepFrames = 10;
@@ -527,6 +536,8 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_dof_kernel", &ps_r2_dof_kernel_size, .0f, 10.f);
 	CMD4(CCC_Float, "r2_dof_sky", &ps_r2_dof_sky, -10000.f, 10000.f);
 	//CMD3(CCC_Mask, "r2_dof_enable", &ps_r2_ls_flags, R2FLAG_DOF);
+
+	CMD3(CCC_Token, "r2_sun_shafts", &ps_r_sun_shafts, qsun_shafts_token);
 
 	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
 
