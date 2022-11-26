@@ -1416,15 +1416,14 @@ void CRender::init_cacades()
 	{
 	case 0:
 		m_sun_cascades[0].reset_chain = true;
-		m_sun_cascades[0].size = 15;
+		m_sun_cascades[0].size = 9;
 		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
-		m_sun_cascades[1].size = 30;
+		m_sun_cascades[1].size = 40;
 		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
 
-		m_sun_cascades[2].size = ps_r2_sun_far;
+		m_sun_cascades[2].size = 160;
 		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
-		break;
 	case 1:
 		m_sun_cascades[0].reset_chain = true;
 		m_sun_cascades[0].size = 15;
@@ -1436,7 +1435,7 @@ void CRender::init_cacades()
 		m_sun_cascades[2].size = 60;
 		m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
 
-		m_sun_cascades[3].size = ps_r2_sun_far;
+		m_sun_cascades[3].size = 160;
 		m_sun_cascades[3].bias = m_sun_cascades[3].size * fBias;
 		break;
 	case 2:
@@ -1465,7 +1464,7 @@ void CRender::init_cacades()
 		m_sun_cascades[7].size = 80;
 		m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
 
-		m_sun_cascades[8].size = ps_r2_sun_far;
+		m_sun_cascades[8].size = 160;
 		m_sun_cascades[8].bias = m_sun_cascades[8].size * fBias;
 		break;
 	case 3:
@@ -1512,7 +1511,7 @@ void CRender::init_cacades()
 		m_sun_cascades[13].size = 90;
 		m_sun_cascades[13].bias = m_sun_cascades[13].size * fBias;
 
-		m_sun_cascades[14].size = ps_r2_sun_far;
+		m_sun_cascades[14].size = 160;
 		m_sun_cascades[14].bias = m_sun_cascades[14].size * fBias;
 		break;
 	case 4:
@@ -1649,7 +1648,7 @@ void CRender::init_cacades()
 		m_sun_cascades[43].size = 90;
 		m_sun_cascades[43].bias = m_sun_cascades[43].size * fBias;
 
-		m_sun_cascades[44].size = ps_r2_sun_far;
+		m_sun_cascades[44].size = 160;
 		m_sun_cascades[44].bias = m_sun_cascades[44].size * fBias;
 		break;
 	}
@@ -1664,16 +1663,16 @@ void CRender::init_cacades()
 
 void CRender::render_sun_cascades()
 {
-//	bool b_need_to_render_sunshafts = RImplementation.Target->need_to_render_sunshafts();
+	bool b_need_to_render_sunshafts = RImplementation.Target->need_to_render_sunshafts();
 	bool last_cascade_chain_mode = m_sun_cascades.back().reset_chain;
-//	if (b_need_to_render_sunshafts)
-//		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = true;
+	if (b_need_to_render_sunshafts)
+		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = true;
 
 	for (u32 i = 0; i < m_sun_cascades.size(); ++i)
 		render_sun_cascade(i);
 
-//	if (b_need_to_render_sunshafts)
-//		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = last_cascade_chain_mode;
+	if (b_need_to_render_sunshafts)
+		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = last_cascade_chain_mode;
 }
 
 void CRender::render_sun_cascade(u32 cascade_ind)
@@ -1916,7 +1915,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		bool	bNormal = mapNormal[0].size() || mapMatrix[0].size();
 		bool	bSpecial = mapNormal[1].size() || mapMatrix[1].size() || mapSorted.size();
 		if (bNormal || bSpecial) {
-			Target->phase_smap_direct(fuckingsun, SE_SUN_FAR);
+			Target->phase_smap_direct(fuckingsun, SE_SUN_NEAR);
 			RCache.set_xform_world(Fidentity);
 			RCache.set_xform_view(Fidentity);
 			RCache.set_xform_project(fuckingsun->X.D.combine);
@@ -1926,7 +1925,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			fuckingsun->X.D.transluent = FALSE;
 			if (bSpecial) {
 				fuckingsun->X.D.transluent = TRUE;
-				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_FAR);
+				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_NEAR);
 				r_dsgraph_render_graph(1);			// normal level, secondary priority
 				r_dsgraph_render_sorted();			// strict-sorted geoms
 			}
