@@ -18,7 +18,7 @@
 #endif
 
 #if RENDER==R_R2
-	const int		dm_size				= 40;//24;								//!
+	const int		dm_size = 30;//40;//24;								//!
 #else
 	const int		dm_size = 24;								//!
 #endif
