@@ -27,7 +27,7 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 	case 1: // combine
 		C.r_Pass("null", "ao_build", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_position", r2_RT_P);
-		C.r_Sampler_clf("s_position_blurred", r2_RT_blurred_position);
+		C.r_Sampler_rtf("s_position_blurred", r2_RT_blurred_position);
 		C.r_Sampler_rtf("s_normal", r2_RT_N);
 		jitter(C);
 		C.r_End();
