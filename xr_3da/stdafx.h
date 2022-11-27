@@ -20,7 +20,7 @@
 
 // you must define ENGINE_BUILD then building the engine itself
 // and not define it if you are about to build DLL
-#ifndef NO_ENGINE_API
+#if !defined(NO_ENGINE_API) && !defined(ALL_TO_ONE) 
 #ifdef	ENGINE_BUILD
 #define DLL_API			__declspec(dllimport)
 #define ENGINE_API		__declspec(dllexport)

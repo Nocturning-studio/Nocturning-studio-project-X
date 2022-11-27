@@ -138,6 +138,11 @@ void	CRenderTarget::phase_combine	()
 		if (g_pGamePersistent)	g_pGamePersistent->OnRenderPPUI_main()	;	// PP-UI
 	}
 
+	//	Igor: for volumetric lights
+	//	combine light volume here
+	if (m_bHasActiveVolumetric)
+		phase_combine_volumetric();
+
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil	(FALSE);
 	phase_bloom			( );												// HDR RT invalidated here

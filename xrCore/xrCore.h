@@ -174,7 +174,7 @@
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 
 // Our headers
-#ifdef XRCORE_STATIC
+#if defined(XRCORE_STATIC) || defined(ALL_TO_ONE)
 #	define XRCORE_API
 #else
 #	ifdef XRCORE_EXPORTS

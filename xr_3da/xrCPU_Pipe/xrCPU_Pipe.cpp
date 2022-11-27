@@ -32,7 +32,11 @@ extern xrMemFill_32b	xrMemFill32_MMX;
 
 
 extern "C" {
+#ifdef ALL_TO_ONE
+	void	__cdecl	xrBind_PSGP(xrDispatchTable* T, DWORD dwFeatures)
+#else
 	__declspec(dllexport) void	__cdecl	xrBind_PSGP	(xrDispatchTable* T, DWORD dwFeatures)
+#endif
 	{
 		// analyze features
 		// DWORD dwFeatures = CPU::ID.feature & CPU::ID.os_support;

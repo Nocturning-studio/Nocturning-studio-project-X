@@ -6,11 +6,15 @@
 // (например, имена функций и макросов).
 // Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
 #define ENGINE_API
+#ifndef ALL_TO_ONE
 #define ENGINE_API __declspec(dllexport)
 #define ENGINE_API __declspec(dllimport)
+#endif
 // Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
 // (например, имена функций и макросов).
 // Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
 #define ENGINE_API
+#ifndef ALL_TO_ONE
 #define ENGINE_API __declspec(dllexport)
 #define ENGINE_API __declspec(dllimport)
+#endif

@@ -3,10 +3,14 @@
 
 #pragma once
 
+#ifdef ALL_TO_ONE
+#define XRHS_API
+#endif
 #ifdef XRHEMISPHERE_EXPORTS
 #define XRHS_API __declspec(dllexport)
 #else
 #define XRHS_API __declspec(dllimport)
+#endif
 #endif
 
 typedef void __stdcall		xrHemisphereIterator(float x, float y, float z, float energy, LPVOID param);

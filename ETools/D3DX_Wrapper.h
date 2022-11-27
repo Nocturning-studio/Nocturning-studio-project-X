@@ -1,11 +1,14 @@
 #ifndef D3DX_WraperH
 #define D3DX_WraperH
 #pragma once
-
+#ifndef ALL_TO_ONE
 #ifdef ETOOLS_EXPORTS
 #define ETOOLS_API __declspec( dllexport )
 #else
 #define ETOOLS_API __declspec( dllimport )
+#endif
+#else
+#define ETOOLS_API
 #endif
 
 extern "C" {

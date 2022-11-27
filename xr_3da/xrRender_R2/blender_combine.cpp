@@ -29,6 +29,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("env_s1",			r2_T_envs1			);
 		C.r_Sampler_clf		("sky_s0",			r2_T_sky0			);
 		C.r_Sampler_clf		("sky_s1",			r2_T_sky1			);
+		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
 		jitter(C);
 		C.r_End				();
 		break;

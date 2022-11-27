@@ -2,10 +2,14 @@
 #define SoundH
 #pragma once
 
+#ifndef ALL_TO_ONE
 #ifdef XRSOUND_EXPORTS
 	#define XRSOUND_API __declspec(dllexport)
 #else
 	#define XRSOUND_API __declspec(dllimport)
+#endif
+#else
+#define XRSOUND_API
 #endif
 
 #ifdef __BORLANDC__

@@ -40,7 +40,7 @@
 
  
 
-#ifndef XRGAMESPY_API
+#if !defined(XRGAMESPY_API) && !defined(ALL_TO_ONE) 
 	#ifdef XRGAMESPY_EXPORTS
 		#define XRGAMESPY_API				__declspec(dllexport)
 	#endif

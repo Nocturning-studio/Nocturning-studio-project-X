@@ -1,9 +1,16 @@
 #pragma once
 
+#ifndef ALL_TO_ONE
 extern "C" {
 	typedef __declspec(dllimport)  ISE_Abstract*	__stdcall Factory_Create	(LPCSTR section);
 	typedef __declspec(dllimport)  void				__stdcall Factory_Destroy	(ISE_Abstract *&);
 };
+#else
+extern "C" {
+	typedef ISE_Abstract* __stdcall Factory_Create(LPCSTR section);
+	typedef void		  __stdcall Factory_Destroy(ISE_Abstract*&);
+};
+#endif
 
 extern Factory_Create	*create_entity;
 extern Factory_Destroy	*destroy_entity;

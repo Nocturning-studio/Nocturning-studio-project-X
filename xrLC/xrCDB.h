@@ -8,17 +8,22 @@
 // that uses this DLL. This way any other project whose source files include this file see
 // XRCDB_API functions as being imported from a DLL, wheras this DLL sees symbols
 // defined with this macro as being exported.
-#ifdef XRCDB_EXPORTS
-#define XRCDB_API __declspec(dllexport)
+#ifdef ALL_TO_ONE
+#define ALIGN(a)
+#define XRCDB_API
 #else
-#define XRCDB_API __declspec(dllimport)
+#ifdef XRCDB_EXPORTS
+#	define XRCDB_API __declspec(dllexport)
+#else
+#	define XRCDB_API __declspec(dllimport)
+#endif
 #endif
 #ifdef M_VISUAL
 #define ALIGN(a) __declspec(align(a))
 #else
 #define ALIGN(a)
-#endif
 
+#endif
 // forward declarations
 class CFrustum;
 namespace Opcode {

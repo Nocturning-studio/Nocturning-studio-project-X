@@ -6,7 +6,11 @@
 
 #include	"dxerr9.h"
 // misc
+#ifndef ALL_TO_ONE
 __declspec( dllimport ) bool WINAPI FSColorPickerDoModal(unsigned int * currentColor, unsigned int * originalColor, const int initialExpansionState);
+#else
+bool WINAPI FSColorPickerDoModal(unsigned int* currentColor, unsigned int* originalColor, const int initialExpansionState);
+#endif
 extern "C" __declspec(dllexport) bool  __stdcall FSColorPickerExecute(unsigned int * currentColor, unsigned int * originalColor, const int initialExpansionState)
 {
 	return FSColorPickerDoModal(currentColor, originalColor, initialExpansionState);

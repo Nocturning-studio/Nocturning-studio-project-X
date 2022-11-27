@@ -14,7 +14,11 @@
 
 #define ENGINE_API
 #define ECORE_API
+#ifdef ALL_TO_ONE
+#define DLL_API	
+#else
 #define DLL_API					__declspec(dllexport)
+#endif
 #define TIXML_USE_STL
 
 #include "clsid_game.h"
