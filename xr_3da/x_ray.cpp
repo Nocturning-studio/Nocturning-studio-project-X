@@ -597,7 +597,9 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 	g_dedicated_server = true;
 #endif // DEDICATED_SERVER
 
-	SetThreadAffinityMask(GetCurrentThread(), 1);
+#pragma todo("Deathman to All : насколько я понимаю своей тупой головой - эта строка задает привязку потоков к первому ядру, и если убрать или заменить на это число, то потоки будут использовать остальные ядра, но это не точно, если сможешь разберись")
+	//SetThreadAffinityMask(GetCurrentThread(), 1);
+	SetThreadAffinityMask(GetCurrentThread(), 0x0F);
 
 	// Title window
 	logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc);
