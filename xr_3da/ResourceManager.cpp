@@ -286,6 +286,7 @@ void TextureLoading(u16 thread_num)
 	Msg("TextureLoading -> thread %d finished!", thread_num);
 }
 
+/*
 void	CResourceManager::DeferredUpload()
 {
 	if (!Device.b_is_Ready)				return;
@@ -294,7 +295,8 @@ void	CResourceManager::DeferredUpload()
 		t->second->Load();
 	}
 }
-/*
+*/
+//Функция из проекта Моррея, перенес Deathman, рассказал о существовании функции hardware_concurrency() Maks0 (Многопоточная загрузка текстур)
 	void CResourceManager::DeferredUpload()
 	{
 		if (!Device.b_is_Ready) return;
@@ -313,7 +315,7 @@ void	CResourceManager::DeferredUpload()
 		}
 		else
 		{
-			u32 th_count = (m_textures.size() / 100) + 1;
+			u32 th_count = (m_textures.size() / 100) + 1;//std::thread::hardware_concurrency();//(m_textures.size() / 100) + 1;
 			std::thread* th_arr = new std::thread[th_count];
 			for (auto tex : m_textures)
 				tex_to_load.push_back(tex.second);
@@ -327,9 +329,9 @@ void	CResourceManager::DeferredUpload()
 			tex_to_load.clear();
 		}
 
-		Msg("texture loading time: %d", timer.GetElapsed_ms());
+		Msg("texture loading time: %d ms", timer.GetElapsed_ms());
 	}
-*/
+	
 
 void	CResourceManager::DeferredUnload	()
 {
