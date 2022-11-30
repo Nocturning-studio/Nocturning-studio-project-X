@@ -67,12 +67,14 @@ xr_token shadow_quality_token[] = {
 	{"ultra",	5},
 	{0, 0} };
 
+/*
 u32 ps_blur_type = 0;
 xr_token blur_type_token[] = {
 	{"off", 0},
 	{"mblur", 1},
 	{"dof", 2},
 	{0, 0} };
+	*/
 
 u32 ps_shadow_filter_quality = 0;
 xr_token shadow_filter_quality_token[] = {
@@ -518,7 +520,11 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
 	CMD3(CCC_Token, "r2_shadow_quality", &ps_shadow_quality, shadow_quality_token);
 
-	CMD3(CCC_Token, "r2_blur_type", &ps_blur_type, blur_type_token);
+//	CMD3(CCC_Token, "r2_blur_type", &ps_blur_type, blur_type_token);
+
+	CMD3(CCC_Mask, "r2_dof_enabled", &ps_r2_ls_flags, R2FLAG_DOF);
+	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_ls_flags, R2FLAG_MBLUR);
+
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
 
 	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);

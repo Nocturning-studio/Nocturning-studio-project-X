@@ -129,6 +129,16 @@ void CRenderTarget::phase_pp		()
 	RCache.Vertex.Unlock										(4,g_postprocess.stride());
 
 	// Actual rendering
+
+	Fvector2	vDofKernel;
+	vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
+	vDofKernel.mul(ps_r2_dof_kernel_size);
+
+	Fvector3					dof;
+	g_pGamePersistent->GetCurrentDof(dof);
+	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
+	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+
 	static	shared_str	s_brightness	= "c_brightness";
 	RCache.set_c		(s_brightness,color_get_R(p_brightness)/255.f,color_get_G(p_brightness)/255.f,color_get_B(p_brightness)/255.f,0);
 	RCache.set_Geometry	(g_postprocess);

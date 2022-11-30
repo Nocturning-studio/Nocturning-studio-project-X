@@ -141,7 +141,9 @@ enum
 	R2FLAG_WET_SURFACES						= (1 << 23),
 	R2FLAG_VIGNETTE							= (1 << 24),
 	R2FLAG_CHROMATIC_ABBERATION				= (1 << 25),
-	R2FLAG_BLOOM							= (1 << 26)
+	R2FLAG_BLOOM							= (1 << 26),
+	R2FLAG_DOF								= (1 << 27),
+	R2FLAG_MBLUR							= (1 << 28)
 };
 
 enum

@@ -1925,7 +1925,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			fuckingsun->X.D.transluent = FALSE;
 			if (bSpecial) {
 				fuckingsun->X.D.transluent = TRUE;
-				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_NEAR);
+				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_FAR);
 				r_dsgraph_render_graph(1);			// normal level, secondary priority
 				r_dsgraph_render_sorted();			// strict-sorted geoms
 			}

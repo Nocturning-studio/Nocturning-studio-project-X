@@ -164,6 +164,7 @@ void	CRenderTarget::phase_combine	()
 
 	// PP enabled ?
 	BOOL	PP_Complex		= u_need_PP	();
+	if (ps_r2_ls_flags.test(R2FLAG_DOF)) PP_Complex = TRUE;
 	if (_menu_pp)			PP_Complex	= FALSE;
 
 	// Combine everything + perform AA

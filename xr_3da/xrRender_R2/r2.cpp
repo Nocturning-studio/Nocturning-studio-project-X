@@ -718,6 +718,8 @@ HRESULT	CRender::shader_compile(
 	char c_parallax_mapping[32];
 	char c_steep_parallax_mapping[32];
 
+	char c_mblur[32];
+	char c_dof[32];
 
 	char sh_name[MAX_PATH] = "";
 	size_t len = 0;
@@ -808,20 +810,26 @@ HRESULT	CRender::shader_compile(
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ps_blur_type == 1) {
+	if (ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
+		sprintf(c_mblur, "%d", 1);
 		defines[def_it].Name = "USE_MBLUR";
-		defines[def_it].Definition = "1";
+		defines[def_it].Definition = c_mblur;
 		def_it++;
+		strcat(sh_name, c_mblur);
+		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_blur_type;
+	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_MBLUR));
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_blur_type == 2) {
+	if (ps_r2_ls_flags.test(R2FLAG_DOF)) {
+		sprintf(c_dof, "%d", 1);
 		defines[def_it].Name = "USE_DOF";
-		defines[def_it].Definition = "1";
+		defines[def_it].Definition = c_dof;
 		def_it++;
+		strcat(sh_name, c_dof);
+		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_blur_type;
+	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_DOF));
 	++len;
 
 	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
