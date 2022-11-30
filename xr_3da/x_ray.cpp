@@ -597,9 +597,11 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 	g_dedicated_server = true;
 #endif // DEDICATED_SERVER
 
-#pragma todo("Deathman to All : насколько я понимаю своей тупой головой - эта строка задает привязку потоков к первому ядру, и если убрать или заменить на это число, то потоки будут использовать остальные ядра, но это не точно, если сможешь разберись")
 	//SetThreadAffinityMask(GetCurrentThread(), 1);
-	SetThreadAffinityMask(GetCurrentThread(), 0x0F);
+	//SetThreadAffinityMask(GetCurrentThread(), 0x0F);
+	//SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+	Sleep(0);
 
 	// Title window
 	logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc);
@@ -663,17 +665,20 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 				return 0;
 		};
 
-		if (strstr(Core.Params, "-r2a"))
-			Console->Execute("renderer renderer_r2a");
+		if (strstr(Core.Params, "-r2.5"))
+			Console->Execute("renderer renderer_r2.5");
 		else
-			if (strstr(Core.Params, "-r2"))
-				Console->Execute("renderer renderer_r2");
+			if (strstr(Core.Params, "-r2a"))
+				Console->Execute("renderer renderer_r2a");
 			else
-			{
-				CCC_LoadCFG_custom* pTmp = xr_new<CCC_LoadCFG_custom>("renderer ");
-				pTmp->Execute(Console->ConfigFile);
-				xr_delete(pTmp);
-			}
+				if (strstr(Core.Params, "-r2"))
+					Console->Execute("renderer renderer_r2");
+				else
+				{
+					CCC_LoadCFG_custom* pTmp = xr_new<CCC_LoadCFG_custom>("renderer ");
+					pTmp->Execute(Console->ConfigFile);
+					xr_delete(pTmp);
+				}
 
 		InitInput();
 		Engine.External.Initialize();

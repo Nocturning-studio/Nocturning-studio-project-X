@@ -641,7 +641,7 @@ void CAI_Stalker::UpdateCL()
 
 	if (g_Alive()) {
 		if (g_mt_config.test(mtObjectHandler) && CObjectHandler::planner().initialized()) {
-			fastdelegate::FastDelegate0<>								f = fastdelegate::FastDelegate0<>(this,&CAI_Stalker::update_object_handler);
+			fastdelegate::FastDelegate0<> f = fastdelegate::FastDelegate0<>(this,&CAI_Stalker::update_object_handler);
 #ifdef DEBUG
 			xr_vector<fastdelegate::FastDelegate0<> >::const_iterator	I;
 			I	= std::find(Device.seqParallel.begin(),Device.seqParallel.end(),f);
