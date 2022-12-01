@@ -102,6 +102,8 @@ public:
 	void				r_Sampler_rtf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
 	void				r_Sampler_clf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
 	void				r_Sampler_clw(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
+	void r_Sampler_tex(LPCSTR name, LPCSTR texture);
+	void r_Sampler_tex(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide);
 	void				r_End();
 
 	CBlender_Compile();

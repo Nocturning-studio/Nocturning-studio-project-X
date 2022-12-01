@@ -695,6 +695,7 @@ HRESULT	CRender::shader_compile(
 	char c_ao[32];
 	char c_ao_quality[32];
 	char c_ao_blur[32];
+	char c_ao_use[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
@@ -875,6 +876,20 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(ao_blur);
+	++len;
+
+	/********************************************USING*********************************************/
+
+	if (RImplementation.o.advancedpp && (ps_ao >= 0))
+	{
+		sprintf(c_ao_use, "%d", 1);
+		defines[def_it].Name = "USE_AO";
+		defines[def_it].Definition = c_ao_use;
+		def_it++;
+		strcat(sh_name, c_ao_use);
+		len += 4;
+	}
+	sh_name[len] = '0' + char(RImplementation.o.advancedpp && (ps_ao >= 0));
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 

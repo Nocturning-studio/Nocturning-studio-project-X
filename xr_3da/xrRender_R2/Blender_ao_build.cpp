@@ -29,6 +29,7 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_position", r2_RT_P);
 		C.r_Sampler_rtf("s_position_blurred", r2_RT_blurred_position);
 		C.r_Sampler_rtf("s_normal", r2_RT_N);
+		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture.dds");
 		jitter(C);
 		C.r_End();
 		break;
