@@ -12,16 +12,7 @@
 // #include "std_classes.h"
 // #include "xr_avi.h"
 
-void fix_texture_name(LPSTR fn)
-{
-	LPSTR _ext = strext(fn);
-	if(  _ext					&&
-	  (0==stricmp(_ext,".tga")	||
-		0==stricmp(_ext,".dds")	||
-		0==stricmp(_ext,".bmp")	||
-		0==stricmp(_ext,".ogm")	) )
-		*_ext = 0;
-}
+void fix_texture_name(LPSTR fn);
 
 int get_texture_load_lod(LPCSTR fn)
 {
@@ -274,10 +265,27 @@ struct TextureCreateParams
 	LPDIRECT3DDEVICE9 pDevice;
 };
 
-IDirect3DBaseTexture9* DDS2DLoad(TextureCreateParams params);
-IDirect3DBaseTexture9* DDSCubeLoad(TextureCreateParams params);
-IDirect3DBaseTexture9* DDSLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
-IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
+IDirect3DBaseTexture9* BaseLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
+IDirect3DBaseTexture9* BaseBumpLoad(string_path fname, string_path& fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
+
+using TextureLoader = IDirect3DBaseTexture9 * (*)(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
+using BumpLoader = IDirect3DBaseTexture9 * (*)(string_path fname, string_path& fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice);
+using LoadersPair = std::pair<TextureLoader, BumpLoader>;
+
+constexpr LoadersPair BaseLoader = { &BaseLoad, &BaseBumpLoad};
+const std::map<const char*, LoadersPair> TextureLoaders =
+{
+	{".tga", BaseLoader},
+	{".dds", BaseLoader},
+	{".png", BaseLoader},
+	{".jpg", BaseLoader},
+	{".ppm", BaseLoader},
+	{".pfm", BaseLoader},
+	{".hdr", BaseLoader},
+	{".dib", BaseLoader},
+	{".bmp", BaseLoader}, // Fuck BMP
+};
+
 IDirect3DBaseTexture9* CRender::texture_load(LPCSTR fRName, u32& ret_msize)
 {
 	string_path fn {0};
@@ -285,31 +293,56 @@ IDirect3DBaseTexture9* CRender::texture_load(LPCSTR fRName, u32& ret_msize)
 	R_ASSERT (fRName);
 	R_ASSERT (fRName[0]);
 
-	// make file name
 	string_path fname;
-	strcpy(fname, fRName); //. andy if (strext(fname)) *strext(fname)=0;
+	strcpy(fname, fRName);
 	fix_texture_name (fname);
 
-	if (!FS.exist(fn, "$game_textures$", fname, ".dds") && strstr(fname, "_bump"))	return DDSBumpLoad(fname, fn, ret_msize, HW.pDevice);
-	if (FS.exist(fn,"$level$",			fname,	".dds"))							return DDSLoad(fn, ret_msize, HW.pDevice);
-	if (FS.exist(fn,"$game_saves$",		fname,	".dds"))							return DDSLoad(fn, ret_msize, HW.pDevice);
-	if (FS.exist(fn,"$game_textures$",	fname,	".dds"))							return DDSLoad(fn, ret_msize, HW.pDevice);
+	for (auto& loader : TextureLoaders)
+	{
+		// loader.first - extension
+		// loader.second.first - TextureLoader
+		// loader.second.second - BumpLoader
 
+		if (!FS.exist(fn, "$game_textures$", fname, loader.first) && strstr(fname, "_bump")) // Bump
+			return loader.second.second(fname, fn, ret_msize, HW.pDevice);
+
+		if (FS.exist(fn, "$level$", fname, loader.first)) // Level texture
+			return loader.second.first(fn, ret_msize, HW.pDevice);
+
+		if (FS.exist(fn, "$game_saves$", fname, loader.first)) // Texture from save (screenshot and etc.)
+			return loader.second.first(fn, ret_msize, HW.pDevice);
+
+		if (FS.exist(fn, "$game_textures$", fname, loader.first)) // Base texture
+			return loader.second.first(fn, ret_msize, HW.pDevice);
+	}
 #ifdef _EDITOR
 	ELog.Msg(mtError, "Can't find texture '%s'", fname);
 	return 0;
 #else
 
 	Msg("! Can't find texture '%s'", fname);
-	R_ASSERT(FS.exist(fn, "$game_textures$", "ed\\ed_not_existing_texture", ".dds"));
+	R_ASSERT(IsDummyExist(fn, "ed\\ed_not_existing_texture"));
 
-	return DDSLoad(fn, ret_msize, HW.pDevice);
+	return BaseLoad(fn, ret_msize, HW.pDevice);
 #endif
 }
 
-IDirect3DBaseTexture9* DDS2DLoad(TextureCreateParams params);
-IDirect3DBaseTexture9* DDSCubeLoad(TextureCreateParams params);
-IDirect3DBaseTexture9* DDSLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice)
+IC bool IsDummyExist(string_path& fn, string_path fname)
+{
+	bool exists = false;
+	for (auto& it : TextureLoaders)
+	{
+		exists = (bool)FS.exist(fn, "$game_textures$", fname, it.first);
+		if (exists)
+			break;
+	}
+
+	return exists;
+}
+
+IDirect3DBaseTexture9* Base2DLoad(TextureCreateParams params);
+IDirect3DBaseTexture9* BaseCubeLoad(TextureCreateParams params);
+IDirect3DBaseTexture9* BaseLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice)
 {
 	IReader* S = nullptr;
 
@@ -331,12 +364,12 @@ IDirect3DBaseTexture9* DDSLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9
 		FS.r_close(S);
 		string_path temp;
 
-		R_ASSERT(FS.exist(temp, "$game_textures$", "ed\\ed_not_existing_texture", ".dds"));
+		R_ASSERT(IsDummyExist(temp, "ed\\ed_not_existing_texture"));
 		R_ASSERT(xr_strcmp(temp, fn));
 
 		strcpy(fn, temp);
 
-		return DDSLoad(fn, ret_msize, pDevice); // Loading placeholder
+		return BaseLoad(fn, ret_msize, pDevice); // Loading placeholder
 	}
 
 	TextureCreateParams params{};
@@ -348,12 +381,12 @@ IDirect3DBaseTexture9* DDSLoad(string_path fn, u32& ret_msize, LPDIRECT3DDEVICE9
 	params.pDevice = pDevice;
 
 	if (IMG.ResourceType == D3DRTYPE_CUBETEXTURE) 
-		return DDSCubeLoad(params);
+		return BaseCubeLoad(params);
 	else 
-		return DDS2DLoad(params);
+		return Base2DLoad(params);
 }
 
-IDirect3DBaseTexture9* DDS2DLoad(TextureCreateParams params)
+IDirect3DBaseTexture9* Base2DLoad(TextureCreateParams params)
 {
 	// Check for LMAP and compress if needed
 	strlwr(params.fn);
@@ -376,15 +409,16 @@ IDirect3DBaseTexture9* DDS2DLoad(TextureCreateParams params)
 
 	FS.r_close(params.S);
 
-	if (FAILED(result)) {
+	if (FAILED(result)) 
+	{
 		Msg("! Can't load texture '%s'", params.fn);
 		string_path			temp;
-		R_ASSERT(FS.exist(temp, "$game_textures$", "ed\\ed_not_existing_texture", ".dds"));
+		R_ASSERT(IsDummyExist(temp, "ed\\ed_not_existing_texture"));
 		strlwr(temp);
 		R_ASSERT(xr_strcmp(temp, params.fn));
 		strcpy(params.fn, temp);
 
-		return DDSLoad(params.fn, *params.ret_msize, params.pDevice);
+		return BaseLoad(params.fn, *params.ret_msize, params.pDevice);
 	}
 
 	D3DFORMAT fmt;
@@ -404,7 +438,7 @@ IDirect3DBaseTexture9* DDS2DLoad(TextureCreateParams params)
 	return pTexture2D;
 }
 
-IDirect3DBaseTexture9* DDSCubeLoad(TextureCreateParams params)
+IDirect3DBaseTexture9* BaseCubeLoad(TextureCreateParams params)
 {
 	IDirect3DCubeTexture9* pTextureCUBE = nullptr;
 	HRESULT const result = D3DXCreateCubeTextureFromFileInMemoryEx(
@@ -425,11 +459,11 @@ IDirect3DBaseTexture9* DDSCubeLoad(TextureCreateParams params)
 	{
 		Msg("! Can't load texture '%s'", params.fn);
 		string_path			temp;
-		R_ASSERT(FS.exist(temp, "$game_textures$", "ed\\ed_not_existing_texture", ".dds"));
+		R_ASSERT(IsDummyExist(temp, "ed\\ed_not_existing_texture"));
 		R_ASSERT(xr_strcmp(temp, params.fn));
 		strcpy(params.fn, temp);
 
-		return DDSLoad(params.fn, *params.ret_msize, params.pDevice);
+		return BaseLoad(params.fn, *params.ret_msize, params.pDevice);
 	}
 
 	D3DFORMAT fmt;
@@ -451,7 +485,7 @@ IDirect3DBaseTexture9* DDSCubeLoad(TextureCreateParams params)
 	return pTextureCUBE;
 }
 
-IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice)
+IDirect3DBaseTexture9* BaseBumpLoad(string_path fname, string_path& fn, u32& ret_msize, LPDIRECT3DDEVICE9 pDevice)
 {
 #ifdef DEBUG
 	Msg("! auto-generated bump map: %s", fname);
@@ -464,7 +498,7 @@ IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_
 
 	if (strstr(fname, "_bump#"))
 	{
-		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump#", ".dds"), "ed_dummy_bump#");
+		R_ASSERT2(IsDummyExist(fn, "ed\\ed_dummy_bump#"), "ed_dummy_bump#");
 		S = FS.r_open(fn);
 		R_ASSERT2(S, fn);
 		img_size = S->length();
@@ -477,12 +511,12 @@ IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_
 		params.ret_msize = &ret_msize;
 		params.pDevice = pDevice;
 
-		DDS2DLoad(params);
+		Base2DLoad(params);
 	}
 
 	if (strstr(fname, "_bump"))
 	{
-		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump", ".dds"), "ed_dummy_bump");
+		R_ASSERT2(IsDummyExist(fn, "ed\\ed_dummy_bump"), "ed_dummy_bump");
 		S = FS.r_open(fn);
 
 		R_ASSERT2(S, fn);
@@ -497,12 +531,20 @@ IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_
 		params.ret_msize = &ret_msize;
 		params.pDevice = pDevice;
 
-		DDS2DLoad(params);
+		Base2DLoad(params);
 	}
 	//////////////////
 
 	*strstr(fname, "_bump") = 0;
-	R_ASSERT2(FS.exist(fn, "$game_textures$", fname, ".dds"), fname);
+
+	bool exists = false;
+	for(auto& it : TextureLoaders)
+	{
+		exists = (bool)FS.exist(fn, "$game_textures$", fname, it.first);
+		if (exists)
+			break;
+	}
+	R_ASSERT2(exists, fname);
 
 	// Load   SYS-MEM-surface, bound to device restrictions
 	S = FS.r_open(fn);
@@ -535,7 +577,7 @@ IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_
 
 	mip_cnt = T_normal_1C->GetLevelCount();
 
-#if RENDER==R_R2	
+#if RENDER == R_R2	
 	// Decompress (back)
 	fmt = D3DFMT_A8R8G8B8;
 	IDirect3DTexture9* T_normal_1U = TW_LoadTextureFromTexture(T_normal_1C, fmt, 0, dwWidth, dwHeight);
@@ -568,4 +610,20 @@ IDirect3DBaseTexture9* DDSBumpLoad(string_path fname, string_path& fn, u32& ret_
 
 	ret_msize = calc_texture_size(img_loaded_lod, mip_cnt, img_size);
 	return T_normal_1C;
+}
+
+void fix_texture_name(LPSTR fn)
+{
+	LPSTR _ext = strext(fn);
+	if (_ext)
+	{
+		for (auto& it : TextureLoaders)
+		{
+			if (0 == stricmp(_ext, it.first))
+			{
+				*_ext = 0;
+				return;
+			}
+		}
+	}
 }
