@@ -99,6 +99,7 @@ xr_token bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
+	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 

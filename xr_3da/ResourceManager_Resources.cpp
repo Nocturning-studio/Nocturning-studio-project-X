@@ -177,10 +177,11 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 			FlushLog();
 		}
 
-		CHECK_OR_EXIT(
-			!FAILED(_hr),
-			make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-		);
+		//CHECK_OR_EXIT(
+		//	!FAILED(_hr),
+		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
+		//);
+		//R_ASSERT(!FAILED(_hr));
 
 		return _vs;
 	}
@@ -251,10 +252,12 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 			FlushLog();
 		}
 
-		CHECK_OR_EXIT(
-			!FAILED(_hr),
-			make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-		);
+		//CHECK_OR_EXIT(
+		//	!FAILED(_hr),
+		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
+		//);
+
+		//R_ASSERT(!FAILED(_hr));
 
 		return _ps;
 	}

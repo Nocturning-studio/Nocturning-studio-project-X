@@ -716,6 +716,7 @@ HRESULT	CRender::shader_compile(
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
 	char c_steep_parallax_mapping[32];
+	char c_parallax_occlusion_mapping[32];
 
 	char c_mblur[32];
 	char c_dof[32];
@@ -1141,6 +1142,18 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_bump_mode);
 	++len;
 
+	if (RImplementation.o.advancedpp && ps_bump_mode == 4)
+	{
+		sprintf(c_parallax_occlusion_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_PARALLAX_OCCLUSION";
+		defines[def_it].Definition = c_parallax_occlusion_mapping;
+		def_it++;
+		strcat(sh_name, c_parallax_occlusion_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_bump_mode);
+	++len;
+
 	//////////////////////////////////////////////////////////////////////////
 	int gbuffer_opt = ps_r2_ls_flags_ext.test(R2FLAGEXT_GBUFFER_OPT);
 	if (gbuffer_opt)
@@ -1320,6 +1333,7 @@ HRESULT	CRender::shader_compile(
 		else
 		{
 			Log("! ", file_name);
+			R_ASSERT2(SUCCEEDED(_result), make_string("! Can't compile shader: %s, %s", file_name, (LPCSTR)pErrorBuf->GetBufferPointer()));
 			if (pErrorBuf)
 				Log("! Error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
 			else
