@@ -20,6 +20,8 @@ extern u32 ps_debug_frame_layers;
 extern u32 ps_sun_quality;
 extern u32 ps_blur_type;
 extern u32 ps_bump_mode;
+extern u32 ps_tdetail_bump_mode;
+extern u32 ps_terrain_bump_mode;
 extern u32 ps_shadow_quality;
 extern float ps_r2_sun_far;
 //////////////////////////////////////////////////////////////////////////
@@ -718,6 +720,14 @@ HRESULT	CRender::shader_compile(
 	char c_steep_parallax_mapping[32];
 	char c_parallax_occlusion_mapping[32];
 
+	char c_tdetail_normal_mapping[32];
+	char c_tdetail_parallax_mapping[32];
+	char c_tdetail_steep_parallax_mapping[32];
+	char c_tdetail_parallax_occlusion_mapping[32];
+
+	char c_terrain_normal_mapping[32];
+	char c_terrain_parallax_mapping[32];
+
 	char c_mblur[32];
 	char c_dof[32];
 
@@ -1152,6 +1162,86 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(ps_bump_mode);
+	++len;
+
+	//////////////////////////////////////////////////////////////////////////
+	// Texture detail bump types
+	//////////////////////////////////////////////////////////////////////////
+
+	if (RImplementation.o.sunstatic || ps_tdetail_bump_mode == 1)
+	{
+		sprintf(c_tdetail_normal_mapping, "%d", 1);
+		defines[def_it].Name = "USE_TDETAIL_NORMAL_MAPPING";
+		defines[def_it].Definition = c_tdetail_normal_mapping;
+		def_it++;
+		strcat(sh_name, c_tdetail_normal_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
+	++len;
+
+	if (!RImplementation.o.advancedpp || ps_tdetail_bump_mode == 2)
+	{
+		sprintf(c_tdetail_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_TDETAIL_PARALLAX";
+		defines[def_it].Definition = c_tdetail_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_tdetail_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_tdetail_bump_mode == 3)
+	{
+		sprintf(c_tdetail_steep_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_TDETAIL_STEEP_PARALLAX";
+		defines[def_it].Definition = c_tdetail_steep_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_tdetail_steep_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_tdetail_bump_mode == 4)
+	{
+		sprintf(c_tdetail_parallax_occlusion_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_TDETAIL_PARALLAX_OCCLUSION";
+		defines[def_it].Definition = c_tdetail_parallax_occlusion_mapping;
+		def_it++;
+		strcat(sh_name, c_tdetail_parallax_occlusion_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
+	++len;
+
+	//////////////////////////////////////////////////////////////////////////
+	// Terrain detail bump types
+	//////////////////////////////////////////////////////////////////////////
+
+	if (RImplementation.o.sunstatic || ps_terrain_bump_mode == 1)
+	{
+		sprintf(c_terrain_normal_mapping, "%d", 1);
+		defines[def_it].Name = "USE_TERRAIN_NORMAL_MAPPING";
+		defines[def_it].Definition = c_terrain_normal_mapping;
+		def_it++;
+		strcat(sh_name, c_terrain_normal_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_terrain_bump_mode);
+	++len;
+
+	if (!RImplementation.o.advancedpp || ps_terrain_bump_mode == 2)
+	{
+		sprintf(c_terrain_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_TERRAIN_PARALLAX";
+		defines[def_it].Definition = c_terrain_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_terrain_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_terrain_bump_mode);
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////

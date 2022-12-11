@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\igame_persistent.h"
-#include "..\environment.h""
+#include "..\environment.h"
 
 #define STENCIL_CULL 0
 
@@ -19,7 +19,7 @@ void	CRenderTarget::phase_combine	()
 		t_LUM_dest->surface_set		(rt_LUM_pool[gpu_id*2+1]->pSurface);
 	}
 
-	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR))
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR) && RImplementation.o.advancedpp)
 		phase_ao();
 
 	// low/hi RTs

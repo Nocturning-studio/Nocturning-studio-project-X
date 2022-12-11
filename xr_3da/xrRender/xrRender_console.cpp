@@ -103,6 +103,22 @@ xr_token bump_mode_token[] = {
 	{ 0,							0											}
 };
 
+u32		ps_tdetail_bump_mode = 2;
+xr_token tdetail_bump_mode_token[] = {
+	{ "st_opt_normal_mapping",		1											},
+	{ "st_opt_parallax_mapping",	2											},
+	{ "st_opt_steep_parallax_mapping",3											},
+	{ "st_opt_parallax_occlusion_mapping",4										},
+	{ 0,							0											}
+};
+
+u32		ps_terrain_bump_mode = 2;
+xr_token terrain_bump_mode_token[] = {
+	{ "st_opt_normal_mapping",		1											},
+	{ "st_opt_parallax_mapping",	2											},
+	{ 0,							0											}
+};
+
 u32			ps_r_sun_shafts = 2;
 xr_token							qsun_shafts_token[] = {
 	{ "st_opt_off",					0												},
@@ -533,6 +549,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_shadow_quality", &ps_shadow_quality, shadow_quality_token);
 
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
+	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_tdetail_bump_mode, tdetail_bump_mode_token);
+	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_terrain_bump_mode, terrain_bump_mode_token);
 
 	CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
 	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
