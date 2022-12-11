@@ -289,6 +289,12 @@ public:
 	CRender							();
 	virtual ~CRender				();
 
+	void addShaderOption(const char* name, const char* value);
+	void clearAllShaderOptions() { m_ShaderOptions.clear(); }
+
+	private:
+		xr_vector<D3DXMACRO>									m_ShaderOptions;
+
 	private:
 		FS_FileSet m_file_set;
 };

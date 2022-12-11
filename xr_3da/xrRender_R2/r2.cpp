@@ -568,6 +568,12 @@ LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
 LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
 };
 */
+void CRender::addShaderOption(const char* name, const char* value)
+{
+	D3DXMACRO macro = { name, value };
+	m_ShaderOptions.push_back(macro);
+}
+
 static HRESULT create_shader(
 	LPCSTR const pTarget,
 	DWORD const* buffer,
