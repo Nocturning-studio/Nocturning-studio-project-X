@@ -31,6 +31,16 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("sky_s1",			r2_T_sky1			);
 		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
 		C.r_Sampler_tex		("s_blue_noise", "noise\\blue_noise_texture");
+
+		if (RImplementation.o.HW_smap) {
+			if (RImplementation.o.HW_smap_PCF)	C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
+			else {
+				C.r_Sampler_rtf("s_smap", r2_RT_smap_depth);
+			}
+		}
+		else
+			C.r_Sampler_rtf("s_smap", r2_RT_smap_surf);
+
 		jitter(C);
 		C.r_End				();
 		break;

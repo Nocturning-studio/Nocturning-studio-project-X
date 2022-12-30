@@ -22,7 +22,7 @@ extern u32 ps_blur_type;
 extern u32 ps_bump_mode;
 extern u32 ps_tdetail_bump_mode;
 extern u32 ps_terrain_bump_mode;
-extern u32 ps_shadow_quality;
+extern u32 ps_shadow_filtering;
 extern float ps_r2_sun_far;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
@@ -574,6 +574,11 @@ void CRender::addShaderOption(const char* name, const char* value)
 	m_ShaderOptions.push_back(macro);
 }
 
+void CRender::clearAllShaderOptions()
+{
+	m_ShaderOptions.clear();
+}
+
 static HRESULT create_shader(
 	LPCSTR const pTarget,
 	DWORD const* buffer,
@@ -709,7 +714,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_debug_frame_layers[32];
 
-	char c_ps_shadow_quality[32];
+	char c_ps_shadow_filtering[32];
 
 	char c_vignette[32];
 	char c_chroma_abb[32];
@@ -733,6 +738,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_terrain_normal_mapping[32];
 	char c_terrain_parallax_mapping[32];
+	char c_terrain_steep_parallax_mapping[32];
 
 	char c_mblur[32];
 	char c_dof[32];
@@ -740,6 +746,12 @@ HRESULT	CRender::shader_compile(
 	char c_gbuffer_opt[32];
 
 	char sh_name[MAX_PATH] = "";
+
+	for (u32 i = 0; i < m_ShaderOptions.size(); ++i)
+	{
+		defines[def_it++] = m_ShaderOptions[i];
+	}
+
 	size_t len = 0;
 
 	// options
@@ -1078,16 +1090,16 @@ HRESULT	CRender::shader_compile(
 	//////////////////////////////////////////////////////////////////////////
 	// Filter types
 	//////////////////////////////////////////////////////////////////////////
-	if (ps_shadow_quality)
+	if (ps_shadow_filtering)
 	{
-		sprintf(c_ps_shadow_quality, "%d", ps_shadow_quality);
-		defines[def_it].Name = "SHADOW_QUALITY";
-		defines[def_it].Definition = c_ps_shadow_quality;
+		sprintf(c_ps_shadow_filtering, "%d", ps_shadow_filtering);
+		defines[def_it].Name = "SHADOW_FILTER";
+		defines[def_it].Definition = c_ps_shadow_filtering;
 		def_it++;
-		strcat(sh_name, c_ps_shadow_quality);
+		strcat(sh_name, c_ps_shadow_filtering);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_shadow_quality);
+	sh_name[len] = '0' + char(ps_shadow_filtering);
 	++len;
 
 	int soft_shadows = ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS);
@@ -1245,6 +1257,18 @@ HRESULT	CRender::shader_compile(
 		defines[def_it].Definition = c_terrain_parallax_mapping;
 		def_it++;
 		strcat(sh_name, c_terrain_parallax_mapping);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ps_terrain_bump_mode);
+	++len;
+
+	if (RImplementation.o.advancedpp || ps_terrain_bump_mode == 3)
+	{
+		sprintf(c_terrain_steep_parallax_mapping, "%d", 1);
+		defines[def_it].Name = "ALLOW_TERRAIN_STEEP_PARALLAX";
+		defines[def_it].Definition = c_terrain_steep_parallax_mapping;
+		def_it++;
+		strcat(sh_name, c_terrain_steep_parallax_mapping);
 		len += 1;
 	}
 	sh_name[len] = '0' + char(ps_terrain_bump_mode);

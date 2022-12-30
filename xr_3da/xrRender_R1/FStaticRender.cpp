@@ -830,8 +830,10 @@ HRESULT CRender::shader_compile(
 				Log("! Warning: ", (LPCSTR)pErrorBuf->GetBufferPointer());
 			}
 		}
-		else {
+		else
+		{
 			Log("! ", file_name);
+			R_ASSERT2(SUCCEEDED(_result), make_string("! Can't compile shader: %s, %s", file_name, (LPCSTR)pErrorBuf->GetBufferPointer()));
 			if (pErrorBuf)
 				Log("! Error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
 			else

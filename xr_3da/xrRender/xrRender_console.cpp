@@ -61,21 +61,12 @@ xr_token sun_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_shadow_quality = 1;
-xr_token shadow_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_extreme",				4											},
-	{ "st_opt_ultra",				5											},
-	{ 0,							0											} 
-};
-
-u32		ps_shadow_filter_quality = 0;
-xr_token shadow_filter_quality_token[] = {
-	{ "st_opt_low",					0											},
-	{ "st_opt_medium",				1											},
-	{ "st_opt_high",				2											},
+u32		ps_shadow_filtering = 1;
+xr_token shadow_filter_token[] = {
+	{ "st_opt_disable",				0											},
+	{ "st_opt_min",					1											},
+	{ "st_opt_mid",					2											},
+	{ "st_opt_max",					3											},
 	{ 0,							0											} 
 };
 
@@ -99,7 +90,7 @@ xr_token bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-	{ "st_opt_parallax_occlusion_mapping",4										},
+//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
@@ -108,7 +99,7 @@ xr_token tdetail_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-	{ "st_opt_parallax_occlusion_mapping",4										},
+//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
@@ -116,6 +107,7 @@ u32		ps_terrain_bump_mode = 2;
 xr_token terrain_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
+	{ "st_opt_steep_parallax_mapping",3											},
 	{ 0,							0											}
 };
 
@@ -546,7 +538,7 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_sun_shafts", &ps_r_sun_shafts, qsun_shafts_token);
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
-	CMD3(CCC_Token, "r2_shadow_quality", &ps_shadow_quality, shadow_quality_token);
+	CMD3(CCC_Token, "r2_shadow_filtering", &ps_shadow_filtering, shadow_filter_token);
 
 	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
 	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_tdetail_bump_mode, tdetail_bump_mode_token);

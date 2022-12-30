@@ -4,6 +4,8 @@ void fix_texture_name(LPSTR fn);
 
 void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOOL _aref, LPCSTR _detail_replace, bool DO_NOT_FINISH)
 {
+	//RImplementation.addShaderOption("TEST_DEFINE", "1");
+
 	// Uber-parse
 	string256		fname,fnameA,fnameB;
 	strcpy			(fname,*C.L_textures[0]);	//. andy if (strext(fname)) *strext(fname)=0;
@@ -89,6 +91,8 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	//C.r_Sampler("s_speccolor",	strconcat(sizeof(fname), fname, fname, "_speccolor"),	false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_speccolor.dds)
 	//C.r_Sampler("s_detail_nmap",		strconcat(sizeof(dt),	 dt,	dt,		"_nmap"),		false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 #endif
+
+	RImplementation.clearAllShaderOptions();
 
 	if (!DO_NOT_FINISH)		C.r_End	();
 }
