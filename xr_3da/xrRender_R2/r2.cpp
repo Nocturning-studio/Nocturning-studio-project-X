@@ -144,25 +144,15 @@ void CRender::create()
 		switch (ps_sun_quality)
 		{
 		case 0:
-			ps_r2_sun_far = 100;
 			o.smapsize = 1024;
-			break;
 		case 1:
-			ps_r2_sun_far = 100;
 			o.smapsize = 1536;
-			break;
 		case 2:
-			ps_r2_sun_far = 100;
 			o.smapsize = 2048;
-			break;
 		case 3:
-			ps_r2_sun_far = 100;
 			o.smapsize = 2560;
-			break;
 		case 4:
-			ps_r2_sun_far = 100;
 			o.smapsize = 3072;
-			break;
 		}
 	///////////////////////////////////////////////////
 
