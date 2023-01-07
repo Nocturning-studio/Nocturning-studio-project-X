@@ -441,6 +441,7 @@ IInputReceiver* CInput::CurrentIR()
 
 void CInput::exclusive_mode(const bool& exclusive)
 {
+	g_exclusive = exclusive;
 	pKeyboard->SetCooperativeLevel(
 		Device.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND
@@ -450,4 +451,9 @@ void CInput::exclusive_mode(const bool& exclusive)
 		Device.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY
 	);
+}
+
+bool CInput::get_exclusive_mode()
+{
+	return g_exclusive;
 }

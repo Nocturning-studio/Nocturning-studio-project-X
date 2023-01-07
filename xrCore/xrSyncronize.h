@@ -22,7 +22,7 @@
 class XRCORE_API		xrCriticalSection
 {
 private:
-	void*				pmutex;
+	PCRITICAL_SECTION pmutex;
 #ifdef PROFILE_CRITICAL_SECTIONS
 	LPCSTR				m_id;
 #endif // PROFILE_CRITICAL_SECTIONS

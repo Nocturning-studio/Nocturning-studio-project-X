@@ -30,12 +30,12 @@
 #include <cstring>
 //#include <iostream>
 
+#ifdef NDEBUG
 void boost::throw_exception	( std::exception const & )
 {
 	abort();
 }
 
-#ifdef NDEBUG
 //void std::terminate()
 //{
 //	abort();

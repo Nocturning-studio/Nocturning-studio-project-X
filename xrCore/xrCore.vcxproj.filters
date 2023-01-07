@@ -70,6 +70,12 @@
     <Filter Include="Compression\lzo">
       <UniqueIdentifier>{5652770e-b267-45c4-8666-e9afbd2464e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Clipboard">
+      <UniqueIdentifier>{7e4f0bbe-7409-422e-8634-b33654f62e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Extensions\buffer_vector">
+      <UniqueIdentifier>{f785f078-dc46-42cc-86d3-e4e60b09ee46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -250,6 +256,9 @@
       <Filter>Compression\lzo</Filter>
     </ClCompile>
     <ClCompile Include="xrSyncronize.cpp" />
+    <ClCompile Include="os_clipboard.cpp">
+      <Filter>Clipboard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -520,6 +529,15 @@
       <Filter>Compression\lzo</Filter>
     </ClInclude>
     <ClInclude Include="xrSyncronize.h" />
+    <ClInclude Include="os_clipboard.h">
+      <Filter>Clipboard</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer_vector.h">
+      <Filter>Math\Extensions\buffer_vector</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer_vector_inline.h">
+      <Filter>Math\Extensions\buffer_vector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">
