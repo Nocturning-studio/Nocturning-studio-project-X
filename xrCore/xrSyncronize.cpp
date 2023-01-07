@@ -38,13 +38,16 @@ xrCriticalSection::xrCriticalSection	()
 #endif // PROFILE_CRITICAL_SECTIONS
 {
 	pmutex							= xr_alloc<CRITICAL_SECTION>(1);
-	InitializeCriticalSection		( (CRITICAL_SECTION*)pmutex	);
+	InitializeCriticalSection		( pmutex	);
 }
 
 xrCriticalSection::~xrCriticalSection	()
 {
-	DeleteCriticalSection			( (CRITICAL_SECTION*)pmutex	);
-	xr_free							( pmutex		);
+	if (pmutex)
+	{
+		DeleteCriticalSection(pmutex);
+		xr_free(pmutex);
+	}
 }
 
 #ifdef DEBUG
@@ -61,15 +64,18 @@ void	xrCriticalSection::Enter	()
 #	endif // DEBUG
 	profiler						temp(m_id);
 #endif // PROFILE_CRITICAL_SECTIONS
-	EnterCriticalSection			( (CRITICAL_SECTION*)pmutex );
+	if(pmutex)
+		EnterCriticalSection			( pmutex );
 }
 
 void	xrCriticalSection::Leave	()
 {
-	LeaveCriticalSection			( (CRITICAL_SECTION*)pmutex );
+	if(pmutex)
+		LeaveCriticalSection			( pmutex );
 }
 
 BOOL	xrCriticalSection::TryEnter	()
 {
-	return TryEnterCriticalSection	( (CRITICAL_SECTION*)pmutex );
+	if(pmutex)
+		return TryEnterCriticalSection	( pmutex );
 }
