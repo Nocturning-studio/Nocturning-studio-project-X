@@ -139,6 +139,18 @@
     <Filter Include="Engine\Noise">
       <UniqueIdentifier>{557b67e4-0fc1-40cb-96e0-60ce0db42af4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\text_editor">
+      <UniqueIdentifier>{77af4278-71e3-4b6f-8a5c-fd27da36ae93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\text_editor\edit_actions">
+      <UniqueIdentifier>{c07c2798-fcb8-48bd-b3f6-584a3c386207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\text_editor\line_editor">
+      <UniqueIdentifier>{bf589450-b5b4-4fd7-8bef-2055633017c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\text_editor\line_editor_control">
+      <UniqueIdentifier>{42e37fd5-bc9c-4f61-81f4-1e0bfd5aa9de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -509,6 +521,15 @@
     </ClInclude>
     <ClInclude Include="R_Backend_tree.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="edit_actions.h">
+      <Filter>Engine\text_editor\edit_actions</Filter>
+    </ClInclude>
+    <ClInclude Include="line_editor.h">
+      <Filter>Engine\text_editor\line_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="line_edit_control.h">
+      <Filter>Engine\text_editor\line_editor_control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -889,6 +910,24 @@
     </ClCompile>
     <ClCompile Include="R_Backend_tree.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="edit_actions.cpp">
+      <Filter>Engine\text_editor\edit_actions</Filter>
+    </ClCompile>
+    <ClCompile Include="line_editor.cpp">
+      <Filter>Engine\text_editor\line_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="line_edit_control.cpp">
+      <Filter>Engine\text_editor\line_editor_control</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_control.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_callback.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_get.cpp">
+      <Filter>Engine\Console</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

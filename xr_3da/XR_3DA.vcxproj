@@ -62,21 +62,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Advanced|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -211,7 +211,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -247,6 +247,7 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -303,6 +304,7 @@
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
       <FixedBaseAddress>false</FixedBaseAddress>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -701,6 +703,7 @@
     <ClInclude Include="du_cylinder.h" />
     <ClInclude Include="du_sphere.h" />
     <ClInclude Include="du_sphere_part.h" />
+    <ClInclude Include="edit_actions.h" />
     <ClInclude Include="Effector.h" />
     <ClInclude Include="EffectorPP.h" />
     <ClInclude Include="Engine.h" />
@@ -733,6 +736,8 @@
     <ClInclude Include="ISheduled.h" />
     <ClInclude Include="ISpatial.h" />
     <ClInclude Include="LightAnimLibrary.h" />
+    <ClInclude Include="line_editor.h" />
+    <ClInclude Include="line_edit_control.h" />
     <ClInclude Include="MbHelpers.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="ObjectAnimator.h" />
@@ -852,6 +857,7 @@
     <ClCompile Include="du_cylinder.cpp" />
     <ClCompile Include="du_sphere.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
+    <ClCompile Include="edit_actions.cpp" />
     <ClCompile Include="Effector.cpp" />
     <ClCompile Include="EffectorPP.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -897,6 +903,8 @@
     </ClCompile>
     <ClCompile Include="ISpatial_verify.cpp" />
     <ClCompile Include="LightAnimLibrary.cpp" />
+    <ClCompile Include="line_editor.cpp" />
+    <ClCompile Include="line_edit_control.cpp" />
     <ClCompile Include="mailSlot.cpp" />
     <ClCompile Include="MbHelpers.cpp" />
     <ClCompile Include="motion.cpp" />
@@ -983,6 +991,9 @@
     <ClCompile Include="xr_efflensflare.cpp" />
     <ClCompile Include="Xr_input.cpp" />
     <ClCompile Include="XR_IOConsole.cpp" />
+    <ClCompile Include="XR_IOConsole_callback.cpp" />
+    <ClCompile Include="XR_IOConsole_control.cpp" />
+    <ClCompile Include="XR_IOConsole_get.cpp" />
     <ClCompile Include="xr_ioc_cmd.cpp" />
     <ClCompile Include="xr_object.cpp" />
     <ClCompile Include="xr_object_list.cpp" />

@@ -32,30 +32,30 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Advanced|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -547,6 +547,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Advanced|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <ClCompile Include="os_clipboard.cpp" />
     <ClCompile Include="ppmd_compressor.cpp" />
     <ClCompile Include="rt_compressor.cpp" />
     <ClCompile Include="rt_compressor9.cpp" />
@@ -618,6 +619,8 @@
     <ClInclude Include="blackbox\SymbolEngine.h" />
     <ClInclude Include="blackbox\WarningsOff.h" />
     <ClInclude Include="blackbox\WarningsOn.h" />
+    <ClInclude Include="buffer_vector.h" />
+    <ClInclude Include="buffer_vector_inline.h" />
     <ClInclude Include="clsid.h" />
     <ClInclude Include="Coder.hpp" />
     <ClInclude Include="compression_ppmd_stream.h" />
@@ -646,6 +649,7 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="lzhuf.h" />
     <ClInclude Include="memory_monitor.h" />
+    <ClInclude Include="os_clipboard.h" />
     <ClInclude Include="PPMd.h" />
     <ClInclude Include="PPMdType.h" />
     <ClInclude Include="ppmd_compressor.h" />

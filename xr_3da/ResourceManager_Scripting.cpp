@@ -8,7 +8,8 @@
 #include	"blenders\blender_recorder.h"
 #include	"ai_script_space.h"
 #include	"ai_script_lua_extension.h"
-#include	"luabind/return_reference_to_policy.hpp"
+#include	<luabind/error.hpp>
+#include	<luabind/return_reference_to_policy.hpp>
 
 using namespace				luabind;
 
@@ -144,7 +145,8 @@ void	CResourceManager::LS_Load()
 #endif
 
 	luabind::open(LSVM);
-#if !XRAY_EXCEPTIONS
+
+#ifndef XRAY_EXCEPTIONS
 	if (0 == luabind::get_error_callback())
 		luabind::set_error_callback(LuaError);
 #endif
