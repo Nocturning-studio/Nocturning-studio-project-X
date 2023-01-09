@@ -729,11 +729,8 @@ IConsole_Command* CConsole::find_next_cmd(LPCSTR in_str, shared_str& out_str)
 	bool b_ra = (in_str == strstr(in_str, radmin_cmd_name));
 	u32 offset = (b_ra) ? xr_strlen(radmin_cmd_name) : 0;
 
-	size_t size_t2 = (strlen(in_str + offset) + strlen(" ")) * 2;	// This need, cause strconcat uses safe 
-																	// versions and calculate size with substraction
-																	// of original dest size (dest_sz - eachLineSize)
-	LPSTR t2 = (LPSTR)_alloca(size_t2);
-	strconcat(size_t2, t2, in_str + offset, " ");
+	LPSTR t2;
+	STRCONCAT(t2, in_str + offset, " ");
 
 	vecCMD_IT it = Commands.lower_bound(t2);
 	if (it != Commands.end())
@@ -760,9 +757,8 @@ bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
 		return false;
 	}
 
-	size_t size_t2 = (strlen(in_str) + strlen(" ")) * 2;
-	LPSTR t2 = (LPSTR)_alloca(size_t2);
-	strconcat(size_t2, t2, in_str, " ");
+	LPSTR t2;
+	STRCONCAT(t2, in_str, " ");
 
 	shared_str temp;
 	IConsole_Command* cc = find_next_cmd(t2, temp);
@@ -787,9 +783,8 @@ bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
 			break; // for
 		}
 
-		size_t size_t3 = (strlen(out_v.back().text.c_str()) + strlen(" ")) * 2;
-		LPSTR t3 = (LPSTR)_alloca(size_t3);
-		strconcat(size_t3, t3, out_v.back().text.c_str(), " ");
+		LPSTR t3;
+		STRCONCAT(t3, out_v.back().text.c_str(), " ");
 		cc = find_next_cmd(t3, temp);
 		if (!cc)
 		{

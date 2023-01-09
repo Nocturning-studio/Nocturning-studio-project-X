@@ -168,16 +168,14 @@ void CConsole::Execute_cmd() // DIK_RETURN, DIK_NUMPADENTER
 		shared_str const& str = m_tips[m_select_tip].text;
 		if (m_tips_mode == 1)
 		{
-			size_t size_buff = (strlen(str.c_str()) + strlen(" ")) * 2;
-			LPSTR buf = (LPSTR)_alloca(size_buff);
-			strconcat(size_buff, buf, str.c_str(), " ");
+			LPSTR buf;
+			STRCONCAT(buf, str.c_str(), " ");
 			ec().set_edit(buf);
 		}
 		else if (m_tips_mode == 2)
 		{
-			size_t size_buff = (strlen(m_cur_cmd.c_str()) + strlen(" ") + strlen(str.c_str())) * 2;
-			LPSTR buf = (LPSTR)_alloca(size_buff);
-			strconcat(strlen(m_cur_cmd.c_str()), buf, m_cur_cmd.c_str(), " ", str.c_str());
+			LPSTR buf;
+			STRCONCAT(buf, m_cur_cmd.c_str(), " ", str.c_str());
 			ec().set_edit(buf);
 		}
 		reset_selected_tip();
