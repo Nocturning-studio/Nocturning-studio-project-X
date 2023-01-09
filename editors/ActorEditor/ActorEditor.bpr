@@ -34,7 +34,7 @@
     <USERDEFINES value="_EDITOR;_ACTOR_EDITOR;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="ActorEditor.cpp"/>
-    <INCLUDEPATH value="$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xr_3da;..\..\xr_3da\xrCPU_Pipe;..\..\xr_3da\xrRender"/>
+    <INCLUDEPATH value="$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xrEngine;..\..\xrEngine\xrCPU_Pipe;..\..\xrEngine\xrRender"/>
     <LIBPATH value="$(BCB)\Projects;$(BCB)\lib;$(BCB)\lib\obj;$(BCB)\Projects\Lib;$(COMPONENTS)\alexmx;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;x:\libraries"/>
     <WARNINGS value="-w8092 -w8090 -w8089 -w8087 -wprc -wucp -wstv -wstu -wsig -wpin -w-par 
       -wnod -wnak -wdef -wcln -wbbf -wasm -wamp -wamb"/>
@@ -44,8 +44,8 @@
     <IDLCFLAGS value="-src_suffix cpp -D_EDITOR -D_ACTOR_EDITOR -D_DEBUG -I$(DXSDK_DIR)\Include 
       -I$(COMPONENTS)\alexmx -I$(BCB)\include -I$(BCB)\include\vcl 
       -I$(COMPONENTS)\ElPack\Code -I$(COMPONENTS)\ElPack\Code\Source 
-      -I$(CORE_DIR) -I..\..\xr_3da -I..\..\xr_3da\xrCPU_Pipe 
-      -I..\..\xr_3da\xrRender -boa"/>
+      -I$(CORE_DIR) -I..\..\xrEngine -I..\..\xrEngine\xrCPU_Pipe 
+      -I..\..\xrEngine\xrRender -boa"/>
     <CFLAG1 value="-Od -H=x:\intermediate_ed\ae\pch.csm -Hc -Q -Vms -Vx -Ve -xf -xp -VF -ff 
       -X- -r- -ps -a4 -6 -b- -k -y -v -vi- -He -c -tW -tWM"/>
     <PFLAGS value="-N2x:\intermediate_ed\ae -N0x:\intermediate_ed\ae -$Y+ -$W -$O- -$A8 -v 
@@ -114,9 +114,9 @@ Comments=
 
 [HistoryLists\hlIncludePath]
 Count=30
-Item0=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xr_3da;..\..\xr_3da\xrCPU_Pipe;..\..\xr_3da\xrRender
-Item1=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xr_3da;..\..\xr_3da\xrCPU_Pipe
-Item2=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xr_3da\xrCPU_Pipe
+Item0=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xrEngine;..\..\xrEngine\xrCPU_Pipe;..\..\xrEngine\xrRender
+Item1=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xrEngine;..\..\xrEngine\xrCPU_Pipe
+Item2=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR);..\..\xrEngine\xrCPU_Pipe
 Item3=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source;$(CORE_DIR)
 Item4=$(CORE_DIR);$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source
 Item5=$(DXSDK_DIR)\Include;$(COMPONENTS)\alexmx;$(BCB)\include;$(BCB)\include\vcl;$(COMPONENTS)\ElPack\Code;$(COMPONENTS)\ElPack\Code\Source

@@ -93,7 +93,7 @@
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xr_3da;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrEngine;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)_x64\</OutDir>

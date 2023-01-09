@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="XR_3DA"
+	Name="xrEngine"
 	ProjectGUID="{2578C6D8-660D-48AE-9322-7422F8664F06}"
 	>
 	<Platforms>
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -158,7 +158,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -270,7 +270,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -390,7 +390,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -503,7 +503,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -613,7 +613,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="x:\XR_3DA.tlb"
+				TypeLibraryName="x:\xrEngine.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"

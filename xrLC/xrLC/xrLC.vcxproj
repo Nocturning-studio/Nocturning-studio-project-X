@@ -109,7 +109,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\MagicFm\x64;$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrShared;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xrEngine;$(SolutionDir)\xrShared;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
@@ -124,19 +124,19 @@
     <IncludePath>$(SolutionDir)\components\FreeImage\;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)\xr_3da;$(SolutionDir)\editors\LevelEditor\Edit;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\editors\ECore\Engine;$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\ETools;$(SolutionDir)\xrCDB;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrCore;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrEngine;$(SolutionDir)\editors\LevelEditor\Edit;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\editors\ECore\Engine;$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\ETools;$(SolutionDir)\xrCDB;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrCore;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>X:\xr_3da;X:\editors\LevelEditor\Edit;X:\components\MagicFm\Include;X:\editors\ECore\Engine;X:\components\FreeImage\Source;X:\ETools;X:\xrCDB;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>X:\xrEngine;X:\editors\LevelEditor\Edit;X:\components\MagicFm\Include;X:\editors\ECore\Engine;X:\components\FreeImage\Source;X:\ETools;X:\xrCDB;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xr_3da;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrEngine;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)_x64\</OutDir>
     <IntDir>$(SolutionDir)\output\libraries_$(Configuration)_x64\</IntDir>
     <LibraryPath>$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -418,7 +418,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\COMMON_COMPILERS;..\xr_3da;..\xrCDB;..\ETools;X:\3rd_party\Src\FreeImage;X:\3rd_party\Src\d3dx\include;..\xrCore\;X:\3rd_party\Src\MagicSoftware\FreeMagic\Include;..\xrQSlim\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\COMMON_COMPILERS;..\xrEngine;..\xrCDB;..\ETools;X:\3rd_party\Src\FreeImage;X:\3rd_party\Src\d3dx\include;..\xrCore\;X:\3rd_party\Src\MagicSoftware\FreeMagic\Include;..\xrQSlim\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_AMD64_;_WIN64;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -480,7 +480,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\COMMON_COMPILERS;..\xr_3da;..\xrCDB;..\ETools;X:\3rd_party\Src\FreeImage;X:\3rd_party\Src\d3dx\include;..\xrCore\;X:\3rd_party\Src\MagicSoftware\FreeMagic\Include;..\xrQSlim\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\COMMON_COMPILERS;..\xrEngine;..\xrCDB;..\ETools;X:\3rd_party\Src\FreeImage;X:\3rd_party\Src\d3dx\include;..\xrCore\;X:\3rd_party\Src\MagicSoftware\FreeMagic\Include;..\xrQSlim\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_AMD64_;_WIN64;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -561,7 +561,7 @@
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\xr_3da\fmesh.cpp" />
+    <ClCompile Include="..\xrEngine\fmesh.cpp" />
     <ClCompile Include="NVMeshMender.cpp" />
     <ClCompile Include="nv_algebra.cpp" />
     <ClCompile Include="object.cpp" />

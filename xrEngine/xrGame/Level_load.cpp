@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../xr_3da/Environment.h"
+#include "../xrEngine/Environment.h"
 #include "HUDmanager.h"
 #include "LevelGameDef.h"
 #include "ai_space.h"

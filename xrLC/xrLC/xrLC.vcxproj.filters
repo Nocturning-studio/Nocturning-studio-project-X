@@ -285,7 +285,7 @@
     <ClCompile Include="xrMU_Model_Load.cpp">
       <Filter>COMPILER\Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\xr_3da\fmesh.cpp">
+    <ClCompile Include="..\xrEngine\fmesh.cpp">
       <Filter>COMPILER\XRAY</Filter>
     </ClCompile>
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />

@@ -7,11 +7,11 @@
 #include "spawnpoint.h"
 #include "ESceneSpawnTools.h"
 #include "eshape.h"
-#include "../../xr_3da/xrGame/xrServer_Objects_Abstract.h"
+#include "../../xrEngine/xrGame/xrServer_Objects_Abstract.h"
 #include "../ECore/Editor/ui_main.h"
 #include "SkeletonAnimated.h"
 #include "ObjectAnimator.h"
-#include "../../xr_3da/xrGame/xrMessages.h"
+#include "../../xrEngine/xrGame/xrMessages.h"
 #include "scene.h"
 #include "d3dutils.h"
 

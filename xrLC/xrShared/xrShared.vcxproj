@@ -80,7 +80,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xr_3da;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrEngine;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\include\dx9sdk\include;X:\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\libraries;$(LibraryPath)</LibraryPath>

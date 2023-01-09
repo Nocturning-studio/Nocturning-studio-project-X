@@ -2,10 +2,10 @@
 File_0=SourceModule,'I:\xray-svn-trunk\editors\ECore\Editor\UI_MainMail.cpp',0,1,1,38,21,0,0
 File_1=SourceModule,'I:\xray-svn-trunk\editors\ActorEditor\KeyBar.cpp',0,1,41,24,62,0,0
 File_2=SourceModule,'I:\xray-svn-trunk\editors\ActorEditor\UI_ActorTools.cpp',0,1,285,35,302,0,0
-File_3=SourceModule,'I:\xray-svn-trunk\xr_3da\Motion.h',0,1,162,1,173,0,0
+File_3=SourceModule,'I:\xray-svn-trunk\xrEngine\Motion.h',0,1,162,1,173,0,0
 File_4=SourceModule,'i:\xray-svn-trunk\xrcore\_flags.h',0,1,4,1,23,0,0
 File_5=SourceModule,'I:\xray-svn-trunk\editors\ECore\Editor\EditObjectMotions.cpp',0,1,30,22,43,0,0
-File_6=SourceModule,'I:\xray-svn-trunk\xr_3da\motion.cpp',0,1,463,56,477,0,0
+File_6=SourceModule,'I:\xray-svn-trunk\xrEngine\motion.cpp',0,1,463,56,477,0,0
 File_7=SourceModule,'I:\xray-svn-trunk\xrCore\FileSystem_borland.cpp',0,1,37,34,46,0,0
 File_8=SourceModule,'I:\xray-svn-trunk\editors\ECore\Editor\ImageEditor.cpp',0,1,383,24,397,0,0
 File_9=SourceModule,'I:\xray-svn-trunk\xrCore\FileSystem.cpp',0,1,202,29,222,0,0

@@ -336,7 +336,7 @@ void __fastcall CEditableObject::OnChangeTransform(PropValue*)
 }
 //---------------------------------------------------------------------------
 
-#include "../../xr_3da/blenders/Blender.h"
+#include "../../xrEngine/blenders/Blender.h"
 IC BOOL BE      (BOOL A, BOOL B)
 {
     bool a = !!A;

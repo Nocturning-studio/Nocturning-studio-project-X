@@ -88,7 +88,7 @@ __inline float expf	(float val)                           	{ return ::exp(val);}
 
 #include "../../xrCDB/xrCDB.h"
 #include "../../xrSound/Sound.h"
-#include "../../xr_3da/PSystem.h"
+#include "../../xrEngine/PSystem.h"
 
 // DirectX headers
 #include <d3d9.h>
@@ -97,8 +97,8 @@ __inline float expf	(float val)                           	{ return ::exp(val);}
 #include <dsound.h>
 
 // some user components
-#include "../../xr_3da/fmesh.h"
-#include "../../xr_3da/_d3d_extensions.h"
+#include "../../xrEngine/fmesh.h"
+#include "../../xrEngine/_d3d_extensions.h"
 
 #include "../ECore/editor/D3DX_Wrapper.h"
 
@@ -108,7 +108,7 @@ DEFINE_VECTOR		(AnsiString*,LPAStringVec,LPAStringIt);
 #include "../xrEProps/xrEProps.h"
 #include "../../xrCore/Log.h"
 #include "../ECore/editor/engine.h"
-#include "../../xr_3da/defines.h"
+#include "../../xrEngine/defines.h"
 
 struct str_pred : public std::binary_function<char*, char*, bool>
 {
@@ -123,7 +123,7 @@ struct astr_pred : public std::binary_function<const AnsiString&, const AnsiStri
 
 #ifdef _EDITOR
 	#include "../ECore/editor/device.h"
-	#include "../../xr_3da/properties.h"
+	#include "../../xrEngine/properties.h"
 	#include "../ECore/editor/render.h"
 	DEFINE_VECTOR(FVF::L,FLvertexVec,FLvertexIt);
 	DEFINE_VECTOR(FVF::TL,FTLvertexVec,FTLvertexIt);

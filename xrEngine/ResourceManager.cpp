@@ -268,14 +268,14 @@ void CResourceManager::Delete(const Shader* S)
 #include <thread>
 xr_vector<CTexture*> tex_to_load;
 
-void TextureLoading(u32 lowerbound, u32 upperbound)
+void TextureLoading(u16 thread_num, u32 lowerbound, u32 upperbound)
 {
-    Msg("TextureLoading -> thread %d started!", thread_num);
+	Msg("TextureLoading -> thread %d started!", thread_num);
 
-    for (size_t i = lowerbound; i < upperbound; i++)
-        tex_to_load[i]->Load();
-    
-    Msg("TextureLoading -> thread %d finished!", thread_num);
+	for (size_t i = lowerbound; i < upperbound; i++)
+		tex_to_load[i]->Load();
+
+	Msg("TextureLoading -> thread %d finished!", thread_num);
 }
 
 void CResourceManager::DeferredUpload()

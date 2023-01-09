@@ -4,7 +4,7 @@
 #include "net_server.h"
 #include "net_messages.h"
 #include "NET_Log.h"
-#include "../xr_3da/xrGame/battleye.h"
+#include "../xrEngine/xrGame/battleye.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)

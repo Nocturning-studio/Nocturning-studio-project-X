@@ -243,7 +243,7 @@ IC void volume_lerp(float &c, float t, float s, float dt)
 	c += (diff / diff_a) * mot;
 }
 
-#include "..\xr_3da\xrGame\ai_sounds.h"
+#include "..\xrEngine\xrGame\ai_sounds.h"
 
 BOOL CSoundRender_Emitter::update_culling(float dt)
 {
