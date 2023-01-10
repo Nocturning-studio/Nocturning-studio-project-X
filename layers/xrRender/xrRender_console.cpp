@@ -17,7 +17,7 @@ xr_token							qpreset_token[] = {
 
 u32		ps_aa = 1;
 xr_token							aa_token[] = {
-	{ "st_opt_edge_sampling",		1											},
+	//{ "st_opt_edge_sampling",		1											},
 	{ "st_opt_dlaa",				2											},
 	{ "st_opt_fxaa",				3											},
 	{ 0,							0											} 
@@ -510,7 +510,7 @@ void		xrRender_initconsole()
 {
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
-	CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
+	//CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
@@ -544,8 +544,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_tdetail_bump_mode, tdetail_bump_mode_token);
 	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_terrain_bump_mode, terrain_bump_mode_token);
 
-	CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
-	CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
+	//CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
+	//CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
 
 	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
 
