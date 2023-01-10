@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../xrSound/Sound.h"
+#include "../../xrSound/Sound.h"
 #include "../../xrEngine/SH_Texture.h"
 
 class CUIWindow;

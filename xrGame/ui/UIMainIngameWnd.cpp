@@ -41,7 +41,7 @@
 
 #ifdef DEBUG
 #	include "../attachable_item.h"
-#	include "../../xr_input.h"
+#	include "../../xrEngine/xr_input.h"
 #endif
 
 #include "UIScrollView.h"

@@ -49,7 +49,7 @@
 #	include "ai/crow/ai_crow.h"
 
 #	ifdef DEBUG
-#		include "../StatGraph.h"
+#		include "../xrEngine/StatGraph.h"
 #		include "PHDebug.h"
 #	endif // DEBUG
 
