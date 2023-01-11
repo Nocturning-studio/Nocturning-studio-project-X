@@ -1397,7 +1397,8 @@ void CRender::init_cacades()
 	case 2:
 	case 3:
 	{
-		cascade_count = 9;
+		float fBias = -0.000025f;
+		cascade_count = 12;
 		break;
 	}
 	case 4:
@@ -1442,14 +1443,20 @@ void CRender::init_cacades()
 		m_sun_cascades[6].size = 50;
 		m_sun_cascades[6].bias = m_sun_cascades[6].size * fBias;
 
-		m_sun_cascades[7].size = 70;
+		m_sun_cascades[7].size = 60;
 		m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
 
-		m_sun_cascades[8].size = 90;
+		m_sun_cascades[8].size = 70;
 		m_sun_cascades[8].bias = m_sun_cascades[8].size * fBias;
 
-		m_sun_cascades[7].size = ps_r2_sun_far;
-		m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
+		m_sun_cascades[9].size = 80;
+		m_sun_cascades[9].bias = m_sun_cascades[9].size * fBias;
+
+		m_sun_cascades[10].size = 90;
+		m_sun_cascades[10].bias = m_sun_cascades[10].size * fBias;
+
+		m_sun_cascades[11].size = ps_r2_sun_far;
+		m_sun_cascades[11].bias = m_sun_cascades[11].size * fBias;
 		break;
 	}
 	case 4:

@@ -144,19 +144,19 @@ void CRender::create()
 		switch (ps_sun_quality)
 		{
 		case 1:
-			o.smapsize = 1024;
-			break;
-		case 2:
 			o.smapsize = 1536;
 			break;
-		case 3:
+		case 2:
 			o.smapsize = 2048;
 			break;
-		case 4:
+		case 3:
 			o.smapsize = 2560;
 			break;
-		case 5:
+		case 4:
 			o.smapsize = 3072;
+			break;
+		case 5:
+			o.smapsize = 3560;
 			break;
 		}
 	///////////////////////////////////////////////////
