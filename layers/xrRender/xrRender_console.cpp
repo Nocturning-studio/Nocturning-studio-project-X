@@ -53,11 +53,11 @@ xr_token ao_quality_token[] = {
 
 u32		ps_sun_quality = 1;
 xr_token sun_quality_token[] = {
-	{ "st_opt_low",					0											},
-	{ "st_opt_medium",				1											},
-	{ "st_opt_high",				2											},
-	{ "st_opt_extreme",				3											},
-	{ "st_opt_ultra",				4											},
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_extreme",				4											},
+	{ "st_opt_ultra",				5											},
 	{ 0,							0											} 
 };
 
