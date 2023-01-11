@@ -17,7 +17,7 @@ xr_token							qpreset_token[] = {
 
 u32		ps_aa = 1;
 xr_token							aa_token[] = {
-	//{ "st_opt_edge_sampling",		1											},
+	{ "st_opt_off",					1											},
 	{ "st_opt_dlaa",				2											},
 	{ "st_opt_fxaa",				3											},
 	{ 0,							0											} 
