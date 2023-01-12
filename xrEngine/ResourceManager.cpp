@@ -263,8 +263,14 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
+#define MT_TEXTURES
+
 #ifdef MT_TEXTURES
-//Загрузка текстур несколькими потоками, thanks Morrey and Maks0
+//Загрузка текстур несколькими потоками. 
+//Спасибо Morrey из проекта которого я взял функцию, 
+//	Maks0 за переделку под определение количества ядер процессора и 
+//	использвания соответствующего числа потоков и VAX, который доделал функцию
+
 #include <thread>
 xr_vector<CTexture*> tex_to_load;
 
@@ -278,6 +284,54 @@ void TextureLoading(u16 thread_num, u32 lowerbound, u32 upperbound)
 	Msg("TextureLoading -> thread %d finished!", thread_num);
 }
 
+void CResourceManager::DeferredUpload()
+{
+	if (!Device.b_is_Ready) return;
+
+	const u32 MinTexturesCntToUseMT = 100;
+
+	tex_to_load.clear();
+	Msg("CResourceManager::DeferredUpload -> START, size = %d", m_textures.size());
+	CTimer timer;
+	timer.Start();
+
+	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load"))
+	{
+		Msg("CResourceManager::DeferredUpload -> one thread");
+
+		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+			t->second->Load();
+	}
+	else
+	{
+		u32 th_count = std::thread::hardware_concurrency();
+		u32 texCntOneThread = m_textures.size() / th_count;
+		std::thread* th_arr = new std::thread[th_count];
+
+		for (const auto& tex : m_textures)
+			tex_to_load.push_back(tex.second);
+
+		for (u16 i = 0; i < th_count; i++)
+		{
+			u32 from = i * texCntOneThread;
+			u32 to = (i + 1) * texCntOneThread;
+
+			if (i == th_count - 1) to = m_textures.size();
+
+			th_arr[i] = std::thread(&TextureLoading, i, from, to);
+		}
+
+		for (size_t i = 0; i < th_count; i++)
+			th_arr[i].join();
+
+		delete[] th_arr;
+		tex_to_load.clear();
+	}
+
+	Msg("texture loading time: %d ms", timer.GetElapsed_ms());
+}
+
+/*
 void CResourceManager::DeferredUpload()
 {
     if (!Device.b_is_Ready)
@@ -327,6 +381,7 @@ void CResourceManager::DeferredUpload()
 
     Msg("texture loading time: %d ms", timer.GetElapsed_ms());
 }
+*/
 #else//MT_TEXTURES
 void	CResourceManager::DeferredUpload()
 {
@@ -337,6 +392,7 @@ void	CResourceManager::DeferredUpload()
 	}
 }
 #endif//MT_TEXTURES
+
 void	CResourceManager::DeferredUnload	()
 {
 	if (!Device.b_is_Ready)				return;
