@@ -50,12 +50,34 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		} else {
 			dtA[0] = dtB[0] = 0;
 		}
-		strcat			(vs,"_bump");
-		strcat			(ps,"_bump");
+		extern u32 ps_bump_mode;
+		if (ps_bump_mode == 1)
+		{
+			strcat(vs, "_bump");
+			strcat(ps, "_bump");
+		}
+		else if (ps_bump_mode == 2)
+		{
+			strcat(vs, "_parallax");
+			strcat(ps, "_parallax");
+		}
+		if (ps_bump_mode == 3)
+		{
+			strcat(vs, "_steep_parallax");
+			strcat(ps, "_steep_parallax");
+		}
+
 		if (hq && (C.bDetail_Diffuse || C.bDetail_Bump) )	{
 			strcat		(vs,"_d"	);
-			if (C.bDetail_Bump)
-				strcat(ps, "_db"	);	//	bump & detail & hq
+			if (C.bDetail_Bump) {
+				extern u32 ps_tdetail_bump_mode;
+				if (ps_tdetail_bump_mode == 1)
+				strcat(ps, "_db");	//	bump & detail & hq (bump mapping)
+				else if (ps_tdetail_bump_mode == 2)
+				strcat(ps, "_dp");	//	bump & detail & hq (parallax mapping)
+				else if (ps_tdetail_bump_mode == 3)
+				strcat(ps, "_ds");	//	bump & detail & hq (steep parallax mapping)
+			}
 			else
 				strcat(ps,"_d"		);
 		}
