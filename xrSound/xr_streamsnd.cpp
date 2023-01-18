@@ -57,7 +57,7 @@ void CSoundStream::Update( )
 	if (dwStatus&DSBSTATUS_BUFFERLOST) pBuffer->Restore();
 	if (bNeedUpdate) {
 		fRealVolume = .5f*fRealVolume + .5f*fVolume;
-		pBuffer->SetVolume( LONG((1-fRealVolume*psSoundVMusic*fBaseVolume)*float(DSBVOLUME_MIN)) );
+		pBuffer->SetVolume( LONG((1 - fRealVolume * psSoundVEffects * psSoundVMusic * fBaseVolume) * float(DSBVOLUME_MIN)) );
 		bNeedUpdate = false;
 	}
 }

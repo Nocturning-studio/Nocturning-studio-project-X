@@ -56,7 +56,7 @@ void CSoundRender_Emitter::update(float dt)
 		fTimeToPropagade = fTime;
 		fade_volume = 1.f;
 		occluder_volume = SoundRender->get_occlusion(p_source.position, .2f, occluder);
-		smooth_volume = p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic) * (b2D ? 1.f : occluder_volume);
+		smooth_volume = p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVEffects * psSoundVMusic) * (b2D ? 1.f : occluder_volume);
 		e_current = e_target = *SoundRender->get_environment(p_source.position);
 
 		if (update_culling(dt))
@@ -86,7 +86,7 @@ void CSoundRender_Emitter::update(float dt)
 		fTimeToPropagade = fTime;
 		fade_volume = 1.f;
 		occluder_volume = SoundRender->get_occlusion(p_source.position, .2f, occluder);
-		smooth_volume = p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic) * (b2D ? 1.f : occluder_volume);
+		smooth_volume = p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVEffects * psSoundVMusic) * (b2D ? 1.f : occluder_volume);
 		e_current = e_target = *SoundRender->get_environment(p_source.position);
 
 		if (update_culling(dt))
@@ -265,7 +265,7 @@ BOOL CSoundRender_Emitter::update_culling(float dt)
 		// Calc attenuated volume
 		float att = p_source.min_distance / (psSoundRolloff * dist);
 		clamp(att, 0.f, 1.f);
-		float fade_scale = bStopping || (att * p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic) < psSoundCull) ? -1.f : 1.f;
+		float fade_scale = bStopping || (att * p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVEffects * psSoundVMusic) < psSoundCull) ? -1.f : 1.f;
 		fade_volume += dt * 10.f * fade_scale;
 
 		// Update occlusion
@@ -277,7 +277,7 @@ BOOL CSoundRender_Emitter::update_culling(float dt)
 	}
 	clamp(fade_volume, 0.f, 1.f);
 	// Update smoothing
-	smooth_volume = .9f * smooth_volume + .1f * (p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic) * occluder_volume * fade_volume);
+	smooth_volume = .9f * smooth_volume + .1f * (p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVEffects * psSoundVMusic) * occluder_volume * fade_volume);
 	if (smooth_volume < psSoundCull)
 		return FALSE; // allow volume to go up
 	// Here we has enought "PRIORITY" to be soundable
