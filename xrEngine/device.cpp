@@ -92,7 +92,7 @@ void CRenderDevice::End(void)
 	//
 	if (dwPrecacheFrame)
 	{
-		::Sound->set_master_volume(0.f);
+		::Sound->set_master_volume(psSoundVFactor);
 		dwPrecacheFrame--;
 		pApp->load_draw_internal();
 		if (0 == dwPrecacheFrame)
@@ -101,7 +101,7 @@ void CRenderDevice::End(void)
 
 			if (precache_light) precache_light->set_active(false);
 			if (precache_light) precache_light.destroy();
-			::Sound->set_master_volume(1.f);
+			::Sound->set_master_volume(psSoundVFactor);
 			pApp->destroy_loading_shaders();
 			Resources->DestroyNecessaryTextures();
 			Memory.mem_compact();
