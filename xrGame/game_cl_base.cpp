@@ -42,25 +42,26 @@ game_cl_GameState::~game_cl_GameState()
 	xr_delete					(m_WeaponUsageStatistic);
 }
 
-void	game_cl_GameState::net_import_GameTime		(NET_Packet& P)
+void game_cl_GameState::net_import_GameTime(NET_Packet& P)
 {
-	u64				GameTime;
-	P.r_u64			(GameTime);
-	float			TimeFactor;
-	P.r_float		(TimeFactor);
+	// time
 
-	Level().SetGameTimeFactor	(GameTime,TimeFactor);
+	u64 GameTime;
+	P.r_u64(GameTime);
+	float TimeFactor;
+	P.r_float(TimeFactor);
 
-	u64				GameEnvironmentTime;
-	P.r_u64			(GameEnvironmentTime);
-	float			EnvironmentTimeFactor;
-	P.r_float		(EnvironmentTimeFactor);
+	u64 GameEnvironmentTime;
+	P.r_u64(GameEnvironmentTime);
+	float EnvironmentTimeFactor;
+	P.r_float(EnvironmentTimeFactor);
+
+	Level().SetGameTimeFactor(GameTime, TimeFactor);
 
 	u64 OldTime = Level().GetEnvironmentGameTime();
-	Level().SetEnvironmentGameTimeFactor	(GameEnvironmentTime,EnvironmentTimeFactor);
+	Level().SetEnvironmentGameTimeFactor(GameEnvironmentTime, EnvironmentTimeFactor);
 
-	if(!g_dedicated_server && OldTime > GameEnvironmentTime)
-		GamePersistent().Environment().Invalidate();
+	if (OldTime != GameTime) GamePersistent().Environment().Invalidate();
 }
 
 void	game_cl_GameState::net_import_state	(NET_Packet& P)

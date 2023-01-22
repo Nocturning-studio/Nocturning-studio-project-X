@@ -283,29 +283,33 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 
 void game_sv_GameState::net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id)
 {
-	game_PlayerState* A		= get_id		(id);
+	game_PlayerState* A = get_id(id);
 	if (A)
 	{
 		u16 bk_flags = A->flags__;
-		if (id==id_to)	
+		if (id == id_to)
 		{
 			A->setFlag(GAME_PLAYER_FLAG_LOCAL);
 		}
 
-		P.w_clientID	(id);
-		A->net_Export	(P);
-		A->flags__		= bk_flags;
+		P.w_clientID(id);
+		A->net_Export(P);
+		A->flags__ = bk_flags;
 	};
+	net_Export_GameTime(P);
 };
 
-void game_sv_GameState::net_Export_GameTime						(NET_Packet& P)
+void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 {
-	//Syncronize GameTime 
+	//#pragma todo("It should be done via single message, why always pass this data?")
+	//#if 0
+		//Syncronize GameTime 
 	P.w_u64(GetGameTime());
 	P.w_float(GetGameTimeFactor());
 	//Syncronize EnvironmentGameTime 
 	P.w_u64(GetEnvironmentGameTime());
 	P.w_float(GetEnvironmentGameTimeFactor());
+	//#endif
 };
 
 
