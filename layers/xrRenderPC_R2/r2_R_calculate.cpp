@@ -24,7 +24,7 @@ void CRender::Calculate		()
 	r_ssaGLOD_start					=	_sqr(ps_r__GLOD_ssa_start/3)/g_fSCREEN;
 	r_ssaGLOD_end					=	_sqr(ps_r__GLOD_ssa_end/3)	/g_fSCREEN;
 	r_ssaHZBvsTEX					=	_sqr(ps_r__ssaHZBvsTEX/3)	/g_fSCREEN;
-	r_dtex_range					=	ps_r2_df_parallax_range * g_fSCREEN / (1024.f * 768.f);
+	r_dtex_range					=	ps_r2_df_parallax_range * g_fSCREEN / (Device.dwWidth * Device.dwHeight);
 	
 	// Detect camera-sector
 	if (!vLastCameraPos.similar(Device.vCameraPosition,EPS_S)) 
@@ -48,21 +48,20 @@ void CRender::Calculate		()
 		}
 	}
 
-	//
 	Lights.Update();
 
 	// Check if we touch some light even trough portal
 	lstRenderables.clear();
-	g_SpatialSpace->q_sphere(lstRenderables,0,STYPE_LIGHTSOURCE,Device.vCameraPosition,EPS_L);
-	for (u32 _it=0; _it<lstRenderables.size(); _it++)	{
-		ISpatial*	spatial		= lstRenderables[_it];		spatial->spatial_updatesector	();
-		CSector*	sector		= (CSector*)spatial->spatial.sector;
-		if	(0==sector)										continue;	// disassociated from S/P structure
+	g_SpatialSpace->q_sphere(lstRenderables, 0, STYPE_LIGHTSOURCE, Device.vCameraPosition, EPS_L);
+	for (u32 _it = 0; _it < lstRenderables.size(); _it++) {
+		ISpatial* spatial = lstRenderables[_it];		spatial->spatial_updatesector();
+		CSector* sector = (CSector*)spatial->spatial.sector;
+		if (0 == sector)										continue;	// disassociated from S/P structure
 
-		VERIFY							(spatial->spatial.type & STYPE_LIGHTSOURCE);
+		VERIFY(spatial->spatial.type & STYPE_LIGHTSOURCE);
 		// lightsource
-		light*			L				= (light*)	(spatial->dcast_Light());
-		VERIFY							(L);
-		Lights.add_light				(L);
+		light* L = (light*)(spatial->dcast_Light());
+		VERIFY(L);
+		Lights.add_light(L);
 	}
 }
