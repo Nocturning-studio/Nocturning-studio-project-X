@@ -676,8 +676,8 @@ void CGamePersistent::RestoreEffectorDOF()
 //	m_dof		[4];	// 0-dest 1-current 2-from 3-original
 void CGamePersistent::UpdateDof()
 {
-	static float diff_far = pSettings->r_float("zone_pick_dof", "far");//70.0f;
-	static float diff_near = pSettings->r_float("zone_pick_dof", "near");//-70.0f;
+	static float diff_far = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "far", 70);
+	static float diff_near = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "near", -70);
 
 	if (m_bPickableDOF)
 	{

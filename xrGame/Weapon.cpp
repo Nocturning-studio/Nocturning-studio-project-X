@@ -465,10 +465,10 @@ void CWeapon::Load		(LPCSTR section)
 
 	Fvector			def_dof;
 	def_dof.set(-1, -1, -1);
-	m_ZoomDof = READ_IF_EXISTS(pSettings, r_fvector3, section, "zoom_dof", Fvector().set(-1, -1, -1));
+	m_ZoomDof = READ_IF_EXISTS(pSettings, r_fvector3, section, "zoom_dof", Fvector().set(0.5, 1.0, 180));
 	m_bZoomDofEnabled = !def_dof.similar(m_ZoomDof);
 
-	m_ReloadDof = READ_IF_EXISTS(pSettings, r_fvector4, section, "reload_dof", Fvector4().set(-1, -1, -1, -1));
+	m_ReloadDof = READ_IF_EXISTS(pSettings, r_fvector4, section, "reload_dof", Fvector4().set(0.0, 0.5, 5, 1.7));
 
 	//////////////////////////////////////////////////////////
 
