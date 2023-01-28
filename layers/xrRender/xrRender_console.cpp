@@ -72,16 +72,30 @@ xr_token shadow_filter_token[] = {
 
 u32		ps_debug_frame_layers = 0;
 xr_token debug_frame_layers_token[] = {
-	{ "off",						0											},
-	{ "hemi",						1											},
-	{ "occ",						2											},
-	{ "ao",							3											},
-	{ "diffuse",					4											},
-	{ "light",						5											},
-	{ "normal",						6											},
-	{ "color",						7											},
-	{ "specular",					8											},
-	{ "position",					9											},
+	{ "full_frame",					0											},
+	{ "gbuffer_color",				1											},
+	{ "gbuffer_position",			2											},
+	{ "gbuffer_normal",				3											},
+	{ "gbuffer_gloss",				4											},
+	{ "gbuffer_hemisphere",			5											},
+	{ "gbuffer_material",			6											},
+	{ "gbuffer_split",				7											},
+	{ "accumulator_light",			8											},
+	{ "accumulator_specular",		9											},
+	{ "real_time_ao",				10											},
+	{ "real_time_ao_with_hemi",		11											},
+	{ "split_with_real_time_ao_and_without", 12									},
+	{ "split_with_hemisphere_and_without",	 13									},
+	{ "split_ao_blur_stages",				 14									},
+	{ "full_ao_with_light",			15											},
+	{ 0,							0											}
+};
+
+u32		ps_debug_textures = 0;
+xr_token ps_debug_textures_token[] = {
+	{ "disabled",					0											},
+	{ "uv_checker",					1											},
+	{ "white",						2											},
 	{ 0,							0											}
 };
 
@@ -547,7 +561,8 @@ void		xrRender_initconsole()
 	//CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
 	//CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
 
-	CMD3(CCC_Token, "r2_debug_frame_layers", &ps_debug_frame_layers, debug_frame_layers_token);
+	CMD3(CCC_Token, "r2_debug_render", &ps_debug_frame_layers, debug_frame_layers_token);
+	CMD3(CCC_Token, "r2_debug_textures", &ps_debug_textures, ps_debug_textures_token);
 
 	CMD3(CCC_Mask, "r2_gbuffer_opt", &ps_r2_ls_flags_ext, R2FLAGEXT_GBUFFER_OPT);
 

@@ -137,6 +137,7 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	IBlender::Compile		(C);
 	// codepath is the same, only the shaders differ
 	// ***only pixel shaders differ***
+	extern u32 ps_debug_textures;
 	string256				mask;
 	strconcat				(sizeof(mask),mask,C.L_textures[0].c_str(),"_mask");
 	switch(C.iElement) 
@@ -146,10 +147,27 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_Sampler		("s_mask",	mask);
 		C.r_Sampler		("s_lmap",	C.L_textures[1]);
 
-		C.r_Sampler		("s_dt_r",	oR_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_g",	oG_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_b",	oB_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_a",	oA_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
+		if (ps_debug_textures == 1)
+		{
+			C.r_Sampler_tex("s_dt_r", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_g", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_b", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_a", "ed\\debug_uv_checker");
+		}
+		else if (ps_debug_textures == 2)
+		{
+			C.r_Sampler_tex("s_dt_r", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_g", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_b", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_a", "ed\\debug_white");
+		}
+		else
+		{
+			C.r_Sampler("s_dt_r", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_g", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_b", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_a", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		}
 
 		C.r_Sampler		("s_dn_r",	strconcat(sizeof(mask),mask,oR_Name,"_bump") );
 		C.r_Sampler		("s_dn_g",	strconcat(sizeof(mask),mask,oG_Name,"_bump") );
