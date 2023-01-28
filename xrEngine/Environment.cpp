@@ -138,7 +138,7 @@ void CEnvironment::Invalidate()
 	bWFX = false;
 	Current[0] = 0;
 	Current[1] = 0;
-	if (eff_LensFlare)		eff_LensFlare->Invalidate();
+//	if (eff_LensFlare)		eff_LensFlare->Invalidate();
 }
 
 float CEnvironment::TimeDiff(float prev, float cur)
