@@ -15,6 +15,14 @@ xr_token							qpreset_token[] = {
 	{ 0,							0											}
 };
 
+u32			ps_EffPreset = 1;
+xr_token							qeffpreset_token[] = {
+	{ "st_opt_eff_set_disabled",	0											},
+	{ "st_opt_eff_set_default",		1											},
+	{ "st_opt_eff_set_cinemaic",	2											},
+	{ 0,							0											}
+};
+
 u32		ps_aa = 1;
 xr_token							aa_token[] = {
 	{ "st_opt_off",					1											},
@@ -373,6 +381,27 @@ public:
 	}
 };
 
+class	CCC_EffPreset : public CCC_Token
+{
+public:
+	CCC_EffPreset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
+
+	virtual void	Execute(LPCSTR args) {
+		CCC_Token::Execute(args);
+		string_path		_cfg;
+		string_path		cmd;
+
+		switch (*value) {
+		case 0:		strcpy(_cfg, "eff_disabled.ltx");	break;
+		case 1:		strcpy(_cfg, "eff_default.ltx");	break;
+		case 2:		strcpy(_cfg, "eff_cinematic.ltx");	break;
+		}
+		FS.update_path(_cfg, "$game_config$", _cfg);
+		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
+		Console->Execute(cmd);
+	}
+};
+
 #if RENDER==R_R2
 #include "r__pixel_calculator.h"
 class CCC_BuildSSA : public IConsole_Command
@@ -567,6 +596,7 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_gbuffer_opt", &ps_r2_ls_flags_ext, R2FLAGEXT_GBUFFER_OPT);
 
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
+	CMD3(CCC_EffPreset, "eff_preset", &ps_EffPreset, qeffpreset_token);
 
 	// Common
 	CMD1(CCC_Screenshot, "screenshot");
