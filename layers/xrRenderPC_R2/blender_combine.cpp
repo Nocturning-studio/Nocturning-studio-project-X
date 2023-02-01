@@ -84,6 +84,13 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 5:	// post-processing
+		C.r_Pass			("null",			"combine_3_PP",		FALSE,	FALSE,	FALSE);
+		C.r_Sampler_clf		("s_image",			r2_RT_albedo);
+		C.r_Sampler_rtf		("s_position",		r2_RT_P);
+		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
+		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
+		C.r_Sampler_tex		("s_vignette",		"vfx\\vfx_vignette");
+		C.r_End();
 		break;
 	}
 }

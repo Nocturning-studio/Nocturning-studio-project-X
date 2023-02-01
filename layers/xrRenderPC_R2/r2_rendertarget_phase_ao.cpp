@@ -19,7 +19,7 @@ void CRenderTarget::phase_ao()
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//Downsample s_position for optimization 
 
-		//Set output RT
+	//Set output RT
 	u_setrt(rt_blurred_position, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -81,7 +81,7 @@ void CRenderTarget::phase_ao()
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//AO Filter	pt.1	(Here we sample rt_ao, and blur it (then output to rt_ao_blurred))
 
-		//Set output RT
+	//Set output RT
 	u_setrt(rt_ao_blurred1, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -110,7 +110,7 @@ void CRenderTarget::phase_ao()
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//AO Filter pt.2		(Here we sample rt_ao_blurred, and blur it again)
 
-		//Set output RT
+	//Set output RT
 	u_setrt(rt_ao_blurred2, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
