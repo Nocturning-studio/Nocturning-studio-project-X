@@ -23,7 +23,7 @@ BOOL		g_bLoaded = FALSE;
 ref_light	precache_light = 0;
 /////////////////////////////////////
 DWORD gMainThreadId = 0xFFFFFFFF;
-DWORD gSecondaryThreadId = 0xFFFFFFFF;
+DWORD gSecondaryThreadId = std::thread::hardware_concurrency();//0xFFFFFFFF;
 /////////////////////////////////////
 
 
