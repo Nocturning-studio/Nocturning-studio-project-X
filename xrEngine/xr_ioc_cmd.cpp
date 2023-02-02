@@ -16,6 +16,7 @@
 #include "xr_object.h"
 
 extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
+extern ENGINE_API Flags32 ps_weather_ls_flags = { WEATHER_EFFECTS };
 
 extern xr_token* vid_mode_token;
 
@@ -711,6 +712,8 @@ void CCC_Register()
 #ifndef DEDICATED_SERVER
 	CMD1(CCC_soundDevice, "snd_device");
 #endif
+
+	CMD3(CCC_Mask, "weather_effects", &ps_weather_ls_flags, WEATHER_EFFECTS);
 
 	CMD1(CCC_r2, "renderer");
 	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);

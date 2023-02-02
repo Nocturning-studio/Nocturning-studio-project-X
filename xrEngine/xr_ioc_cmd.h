@@ -8,6 +8,12 @@ enum
 	NORMAL_VIEW = (1ul << 2ul)
 };
 
+extern ENGINE_API Flags32 ps_weather_ls_flags;
+enum
+{
+	WEATHER_EFFECTS = (1ul << 1ul)
+};
+
 #define CMD0(cls)					{ static cls x##cls();				Console->AddCommand(&x##cls);}
 #define CMD1(cls,p1)				{ static cls x##cls(p1);			Console->AddCommand(&x##cls);}
 #define CMD2(cls,p1,p2)				{ static cls x##cls(p1,p2);			Console->AddCommand(&x##cls);}

@@ -179,6 +179,7 @@ void CGamePersistent::Disconnect()
 }
 
 #include "xr_level_controller.h"
+#include "../xrEngine/xr_ioc_cmd.h"
 
 void CGamePersistent::OnGameStart()
 {
@@ -270,14 +271,12 @@ void CGamePersistent::WeathersUpdate()
 #endif // DEBUG
 
 						VERIFY(snd._handle());
-						//u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
-						//ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
 						ambient_sound_next_time[idx] = Device.dwTimeGlobal + iFloor(snd.get_length_sec() * 1000.0f) + ch.get_rnd_sound_time();
 							//	Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
 					}
 			}
 			// start effect
-			if ((FALSE == bIndoor) && (0 == ambient_particles) && Device.dwTimeGlobal > ambient_effect_next_time) {
+			if ((FALSE == bIndoor) && (0 == ambient_particles) && (Device.dwTimeGlobal > ambient_effect_next_time) && (ps_weather_ls_flags.test(WEATHER_EFFECTS))) {
 				CEnvAmbient::SEffect* eff = env_amb->get_rnd_effect();
 				if (eff) {
 					Environment().wind_gust_factor = eff->wind_gust_factor;
