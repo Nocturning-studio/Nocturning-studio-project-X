@@ -47,5 +47,12 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_position_blurred", r2_RT_blurred_position);
 		C.r_End();
 		break;
+	case 4: //Read secondary RT and blur AO
+		C.r_Pass("null", "ao_filter3", FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf("s_ao_blurred1", r2_RT_ao3);
+		C.r_Sampler_rtf("s_position", r2_RT_P);
+		C.r_Sampler_rtf("s_position_blurred", r2_RT_blurred_position);
+		C.r_End();
+		break;
 	}
 }

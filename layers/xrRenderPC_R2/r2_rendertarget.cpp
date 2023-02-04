@@ -359,6 +359,7 @@ CRenderTarget::CRenderTarget		()
 		rt_ao.create(r2_RT_ao1, w, h, D3DFMT_A16B16G16R16F);
 		rt_ao_blurred1.create(r2_RT_ao2, w, h, D3DFMT_A16B16G16R16F);
 		rt_ao_blurred2.create(r2_RT_ao3, w, h, D3DFMT_A16B16G16R16F);
+		rt_ao_blurred3.create(r2_RT_ao4, w, h, D3DFMT_A16B16G16R16F);
 
 		rt_blurred_position.create(r2_RT_blurred_position, w, h, D3DFMT_A16B16G16R16F);
 

@@ -135,4 +135,33 @@ void CRenderTarget::phase_ao()
 
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//AO Filter pt.3		(Here we sample rt_ao_blurred, and blur it again)
+
+	//Set output RT
+	u_setrt(rt_ao_blurred3, nullptr, nullptr, HW.pBaseZB);
+
+	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
+	RCache.set_CullMode(CULL_NONE);
+	RCache.set_Stencil(FALSE);
+
+	//Fill vertex buffer
+	pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	RCache.Vertex.Unlock(4, g_combine->vb_stride);
+
+	//Set pass
+	RCache.set_Element(s_ao->E[4]);
+
+	//Set geometry
+	RCache.set_Geometry(g_combine);
+
+	//Draw
+	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }

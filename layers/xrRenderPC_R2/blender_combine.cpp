@@ -22,8 +22,9 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf		("s_tonemap",		r2_RT_luminance_cur	);
 		C.r_Sampler_clw		("s_material",		r2_material			);
 		C.r_Sampler_clf		("s_ao",			r2_RT_ao1			);
-		C.r_Sampler_clf		("s_ao_blurred1",	r2_RT_ao2			);
-		C.r_Sampler_clf		("s_ao_blurred2",	r2_RT_ao3			);
+		C.r_Sampler_clf		("s_ao_blurred",	r2_RT_ao2			);
+		C.r_Sampler_clf		("s_ao_blurred1",	r2_RT_ao3			);
+		C.r_Sampler_clf		("s_ao_blurred2",	r2_RT_ao4			);
 		C.r_Sampler_clf		("s_position_blurred",	r2_RT_blurred_position);
 		C.r_Sampler_clf		("env_s0",			r2_T_envs0			);
 		C.r_Sampler_clf		("env_s1",			r2_T_envs1			);

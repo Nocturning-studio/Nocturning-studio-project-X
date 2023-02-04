@@ -63,6 +63,7 @@ public:
 	ref_rt						rt_ao;
 	ref_rt						rt_ao_blurred1;
 	ref_rt						rt_ao_blurred2;
+	ref_rt						rt_ao_blurred3;
 	ref_rt						rt_blurred_position;
 
 	// env

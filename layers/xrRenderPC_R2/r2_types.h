@@ -26,6 +26,7 @@
 #define		r2_RT_ao1			"$user$ao1"				// ---
 #define		r2_RT_ao2			"$user$ao2"				// ---
 #define		r2_RT_ao3			"$user$ao3"				// ---
+#define		r2_RT_ao4			"$user$ao4"				// ---
 #define		r2_RT_blurred_position "$user$blurred_position"// ---
 
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
