@@ -7,7 +7,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	//RImplementation.addShaderOption("TEST_DEFINE", "1");
 
 	// Uber-parse
-	string256		fname,fnameA,fnameB;
+	string256		fname, fnameA, fnameB;
 	strcpy			(fname,*C.L_textures[0]);	//. andy if (strext(fname)) *strext(fname)=0;
 	fix_texture_name(fname);
 	ref_texture		_t;		_t.create			(fname);
@@ -117,11 +117,19 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	else
 	C.r_Sampler		("s_base",		C.L_textures[0],	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
 
+
+	char* AoPath = strconcat(sizeof(fname), fname, fname, "_ao");
+	string_path BakedAOPath = { 0 }; 
+	if (FS.exist(BakedAOPath, "$game_textures$", AoPath, ".dds"))
+		C.r_Sampler_tex("s_baked_ao", AoPath);
+	else
+		C.r_Sampler_tex("s_baked_ao", "vfx\\vfx_no_ao");
+
 	C.r_Sampler		("s_bumpX",		fnameB,				false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);	// should be before base bump
 	C.r_Sampler		("s_bump",		fnameA,				false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-	C.r_Sampler		("s_bumpD",		dt,					false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
+
 	C.r_Sampler		("s_detail",	dt,					false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-	// KD: samplers for detail bump registering
+
 	if (C.bDetail_Bump) {
 		C.r_Sampler		("s_detailBump",		dtA,		false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
 		C.r_Sampler		("s_detailBumpX",		dtB,		false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
@@ -133,12 +141,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 
 #ifdef ADVANCED_BUILD
 	if (bump)
-	C.r_Sampler("s_spec",		strconcat(sizeof(fname), fname, fname, "_spec.dds"),		false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_spec.dds)
-	
-	//C.r_Sampler("s_nmap", strconcat(sizeof(fname), fname, fname, "_nmap"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_nmap.dds)
-	//C.r_Sampler("s_spec",		strconcat(sizeof(fname), fname, fname, "_spec"),		false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_spec.dds)
-	//C.r_Sampler("s_speccolor",	strconcat(sizeof(fname), fname, fname, "_speccolor"),	false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_speccolor.dds)
-	//C.r_Sampler("s_detail_nmap",		strconcat(sizeof(dt),	 dt,	dt,		"_nmap"),		false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_spec",		strconcat(sizeof(fname), fname, fname, "_spec"),		false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC); // <- Very big thanks for LVutner (albedo_spec.dds)
 #endif
 
 	RImplementation.clearAllShaderOptions();
