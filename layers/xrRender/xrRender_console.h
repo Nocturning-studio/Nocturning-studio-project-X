@@ -104,6 +104,24 @@ extern ECORE_API int			ps_r2_dhemi_count;			// 5
 extern ECORE_API float			ps_r2_slight_fade;			// 1.f
 extern ECORE_API int			ps_r2_wait_sleep;
 
+extern ECORE_API u32			ps_aa;
+extern ECORE_API u32			ps_aa_quality;
+
+extern ECORE_API u32			ps_ao;
+extern ECORE_API u32			ps_ao_quality;
+
+extern ECORE_API u32			ps_debug_frame_layers;
+
+extern ECORE_API u32			ps_sun_quality;
+extern ECORE_API u32			ps_shadow_filtering;
+
+extern ECORE_API u32			ps_blur_type;
+extern ECORE_API u32			ps_dof_quality;
+
+extern ECORE_API u32			ps_bump_mode;
+extern ECORE_API u32			ps_tdetail_bump_mode;
+extern ECORE_API u32			ps_terrain_bump_mode;
+
 //	x - min (0), y - focus (1.4), z - max (100)
 extern ECORE_API Fvector3		ps_r2_dof;
 extern ECORE_API float			ps_r2_dof_sky;				//	distance to sky
@@ -136,7 +154,7 @@ enum
 
 	R2FLAG_SOFT_WATER						= (1 << 18),
 	R2FLAG_SOFT_PARTICLES					= (1 << 19),
-	R2FLAG_SOFT_SHADOWS						= (1 << 20),
+	R2FLAG_SOFT_FOG							= (1 << 20),
 	R2FLAG_GLOSS_RGB						= (1 << 21),
 	R2FLAG_AA_EDGE_DETECT					= (1 << 22),
 	R2FLAG_WET_SURFACES						= (1 << 23),

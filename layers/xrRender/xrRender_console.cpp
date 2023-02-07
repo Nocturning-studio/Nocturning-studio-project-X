@@ -134,6 +134,15 @@ xr_token							qsun_shafts_token[] = {
 	{ 0,							0												}
 };
 
+u32		ps_dof_quality = 2;
+xr_token dof_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_ultra",				4											},
+	{ 0,							0											}
+};
+
 // Common
 //int		ps_r__Supersample			= 1		;
 int			ps_r__LightSleepFrames = 10;
@@ -524,7 +533,7 @@ void		xrRender_initconsole()
 {
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
-	//CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
+	CMD3(CCC_Mask, "r2_soft_fog", &ps_r2_ls_flags, R2FLAG_SOFT_FOG);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
@@ -547,6 +556,7 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float,		"r2_dof_kernel",	&ps_r2_dof_kernel_size,		.0f, 10.f);
 	CMD4(CCC_Float,		"r2_dof_sky",		&ps_r2_dof_sky, -10000.f, 10000.f);
 	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_ls_flags, R2FLAG_DOF);
+	CMD3(CCC_Token,		"r2_dof_quality",	&ps_dof_quality, dof_quality_token);
 
 	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_ls_flags, R2FLAG_MBLUR);
 

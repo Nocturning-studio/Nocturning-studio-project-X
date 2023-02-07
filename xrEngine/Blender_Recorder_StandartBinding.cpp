@@ -221,6 +221,17 @@ class cl_sun0_color : public R_constant_setup {
 		RCache.set_c(C, result);
 	}
 };	static cl_sun0_color		binder_sun0_color;
+
+static class cl_env_color : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptorMixer& envdesc = g_pGamePersistent->Environment().CurrentEnv;
+		Fvector4 envclr = { envdesc.sky_color.x * 2 + EPS,	envdesc.sky_color.y * 2 + EPS,	envdesc.sky_color.z * 2 + EPS,	envdesc.weight };
+		RCache.set_c(C, envclr);
+	}
+}	binder_env_color;
+
 class cl_sun0_dir_w : public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
@@ -328,6 +339,9 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("fog_params", &binder_fog_params);
 	r_Constant("fog_color", &binder_fog_color);
 #endif
+	// env-params
+	r_Constant("env_color", &binder_env_color);
+
 	// time
 	r_Constant("timers", &binder_times);
 

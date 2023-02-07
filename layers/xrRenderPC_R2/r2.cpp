@@ -9,21 +9,8 @@
 #include "..\xrRender\LightTrack.h"
 #include <boost/crc.hpp>
 #include "../xrEngine\r_constants.h"
-
-CRender	RImplementation;
 //////////////////////////////////////////////////////////////////////////
-extern u32 ps_aa;
-extern u32 ps_aa_quality;
-extern u32 ps_ao;
-extern u32 ps_ao_quality;
-extern u32 ps_debug_frame_layers;
-extern u32 ps_sun_quality;
-extern u32 ps_blur_type;
-extern u32 ps_bump_mode;
-extern u32 ps_tdetail_bump_mode;
-extern u32 ps_terrain_bump_mode;
-extern u32 ps_shadow_filtering;
-extern float ps_r2_sun_far;
+CRender	RImplementation;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
 {
@@ -140,7 +127,7 @@ void CRender::create()
 
 	// hardware
 	///////////////////////////////////////////////////
-	//Shadow filter, smap res and sun far choosing
+	//Smap res choosing
 		switch (ps_sun_quality)
 		{
 		case 1:
@@ -156,7 +143,7 @@ void CRender::create()
 			o.smapsize = 2560;
 			break;
 		case 5:
-			o.smapsize = 3072;
+			o.smapsize = 4096;
 			break;
 		}
 	///////////////////////////////////////////////////
@@ -694,7 +681,6 @@ HRESULT	CRender::shader_compile(
 
 	char c_smapsize[32];
 	char c_gloss[32];
-	char c_gloss_rgb[32];
 
 	char c_sun_shafts[32];
 
@@ -717,9 +703,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_soft_water[32];
 	char c_soft_particles[32];
-	char c_soft_shadows[32];
-
-	char c_wet_surfaces[32];
+	char c_soft_fog[32];
 
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
@@ -737,6 +721,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_mblur[32];
 	char c_dof[32];
+	char c_dof_quality[32];
 
 	char c_gbuffer_opt[32];
 
@@ -835,7 +820,7 @@ HRESULT	CRender::shader_compile(
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
 		sprintf(c_mblur, "%d", 1);
 		defines[def_it].Name = "USE_MBLUR";
 		defines[def_it].Definition = c_mblur;
@@ -846,7 +831,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_MBLUR));
 	++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_DOF)) {
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF)) {
 		sprintf(c_dof, "%d", 1);
 		defines[def_it].Name = "USE_DOF";
 		defines[def_it].Definition = c_dof;
@@ -855,6 +840,18 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_DOF));
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_dof_quality)
+	{
+		sprintf(c_dof_quality, "%d", ps_dof_quality);
+		defines[def_it].Name = "DOF_QUALITY";
+		defines[def_it].Definition = c_dof_quality;
+		def_it++;
+		strcat(sh_name, c_dof_quality);
+		len += 4;
+	}
+	sh_name[len] = '0' + (char)ps_dof_quality;
 	++len;
 
 	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
@@ -976,6 +973,14 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sunstatic);
 	++len;
 
+	if (o.advancedpp) {
+		defines[def_it].Name = "USE_R2_ADVANCED_POSTPROCESS";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + char(o.advancedpp);
+	++len;
+
 	if (o.forcegloss) {
 		sprintf(c_gloss, "%f", o.forcegloss_v);
 		defines[def_it].Name = "FORCE_GLOSS";
@@ -1043,32 +1048,6 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(soft_particles);
 	++len;
 
-	int gloss_rgb = ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_GLOSS_RGB))
-	{
-		sprintf(c_gloss_rgb, "%d", gloss_rgb);
-		defines[def_it].Name = "USE_RGB_GLOSS";
-		defines[def_it].Definition = c_gloss_rgb;
-		def_it++;
-		strcat(sh_name, c_gloss_rgb);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(gloss_rgb);
-	++len;
-
-	int wet_surfaces = ps_r2_ls_flags.test(R2FLAG_WET_SURFACES);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_WET_SURFACES))
-	{
-		sprintf(c_wet_surfaces, "%d", wet_surfaces);
-		defines[def_it].Name = "USE_WET_SURFACES";
-		defines[def_it].Definition = c_wet_surfaces;
-		def_it++;
-		strcat(sh_name, c_wet_surfaces);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(wet_surfaces);
-	++len;
-
 	int bloom = ps_r2_ls_flags.test(R2FLAG_BLOOM);
 	if (ps_r2_ls_flags.test(R2FLAG_BLOOM))
 	{
@@ -1097,17 +1076,17 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_shadow_filtering);
 	++len;
 
-	int soft_shadows = ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS))
+	int soft_fog = ps_r2_ls_flags.test(R2FLAG_SOFT_FOG);
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_FOG))
 	{
-		sprintf(c_soft_shadows, "%d", soft_shadows);
-		defines[def_it].Name = "USE_SOFT_SHADOWS";
-		defines[def_it].Definition = c_soft_shadows;
+		sprintf(c_soft_fog, "%d", soft_fog);
+		defines[def_it].Name = "USE_SOFT_FOG";
+		defines[def_it].Definition = c_soft_fog;
 		def_it++;
-		strcat(sh_name, c_soft_shadows);
+		strcat(sh_name, c_soft_fog);
 		len += 1;
 	}
-	sh_name[len] = '0' + char(soft_shadows);
+	sh_name[len] = '0' + char(soft_fog);
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////
