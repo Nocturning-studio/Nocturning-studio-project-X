@@ -11,6 +11,7 @@
 //refs
 class ENGINE_API IRender_DetailModel;
 
+
 //
 class ENGINE_API CEffect_Rain
 {
@@ -83,6 +84,8 @@ public:
 
 	void							Render();
 	void							OnFrame();
+
+	void							InvalidateState() { state = stIdle; }
 };
 
 #endif //RainH

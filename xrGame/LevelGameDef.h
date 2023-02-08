@@ -26,13 +26,22 @@ enum ERPpointType{		// [0..255]
 	rptTeamBaseParticle,
 };
 
-
 enum ERPGameType{		// [0..255]
 	rpgtGameAny							= 0,
 	rpgtGameDeathmatch					= 1,
 	rpgtGameTeamDeathmatch				= 2,
 	rpgtGameArtefactHunt				= 3,
 };
+
+enum EEnvModUsedParams {
+	eViewDist							= (1 << 0),
+	eFogColor							= (1 << 1),
+	eFogDensity							= (1 << 2),
+	eAmbientColor						= (1 << 3),
+	eSkyColor							= (1 << 4),
+	eHemiColor							= (1 << 5)
+};
+
 extern ECORE_API xr_token rpoint_type[];
 extern ECORE_API xr_token rpoint_game_type[];
 

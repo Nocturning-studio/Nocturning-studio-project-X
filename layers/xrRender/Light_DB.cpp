@@ -142,46 +142,46 @@ void			CLight_DB::Update			()
 	{
 		light*	_sun_original		= (light*) sun_original._get();
 		light*	_sun_adapted		= (light*) sun_adapted._get();
-		CEnvDescriptor&	E			= g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptor*	E			= g_pGamePersistent->Environment().CurrentEnv;
 		VERIFY						(_valid(E.sun_dir));
 #ifdef DEBUG
 		if(E.sun_dir.y>=0)
 		{
-			Log("sect_name", E.sect_name.c_str());
-			Log("E.sun_dir", E.sun_dir);
-			Log("E.wind_direction",E.wind_direction);
-			Log("E.wind_velocity",E.wind_velocity);
-			Log("E.sun_color",E.sun_color);
-			Log("E.rain_color",E.rain_color);
-			Log("E.rain_density",E.rain_density);
-			Log("E.fog_distance",E.fog_distance);
-			Log("E.fog_density",E.fog_density);
-			Log("E.fog_color",E.fog_color);
-			Log("E.far_plane",E.far_plane);
-			Log("E.sky_rotation",E.sky_rotation);
-			Log("E.sky_color",E.sky_color);
+			Log("sect_name", E->sect_name.c_str());
+			Log("E.sun_dir", E->sun_dir);
+			Log("E.wind_direction",E->wind_direction);
+			Log("E.wind_velocity",E->wind_velocity);
+			Log("E.sun_color",E->sun_color);
+			Log("E.rain_color",E->rain_color);
+			Log("E.rain_density",E->rain_density);
+			Log("E.fog_distance",E->fog_distance);
+			Log("E.fog_density",E->fog_density);
+			Log("E.fog_color",E->fog_color);
+			Log("E.far_plane",E->far_plane);
+			Log("E.sky_rotation",E->sky_rotation);
+			Log("E.sky_color",E->sky_color);
 		}
 #endif
-		VERIFY2						(E.sun_dir.y<0,"Invalid sun direction settings in evironment-config");
+		VERIFY2						(E->sun_dir.y<0,"Invalid sun direction settings in evironment-config");
 		Fvector						OD,OP,AD,AP;
-		OD.set						(E.sun_dir).normalize			();
+		OD.set						(E->sun_dir).normalize			();
 		OP.mad						(Device.vCameraPosition,OD,-500.f);
-		AD.set(0,-.75f,0).add		(E.sun_dir);
+		AD.set(0,-.75f,0).add		(E->sun_dir);
 
 		// for some reason E.sun_dir can point-up
 		int		counter = 0;
 		while	(AD.magnitude()<0.001 && counter<10)	{
-			AD.add(E.sun_dir); counter++;
+			AD.add(E->sun_dir); counter++;
 		}
 		AD.normalize				();
 		AP.mad						(Device.vCameraPosition,AD,-500.f);
 		sun_original->set_rotation	(OD,_sun_original->right	);
 		sun_original->set_position	(OP);
-		sun_original->set_color		(E.sun_color.x,E.sun_color.y,E.sun_color.z);
+		sun_original->set_color		(E->sun_color.x,E->sun_color.y,E->sun_color.z);
 		sun_original->set_range		(600.f);
 		sun_adapted->set_rotation	(AD, _sun_adapted->right	);
 		sun_adapted->set_position	(AP		);
-		sun_adapted->set_color		(E.sun_color.x*ps_r2_sun_lumscale,E.sun_color.y*ps_r2_sun_lumscale,E.sun_color.z*ps_r2_sun_lumscale);
+		sun_adapted->set_color		(E->sun_color.x*ps_r2_sun_lumscale,E->sun_color.y*ps_r2_sun_lumscale,E->sun_color.z*ps_r2_sun_lumscale);
 		sun_adapted->set_range		(600.f	);
 	}
 
