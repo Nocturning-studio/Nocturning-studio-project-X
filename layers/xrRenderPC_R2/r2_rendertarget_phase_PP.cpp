@@ -62,6 +62,8 @@ BOOL CRenderTarget::u_need_PP	()
 
 	// bool	_menu_pp= g_pGamePersistent?g_pGamePersistent->OnRenderPPUI_query():false;
 
+	bool _dof_pp = ps_r2_pp_flags.test(R2FLAG_DOF);
+
 	bool	_cbase	= false;
 	{
 		int		_r	= color_get_R(param_color_base)	; _r=_abs(_r-int(0x7f));
@@ -76,7 +78,7 @@ BOOL CRenderTarget::u_need_PP	()
 		int		_b	= color_get_B(param_color_add)	;
 		if (_r>2 || _g>2 || _b>2)	_cadd	= true	;
 	}
-	return _blur || _gray || _noise || _dual || _cbase || _cadd; 
+	return _blur || _gray || _noise || _dual || _cbase || _cadd || _dof_pp; 
 }
 
 struct TL_2c3uv		{

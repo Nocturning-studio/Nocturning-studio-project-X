@@ -820,7 +820,7 @@ HRESULT	CRender::shader_compile(
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_MBLUR)) {
 		sprintf(c_mblur, "%d", 1);
 		defines[def_it].Name = "USE_MBLUR";
 		defines[def_it].Definition = c_mblur;
@@ -828,10 +828,10 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_mblur);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_MBLUR));
+	sh_name[len] = '0' + char(ps_r2_pp_flags.test(R2FLAG_MBLUR));
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF)) {
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_DOF)) {
 		sprintf(c_dof, "%d", 1);
 		defines[def_it].Name = "USE_DOF";
 		defines[def_it].Definition = c_dof;
@@ -839,7 +839,7 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_dof);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_r2_ls_flags.test(R2FLAG_DOF));
+	sh_name[len] = '0' + char(ps_r2_pp_flags.test(R2FLAG_DOF));
 	++len;
 
 	if (RImplementation.o.advancedpp && ps_dof_quality)
@@ -996,8 +996,8 @@ HRESULT	CRender::shader_compile(
 //Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	int vignette = ps_r2_ls_flags.test(R2FLAG_VIGNETTE);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_VIGNETTE))
+	int vignette = ps_r2_pp_flags.test(R2FLAG_VIGNETTE);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
 	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "USE_VIGNETTE";
@@ -1009,8 +1009,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(vignette);
 	++len;
 
-	int chroma_abb = ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_CHROMATIC_ABBERATION))
+	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
@@ -1048,8 +1048,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(soft_particles);
 	++len;
 
-	int bloom = ps_r2_ls_flags.test(R2FLAG_BLOOM);
-	if (ps_r2_ls_flags.test(R2FLAG_BLOOM))
+	int bloom = ps_r2_pp_flags.test(R2FLAG_BLOOM);
+	if (ps_r2_pp_flags.test(R2FLAG_BLOOM))
 	{
 		sprintf(c_bloom, "%d", bloom);
 		defines[def_it].Name = "USE_BLOOM";

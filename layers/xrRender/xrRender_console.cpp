@@ -204,6 +204,12 @@ Flags32 ps_r2_ls_flags =
 	R2FLAG_SUN_TSM
 }; // r2-only
 
+Flags32 ps_r2_pp_flags =
+{
+	R2FLAG_DOF |
+	R2FLAG_MBLUR
+}; // r2.5-only
+
 Flags32		ps_r2_ls_flags_ext = { R2FLAGEXT_AO_BLUR };
 
 float		ps_r2_df_parallax_h = 0.02f;
@@ -543,9 +549,9 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
 	CMD3(CCC_Mask,  "r2_ao_blur", &ps_r2_ls_flags_ext, R2FLAGEXT_AO_BLUR);
 
-	CMD3(CCC_Mask, "r2_vignette", &ps_r2_ls_flags, R2FLAG_VIGNETTE);
-	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_ls_flags, R2FLAG_CHROMATIC_ABBERATION);
-	CMD3(CCC_Mask, "r2_bloom", &ps_r2_ls_flags, R2FLAG_BLOOM);
+	CMD3(CCC_Mask, "r2_vignette", &ps_r2_pp_flags, R2FLAG_VIGNETTE);
+	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
+	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
 
 	Fvector	tw_min, tw_max;
 	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);
@@ -555,10 +561,10 @@ void		xrRender_initconsole()
 	CMD4(CCC_DofFar,	"r2_dof_far",		&ps_r2_dof.z,	tw_min.z,	tw_max.z);
 	CMD4(CCC_Float,		"r2_dof_kernel",	&ps_r2_dof_kernel_size,		.0f, 10.f);
 	CMD4(CCC_Float,		"r2_dof_sky",		&ps_r2_dof_sky, -10000.f, 10000.f);
-	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_ls_flags, R2FLAG_DOF);
+	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_pp_flags, R2FLAG_DOF);
 	CMD3(CCC_Token,		"r2_dof_quality",	&ps_dof_quality, dof_quality_token);
 
-	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_ls_flags, R2FLAG_MBLUR);
+	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_pp_flags, R2FLAG_MBLUR);
 
 	CMD3(CCC_Token, "r2_sun_shafts", &ps_r_sun_shafts, qsun_shafts_token);
 	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
