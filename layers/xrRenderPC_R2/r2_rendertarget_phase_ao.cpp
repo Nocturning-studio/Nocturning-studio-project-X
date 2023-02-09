@@ -54,7 +54,8 @@ void CRenderTarget::phase_ao()
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
 
-	Fmatrix	m_v2w;			m_v2w.invert(Device.mView);
+	Fmatrix	m_v2w;			
+	m_v2w.invert(Device.mView);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -87,6 +88,8 @@ void CRenderTarget::phase_ao()
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
 
+	m_v2w.invert(Device.mView);
+
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
@@ -104,6 +107,8 @@ void CRenderTarget::phase_ao()
 	//Set geometry
 	RCache.set_Geometry(g_combine);
 
+	RCache.set_c("m_v2w", m_v2w);
+
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
@@ -115,6 +120,8 @@ void CRenderTarget::phase_ao()
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
+	m_v2w.invert(Device.mView);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -133,6 +140,8 @@ void CRenderTarget::phase_ao()
 	//Set geometry
 	RCache.set_Geometry(g_combine);
 
+	RCache.set_c("m_v2w", m_v2w);
+
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
@@ -144,6 +153,8 @@ void CRenderTarget::phase_ao()
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+
+	m_v2w.invert(Device.mView);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -161,6 +172,8 @@ void CRenderTarget::phase_ao()
 
 	//Set geometry
 	RCache.set_Geometry(g_combine);
+
+	RCache.set_c("m_v2w", m_v2w);
 
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
