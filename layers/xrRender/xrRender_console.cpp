@@ -15,11 +15,20 @@ xr_token							qpreset_token[] = {
 	{ 0,							0											}
 };
 
+u32			ps_EffPreset = 2;
+xr_token							qeffpreset_token[] = {
+	{ "st_opt_eff_disabled",		0											},
+	{ "st_opt_eff_default",			1											},
+	{ "st_opt_eff_cinematic",		2											},
+	{ 0,							0											}
+};
+
 u32		ps_aa = 1;
 xr_token							aa_token[] = {
 	{ "st_opt_off",					1											},
 	{ "st_opt_dlaa",				2											},
-	{ "st_opt_fxaa",				3											},
+	{ "st_opt_dlaa_force_edge_detect", 3										},
+	{ "st_opt_fxaa",				4											},
 	{ 0,							0											} 
 };
 
@@ -38,7 +47,7 @@ xr_token ao_token[] = {
 	{ "st_opt_ssao",				1											},
 	{ "st_opt_hdao",				2											},
 	{ "st_opt_hbao",				3											},
-	{ "st_opt_gtao",				4											},
+//	{ "st_opt_gtao",				4											},
 	{ 0,							0											} 
 };
 
@@ -387,7 +396,27 @@ public:
 		Console->Execute(cmd);
 	}
 };
+//-----------------------------------------------------------------------
+class	CCC_EffPreset : public CCC_Token
+{
+public:
+	CCC_EffPreset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
 
+	virtual void	Execute(LPCSTR args) {
+		CCC_Token::Execute(args);
+		string_path		_cfg;
+		string_path		cmd;
+
+		switch (*value) {
+		case 0:		strcpy(_cfg, "eff_disabled.ltx");	break;
+		case 1:		strcpy(_cfg, "eff_default.ltx");		break;
+		case 2:		strcpy(_cfg, "eff_cinematic.ltx");	break;
+		}
+		FS.update_path(_cfg, "$game_config$", _cfg);
+		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
+		Console->Execute(cmd);
+	}
+};
 #if RENDER==R_R2
 #include "r__pixel_calculator.h"
 class CCC_BuildSSA : public IConsole_Command
@@ -543,7 +572,6 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
-	CMD3(CCC_Mask, "r2_aa_edge_detect", &ps_r2_ls_flags, R2FLAG_AA_EDGE_DETECT);
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
@@ -574,15 +602,13 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_tdetail_bump_mode, tdetail_bump_mode_token);
 	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_terrain_bump_mode, terrain_bump_mode_token);
 
-	//CMD3(CCC_Mask, "r2_gloss_rgb", &ps_r2_ls_flags, R2FLAG_GLOSS_RGB);
-	//CMD3(CCC_Mask, "r2_wet_surfaces", &ps_r2_ls_flags, R2FLAG_WET_SURFACES);
-
 	CMD3(CCC_Token, "r2_debug_render", &ps_debug_frame_layers, debug_frame_layers_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_debug_textures, ps_debug_textures_token);
 
 	CMD3(CCC_Mask, "r2_gbuffer_opt", &ps_r2_ls_flags_ext, R2FLAGEXT_GBUFFER_OPT);
 
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
+	CMD3(CCC_EffPreset, "eff_preset", &ps_EffPreset, qeffpreset_token);
 
 	// Common
 	CMD1(CCC_Screenshot, "screenshot");

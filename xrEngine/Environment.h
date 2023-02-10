@@ -306,6 +306,8 @@ public:
 
 	void					OnFrame();
 
+	void					calculate_dynamic_sun_dir();
+
 	void					RenderSky();
 	void					RenderClouds();
 	void					RenderFlares();

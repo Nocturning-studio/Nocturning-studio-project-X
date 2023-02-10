@@ -169,7 +169,8 @@ void	CRenderTarget::phase_combine()
 	// Combine everything + perform AA
 	if (PP_Complex)	u_setrt(rt_Color, 0, 0, HW.pBaseZB);			// LDR RT
 	else					u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-	//. u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+	// u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 	if (1)
@@ -209,7 +210,10 @@ void	CRenderTarget::phase_combine()
 		if (ps_r2_ls_flags.test(R2FLAG_AA))			RCache.set_Element(s_combine->E[bDistort ? 3 : 1]);	// look at blender_combine.cpp
 		else										RCache.set_Element(s_combine->E[bDistort ? 4 : 2]);	// look at blender_combine.cpp
 		Fvector3					dof;
-		g_pGamePersistent->GetCurrentDof(dof);
+
+		if (ps_r2_pp_flags.test(R2FLAG_DOF))
+			g_pGamePersistent->GetCurrentDof(dof);
+
 		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 		RCache.set_c("e_barrier", ps_r2_aa_barier.x, ps_r2_aa_barier.y, ps_r2_aa_barier.z, 0);
@@ -264,7 +268,10 @@ void	CRenderTarget::phase_combine()
 		Fvector3	dof;
 		vDofKernel.set(0.5f / w, 0.5f / h);
 		vDofKernel.mul(ps_r2_dof_kernel_size);
-		g_pGamePersistent->GetCurrentDof(dof);
+
+		if(ps_r2_pp_flags.test(R2FLAG_DOF))
+			g_pGamePersistent->GetCurrentDof(dof);
+
 		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 		RCache.set_c("m_current", m_current);

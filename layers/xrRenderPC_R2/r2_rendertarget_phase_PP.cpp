@@ -78,7 +78,7 @@ BOOL CRenderTarget::u_need_PP	()
 		int		_b	= color_get_B(param_color_add)	;
 		if (_r>2 || _g>2 || _b>2)	_cadd	= true	;
 	}
-	return _blur || _gray || _noise || _dual || _cbase || _cadd || _dof_pp; 
+	return _blur || _gray || _noise || _dual || _cbase || _cadd;// || _dof_pp; 
 }
 
 struct TL_2c3uv		{
@@ -137,7 +137,10 @@ void CRenderTarget::phase_pp		()
 	vDofKernel.mul(ps_r2_dof_kernel_size);
 
 	Fvector3					dof;
-	g_pGamePersistent->GetCurrentDof(dof);
+
+	if (ps_r2_pp_flags.test(R2FLAG_DOF))
+		g_pGamePersistent->GetCurrentDof(dof);
+
 	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 
