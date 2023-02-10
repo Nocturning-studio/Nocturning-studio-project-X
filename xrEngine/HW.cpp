@@ -473,7 +473,7 @@ void	CHW::updateWindowProps(HWND m_hWnd)
 		AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
 
 		SetWindowPos(m_hWnd,
-			HWND_TOP,
+			HWND_NOTOPMOST,
 			m_rcWindowBounds.left,
 			m_rcWindowBounds.top,
 			(m_rcWindowBounds.right - m_rcWindowBounds.left),
@@ -522,7 +522,7 @@ void	fill_vid_mode_list(CHW* _hw)
 		string32		str;
 
 		_hw->pD3D->EnumAdapterModes(_hw->DevAdapter, _hw->Caps.fTarget, i, &Mode);
-		if (Mode.Width < 800)		continue;
+		if (Mode.Width < 426)		continue;
 
 		sprintf_s(str, sizeof(str), "%dx%d", Mode.Width, Mode.Height);
 

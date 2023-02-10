@@ -234,7 +234,7 @@ float CEnvironment::TimeWeight(float val, float min_t, float max_t)
 	return			weight;
 }
 
-//Kondr48: функция перемотки времени
+//Kondr48: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 void CEnvironment::ChangeGameTime(float game_time)
 {
 	fGameTime = NormalizeTime(fGameTime + game_time);
@@ -530,6 +530,7 @@ void CEnvironment::OnFrame()
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, color_rgba_f(CurrentEnv->fog_color.x, CurrentEnv->fog_color.y, CurrentEnv->fog_color.z, 0)));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGSTART, *(u32*)(&CurrentEnv->fog_near)));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGEND, *(u32*)(&CurrentEnv->fog_far)));
+
 }
 
 void CEnvironment::calculate_dynamic_sun_dir()
@@ -594,6 +595,7 @@ void CEnvironment::calculate_dynamic_sun_dir()
 
 	R_ASSERT(_valid(AZ));
 	R_ASSERT(_valid(SEA));
+  
 	CurrentEnv->sun_dir.setHP(AZ, SEA);
 	R_ASSERT(_valid(CurrentEnv->sun_dir));
 

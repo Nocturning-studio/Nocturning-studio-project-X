@@ -142,28 +142,23 @@ enum
 	R2FLAG_ZFILL							= (1<<9),
 	R2FLAG_R1LIGHTS							= (1<<10),
 	R2FLAG_SUN_IGNORE_PORTALS				= (1<<11),
-
-//	R2FLAG_SUN_STATIC						= (1<<12),
 	
-	R2FLAG_EXP_SPLIT_SCENE					= (1<<13),
-	R2FLAG_EXP_DONT_TEST_UNSHADOWED			= (1<<14),
+	R2FLAG_EXP_SPLIT_SCENE					= (1<<12),
+	R2FLAG_EXP_DONT_TEST_UNSHADOWED			= (1<<13),
 
-	R2FLAG_USE_NVDBT						= (1<<15),
-	R2FLAG_USE_NVSTENCIL					= (1<<16),
+	R2FLAG_USE_NVDBT						= (1<<14),
+	R2FLAG_USE_NVSTENCIL					= (1<<15),
 
-	R2FLAG_EXP_MT_CALC						= (1<<17),
+	R2FLAG_EXP_MT_CALC						= (1<<16),
 
-	R2FLAG_SOFT_WATER						= (1 << 18),
-	R2FLAG_SOFT_PARTICLES					= (1 << 19),
-	R2FLAG_SOFT_FOG							= (1 << 20),
-	R2FLAG_GLOSS_RGB						= (1 << 21),
-	R2FLAG_AA_EDGE_DETECT					= (1 << 22),
-	R2FLAG_WET_SURFACES						= (1 << 23),
-	R2FLAG_VIGNETTE							= (1 << 24),
-	R2FLAG_CHROMATIC_ABBERATION				= (1 << 25),
-	R2FLAG_BLOOM							= (1 << 26),
-	R2FLAG_DOF								= (1 << 27),
-	R2FLAG_MBLUR							= (1 << 28)
+	R2FLAG_SOFT_WATER						= (1 << 17),
+	R2FLAG_SOFT_PARTICLES					= (1 << 18),
+	R2FLAG_SOFT_FOG							= (1 << 19),
+	R2FLAG_VIGNETTE							= (1 << 20),
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 21),
+	R2FLAG_BLOOM							= (1 << 22),
+	R2FLAG_DOF								= (1 << 23),
+	R2FLAG_MBLUR							= (1 << 24)
 };
 
 enum

@@ -143,7 +143,7 @@ void CRender::create()
 			o.smapsize = 2560;
 			break;
 		case 5:
-			o.smapsize = 4096;
+			o.smapsize = 3072;
 			break;
 		}
 	///////////////////////////////////////////////////
@@ -622,7 +622,7 @@ static HRESULT create_shader(
 		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &_disasm);
 		string_path		dname;
 		strconcat(sizeof(dname), dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
-		IWriter* W = FS.w_open("$logs$", dname);
+		IWriter* W = FS.w_open("$app_data_root$", dname);
 		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
 		FS.w_close(W);
 		_RELEASE(_disasm);
@@ -941,19 +941,6 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + (char)ps_aa_quality;
-	++len;
-
-	int aa_edge_detect = ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_AA_EDGE_DETECT))
-	{
-		sprintf(c_aa_edge_detect, "%d", aa_edge_detect);
-		defines[def_it].Name = "USE_EDGE_DETECT";
-		defines[def_it].Definition = c_aa_edge_detect;
-		def_it++;
-		strcat(sh_name, c_aa_edge_detect);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(aa_edge_detect);
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
