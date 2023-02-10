@@ -230,7 +230,7 @@ void CGamePersistent::WeathersUpdate()
 		BOOL bIndoor = TRUE;
 		if (actor) bIndoor = actor->renderable_ROS()->get_luminocity_hemi() < 0.05f;
 
-		int data_set = (Random.randF() < (1.f - Environment().CurrentEnv.weight)) ? 0 : 1;
+		int data_set = (Random.randF() < (1.f - Environment().CurrentEnv->weight)) ? 0 : 1;
 
 		CEnvDescriptor* const current_env = Environment().Current[0];
 		VERIFY(current_env);

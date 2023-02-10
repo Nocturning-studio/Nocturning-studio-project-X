@@ -129,11 +129,26 @@ ESingleGameDifficulty get_game_difficulty()
 	return g_SingleGameDifficulty;
 }
 
+bool start_weather_fx_from_time(LPCSTR weather_name, float time)
+{
+	return			(g_pGamePersistent->Environment().StartWeatherFXFromTime(weather_name, time));
+}
+
 u32 get_time_days()
 {
 	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
 	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
 	return			day;
+}
+
+float get_wfx_time()
+{
+	return			(g_pGamePersistent->Environment().wfx_time);
+}
+
+void stop_weather_fx()
+{
+	g_pGamePersistent->Environment().StopWFX();
 }
 
 u32 get_time_hours()
@@ -157,9 +172,23 @@ float cover_in_direction(u32 level_vertex_id, const Fvector &direction)
 	return			(ai().level_graph().cover_in_direction(y,level_vertex_id));
 }
 
+u32 get_time_year()
+{
+	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
+	return			year;
+}
+
+u32 get_time_month()
+{
+	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
+	return			month;
+}
+
 float rain_factor()
 {
-	return			(g_pGamePersistent->Environment().CurrentEnv.rain_density);
+	return			(g_pGamePersistent->Environment().CurrentEnv->rain_density);
 }
 
 u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distance)
@@ -345,7 +374,7 @@ CEnvironment *environment()
 
 CEnvDescriptor *current_environment(CEnvironment *self)
 {
-	return		(&self->CurrentEnv);
+	return		(self->CurrentEnv);
 }
 extern bool g_bDisableAllInput;
 void disable_input()
@@ -546,7 +575,11 @@ void CLevel::script_register(lua_State *L)
 		def("get_weather",						get_weather),
 		def("set_weather",						set_weather),
 		def("set_weather_fx",					set_weather_fx),
+		def("start_weather_fx_from_time",		start_weather_fx_from_time),
 		def("is_wfx_playing",					is_wfx_playing),
+
+		def("get_wfx_time",						get_wfx_time),
+		def("stop_weather_fx",					stop_weather_fx),
 
 		def("environment",						environment),
 		

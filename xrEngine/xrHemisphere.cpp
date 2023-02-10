@@ -576,7 +576,7 @@ int ECORE_API xrHemisphereVertices(int quality, const Fvector*& verts)
 		h_count = HEMI3_VERTS;
 		verts = hemi_3;
 		break;
-	default:// NO
+	default:// NO 	
 		NODEFAULT;
 	}
 	return h_count;
@@ -600,7 +600,7 @@ int	ECORE_API xrHemisphereIndices(int quality, const u16*& indices)
 		//		h_count		= HEMI3_FACES*3;
 		//		indices		= hemi_3v;
 		//		break;
-	default:// NO
+	default:// NO 	
 		NODEFAULT;
 	}
 	return h_count;

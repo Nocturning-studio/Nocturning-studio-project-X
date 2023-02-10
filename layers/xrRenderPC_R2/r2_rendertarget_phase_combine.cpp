@@ -68,12 +68,12 @@ void	CRenderTarget::phase_combine()
 	{
 		// Compute params
 		Fmatrix		m_v2w;			m_v2w.invert(Device.mView);
-		CEnvDescriptorMixer& envdesc = g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
 		const float minamb = 0.001f;
-		Fvector4	ambclr = { _max(envdesc.ambient.x * 2,minamb),	_max(envdesc.ambient.y * 2,minamb),			_max(envdesc.ambient.z * 2,minamb),	0 };
+		Fvector4	ambclr = { _max(envdesc->ambient.x * 2,minamb),	_max(envdesc->ambient.y * 2,minamb),			_max(envdesc->ambient.z * 2,minamb),	0 };
 		ambclr.mul(ps_r2_sun_lumscale_amb);
-		Fvector4	envclr = { envdesc.sky_color.x * 2 + EPS,	envdesc.sky_color.y * 2 + EPS,	envdesc.sky_color.z * 2 + EPS,	envdesc.weight };
-		Fvector4	fogclr = { envdesc.fog_color.x,	envdesc.fog_color.y,	envdesc.fog_color.z,		0 };
+		Fvector4	envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
+		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z,		0 };
 		envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.z *= 2 * ps_r2_sun_lumscale_hemi;
@@ -107,8 +107,8 @@ void	CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine_VP->vb_stride);
 
 		// Setup textures
-		IDirect3DBaseTexture9* e0 = _menu_pp ? 0 : envdesc.sky_r_textures_env[0].second->surface_get();
-		IDirect3DBaseTexture9* e1 = _menu_pp ? 0 : envdesc.sky_r_textures_env[1].second->surface_get();
+		IDirect3DBaseTexture9* e0 = _menu_pp ? 0 : envdesc->sky_r_textures_env[0].second->surface_get();
+		IDirect3DBaseTexture9* e1 = _menu_pp ? 0 : envdesc->sky_r_textures_env[1].second->surface_get();
 		t_envmap_0->surface_set(e0);	_RELEASE(e0);
 		t_envmap_1->surface_set(e1);	_RELEASE(e1);
 
@@ -352,16 +352,16 @@ void CRenderTarget::phase_combine_volumetric()
 	{
 		// Compute params
 		Fmatrix		m_v2w;			m_v2w.invert(Device.mView);
-		CEnvDescriptorMixer& envdesc = g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
 		const float minamb = 0.001f;
-		Fvector4	ambclr = { _max(envdesc.ambient.x * 2,minamb),	_max(envdesc.ambient.y * 2,minamb),			_max(envdesc.ambient.z * 2,minamb),	0 };
+		Fvector4	ambclr = { _max(envdesc->ambient.x * 2,minamb),	_max(envdesc->ambient.y * 2,minamb),			_max(envdesc->ambient.z * 2,minamb),	0 };
 		ambclr.mul(ps_r2_sun_lumscale_amb);
 
 		//.		Fvector4	envclr			= { envdesc.sky_color.x*2+EPS,	envdesc.sky_color.y*2+EPS,	envdesc.sky_color.z*2+EPS,	envdesc.weight					};
-		Fvector4	envclr = { envdesc.hemi_color.x * 2 + EPS,	envdesc.hemi_color.y * 2 + EPS,	envdesc.hemi_color.z * 2 + EPS,	envdesc.weight };
+		Fvector4	envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
 
 
-		Fvector4	fogclr = { envdesc.fog_color.x,	envdesc.fog_color.y,	envdesc.fog_color.z,		0 };
+		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z,		0 };
 		envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.z *= 2 * ps_r2_sun_lumscale_hemi;

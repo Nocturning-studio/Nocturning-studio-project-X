@@ -4,6 +4,7 @@
 #include "xr_collide_defs.h"
 
 class ENGINE_API CInifile;
+class ENGINE_API CEnvironment;
 
 class ENGINE_API CLensFlareDescriptor
 {
@@ -53,7 +54,8 @@ public:
 	void 				OnDeviceCreate();
 	void 				OnDeviceDestroy();
 };
-DEFINE_VECTOR(CLensFlareDescriptor, LensFlareDescVec, LensFlareDescIt);
+DEFINE_VECTOR(CLensFlareDescriptor*, LensFlareDescVec, LensFlareDescIt);
+
 
 class ENGINE_API CLensFlare
 {
@@ -84,6 +86,7 @@ protected:
 		lfsHide,
 		lfsShow,
 	};
+protected:
 	LFState				m_State;
 	float				m_StateBlend;
 
@@ -95,12 +98,12 @@ public:
 	CLensFlare();
 	virtual				~CLensFlare();
 
-	void				OnFrame(int id);
-	void __fastcall		Render(BOOL bSun, BOOL bFlares, BOOL bGradient);
+	void				OnFrame(shared_str id);
+	void __fastcall			Render(BOOL bSun, BOOL bFlares, BOOL bGradient);
 	void 				OnDeviceCreate();
 	void 				OnDeviceDestroy();
 
-	int					AppendDef(CInifile* pIni, LPCSTR sect);
+	shared_str			AppendDef(CEnvironment& environment, CInifile* pIni, LPCSTR sect);
 
 	void				Invalidate() { m_State = lfsNone; }
 };
