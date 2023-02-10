@@ -227,7 +227,7 @@ static class cl_env_color : public R_constant_setup
 	virtual void setup(R_constant* C)
 	{
 		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
-		Fvector4 envclr = { envdesc->sky_color.x * 2 + EPS,	envdesc->sky_color.y * 2 + EPS,	envdesc->sky_color.z * 2 + EPS,	envdesc->weight };
+		Fvector4 envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
 		RCache.set_c(C, envclr);
 	}
 }	binder_env_color;

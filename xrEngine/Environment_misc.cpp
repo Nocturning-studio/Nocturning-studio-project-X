@@ -261,7 +261,7 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	save = clouds_color.w;	clouds_color.mul(.5f * multiplier);
 	clouds_color.w = save;
 
-	sky_color = config.r_fvector3(m_identifier.c_str(), "sky_color");
+	sky_color = config.r_fvector3(m_identifier.c_str(), "sky_color");		sky_color.mul(.5f);
 
 	if (config.line_exist(m_identifier.c_str(), "sky_rotation"))	sky_rotation = deg2rad(config.r_float(m_identifier.c_str(), "sky_rotation"));
 	else											sky_rotation = 0;
