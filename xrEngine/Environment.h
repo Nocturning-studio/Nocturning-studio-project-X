@@ -304,8 +304,6 @@ public:
 	void					calculate_dynamic_sun_dir();
 	void					lerp(float& current_weight);
 
-	void					calculate_dynamic_sun_dir();
-
 	void					RenderSky();
 	void					RenderClouds();
 	void					RenderFlares();

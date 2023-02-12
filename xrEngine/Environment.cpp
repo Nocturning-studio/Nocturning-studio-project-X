@@ -29,7 +29,7 @@
 ENGINE_API	float			psVisDistance = 1.f;
 static const float			MAX_NOISE_FREQ = 0.03f;
 
-#define WEATHER_LOGGING
+//#define WEATHER_LOGGING
 
 // real WEATHER->WFX transition time
 #define WFX_TRANS_TIME		5.f
@@ -209,7 +209,7 @@ void CEnvironment::Invalidate()
 	bWFX = false;
 	Current[0] = 0;
 	Current[1] = 0;
-	if (eff_LensFlare)		eff_LensFlare->Invalidate();
+	//if (eff_LensFlare)		eff_LensFlare->Invalidate();
 }
 
 float CEnvironment::TimeDiff(float prev, float cur)

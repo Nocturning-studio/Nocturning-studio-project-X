@@ -134,6 +134,12 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 
 	C.r_Sampler		("s_detail",	dt,					false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
 
+	char* DetailAoPath = strconcat(sizeof(dt), dt, dt, "_ao");
+	if (FS.exist(BakedAOPath, "$game_textures$", DetailAoPath, ".dds"))
+		C.r_Sampler_tex("s_detail_baked_ao", DetailAoPath);
+	else
+		C.r_Sampler_tex("s_detail_baked_ao", "vfx\\vfx_no_ao");
+
 	if (C.bDetail_Bump) {
 		C.r_Sampler		("s_detailBump",		dtA,		false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
 		C.r_Sampler		("s_detailBumpX",		dtB,		false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);

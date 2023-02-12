@@ -621,8 +621,8 @@ static HRESULT create_shader(
 		ID3DXBuffer* _disasm = 0;
 		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &_disasm);
 		string_path		dname;
-		strconcat(sizeof(dname), dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
-		IWriter* W = FS.w_open("$app_data_root$", dname);
+		strconcat(sizeof(dname), dname, "disassembied_shaders\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
+		IWriter* W = FS.w_open("$debug_data_root$", dname);
 		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
 		FS.w_close(W);
 		_RELEASE(_disasm);

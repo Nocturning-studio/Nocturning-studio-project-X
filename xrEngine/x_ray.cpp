@@ -34,7 +34,7 @@ XRCORE_API	LPCSTR	build_date;
 XRCORE_API	u32		build_id;
 
 //#define NO_SINGLE
-#define NO_MULTI_INSTANCES
+//#define NO_MULTI_INSTANCES
 
 static LPSTR month_id[12] = {
 	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
@@ -599,8 +599,8 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 
 	//SetThreadAffinityMask(GetCurrentThread(), 1);
 	//SetThreadAffinityMask(GetCurrentThread(), 0x0F);
-	//SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	//SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 	Sleep(0);
 
 	// Title window
