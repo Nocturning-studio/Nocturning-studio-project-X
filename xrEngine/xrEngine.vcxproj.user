@@ -34,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-AVX|Win32'">
     <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>-i -center_screen</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-center_screen -disasm</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>E:\INdev\NSPROJECTX</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-SSE|Win32'">
     <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>-i -center_screen</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-center_screen -disasm -i</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>E:\INdev\NSPROJECTX</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
