@@ -97,24 +97,6 @@ static class cl_water_intensity : public R_constant_setup
 	}
 }	binder_water_intensity;
 //////////////////////////////////////////////////////////////////////////
-static class cl_pos_decompress_params : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
-		float HorzTan = -VertTan / Device.fASPECT;
-
-		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
-
-	}
-}	binder_pos_decompress_params;
-//////////////////////////////////////////////////////////////////////////
-static class cl_pos_decompress_params2 : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
-	}
-}	binder_pos_decompress_params2;
-//////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -293,8 +275,6 @@ void CRender::create()
 	::Device.Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
 	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
-	::Device.Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
-	::Device.Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
@@ -884,21 +864,6 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + (char)ps_ao_quality;
 	++len;
 
-	/********************************************BLUR**********************************************/
-
-	int ao_blur = ps_r2_ls_flags_ext.test(R2FLAGEXT_AO_BLUR);
-	if (RImplementation.o.advancedpp && ao_blur)
-	{
-		sprintf(c_ao_blur, "%d", ao_blur);
-		defines[def_it].Name = "USE_AO_BLUR";
-		defines[def_it].Definition = c_ao_blur;
-		def_it++;
-		strcat(sh_name, c_ao_blur);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ao_blur);
-	++len;
-
 	/********************************************USING*********************************************/
 
 	if (RImplementation.o.advancedpp && (ps_ao >= 0))
@@ -1236,19 +1201,6 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////
-	int gbuffer_opt = ps_r2_ls_flags_ext.test(R2FLAGEXT_GBUFFER_OPT);
-	if (gbuffer_opt)
-	{
-		sprintf(c_gbuffer_opt, "%d", gbuffer_opt);
-		defines[def_it].Name = "GBUFFER_OPTIMIZATION";
-		defines[def_it].Definition = c_gbuffer_opt;
-		def_it++;
-		strcat(sh_name, c_gbuffer_opt);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(gbuffer_opt);
-	++len;
-	//////////////////////////////////////////////////////////////////////////
 
 	if (o.forceskinw) {
 		defines[def_it].Name = "SKIN_COLOR";
@@ -1389,10 +1341,15 @@ HRESULT	CRender::shader_compile(
 				if ('v' == pTarget[0])			pTarget = "vs_3_0";
 				else							pTarget = "ps_3_0";
 			}
-			else
+			else if(o.sunstatic)
 			{
 				if ('v' == pTarget[0])			pTarget = "vs_2_a";
 				else							pTarget = "ps_2_a";
+			}
+			else
+			{
+				if ('v' == pTarget[0])			pTarget = "vs_2_a";
+				else							pTarget = "ps_2_b";
 			}
 		}
 

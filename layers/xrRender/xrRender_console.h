@@ -135,7 +135,6 @@ enum
 	R2FLAG_SUN_TSM							= (1<<2),
 	R2FLAG_SUN_DETAILS						= (1<<3),
 	R2FLAG_TONEMAP							= (1<<4),
-	R2FLAG_AA								= (1<<5),
 	R2FLAG_GI								= (1<<6),
 	R2FLAG_FASTBLOOM						= (1<<7),
 	R2FLAG_GLOBALMATERIAL					= (1<<8),
@@ -165,8 +164,6 @@ enum
 {
 	R2FLAGEXT_SUN_ZCULLING					= (1 << 0),
 	R2FLAGEXT_SUN_OLD						= (1 << 1),
-	R2FLAGEXT_AO_BLUR						= (1 << 2),
-	R2FLAGEXT_GBUFFER_OPT					= (1 << 3),
 };
 
 extern void						xrRender_initconsole	();

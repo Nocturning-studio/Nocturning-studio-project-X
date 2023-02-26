@@ -26,10 +26,10 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_ao_blurred1",	r2_RT_ao3			);
 		C.r_Sampler_clf		("s_ao_blurred2",	r2_RT_ao4			);
 		C.r_Sampler_clf		("s_position_blurred",	r2_RT_blurred_position);
-		C.r_Sampler_clf		("env_s0",			r2_T_envs0			);
-		C.r_Sampler_clf		("env_s1",			r2_T_envs1			);
-		C.r_Sampler_clf		("sky_s0",			r2_T_sky0			);
-		C.r_Sampler_clf		("sky_s1",			r2_T_sky1			);
+		C.r_Sampler_rtf		("env_s0",			r2_T_envs0			);
+		C.r_Sampler_rtf		("env_s1",			r2_T_envs1			);
+		C.r_Sampler_rtf		("sky_s0",			r2_T_sky0			);
+		C.r_Sampler_rtf		("sky_s1",			r2_T_sky1			);
 		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
 		C.r_Sampler_tex		("s_blue_noise",	"noise\\blue_noise_texture");
 		C.r_Sampler_tex		("s_debug_mask",	"ed\\debug_mask");
@@ -49,7 +49,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 1:	// aa-edge-detection + AA :)
-		C.r_Pass			("null",			"combine_2_AA",		FALSE,	FALSE,	FALSE);
+		C.r_Pass			("combine_2",		"combine_2_AA",		FALSE,	FALSE,	FALSE);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
@@ -57,8 +57,8 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
 		C.r_End				();
 		break;
-	case 2:	// non-AA
-		C.r_Pass			("null",			"combine_2_NAA",	FALSE,	FALSE,	FALSE);
+	case 2:	// aa-edge-detection + AA :) + DISTORTION
+		C.r_Pass			("combine_2",		"combine_2_AA_D",	FALSE,	FALSE,	FALSE);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
@@ -66,27 +66,9 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
 		C.r_End				();
 		break;
-	case 3:	// aa-edge-detection + AA :) + DISTORTION
-		C.r_Pass			("null",			"combine_2_AA_D",	FALSE,	FALSE,	FALSE);
-		C.r_Sampler_rtf		("s_position",		r2_RT_P);
-		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
-		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
-		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
-		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_End				();
-		break;
-	case 4:	// non-AA + DISTORTION
-		C.r_Pass			("null",			"combine_2_NAA_D",	FALSE,	FALSE,	FALSE);
-		C.r_Sampler_rtf		("s_position",		r2_RT_P);
-		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
-		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
-		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
-		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_End				();
-		break;
-	case 5:	// post-processing
+	case 3:	// post-processing
 		C.r_Pass			("null",			"combine_3_PP",		FALSE,	FALSE,	FALSE);
-		C.r_Sampler_clf		("s_image",			r2_RT_albedo);
+		C.r_Sampler_rtf		("s_image",			r2_RT_albedo);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);

@@ -19,7 +19,7 @@ void	CRenderTarget::phase_combine()
 		t_LUM_dest->surface_set(rt_LUM_pool[gpu_id * 2 + 1]->pSurface);
 	}
 
-	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR) && RImplementation.o.advancedpp)
+	if (ps_ao && RImplementation.o.advancedpp)
 		phase_ao();
 
 	// low/hi RTs
@@ -146,6 +146,8 @@ void	CRenderTarget::phase_combine()
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil(FALSE);
 	phase_bloom();												// HDR RT invalidated here
+	if(ps_aa == 5 || ps_aa == 8)
+	phase_smaa();
 
 	// Distortion filter
 	BOOL	bDistort = RImplementation.o.distortion_enabled;				// This can be modified
@@ -207,8 +209,7 @@ void	CRenderTarget::phase_combine()
 		vDofKernel.mul(ps_r2_dof_kernel_size);
 
 		// Draw COLOR
-		if (ps_r2_ls_flags.test(R2FLAG_AA))			RCache.set_Element(s_combine->E[bDistort ? 3 : 1]);	// look at blender_combine.cpp
-		else										RCache.set_Element(s_combine->E[bDistort ? 4 : 2]);	// look at blender_combine.cpp
+		RCache.set_Element(s_combine->E[bDistort ? 2 : 1]);	// look at blender_combine.cpp
 		Fvector3					dof;
 
 		if (ps_r2_pp_flags.test(R2FLAG_DOF))
@@ -261,7 +262,7 @@ void	CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		//Set pass
-		RCache.set_Element(s_combine->E[5]);
+		RCache.set_Element(s_combine->E[3]);
 
 		//Unifoms
 		Fvector2	vDofKernel;

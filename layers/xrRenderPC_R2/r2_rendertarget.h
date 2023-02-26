@@ -27,6 +27,7 @@ public:
 	IBlender*					b_ao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
+	IBlender*					b_smaa;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -65,6 +66,8 @@ public:
 	ref_rt						rt_ao_blurred2;
 	ref_rt						rt_ao_blurred3;
 	ref_rt						rt_blurred_position;
+	ref_rt						rt_smaa_edgetex;
+	ref_rt						rt_smaa_blendtex;
 
 	// env
 	ref_texture					t_envmap_0		;	// env-0
@@ -94,6 +97,7 @@ private:
 	ref_shader					s_accum_point	;
 	ref_shader					s_accum_spot	;
 	ref_shader					s_accum_reflected;
+	ref_shader					s_smaa;
 
 	ref_geom					g_accum_point	;
 	ref_geom					g_accum_spot	;
@@ -218,6 +222,7 @@ public:
 	void						phase_combine			();
 	void						phase_combine_volumetric();
 	void						phase_pp				();
+	void						phase_smaa				();
 
 	virtual void				set_blur				(float	f)		{ param_blur=f;						}
 	virtual void				set_gray				(float	f)		{ param_gray=f;						}

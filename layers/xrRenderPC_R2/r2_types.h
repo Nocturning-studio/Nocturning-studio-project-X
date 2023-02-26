@@ -23,6 +23,9 @@
 #define		r2_RT_bloom1		"$user$bloom1"			// ---
 #define		r2_RT_bloom2		"$user$bloom2"			// ---
 
+#define		r2_RT_smaa_edgetex  "$user$smaa_edgetex"
+#define		r2_RT_smaa_blendtex "$user$smaa_blendtex"
+
 #define		r2_RT_ao1			"$user$ao1"				// ---
 #define		r2_RT_ao2			"$user$ao2"				// ---
 #define		r2_RT_ao3			"$user$ao3"				// ---

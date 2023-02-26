@@ -302,6 +302,32 @@ static class cl_screen_params : public R_constant_setup
 		RCache.set_c(C, result);
 	}
 } binder_screen_params;
+//////////////////////////////////////////////////////////////////////////
+static class cl_fov : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, Device.fFOV, Device.fASPECT, 0, 0);
+	}
+}	binder_fov;
+//////////////////////////////////////////////////////////////////////////
+static class cl_pos_decompress_params : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
+		float HorzTan = -VertTan / Device.fASPECT;
+
+		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
+
+	}
+}	binder_pos_decompress_params;
+//////////////////////////////////////////////////////////////////////////
+static class cl_pos_decompress_params2 : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
+	}
+}	binder_pos_decompress_params2;
+//////////////////////////////////////////////////////////////////////////
 
 // Standart constant-binding
 void	CBlender_Compile::SetMapping()
@@ -362,6 +388,10 @@ void	CBlender_Compile::SetMapping()
 
 	r_Constant("screen_res", &binder_screen_res);
 	r_Constant("ogse_c_screen", &binder_screen_params);
+
+	r_Constant("pos_decompression_params", &binder_pos_decompress_params);
+	r_Constant("pos_decompression_params2", &binder_pos_decompress_params2);
+	r_Constant("fov", &binder_fov);
 
 	// detail
 	//if (bDetail	&& detail_scaler)
