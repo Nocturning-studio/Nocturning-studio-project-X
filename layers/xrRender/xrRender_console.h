@@ -4,6 +4,7 @@
 
 // Common
 extern ENGINE_API	BOOL		r2_advanced_pp;
+extern ENGINE_API	BOOL		r1_advanced_mode;
 extern ENGINE_API	int			ps_r__Supersample;
 extern ECORE_API	int			ps_r__LightSleepFrames;
 
@@ -153,11 +154,12 @@ enum
 	R2FLAG_SOFT_WATER						= (1 << 17),
 	R2FLAG_SOFT_PARTICLES					= (1 << 18),
 	R2FLAG_SOFT_FOG							= (1 << 19),
-	R2FLAG_VIGNETTE							= (1 << 20),
-	R2FLAG_CHROMATIC_ABBERATION				= (1 << 21),
-	R2FLAG_BLOOM							= (1 << 22),
-	R2FLAG_DOF								= (1 << 23),
-	R2FLAG_MBLUR							= (1 << 24)
+	R2FLAG_SOFT_SHADOWS						= (1 << 20),
+	R2FLAG_VIGNETTE							= (1 << 21),
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 22),
+	R2FLAG_BLOOM							= (1 << 23),
+	R2FLAG_DOF								= (1 << 24),
+	R2FLAG_MBLUR							= (1 << 25)
 };
 
 enum

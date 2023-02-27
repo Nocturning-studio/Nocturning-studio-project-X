@@ -22,9 +22,10 @@ extern xr_token* vid_mode_token;
 
 xr_token							vid_quality_token[] = {
 	{ "renderer_r1",				0											},
-	{ "renderer_r2a",				1											},
-	{ "renderer_r2",				2											},
-	{ "renderer_r2.5",				3											},
+	{ "renderer_r1.2",				1											},
+	{ "renderer_r2a",				2											},
+	{ "renderer_r2",				3											},
+	{ "renderer_r2.5",				4											},
 	{ 0,							0											}
 };
 
@@ -541,6 +542,7 @@ public:
 
 ENGINE_API BOOL r2_sun_static  = FALSE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;
+ENGINE_API BOOL r1_advanced_mode = FALSE;
 
 u32				renderer_value = 0;
 class CCC_r2 : public CCC_Token
@@ -557,9 +559,10 @@ public:
 		inherited::Execute(args);
 #endif // DEDICATED_SERVER
 
-		psDeviceFlags.set(rsR2, (renderer_value > 0));
-		r2_sun_static  = (renderer_value < 2);
-		r2_advanced_pp = (renderer_value > 2);
+		psDeviceFlags.set(rsR2, (renderer_value > 1));
+		r2_sun_static  = (renderer_value < 3);
+		r2_advanced_pp = (renderer_value > 3);
+		r1_advanced_mode = (renderer_value == 1);
 	}
 
 	virtual void	Save(IWriter* F) {
@@ -630,10 +633,6 @@ void CCC_Register()
 	CMD1(CCC_E_Dump, "e_list");
 	CMD1(CCC_E_Signal, "e_signal");
 
-	CMD3(CCC_Mask, "rs_wireframe", &psDeviceFlags, rsWireframe);
-	CMD3(CCC_Mask, "rs_clear_bb", &psDeviceFlags, rsClearBB);
-	CMD3(CCC_Mask, "rs_occlusion", &psDeviceFlags, rsOcclusion);
-
 	CMD3(CCC_Mask, "rs_detail", &psDeviceFlags, rsDetails);
 	CMD4(CCC_Float, "r__dtex_range", &r__dtex_range, 5, 175);
 
@@ -641,6 +640,10 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_render_statics", &psDeviceFlags, rsDrawStatic);
 	CMD3(CCC_Mask, "rs_render_dynamics", &psDeviceFlags, rsDrawDynamic);
 #endif
+
+	CMD3(CCC_Mask, "rs_wireframe", &psDeviceFlags, rsWireframe);
+	CMD3(CCC_Mask, "rs_clear_bb", &psDeviceFlags, rsClearBB);
+	CMD3(CCC_Mask, "rs_occlusion", &psDeviceFlags, rsOcclusion);
 
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);

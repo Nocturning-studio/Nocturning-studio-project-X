@@ -684,6 +684,7 @@ HRESULT	CRender::shader_compile(
 	char c_soft_water[32];
 	char c_soft_particles[32];
 	char c_soft_fog[32];
+	char c_soft_shadows[32];
 
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
@@ -1026,6 +1027,18 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + char(ps_shadow_filtering);
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS))
+	{
+		sprintf(c_soft_shadows, "%d", 1);
+		defines[def_it].Name = "USE_SOFT_SHADOWS";
+		defines[def_it].Definition = c_soft_shadows;
+		def_it++;
+		strcat(sh_name, c_soft_shadows);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS));
 	++len;
 
 	int soft_fog = ps_r2_ls_flags.test(R2FLAG_SOFT_FOG);

@@ -572,6 +572,7 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Mask, "r2_soft_fog", &ps_r2_ls_flags, R2FLAG_SOFT_FOG);
+	CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
