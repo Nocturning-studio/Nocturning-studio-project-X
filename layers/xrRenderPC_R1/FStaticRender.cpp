@@ -705,6 +705,30 @@ HRESULT CRender::shader_compile(
 	size_t len = 0;
 
 	// options
+	if (r1_advanced_mode) 
+	{
+		defines[def_it].Name = "USE_R1_ADVANCED_MODE";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '1'; ++len;
+	}
+	else
+	{
+		sh_name[len] = '0'; ++len;
+	}
+
+	if (ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
+	{
+		defines[def_it].Name = "USE_VIGNETTE";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '1'; ++len;
+	}
+	else
+	{
+		sh_name[len] = '0'; ++len;
+	}
+
 	if (o.forceskinw) {
 		defines[def_it].Name = "SKIN_COLOR";
 		defines[def_it].Definition = "1";

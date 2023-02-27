@@ -236,7 +236,7 @@ void CRenderTarget::End		()
 	curWidth			= Device.dwWidth;
 	curHeight			= Device.dwHeight;
 	
-	if (!bPerform)		return;
+	//if (!bPerform)		return;
 	RCache.set_Shader	(bDistort ? s_postprocess_D : s_postprocess );
 
 	int		gblend		= clampr		(iFloor((1-param_gray)*255.f),0,255);

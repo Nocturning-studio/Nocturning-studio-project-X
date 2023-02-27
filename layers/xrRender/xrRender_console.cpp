@@ -580,7 +580,7 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
 
-	CMD3(CCC_Mask, "r2_vignette", &ps_r2_pp_flags, R2FLAG_VIGNETTE);
+	CMD3(CCC_Mask, "r_vignette", &ps_r2_pp_flags, R2FLAG_VIGNETTE);
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
 
