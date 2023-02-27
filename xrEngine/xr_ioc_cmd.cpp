@@ -22,7 +22,7 @@ extern xr_token* vid_mode_token;
 
 xr_token							vid_quality_token[] = {
 	{ "renderer_r1",				0											},
-	{ "renderer_r1.2",				1											},
+	{ "renderer_r1.5",				1											},
 	{ "renderer_r2a",				2											},
 	{ "renderer_r2",				3											},
 	{ "renderer_r2.5",				4											},
