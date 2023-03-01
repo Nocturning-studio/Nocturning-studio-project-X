@@ -287,8 +287,11 @@ void CRender::create()
 
 	//rmNormal					();
 	marker = 0;
-	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[0]));
-	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[1]));
+	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
+	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
+	ZeroMemory(q_sync_point, sizeof(q_sync_point));
+	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
 
 	xrRender_apply_tf();
 	::PortalTraverser.initialize();
@@ -297,8 +300,10 @@ void CRender::create()
 void					CRender::destroy()
 {
 	::PortalTraverser.destroy();
-	_RELEASE(q_sync_point[1]);
-	_RELEASE(q_sync_point[0]);
+	//_RELEASE					(q_sync_point[1]);
+	//_RELEASE					(q_sync_point[0]);
+	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+		_RELEASE(q_sync_point[i]);
 	HWOCC.occq_destroy();
 	xr_delete(Models);
 	xr_delete(Target);
@@ -327,14 +332,18 @@ void CRender::reset_begin()
 
 	xr_delete(Target);
 	HWOCC.occq_destroy();
-	_RELEASE(q_sync_point[1]);
-	_RELEASE(q_sync_point[0]);
+	//_RELEASE					(q_sync_point[1]);
+	//_RELEASE					(q_sync_point[0]);
+	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+		_RELEASE(q_sync_point[i]);
 }
 
 void CRender::reset_end()
 {
-	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[0]));
-	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[1]));
+	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
+	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
+	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
 	HWOCC.occq_create(occq_size);
 
 	Target = xr_new<CRenderTarget>();
@@ -666,12 +675,10 @@ HRESULT	CRender::shader_compile(
 
 	char c_ao[32];
 	char c_ao_quality[32];
-	char c_ao_blur[32];
 	char c_ao_use[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
-	char c_aa_edge_detect[32];
 
 	char c_debug_frame_layers[32];
 
@@ -703,8 +710,6 @@ HRESULT	CRender::shader_compile(
 	char c_mblur[32];
 	char c_dof[32];
 	char c_dof_quality[32];
-
-	char c_gbuffer_opt[32];
 
 	char sh_name[MAX_PATH] = "";
 
