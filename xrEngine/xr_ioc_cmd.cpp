@@ -542,7 +542,7 @@ public:
 
 ENGINE_API BOOL r2_sun_static  = FALSE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;
-ENGINE_API BOOL r1_advanced_mode = FALSE;
+ENGINE_API BOOL r1_advanced_pp = FALSE;
 
 u32				renderer_value = 0;
 class CCC_r2 : public CCC_Token
@@ -562,7 +562,7 @@ public:
 		psDeviceFlags.set(rsR2, (renderer_value > 1));
 		r2_sun_static  = (renderer_value < 3);
 		r2_advanced_pp = (renderer_value > 3);
-		r1_advanced_mode = (renderer_value == 1);
+		r1_advanced_pp = (renderer_value == 1);
 	}
 
 	virtual void	Save(IWriter* F) {
@@ -646,7 +646,7 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_occlusion", &psDeviceFlags, rsOcclusion);
 
 	// Render device states
-	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
+	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 16);
 
 	CMD3(CCC_Mask, "rs_v_sync", &psDeviceFlags, rsVSync);
 	//	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);

@@ -153,7 +153,9 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		// Select target
 		LPCSTR c_target = "vs_2_0";
 		LPCSTR c_entry = "main";
-		if (HW.Caps.geometry_major >= 2)
+		if (HW.Caps.geometry_major == 3)
+			c_target = "vs_3_0";
+		if (HW.Caps.geometry_major == 2)
 			c_target = "vs_2_0";
 		else
 			c_target = "vs_1_1";
@@ -167,7 +169,6 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		data[size] = 0;
 		FS.r_close(file);
 
-		if (r2_advanced_pp)	c_target = "vs_3_0";
 		if (strstr(data, "main_vs_1_1")) { c_target = "vs_1_1"; c_entry = "main_vs_1_1"; }
 		if (strstr(data, "main_vs_2_0")) { c_target = "vs_2_0"; c_entry = "main_vs_2_0"; }
 		if (strstr(data, "main_vs_3_0")) { c_target = "vs_3_0"; c_entry = "main_vs_3_0"; }
@@ -240,8 +241,6 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 
 		// Select target
 		LPCSTR						c_target = "ps_2_0";
-		if(r2_advanced_pp)			c_target = "ps_3_0";
-
 		LPCSTR						c_entry = "main";
 		if (strstr(data, "main_ps_1_1")) { c_target = "ps_1_1"; c_entry = "main_ps_1_1"; }
 		if (strstr(data, "main_ps_1_2")) { c_target = "ps_1_2"; c_entry = "main_ps_1_2"; }

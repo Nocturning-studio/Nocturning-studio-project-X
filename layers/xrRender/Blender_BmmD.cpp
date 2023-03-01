@@ -7,7 +7,7 @@
 
 #include "blender_BmmD.h"
 
-extern ENGINE_API	BOOL		r1_advanced_mode;
+extern ENGINE_API	BOOL		r1_advanced_pp;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		{
 		case SE_R1_NORMAL_HQ:	
 		case SE_R1_NORMAL_LQ:
-			if (r1_advanced_mode == true)
+			if (r1_advanced_pp == true)
 			{
 				C.r_Pass("impl_dt_mask", "impl_dt_mask", TRUE);
 				C.r_Sampler("s_base", C.L_textures[0]);

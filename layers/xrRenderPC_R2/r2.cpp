@@ -949,8 +949,8 @@ HRESULT	CRender::shader_compile(
 //Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	int vignette = ps_r2_pp_flags.test(R2FLAG_VIGNETTE);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
+	int vignette = ps_r2_pp_flags.test(RFLAG_VIGNETTE);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(RFLAG_VIGNETTE))
 	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "USE_VIGNETTE";
@@ -962,8 +962,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(vignette);
 	++len;
 
-	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION))
+	int chroma_abb = ps_r2_pp_flags.test(RFLAG_CHROMATIC_ABBERATION);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(RFLAG_CHROMATIC_ABBERATION))
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
@@ -1354,15 +1354,10 @@ HRESULT	CRender::shader_compile(
 				if ('v' == pTarget[0])			pTarget = "vs_3_0";
 				else							pTarget = "ps_3_0";
 			}
-			else if(o.sunstatic)
-			{
-				if ('v' == pTarget[0])			pTarget = "vs_2_a";
-				else							pTarget = "ps_2_a";
-			}
 			else
 			{
 				if ('v' == pTarget[0])			pTarget = "vs_2_a";
-				else							pTarget = "ps_2_b";
+				else							pTarget = "ps_2_a";
 			}
 		}
 
