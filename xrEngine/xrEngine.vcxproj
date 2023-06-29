@@ -741,6 +741,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
