@@ -97,6 +97,24 @@ static class cl_water_intensity : public R_constant_setup
 	}
 }	binder_water_intensity;
 //////////////////////////////////////////////////////////////////////////
+static class cl_pos_decompress_params : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
+		float HorzTan = -VertTan / Device.fASPECT;
+
+		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
+
+	}
+}	binder_pos_decompress_params;
+//////////////////////////////////////////////////////////////////////////
+static class cl_pos_decompress_params2 : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
+	}
+}	binder_pos_decompress_params2;
+//////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -275,6 +293,8 @@ void CRender::create()
 	::Device.Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
 	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
+	::Device.Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
+	::Device.Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
@@ -287,11 +307,8 @@ void CRender::create()
 
 	//rmNormal					();
 	marker = 0;
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
-	ZeroMemory(q_sync_point, sizeof(q_sync_point));
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
+	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[0]));
+	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[1]));
 
 	xrRender_apply_tf();
 	::PortalTraverser.initialize();
@@ -300,10 +317,8 @@ void CRender::create()
 void					CRender::destroy()
 {
 	::PortalTraverser.destroy();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		_RELEASE(q_sync_point[i]);
+	_RELEASE(q_sync_point[1]);
+	_RELEASE(q_sync_point[0]);
 	HWOCC.occq_destroy();
 	xr_delete(Models);
 	xr_delete(Target);
@@ -332,18 +347,14 @@ void CRender::reset_begin()
 
 	xr_delete(Target);
 	HWOCC.occq_destroy();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		_RELEASE(q_sync_point[i]);
+	_RELEASE(q_sync_point[1]);
+	_RELEASE(q_sync_point[0]);
 }
 
 void CRender::reset_end()
 {
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
+	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[0]));
+	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[1]));
 	HWOCC.occq_create(occq_size);
 
 	Target = xr_new<CRenderTarget>();
@@ -675,10 +686,12 @@ HRESULT	CRender::shader_compile(
 
 	char c_ao[32];
 	char c_ao_quality[32];
+	char c_ao_blur[32];
 	char c_ao_use[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
+	char c_aa_edge_detect[32];
 
 	char c_debug_frame_layers[32];
 
@@ -691,7 +704,6 @@ HRESULT	CRender::shader_compile(
 	char c_soft_water[32];
 	char c_soft_particles[32];
 	char c_soft_fog[32];
-	char c_soft_shadows[32];
 
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
@@ -710,6 +722,8 @@ HRESULT	CRender::shader_compile(
 	char c_mblur[32];
 	char c_dof[32];
 	char c_dof_quality[32];
+
+	char c_gbuffer_opt[32];
 
 	char sh_name[MAX_PATH] = "";
 
@@ -780,20 +794,20 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sjitter);
 	++len;
 
-	if (HW.Caps.raster_major >= 3 && o.advancedpp) {
+	if (HW.Caps.raster_major >= 3) {
 		defines[def_it].Name = "USE_BRANCHING";
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
-	sh_name[len] = '0' + char(HW.Caps.raster_major >= 3 && o.advancedpp);
+	sh_name[len] = '0' + char(HW.Caps.raster_major >= 3);
 	++len;
 
-	if (HW.Caps.geometry.bVTF && o.advancedpp) {
+	if (HW.Caps.geometry.bVTF) {
 		defines[def_it].Name = "USE_VTF";
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
-	sh_name[len] = '0' + char(HW.Caps.geometry.bVTF && o.advancedpp);
+	sh_name[len] = '0' + char(HW.Caps.geometry.bVTF);
 	++len;
 
 	if (o.Tshadows) {
@@ -868,6 +882,21 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + (char)ps_ao_quality;
+	++len;
+
+	/********************************************BLUR**********************************************/
+
+	int ao_blur = ps_r2_ls_flags_ext.test(R2FLAGEXT_AO_BLUR);
+	if (RImplementation.o.advancedpp && ao_blur)
+	{
+		sprintf(c_ao_blur, "%d", ao_blur);
+		defines[def_it].Name = "USE_AO_BLUR";
+		defines[def_it].Definition = c_ao_blur;
+		def_it++;
+		strcat(sh_name, c_ao_blur);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(ao_blur);
 	++len;
 
 	/********************************************USING*********************************************/
@@ -954,8 +983,8 @@ HRESULT	CRender::shader_compile(
 //Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	int vignette = ps_r2_pp_flags.test(RFLAG_VIGNETTE);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(RFLAG_VIGNETTE))
+	int vignette = ps_r2_pp_flags.test(R2FLAG_VIGNETTE);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
 	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "USE_VIGNETTE";
@@ -967,8 +996,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(vignette);
 	++len;
 
-	int chroma_abb = ps_r2_pp_flags.test(RFLAG_CHROMATIC_ABBERATION);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(RFLAG_CHROMATIC_ABBERATION))
+	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
@@ -1032,18 +1061,6 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + char(ps_shadow_filtering);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS))
-	{
-		sprintf(c_soft_shadows, "%d", 1);
-		defines[def_it].Name = "USE_SOFT_SHADOWS";
-		defines[def_it].Definition = c_soft_shadows;
-		def_it++;
-		strcat(sh_name, c_soft_shadows);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_SHADOWS));
 	++len;
 
 	int soft_fog = ps_r2_ls_flags.test(R2FLAG_SOFT_FOG);
@@ -1219,6 +1236,19 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////
+	int gbuffer_opt = ps_r2_ls_flags_ext.test(R2FLAGEXT_GBUFFER_OPT);
+	if (gbuffer_opt)
+	{
+		sprintf(c_gbuffer_opt, "%d", gbuffer_opt);
+		defines[def_it].Name = "GBUFFER_OPTIMIZATION";
+		defines[def_it].Definition = c_gbuffer_opt;
+		def_it++;
+		strcat(sh_name, c_gbuffer_opt);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(gbuffer_opt);
+	++len;
+	//////////////////////////////////////////////////////////////////////////
 
 	if (o.forceskinw) {
 		defines[def_it].Name = "SKIN_COLOR";
@@ -1348,22 +1378,10 @@ HRESULT	CRender::shader_compile(
 
 	if (FAILED(_result))
 	{
-//		if (0 == xr_strcmp(pFunctionName, "main")) {
-//			if ('v' == pTarget[0])			pTarget = D3DXGetVertexShaderProfile(HW.pDevice);	
-//			else							pTarget = D3DXGetPixelShaderProfile(HW.pDevice);	
-//		}
-
+		// 
 		if (0 == xr_strcmp(pFunctionName, "main")) {
-			if (o.advancedpp)
-			{
-				if ('v' == pTarget[0])			pTarget = "vs_3_0";
-				else							pTarget = "ps_3_0";
-			}
-			else
-			{
-				if ('v' == pTarget[0])			pTarget = "vs_2_a";
-				else							pTarget = "ps_2_a";
-			}
+			if ('v' == pTarget[0])			pTarget = D3DXGetVertexShaderProfile(HW.pDevice);	// vertex	"vs_2_a"; //	
+			else							pTarget = D3DXGetPixelShaderProfile(HW.pDevice);	// pixel	"ps_2_a"; //	
 		}
 
 		includer Includer;

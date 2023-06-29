@@ -262,7 +262,7 @@ void CRender::Render		()
 		}
 	}
 	Device.Statistic->RenderDUMP_Wait_S.End		();
-	q_sync_count								= (q_sync_count+1)%HW.Caps.iGPUNum;
+	q_sync_count								= (q_sync_count+1)%2;
 	CHK_DX										(q_sync_point[q_sync_count]->Issue(D3DISSUE_END));
 
 	//******* Main calc - DEFERRER RENDERER

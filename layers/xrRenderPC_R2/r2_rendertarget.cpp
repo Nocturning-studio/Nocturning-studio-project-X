@@ -11,7 +11,6 @@
 #include "blender_bloom_build.h"
 #include "blender_ao_build.h"
 #include "blender_luminance.h"
-#include "blender_smaa.h"
 #include "r2_rendertarget.h"
 
 void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -208,7 +207,6 @@ CRenderTarget::CRenderTarget		()
 	b_accum_reflected				= xr_new<CBlender_accum_reflected>		();
 	b_bloom							= xr_new<CBlender_bloom_build>			();
 	b_ao							= xr_new<CBlender_ao_build>				();
-	b_smaa							= xr_new<CBlender_smaa>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 
@@ -354,7 +352,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//AO
-	if (ps_ao && RImplementation.o.advancedpp)
+	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR) && RImplementation.o.advancedpp)
 	{
 		u32 w = Device.dwWidth, h = Device.dwHeight;
 
@@ -382,7 +380,7 @@ CRenderTarget::CRenderTarget		()
 		t_LUM_dest.create			(r2_RT_luminance_cur);
 
 		// create pool
-		for (u32 it=0; it<HW.Caps.iGPUNum*2; it++)	{
+		for (u32 it=0; it<4; it++)	{
 			string256					name;
 			sprintf						(name,"%s_%d",	r2_RT_luminance_pool,it	);
 			rt_LUM_pool[it].create		(name,	1,	1,	D3DFMT_R32F				);
@@ -390,17 +388,6 @@ CRenderTarget::CRenderTarget		()
 			CHK_DX						(HW.pDevice->Clear( 0L, NULL, D3DCLEAR_TARGET,	0x7f7f7f7f,	1.0f, 0L));
 		}
 		u_setrt						( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
-	}
-
-	//SMAA
-	{
-		u32 w = Device.dwWidth;
-		u32 h = Device.dwHeight;
-
-		rt_smaa_edgetex.create(r2_RT_smaa_edgetex, w, h, D3DFMT_A16B16G16R16F);
-		rt_smaa_blendtex.create(r2_RT_smaa_blendtex, w, h, D3DFMT_A16B16G16R16F);
-
-		s_smaa.create(b_smaa, "r2\\smaa");
 	}
 
 	// COMBINE
@@ -581,7 +568,6 @@ CRenderTarget::~CRenderTarget	()
 	// Blenders
 	xr_delete					(b_combine				);
 	xr_delete					(b_luminance			);
-	xr_delete					(b_smaa					);
 	xr_delete					(b_bloom				);
 	xr_delete					(b_ao					);
 	xr_delete					(b_accum_reflected		);

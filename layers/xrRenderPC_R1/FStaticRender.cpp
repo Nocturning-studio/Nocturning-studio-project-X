@@ -70,7 +70,6 @@ void					CRender::create					()
 	// disasm
 	o.disasm					= (strstr(Core.Params,"-disasm"))?		TRUE	:FALSE	;
 	o.forceskinw				= (strstr(Core.Params,"-skinw"))?		TRUE	:FALSE	;
-	o.advanced_pp				= r1_advanced_pp;
 	c_ldynamic_props			= "L_dynamic_props";
 
 //---------
@@ -706,42 +705,6 @@ HRESULT CRender::shader_compile(
 	size_t len = 0;
 
 	// options
-	if (o.advanced_pp == true)
-	{
-		defines[def_it].Name = "USE_R1_ADVANCED_MODE";
-		defines[def_it].Definition = "1";
-		def_it++;
-		sh_name[len] = '1'; ++len;
-	}
-	else
-	{
-		sh_name[len] = '0'; ++len;
-	}
-
-	if (o.advanced_pp == true && ps_r2_pp_flags.test(RFLAG_VIGNETTE))
-	{
-		defines[def_it].Name = "USE_VIGNETTE";
-		defines[def_it].Definition = "1";
-		def_it++;
-		sh_name[len] = '1'; ++len;
-	}
-	else
-	{
-		sh_name[len] = '0'; ++len;
-	}
-
-	if (o.advanced_pp == true && ps_r2_pp_flags.test(RFLAG_CHROMATIC_ABBERATION))
-	{
-		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
-		defines[def_it].Definition = "1";
-		def_it++;
-		sh_name[len] = '1'; ++len;
-	}
-	else
-	{
-		sh_name[len] = '0'; ++len;
-	}
-
 	if (o.forceskinw) {
 		defines[def_it].Name = "SKIN_COLOR";
 		defines[def_it].Definition = "1";
@@ -841,20 +804,6 @@ HRESULT CRender::shader_compile(
 
 	if (FAILED(_result))
 	{
-		if (0 == xr_strcmp(pFunctionName, "main")) 
-		{
-			if (o.advanced_pp)
-			{
-				if ('v' == pTarget[0])			pTarget = "vs_2_0";
-				else							pTarget = "ps_2_0";
-			}
-			else
-			{
-				if ('v' == pTarget[0])			pTarget = "vs_1_1";
-				else							pTarget = "ps_1_1";
-			}
-		}
-
 		includer Includer;
 		LPD3DXBUFFER pShaderBuf = NULL;
 		LPD3DXBUFFER pErrorBuf = NULL;

@@ -29,10 +29,6 @@ xr_token							aa_token[] = {
 	{ "st_opt_dlaa",				2											},
 	{ "st_opt_dlaa_force_edge_detect", 3										},
 	{ "st_opt_fxaa",				4											},
-	{ "st_opt_smaa",				5											},
-	{ "st_opt_fxaa_2X",				6											},
-	{ "st_opt_fxaa_with_dlaa",		7											},
-	{ "st_opt_smaa_with_fxaa_with_dlaa", 8										},
 	{ 0,							0											} 
 };
 
@@ -87,7 +83,7 @@ u32		ps_debug_frame_layers = 0;
 xr_token debug_frame_layers_token[] = {
 	{ "full_frame",					0											},
 	{ "gbuffer_color",				1											},
-	{ "gbuffer_depth",				2											},
+	{ "gbuffer_position",			2											},
 	{ "gbuffer_normal",				3											},
 	{ "gbuffer_gloss",				4											},
 	{ "gbuffer_hemisphere",			5											},
@@ -97,9 +93,10 @@ xr_token debug_frame_layers_token[] = {
 	{ "accumulator_specular",		9											},
 	{ "real_time_ao",				10											},
 	{ "real_time_ao_with_hemi",		11											},
-	{ "split_ao_blur_stages",		12											},
-	{ "full_ao_with_light",			13											},
-	{ "shine",						14											},
+	{ "split_with_real_time_ao_and_without", 12									},
+	{ "split_with_hemisphere_and_without",	 13									},
+	{ "split_ao_blur_stages",				 14									},
+	{ "full_ao_with_light",			15											},
 	{ 0,							0											}
 };
 
@@ -222,7 +219,7 @@ Flags32 ps_r2_pp_flags =
 	R2FLAG_MBLUR
 }; // r2.5-only
 
-Flags32		ps_r2_ls_flags_ext = {};
+Flags32		ps_r2_ls_flags_ext = { R2FLAGEXT_AO_BLUR };
 
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
@@ -572,16 +569,16 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Mask, "r2_soft_fog", &ps_r2_ls_flags, R2FLAG_SOFT_FOG);
-	CMD3(CCC_Mask, "r2_soft_shadows", &ps_r2_ls_flags, R2FLAG_SOFT_SHADOWS);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
+	CMD3(CCC_Mask,  "r2_ao_blur", &ps_r2_ls_flags_ext, R2FLAGEXT_AO_BLUR);
 
-	CMD3(CCC_Mask, "r_vignette", &ps_r2_pp_flags, RFLAG_VIGNETTE);
-	CMD3(CCC_Mask, "r_chromatic_abberation", &ps_r2_pp_flags, RFLAG_CHROMATIC_ABBERATION);
+	CMD3(CCC_Mask, "r2_vignette", &ps_r2_pp_flags, R2FLAG_VIGNETTE);
+	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
 
 	Fvector	tw_min, tw_max;
@@ -607,6 +604,8 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_debug_frame_layers, debug_frame_layers_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_debug_textures, ps_debug_textures_token);
+
+	CMD3(CCC_Mask, "r2_gbuffer_opt", &ps_r2_ls_flags_ext, R2FLAGEXT_GBUFFER_OPT);
 
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 	CMD3(CCC_EffPreset, "eff_preset", &ps_EffPreset, qeffpreset_token);
@@ -720,6 +719,7 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_sun_lumscale_hemi", &ps_r2_sun_lumscale_hemi, 0.0, +3.0);
 	CMD4(CCC_Float, "r2_sun_lumscale_amb", &ps_r2_sun_lumscale_amb, 0.0, +3.0);
 
+	CMD3(CCC_Mask, "r2_aa", &ps_r2_ls_flags, R2FLAG_AA);
 	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
 	CMD4(CCC_Float, "r2_mblur", &ps_r2_mblur, 0.0f, 1.0f);
 

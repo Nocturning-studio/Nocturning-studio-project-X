@@ -1424,10 +1424,10 @@ void CRender::init_cacades()
 	case 2: 
 	{
 		m_sun_cascades[0].reset_chain = true;
-		m_sun_cascades[0].size = 35;
+		m_sun_cascades[0].size = 20;
 		m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
-		m_sun_cascades[1].size = 70;
+		m_sun_cascades[1].size = 60;
 		m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
 
 		m_sun_cascades[2].size = ps_r2_sun_far;

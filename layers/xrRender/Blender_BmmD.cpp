@@ -7,7 +7,6 @@
 
 #include "blender_BmmD.h"
 
-extern ENGINE_API	BOOL		r1_advanced_pp;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -64,8 +63,6 @@ void	CBlender_BmmD::Load		(IReader& fs, u16 version )
 //////////////////////////////////////////////////////////////////////////
 void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
-	string256				mask;
-	strconcat(sizeof(mask), mask, C.L_textures[0].c_str(), "_mask");
 	IBlender::Compile		(C);
 	if (C.bEditor)	{
 		C.PassBegin		();
@@ -94,27 +91,18 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		switch (C.iElement)
 		{
 		case SE_R1_NORMAL_HQ:	
+			C.r_Pass		("impl_dt",	"impl_dt",TRUE);
+			C.r_Sampler		("s_base",	C.L_textures[0]);
+			C.r_Sampler		("s_lmap",	C.L_textures[1]);
+			C.r_Sampler		("s_detail",oT2_Name);
+			C.r_End			();
+			break;
 		case SE_R1_NORMAL_LQ:
-			if (r1_advanced_pp == true)
-			{
-				C.r_Pass("impl_dt_mask", "impl_dt_mask", TRUE);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_Sampler("s_lmap", C.L_textures[1]);
-				C.r_Sampler("s_mask", mask);
-				C.r_Sampler("s_dt_r", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-				C.r_Sampler("s_dt_g", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-				C.r_Sampler("s_dt_b", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-				C.r_Sampler("s_dt_a", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-				C.r_End();
-			}
-			else 
-			{
-				C.r_Pass("impl_dt", "impl_dt", TRUE);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_Sampler("s_lmap", C.L_textures[1]);
-				C.r_Sampler("s_detail", oT2_Name);
-				C.r_End();
-			}
+			C.r_Pass		("impl_dt",	"impl_dt",TRUE);
+			C.r_Sampler		("s_base",	C.L_textures[0]);
+			C.r_Sampler		("s_lmap",	C.L_textures[1]);
+			C.r_Sampler		("s_detail",oT2_Name);
+			C.r_End			();
 			break;
 		case SE_R1_LPOINT:
 			C.r_Pass		("impl_point","add_point",FALSE,TRUE,FALSE,TRUE,D3DBLEND_ONE,D3DBLEND_ONE,TRUE);

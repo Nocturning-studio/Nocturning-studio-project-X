@@ -263,7 +263,7 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-//#define MT_TEXTURES
+#define MT_TEXTURES
 
 #ifdef MT_TEXTURES
 //«агрузка текстур несколькими потоками. 
@@ -333,7 +333,7 @@ void CResourceManager::DeferredUpload()
 #else//MT_TEXTURES
 void	CResourceManager::DeferredUpload()
 {
-//	if (!Device.b_is_Ready)				return;
+	if (!Device.b_is_Ready)				return;
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 	{
 		t->second->Load();

@@ -14,8 +14,6 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
-extern ENGINE_API BOOL r2_advanced_pp;
-
 void fix_texture_name(LPSTR fn);
 
 template <class T>
@@ -153,9 +151,7 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		// Select target
 		LPCSTR c_target = "vs_2_0";
 		LPCSTR c_entry = "main";
-		if (HW.Caps.geometry_major == 3)
-			c_target = "vs_3_0";
-		if (HW.Caps.geometry_major == 2)
+		if (HW.Caps.geometry_major >= 2)
 			c_target = "vs_2_0";
 		else
 			c_target = "vs_1_1";
@@ -171,7 +167,6 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 
 		if (strstr(data, "main_vs_1_1")) { c_target = "vs_1_1"; c_entry = "main_vs_1_1"; }
 		if (strstr(data, "main_vs_2_0")) { c_target = "vs_2_0"; c_entry = "main_vs_2_0"; }
-		if (strstr(data, "main_vs_3_0")) { c_target = "vs_3_0"; c_entry = "main_vs_3_0"; }
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
@@ -247,7 +242,6 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 		if (strstr(data, "main_ps_1_3")) { c_target = "ps_1_3"; c_entry = "main_ps_1_3"; }
 		if (strstr(data, "main_ps_1_4")) { c_target = "ps_1_4"; c_entry = "main_ps_1_4"; }
 		if (strstr(data, "main_ps_2_0")) { c_target = "ps_2_0"; c_entry = "main_ps_2_0"; }
-		if (strstr(data, "main_ps_3_0")) { c_target = "ps_3_0"; c_entry = "main_ps_3_0"; }
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);

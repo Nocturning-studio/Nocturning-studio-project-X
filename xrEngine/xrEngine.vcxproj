@@ -502,7 +502,6 @@
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -564,7 +563,6 @@
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -622,7 +620,6 @@
       <TargetMachine>NotSet</TargetMachine>
       <FixedBaseAddress>false</FixedBaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -679,7 +676,6 @@
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -745,8 +741,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -814,8 +808,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -884,8 +876,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -953,8 +943,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1023,8 +1011,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1092,8 +1078,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1162,8 +1146,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1231,8 +1213,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1301,8 +1281,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1370,8 +1348,6 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)..\libraries\$(ProjectName).lib</ImportLibrary>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1429,8 +1405,6 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1488,8 +1462,6 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1544,8 +1516,6 @@
       <LargeAddressAware>true</LargeAddressAware>
       <TargetMachine>NotSet</TargetMachine>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1601,8 +1571,6 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1659,8 +1627,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>
@@ -1719,8 +1685,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>E:\xRay\xrCode\NSXGIT\Master\src\third-party\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if exist $(SolutionDir)..\gamefilesystem ( echo Gamefilesystem folder alredy exist! Skipping...) else (mkdir $(SolutionDir)..\gamefilesystem)</Command>

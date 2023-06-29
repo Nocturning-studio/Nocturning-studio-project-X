@@ -41,16 +41,8 @@ BOOL CRenderTarget::Create	()
 	// Select mode to operate in
 	float	amount		= ps_r__Supersample?float(ps_r__Supersample):1	;
 	float	scale		= _sqrt	(amount);
-	if (r1_advanced_pp)
-	{
-		rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 16384);
-		rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 16384);
-	}
-	else
-	{
-		rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 2048);
-		rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 2048);
-	}
+	rtWidth				= clampr(iFloor(scale*Device.dwWidth  + .5f), 128, 2048);
+	rtHeight			= clampr(iFloor(scale*Device.dwHeight + .5f), 128, 2048);
 	while (rtWidth%2)	rtWidth	--;
 	while (rtHeight%2)	rtHeight--;
 	Msg					("* SSample: %dx%d",rtWidth,rtHeight);
@@ -69,16 +61,8 @@ BOOL CRenderTarget::Create	()
 	R_CHK	(HW.pDevice->CreateDepthStencilSurface	(512,512,HW.Caps.fDepth,D3DMULTISAMPLE_NONE,0,TRUE,&pTempZB,NULL));
 
 	// Shaders and stream
-	if (r1_advanced_pp)
-	{
-		s_postprocess.create("postprocess_adv");
-		if (RImplementation.o.distortion)	s_postprocess_D.create("postprocess_adv_d");
-	}
-	else
-	{
-		s_postprocess.create("postprocess");
-		if (RImplementation.o.distortion)	s_postprocess_D.create("postprocess_d");
-	}
+	s_postprocess.create				("postprocess");
+	if (RImplementation.o.distortion)	s_postprocess_D.create("postprocess_d");
 	g_postprocess.create				(D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_SPECULAR|D3DFVF_TEX3,RCache.Vertex.Buffer(),RCache.QuadIB);
 	return	RT->valid() && RT_distort->valid();
 }
@@ -252,7 +236,7 @@ void CRenderTarget::End		()
 	curWidth			= Device.dwWidth;
 	curHeight			= Device.dwHeight;
 	
-	//if (!bPerform)		return;
+	if (!bPerform)		return;
 	RCache.set_Shader	(bDistort ? s_postprocess_D : s_postprocess );
 
 	int		gblend		= clampr		(iFloor((1-param_gray)*255.f),0,255);
