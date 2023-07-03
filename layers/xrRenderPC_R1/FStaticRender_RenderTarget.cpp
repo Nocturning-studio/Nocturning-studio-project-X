@@ -41,8 +41,8 @@ BOOL CRenderTarget::Create	()
 	// Select mode to operate in
 	float	amount		= ps_r__Supersample?float(ps_r__Supersample):1	;
 	float	scale		= _sqrt	(amount);
-	rtWidth				= clampr(iFloor(scale*Device.dwWidth  + .5f), 128, 2048);
-	rtHeight			= clampr(iFloor(scale*Device.dwHeight + .5f), 128, 2048);
+	rtWidth				= clampr(iFloor(scale*Device.dwWidth  + .5f), 128, 20048);
+	rtHeight			= clampr(iFloor(scale*Device.dwHeight + .5f), 128, 20048);
 	while (rtWidth%2)	rtWidth	--;
 	while (rtHeight%2)	rtHeight--;
 	Msg					("* SSample: %dx%d",rtWidth,rtHeight);
@@ -58,11 +58,12 @@ BOOL CRenderTarget::Create	()
 	}
 
 	// Temp ZB, used by some of the shadowing code
-	R_CHK	(HW.pDevice->CreateDepthStencilSurface	(512,512,HW.Caps.fDepth,D3DMULTISAMPLE_NONE,0,TRUE,&pTempZB,NULL));
+	R_CHK	(HW.pDevice->CreateDepthStencilSurface	(1024,1024,HW.Caps.fDepth,D3DMULTISAMPLE_NONE,0,TRUE,&pTempZB,NULL));
 
 	// Shaders and stream
 	s_postprocess.create				("postprocess");
 	if (RImplementation.o.distortion)	s_postprocess_D.create("postprocess_d");
+
 	g_postprocess.create				(D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_SPECULAR|D3DFVF_TEX3,RCache.Vertex.Buffer(),RCache.QuadIB);
 	return	RT->valid() && RT_distort->valid();
 }
@@ -237,6 +238,7 @@ void CRenderTarget::End		()
 	curHeight			= Device.dwHeight;
 	
 	if (!bPerform)		return;
+
 	RCache.set_Shader	(bDistort ? s_postprocess_D : s_postprocess );
 
 	int		gblend		= clampr		(iFloor((1-param_gray)*255.f),0,255);

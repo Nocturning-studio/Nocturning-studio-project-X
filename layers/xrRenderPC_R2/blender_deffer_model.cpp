@@ -70,10 +70,10 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 		switch(C.iElement) 
 		{
 		case SE_R2_NORMAL_HQ: 			// deffer
-			uber_deffer_model		(C,true,	"model",	"model",bAref);
+			uber_deffer(C, true, "model", "base", bAref);
 			break;
 		case SE_R2_NORMAL_LQ: 			// deffer
-			uber_deffer_model(C,false,	"model",	"model",bAref);
+			uber_deffer(C, false, "model", "base", bAref);
 			break;
 		case SE_R2_SHADOW:				// smap
 			if (bAref)		{
