@@ -163,8 +163,15 @@ void	CBlender_BmmD::Compile(CBlender_Compile& C)
 		else if ((ps_terrain_bump_mode == 3) && (!r2_advanced_pp))
 			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax_mapping", FALSE);
 
-		C.r_Sampler("s_detail_mask", mask);
+		extern u32 ps_debug_textures;
+		if (ps_debug_textures == 1)
+			C.r_Sampler_tex("s_color_map", "ed\\debug_uv_checker");
+		else if (ps_debug_textures == 2)
+			C.r_Sampler_tex("s_color_map", "ed\\debug_white");
+		else
 		C.r_Sampler("s_color_map", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+
+		C.r_Sampler("s_detail_mask", mask);
 		C.r_Sampler("s_light_map", C.L_textures[1]);
 
 		C.r_Sampler("s_detail_albedo_red", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);

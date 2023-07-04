@@ -54,7 +54,13 @@ void	uber_deffer(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOO
 	C.r_Pass(VertexShaderName, PixelShaderName, FALSE);
 
 	// Samplers (Base texture)
-	C.r_Sampler("s_base", AlbedoTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	extern u32 ps_debug_textures;
+	if (ps_debug_textures == 1)
+		C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
+	else if (ps_debug_textures == 2)
+		C.r_Sampler_tex("s_base", "ed\\debug_white");
+	else
+		C.r_Sampler("s_base", AlbedoTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 	string256 BasePathAO;  strcpy(BasePathAO, AlbedoTexName);
 	LPCSTR AoPath = strconcat(sizeof(BasePathAO), BasePathAO, BasePathAO, "_ao");
