@@ -86,15 +86,15 @@ xr_token debug_frame_layers_token[] = {
 	{ "gbuffer_position",			2											},
 	{ "gbuffer_normal",				3											},
 	{ "gbuffer_gloss",				4											},
-	{ "gbuffer_hemisphere",			5											},
+	{ "gbuffer_lightmap_ao",		5											},
 	{ "gbuffer_material",			6											},
 	{ "gbuffer_split",				7											},
-	{ "accumulator_light",			8											},
+	{ "accumulator_diffuse",		8											},
 	{ "accumulator_specular",		9											},
 	{ "real_time_ao",				10											},
 	{ "real_time_ao_with_hemi",		11											},
 	{ "split_with_real_time_ao_and_without", 12									},
-	{ "split_with_hemisphere_and_without",	 13									},
+	{ "split_with_lightmap_ao_and_without",	 13									},
 	{ "split_ao_blur_stages",				 14									},
 	{ "full_ao_with_light",			15											},
 	{ 0,							0											}
@@ -113,7 +113,6 @@ xr_token bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
@@ -122,7 +121,6 @@ xr_token tdetail_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
