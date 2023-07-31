@@ -170,6 +170,8 @@ void	CRenderTarget::phase_combine()
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
+
+	// Actually motion blur
 	if (1)
 	{
 		// 
@@ -204,8 +206,8 @@ void	CRenderTarget::phase_combine()
 		vDofKernel.mul(ps_r2_dof_kernel_size);
 
 		// Draw COLOR
-		if (ps_r2_ls_flags.test(R2FLAG_AA))			RCache.set_Element(s_combine->E[bDistort ? 3 : 1]);	// look at blender_combine.cpp
-		else										RCache.set_Element(s_combine->E[bDistort ? 4 : 2]);	// look at blender_combine.cpp
+		RCache.set_Element(s_combine->E[bDistort ? 1 : 2]);	// look at blender_combine.cpp
+
 		Fvector3					dof;
 
 		if (ps_r2_pp_flags.test(R2FLAG_DOF))
@@ -258,7 +260,7 @@ void	CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		//Set pass
-		RCache.set_Element(s_combine->E[5]);
+		RCache.set_Element(s_combine->E[3]);
 
 		//Unifoms
 		Fvector2	vDofKernel;
@@ -280,6 +282,10 @@ void	CRenderTarget::phase_combine()
 
 		//Draw
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+	}
+
+	if (ps_aa >= 2) {
+		phase_antialiasing();
 	}
 
 	//	PP-if required

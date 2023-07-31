@@ -25,6 +25,7 @@ public:
 	IBlender*					b_accum_reflected;
 	IBlender*					b_bloom;
 	IBlender*					b_ao;
+	IBlender*					b_aa;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
 #ifdef DEBUG
@@ -118,6 +119,9 @@ private:
 
 	// AO
 	ref_shader					s_ao;
+
+	// AA
+	ref_shader					s_aa;
 
 	// Luminance
 	ref_shader					s_luminance;
@@ -225,6 +229,7 @@ public:
 	void						phase_luminance			();
 	void						phase_combine			();
 	void						phase_combine_volumetric();
+	void						phase_antialiasing		();
 	void						phase_pp				();
 
 	virtual void				set_blur				(float	f)		{ param_blur=f;						}

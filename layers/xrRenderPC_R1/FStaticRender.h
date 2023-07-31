@@ -130,7 +130,7 @@ public:
 
 	// Information
 	virtual void					Statistics				(CGameFont* F);
-	virtual LPCSTR					getShaderPath			()									{ return "r1\\";	}
+	virtual LPCSTR					getShaderPath			()									{ return "sm_1_1\\";	}
 	virtual ref_shader				getShader				(int id);
 	virtual IRender_Sector*			getSector				(int id);
 	virtual IRender_Visual*			getVisual				(int id);

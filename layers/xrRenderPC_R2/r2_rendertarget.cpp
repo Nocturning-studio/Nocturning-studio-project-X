@@ -10,6 +10,7 @@
 #include "blender_combine.h"
 #include "blender_bloom_build.h"
 #include "blender_ao_build.h"
+#include "blender_antialiasing.h"
 #include "blender_luminance.h"
 #include "r2_rendertarget.h"
 
@@ -205,8 +206,9 @@ CRenderTarget::CRenderTarget		()
 	b_accum_point					= xr_new<CBlender_accum_point>			();
 	b_accum_spot					= xr_new<CBlender_accum_spot>			();
 	b_accum_reflected				= xr_new<CBlender_accum_reflected>		();
-	b_bloom							= xr_new<CBlender_bloom_build>			();
 	b_ao							= xr_new<CBlender_ao_build>				();
+	b_aa							= xr_new<CBlender_antialiasing>				();
+	b_bloom							= xr_new<CBlender_bloom_build>			();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 
@@ -346,6 +348,11 @@ CRenderTarget::CRenderTarget		()
 
 		//Create shader resource
 		s_ao.create(b_ao, "r2\\ao");
+	}
+
+	//AA
+	{
+		s_aa.create(b_aa, "r2\\aa");
 	}
 
 	// TONEMAP
@@ -548,6 +555,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_combine				);
 	xr_delete					(b_luminance			);
 	xr_delete					(b_bloom				);
+	xr_delete					(b_aa					);
 	xr_delete					(b_ao					);
 	xr_delete					(b_accum_reflected		);
 	xr_delete					(b_accum_spot			);

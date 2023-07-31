@@ -249,6 +249,9 @@
     <ClInclude Include="Blender_ao_build.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="blender_antialiasing.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -553,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ao.cpp">
       <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_antialiasing.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_antialiasing.cpp">
+      <Filter>Shading templates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
