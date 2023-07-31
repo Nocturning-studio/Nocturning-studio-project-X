@@ -19,9 +19,6 @@ void	CRenderTarget::phase_combine()
 		t_LUM_dest->surface_set(rt_LUM_pool[gpu_id * 2 + 1]->pSurface);
 	}
 
-	if (ps_r2_ls_flags_ext.is(R2FLAGEXT_AO_BLUR) && RImplementation.o.advancedpp)
-		phase_ao();
-
 	// low/hi RTs
 	u_setrt(rt_Generic_0, rt_Generic_1, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);

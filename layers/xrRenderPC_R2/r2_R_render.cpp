@@ -408,6 +408,9 @@ void CRender::Render		()
 	// Lighting, dependant on OCCQ
 	render_lights							(LP_pending);
 
+	if (ps_ao >= 1 && RImplementation.o.advancedpp)
+	Target->phase_ao();
+
 	// Postprocess
 	Target->phase_combine					();
 	VERIFY	(0==mapDistort.size());
