@@ -28,7 +28,6 @@
 
 #ifdef PRIQUEL
 #	define USE_SMART_HITS
-#	define USE_IK
 #endif // PRIQUEL
 
 void  NodynamicsCollide(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/)
@@ -245,10 +244,8 @@ void CCharacterPhysicsSupport::SpawnInitPhysics(CSE_Abstract* e)
 			Msg("CCharacterPhysicsSupport::SpawnInitPhysics obj %s before collision correction %f,%f,%f",PH_DBG_ObjectTrack(),m_EntityAlife.Position().x,m_EntityAlife.Position().y,m_EntityAlife.Position().z);
 		}
 #endif
-#ifdef	USE_IK
 		if( etStalker == m_eType || etActor == m_eType )
 				CreateIKController( );
-#endif
 		if( !m_EntityAlife.animation_movement_controlled( ) )
 			CreateCharacter( );
 #ifdef DEBUG  
