@@ -365,6 +365,7 @@ CRenderTarget::CRenderTarget		()
 		rt_blurred_position.create(r2_RT_blurred_position, w, h, D3DFMT_A16B16G16R16F);
 
 		//Create shader resource
+		//b_ao = xr_new<CBlender_ao_build>();
 		s_ao.create(b_ao, "r2\\ao");
 	}
 
@@ -514,11 +515,11 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	// PP
-	s_postprocess.create				("postprocess_stage_effectors");
+	s_postprocess.create				("postprocess");
 	g_postprocess.create				(D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_SPECULAR|D3DFVF_TEX3,RCache.Vertex.Buffer(),RCache.QuadIB);
 
 	// Menu
-	s_menu.create						("ui_menu_distorted");
+	s_menu.create						("distort");
 	g_menu.create						(FVF::F_TL,RCache.Vertex.Buffer(),RCache.QuadIB);
 
 	// 

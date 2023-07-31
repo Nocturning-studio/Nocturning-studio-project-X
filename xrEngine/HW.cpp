@@ -36,7 +36,7 @@ void CHW::Reset(HWND hwnd)
 
 #ifndef _EDITOR
 #ifndef DEDICATED_SERVER
-	BOOL	bWindowed = psWindowMode == 1;//!psDeviceFlags.is(rsFullscreen);
+	BOOL	bWindowed = !psDeviceFlags.is(rsFullscreen);
 #else
 	BOOL	bWindowed = TRUE;
 #endif
@@ -184,7 +184,7 @@ void		CHW::CreateDevice(HWND m_hWnd)
 #ifdef DEDICATED_SERVER
 	BOOL  bWindowed = TRUE;
 #else
-	BOOL  bWindowed = psWindowMode == 1;//!psDeviceFlags.is(rsFullscreen);
+	BOOL  bWindowed = !psDeviceFlags.is(rsFullscreen);
 #endif
 
 	DevAdapter = D3DADAPTER_DEFAULT;
@@ -425,44 +425,15 @@ void	CHW::updateWindowProps(HWND m_hWnd)
 {
 	//	BOOL	bWindowed				= strstr(Core.Params,"-dedicated") ? TRUE : !psDeviceFlags.is	(rsFullscreen);
 #ifndef DEDICATED_SERVER
-//	BOOL	bWindowed = psWindowMode;//!psDeviceFlags.is(rsFullscreen);
-//	BOOL    bBorderless = 
+	BOOL	bWindowed = !psDeviceFlags.is(rsFullscreen);
 #else
-//	BOOL	bWindowed = TRUE;
+	BOOL	bWindowed = TRUE;
 #endif
-
-	BOOL bDedicatedServer = FALSE;
-	BOOL bWindowed = FALSE;
-	BOOL bBorderless = FALSE;
-
-#ifdef DEDICATED_SERVER
-	bDedicatedServer = TRUE;
-#endif
-
-	if (psWindowMode == 1 || bDedicatedServer)
-	{
-		BOOL bWindowed = TRUE;
-		BOOL bBorderless = FALSE;
-	}
-	else if (psWindowMode == 2)
-	{
-		BOOL bWindowed = TRUE;
-		BOOL bBorderless = TRUE;
-	}
-	else if (psWindowMode == 3)
-	{
-		BOOL bWindowed = FALSE;
-		BOOL bBorderless = FALSE;
-	}
 
 	u32		dwWindowStyle = 0;
 	// Set window properties depending on what mode were in.
-	if (bWindowed) 
-	{
-		if (bBorderless)
-			SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_DLGFRAME | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX));
-		else
-			SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_BORDER | WS_DLGFRAME | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX));
+	if (bWindowed) {
+		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_BORDER | WS_DLGFRAME | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX));
 		// When moving from fullscreen to windowed mode, it is important to
 		// adjust the window size after recreating the device rather than
 		// beforehand to ensure that you get the window size you want.  For
@@ -501,22 +472,13 @@ void	CHW::updateWindowProps(HWND m_hWnd)
 
 		AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
 
-		if(bBorderless)
-			SetWindowPos(m_hWnd,
-						HWND_NOTOPMOST,
-						m_rcWindowBounds.left,
-						m_rcWindowBounds.top,
-						(m_rcWindowBounds.right - m_rcWindowBounds.left),
-						(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
-						SWP_SHOWWINDOW | SWP_NOCOPYBITS);
-		else
-			SetWindowPos(m_hWnd,
-						HWND_NOTOPMOST,
-						m_rcWindowBounds.left,
-						m_rcWindowBounds.top,
-						(m_rcWindowBounds.right - m_rcWindowBounds.left),
-						(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
-						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
+		SetWindowPos(m_hWnd,
+			HWND_NOTOPMOST,
+			m_rcWindowBounds.left,
+			m_rcWindowBounds.top,
+			(m_rcWindowBounds.right - m_rcWindowBounds.left),
+			(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
+			SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
 	}
 	else
 	{

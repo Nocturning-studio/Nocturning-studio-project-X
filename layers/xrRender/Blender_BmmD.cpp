@@ -64,10 +64,6 @@ void	CBlender_BmmD::Load		(IReader& fs, u16 version )
 void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
-
-	string256				mask;
-	strconcat(sizeof(mask), mask, C.L_textures[0].c_str(), "_mask");
-
 	if (C.bEditor)	{
 		C.PassBegin		();
 		{
@@ -95,42 +91,37 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		switch (C.iElement)
 		{
 		case SE_R1_NORMAL_HQ:	
-			C.r_Pass		("terrain_detailed", "terrain_detailed",TRUE);
-			C.r_Sampler		("s_color_map", C.L_textures[0]);
-			C.r_Sampler		("s_light_map", C.L_textures[1]);
+			C.r_Pass		("impl_dt",	"impl_dt",TRUE);
+			C.r_Sampler		("s_base",	C.L_textures[0]);
+			C.r_Sampler		("s_lmap",	C.L_textures[1]);
 			C.r_Sampler		("s_detail",oT2_Name);
-			C.r_Sampler		("s_detail_mask", mask);
-			C.r_Sampler		("s_detail_albedo_red", oR_Name);
-			C.r_Sampler		("s_detail_albedo_green", oG_Name);
-			C.r_Sampler		("s_detail_albedo_blue", oB_Name);
-			C.r_Sampler		("s_detail_albedo_alpha", oA_Name);
 			C.r_End			();
 			break;
 		case SE_R1_NORMAL_LQ:
-			C.r_Pass		("terrain",	"terrain",TRUE);
-			C.r_Sampler		("s_color_map", C.L_textures[0]);
-			C.r_Sampler		("s_light_map", C.L_textures[1]);
-			C.r_Sampler		("s_detail", oT2_Name);
+			C.r_Pass		("impl_dt",	"impl_dt",TRUE);
+			C.r_Sampler		("s_base",	C.L_textures[0]);
+			C.r_Sampler		("s_lmap",	C.L_textures[1]);
+			C.r_Sampler		("s_detail",oT2_Name);
 			C.r_End			();
 			break;
 		case SE_R1_LPOINT:
-			C.r_Pass		("add_point","add_point",FALSE,TRUE,FALSE,TRUE,D3DBLEND_ONE,D3DBLEND_ONE,TRUE);
+			C.r_Pass		("impl_point","add_point",FALSE,TRUE,FALSE,TRUE,D3DBLEND_ONE,D3DBLEND_ONE,TRUE);
 			C.r_Sampler		("s_base",	C.L_textures[0]);
 			C.r_Sampler_clf	("s_lmap",	TEX_POINT_ATT		);
 			C.r_Sampler_clf	("s_att",	TEX_POINT_ATT		);
 			C.r_End			();
 			break;
 		case SE_R1_LSPOT:
-			C.r_Pass		("add_spot","add_spot",FALSE,TRUE,FALSE,TRUE,D3DBLEND_ONE,D3DBLEND_ONE,TRUE);
+			C.r_Pass		("impl_spot","add_spot",FALSE,TRUE,FALSE,TRUE,D3DBLEND_ONE,D3DBLEND_ONE,TRUE);
 			C.r_Sampler		("s_base",	C.L_textures[0]);
 			C.r_Sampler_clf	("s_lmap",	"internal\\internal_light_att",		true);
 			C.r_Sampler_clf	("s_att",	TEX_SPOT_ATT		);
 			C.r_End			();
 			break;
 		case SE_R1_LMODELS:
-			C.r_Pass		("terrain_lightmap","terrain_lightmap",FALSE);
-			C.r_Sampler		("s_color_map",C.L_textures[0]);
-			C.r_Sampler		("s_light_map", C.L_textures[1]);
+			C.r_Pass		("impl_l","impl_l",FALSE);
+			C.r_Sampler		("s_base",C.L_textures[0]);
+			C.r_Sampler		("s_lmap",C.L_textures[1]);
 			C.r_End			();
 			break;
 		}
@@ -141,66 +132,65 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 // R2
 //////////////////////////////////////////////////////////////////////////
 #include "uber_deffer.h"
-void	CBlender_BmmD::Compile(CBlender_Compile& C)
+void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
-	IBlender::Compile(C);
+	IBlender::Compile		(C);
 	// codepath is the same, only the shaders differ
 	// ***only pixel shaders differ***
+	extern u32 ps_debug_textures;
 	string256				mask;
-	strconcat(sizeof(mask), mask, C.L_textures[0].c_str(), "_mask");
-	switch (C.iElement)
+	strconcat				(sizeof(mask),mask,C.L_textures[0].c_str(),"_mask");
+	switch(C.iElement) 
 	{
-	case SE_R2_NORMAL_HQ:
-	case SE_R2_NORMAL_LQ:
+	case SE_R2_NORMAL_HQ: 		// deffer
+		uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
+		C.r_Sampler		("s_mask",	mask);
+		C.r_Sampler		("s_lmap",	C.L_textures[1]);
 
-		extern u32 ps_terrain_bump_mode;
-		if (ps_terrain_bump_mode == 1)
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_normal_mapping", FALSE);
-		else if (ps_terrain_bump_mode == 2)
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax_mapping", FALSE);
-		else if ((ps_terrain_bump_mode == 3) && (r2_advanced_pp))
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_parallax_mapping", FALSE);
-		else if ((ps_terrain_bump_mode == 3) && (!r2_advanced_pp))
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax_mapping", FALSE);
-
-		extern u32 ps_debug_textures;
 		if (ps_debug_textures == 1)
-			C.r_Sampler_tex("s_color_map", "ed\\debug_uv_checker");
+		{
+			C.r_Sampler_tex("s_dt_r", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_g", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_b", "ed\\debug_uv_checker");
+			C.r_Sampler_tex("s_dt_a", "ed\\debug_uv_checker");
+		}
 		else if (ps_debug_textures == 2)
-			C.r_Sampler_tex("s_color_map", "ed\\debug_white");
+		{
+			C.r_Sampler_tex("s_dt_r", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_g", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_b", "ed\\debug_white");
+			C.r_Sampler_tex("s_dt_a", "ed\\debug_white");
+		}
 		else
-		C.r_Sampler("s_color_map", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		{
+			C.r_Sampler("s_dt_r", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_g", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_b", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+			C.r_Sampler("s_dt_a", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		}
 
-		C.r_Sampler("s_detail_mask", mask);
-		C.r_Sampler("s_light_map", C.L_textures[1]);
+		C.r_Sampler		("s_dn_r",	strconcat(sizeof(mask),mask,oR_Name,"_bump") );
+		C.r_Sampler		("s_dn_g",	strconcat(sizeof(mask),mask,oG_Name,"_bump") );
+		C.r_Sampler		("s_dn_b",	strconcat(sizeof(mask),mask,oB_Name,"_bump") );
+		C.r_Sampler		("s_dn_a",	strconcat(sizeof(mask),mask,oA_Name,"_bump") );
 
-		C.r_Sampler("s_detail_albedo_red", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_albedo_green", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_albedo_blue", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_albedo_alpha", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		C.r_Sampler		("s_dn_rX",	strconcat(sizeof(mask),mask,oR_Name,"_bump#") );
+		C.r_Sampler		("s_dn_gX",	strconcat(sizeof(mask),mask,oG_Name,"_bump#") );
+		C.r_Sampler		("s_dn_bX",	strconcat(sizeof(mask),mask,oB_Name,"_bump#") );
+		C.r_Sampler		("s_dn_aX",	strconcat(sizeof(mask),mask,oA_Name,"_bump#") );
 
-		C.r_Sampler("s_detail_normal_map_red", strconcat(sizeof(mask), mask, oR_Name, "_bump"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_normal_map_green", strconcat(sizeof(mask), mask, oG_Name, "_bump"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_normal_map_blue", strconcat(sizeof(mask), mask, oB_Name, "_bump"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_normal_map_alpha", strconcat(sizeof(mask), mask, oA_Name, "_bump"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-		C.r_Sampler("s_detail_correction_map_red", strconcat(sizeof(mask), mask, oR_Name, "_bump#"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_correction_map_green", strconcat(sizeof(mask), mask, oG_Name, "_bump#"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_correction_map_blue", strconcat(sizeof(mask), mask, oB_Name, "_bump#"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-		C.r_Sampler("s_detail_correction_map_alpha", strconcat(sizeof(mask), mask, oA_Name, "_bump#"), false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-		C.r_End();
+		C.r_End			();
 		break;
-		//	case SE_R2_NORMAL_LQ: 		// deffer
-		//		uber_deffer		(C, false,	"base","impl",false,oT2_Name[0]?oT2_Name:0,true);
-		//		C.r_Sampler		("s_lmap",	C.L_textures[1]);
-		//		C.r_End			();
-		//		break;
+	case SE_R2_NORMAL_LQ: 		// deffer
+		uber_deffer		(C, false,	"base","impl",false,oT2_Name[0]?oT2_Name:0,true);
+		C.r_Sampler		("s_lmap",	C.L_textures[1]);
+		C.r_End			();
+		break;
 	case SE_R2_SHADOW:			// smap
-		if (RImplementation.o.HW_smap)	C.r_Pass("shadow_direct_base", "dumb", FALSE, TRUE, TRUE, FALSE);
-		else							C.r_Pass("shadow_direct_base", "shadow_direct_base", FALSE);
-		C.r_Sampler("s_base", C.L_textures[0]);
-		C.r_End();
+		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base","dumb",				FALSE,TRUE,TRUE,FALSE);
+		else							C.r_Pass	("shadow_direct_base","shadow_direct_base",	FALSE);
+		C.r_Sampler		("s_base",	C.L_textures[0]);
+		C.r_End			();
 		break;
 	}
 }

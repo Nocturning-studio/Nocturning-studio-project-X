@@ -123,7 +123,7 @@ void CEnvironment::RenderSky()
 	{
 		sh_2sky.create(&m_b_skybox, "skybox_2t");
 		sh_2geom.create(v_skybox_fvf, RCache.Vertex.Buffer(), RCache.Index.Buffer());
-		clouds_sh.create("environment_stage_clouds", "null");
+		clouds_sh.create("clouds", "null");
 		clouds_geom.create(v_clouds_fvf, RCache.Vertex.Buffer(), RCache.Index.Buffer());
 		bNeed_re_create_env = FALSE;
 	}

@@ -22,8 +22,9 @@ extern xr_token* vid_mode_token;
 
 xr_token							vid_quality_token[] = {
 	{ "renderer_r1",				0											},
-	{ "renderer_r2",				1											},
-	{ "renderer_r2.5",				2											},
+	{ "renderer_r2a",				1											},
+	{ "renderer_r2",				2											},
+	{ "renderer_r2.5",				3											},
 	{ 0,							0											}
 };
 
@@ -557,7 +558,8 @@ public:
 #endif // DEDICATED_SERVER
 
 		psDeviceFlags.set(rsR2, (renderer_value > 0));
-		r2_advanced_pp = (renderer_value >= 2);
+		r2_sun_static  = (renderer_value < 2);
+		r2_advanced_pp = (renderer_value > 2);
 	}
 
 	virtual void	Save(IWriter* F) {
@@ -641,15 +643,11 @@ void CCC_Register()
 #endif
 
 	// Render device states
-	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 16);
+	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
 
 	CMD3(CCC_Mask, "rs_v_sync", &psDeviceFlags, rsVSync);
 	//	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
-	// 
-	//CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
-
-	CMD3(CCC_Token, "rs_window_mode", &psWindowMode, WindowMode_token);
-
+	CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
 	CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
 	CMD3(CCC_Mask, "rs_stats", &psDeviceFlags, rsStatistic);
 	CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.4f, 1.5f);

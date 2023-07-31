@@ -30,7 +30,7 @@ public:
 
 	virtual		void		Compile(CBlender_Compile& C)
 	{
-		C.r_Pass("environment_stage_skybox", "environment_stage_skybox", FALSE, TRUE, FALSE);
+		C.r_Pass("sky2", "sky2", FALSE, TRUE, FALSE);
 		C.r_Sampler_clf("s_sky0", "$null");
 		C.r_Sampler_clf("s_sky1", "$null");
 		C.r_Sampler_rtf("s_tonemap", "$user$tonemap");	//. hack

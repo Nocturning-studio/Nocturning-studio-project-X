@@ -1,163 +1,6 @@
 #include "stdafx.h"
 #include "uber_deffer.h"
 
-string_path DummyPath = { 0 };
-
-void fix_texture_name(LPSTR fn);
-
-extern u32 ps_bump_mode;
-
-void	uber_deffer(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOOL _aref, LPCSTR _detail_replace, bool DO_NOT_FINISH)
-{
-	// Uber-parse
-	string256 AlbedoTexName, BumpTexName, BumpDecompressionTexName, DetailTexName;
-	strcpy(AlbedoTexName, *C.L_textures[0]);
-	fix_texture_name(AlbedoTexName);
-	ref_texture	Albedo;	Albedo.create(AlbedoTexName);
-	bool HasBump = Albedo.bump_exist();
-
-	// detect lmap
-	bool HasLightMap = true;
-	if (C.L_textures.size() < 3)	HasLightMap = false;
-	else {
-		pcstr tex = C.L_textures[2].c_str();
-		if (tex[0] == 'l' && tex[1] == 'm' && tex[2] == 'a' && tex[3] == 'p')	HasLightMap = true;
-		else															HasLightMap = false;
-	}
-
-	string256		PixelShaderName, VertexShaderName;
-	strconcat(sizeof(VertexShaderName), VertexShaderName, "gbuffer_stage_", _vspec, HasLightMap ? "_lightmapped" : "");
-	strconcat(sizeof(PixelShaderName), PixelShaderName, "gbuffer_stage_", _pspec, HasLightMap ? "_lightmapped" : "");
-	strcpy_s(DetailTexName, sizeof(DetailTexName), _detail_replace ? _detail_replace : (C.detail_texture ? C.detail_texture : "ed\\ed_dummy_middlegray"));
-
-	if (ps_bump_mode == 1)
-		strcat(PixelShaderName, "_normal_mapping");
-	else if (ps_bump_mode == 2)
-		strcat(PixelShaderName, "_parallax_mapping");
-	else if ((ps_bump_mode == 3) && (r2_advanced_pp))
-		strcat(PixelShaderName, "_steep_parallax_mapping");
-	else if ((ps_bump_mode == 3) && (!r2_advanced_pp))
-		strcat(PixelShaderName, "_parallax_mapping");
-
-	if (HasBump)
-	{
-		strcpy(BumpTexName, Albedo.bump_get().c_str());
-		strconcat(sizeof(BumpDecompressionTexName), BumpDecompressionTexName, BumpTexName, "#");
-	}
-	else
-	{
-		strcpy(BumpTexName, "ed\\ed_dummy_bump");
-		strcpy(BumpDecompressionTexName, "ed\\ed_dummy_bump#");
-	}
-
-	// Create shader pass name
-	C.r_Pass(VertexShaderName, PixelShaderName, FALSE);
-
-	// Samplers (Base texture)
-	extern u32 ps_debug_textures;
-	if (ps_debug_textures == 1)
-		C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-	else if (ps_debug_textures == 2)
-		C.r_Sampler_tex("s_base", "ed\\debug_white");
-	else
-		C.r_Sampler("s_base", AlbedoTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	string256 BasePathAO;  strcpy(BasePathAO, AlbedoTexName);
-	LPCSTR AoPath = strconcat(sizeof(BasePathAO), BasePathAO, BasePathAO, "_ao");
-	if (FS.exist(DummyPath, "$game_textures$", AoPath, ".dds"))
-		C.r_Sampler("s_baked_ao", AoPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_baked_ao", "ed\\ed_dummy_white");
-
-	string256 BasePathEmissive;  strcpy(BasePathEmissive, AlbedoTexName);
-	LPCSTR EmissivePath = strconcat(sizeof(BasePathEmissive), BasePathEmissive, BasePathEmissive, "_emissive");
-	if (FS.exist(DummyPath, "$game_textures$", EmissivePath, ".dds"))
-		C.r_Sampler("s_emissive", EmissivePath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_emissive", "ed\\ed_dummy_black");
-
-	string256 BasePathMetallic;  strcpy(BasePathMetallic, AlbedoTexName);
-	LPCSTR MetallicPath = strconcat(sizeof(BasePathMetallic), BasePathMetallic, BasePathMetallic, "_metallic");
-	if (FS.exist(DummyPath, "$game_textures$", MetallicPath, ".dds"))
-		C.r_Sampler("s_metallic", MetallicPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_metallic", "ed\\ed_dummy_black");
-
-	string256 BasePathRoughness;  strcpy(BasePathRoughness, AlbedoTexName);
-	LPCSTR RoughnessPath = strconcat(sizeof(BasePathRoughness), BasePathRoughness, BasePathRoughness, "_roughness");
-	if (FS.exist(DummyPath, "$game_textures$", RoughnessPath, ".dds"))
-		C.r_Sampler("s_roughness", RoughnessPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_roughness", "ed\\ed_dummy_black");
-
-	string256 BasePathHeight;  strcpy(BasePathHeight, AlbedoTexName);
-	LPCSTR HeightPath = strconcat(sizeof(BasePathHeight), BasePathHeight, BasePathHeight, "_height");
-	if (FS.exist(DummyPath, "$game_textures$", HeightPath, ".dds"))
-		C.r_Sampler("s_height_map", HeightPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_height_map", "ed\\ed_dummy_white");
-
-	string256 BasePathGloss;  strcpy(BasePathGloss, AlbedoTexName);
-	LPCSTR GlossPath = strconcat(sizeof(BasePathGloss), BasePathGloss, BasePathGloss, "_gloss");
-	if (FS.exist(DummyPath, "$game_textures$", GlossPath, ".dds"))
-		C.r_Sampler("s_gloss", GlossPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_gloss", "ed\\ed_dummy_black");
-
-	string256 BasePathNormal;  strcpy(BasePathNormal, AlbedoTexName);
-	LPCSTR NormalPath = strconcat(sizeof(BasePathNormal), BasePathNormal, BasePathNormal, "_normal");
-	if (FS.exist(DummyPath, "$game_textures$", NormalPath, ".dds"))
-		C.r_Sampler("s_normal_map", NormalPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_normal_map", "ed\\ed_dummy_normal");
-
-	string256 BasePathOpacity;  strcpy(BasePathOpacity, AlbedoTexName);
-	LPCSTR OpacityPath = strconcat(sizeof(BasePathOpacity), BasePathOpacity, BasePathOpacity, "_opacity");
-	if (FS.exist(DummyPath, "$game_textures$", OpacityPath, ".dds"))
-		C.r_Sampler("s_opacity", OpacityPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_opacity", "ed\\ed_dummy_white");
-
-	LPCSTR BumpCorrectionPath = BumpDecompressionTexName;
-	if (FS.exist(DummyPath, "$game_textures$", BumpCorrectionPath, ".dds"))
-		C.r_Sampler("s_bumpX", BumpDecompressionTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_bumpX", "ed\\ed_dummy_bump#", false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	LPCSTR BumpPath = BumpTexName;
-	if (FS.exist(DummyPath, "$game_textures$", BumpPath, ".dds"))
-		C.r_Sampler("s_bump", BumpTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_bump", "ed\\ed_dummy_bump", false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	// Samplers detail texture
-	C.r_Sampler("s_detail", DetailTexName, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	string256 BasePathDetailBumpX;  strcpy(BasePathDetailBumpX, DetailTexName);
-	LPCSTR DetailBumpCorrectionPath = strconcat(sizeof(BasePathDetailBumpX), BasePathDetailBumpX, BasePathDetailBumpX, "_bump#");
-	if (FS.exist(DummyPath, "$game_textures$", BumpCorrectionPath, ".dds"))
-		C.r_Sampler("s_detail_bumpX", DetailBumpCorrectionPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_detail_bumpX", "ed\\ed_dummy_bump#", false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	string256 BasePathDetailBump;  strcpy(BasePathDetailBump, DetailTexName);
-	LPCSTR DetailBumpPath = strconcat(sizeof(BasePathDetailBump), BasePathDetailBump, BasePathDetailBump, "_bump");
-	if (FS.exist(DummyPath, "$game_textures$", BumpPath, ".dds"))
-		C.r_Sampler("s_detail_bump", DetailBumpPath, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-	else
-		C.r_Sampler("s_detail_bump", "ed\\ed_dummy_bump", false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
-
-	C.r_Sampler("s_blue_noise", "ed\\ed_blue_noise");
-
-	if (HasLightMap)C.r_Sampler("s_hemi", C.L_textures[2], false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
-
-	if (!DO_NOT_FINISH)		C.r_End();
-}
-
-/*
-#include "stdafx.h"
-#include "uber_deffer.h"
-
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 
@@ -215,7 +58,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		} else {
 			dtA[0] = dtB[0] = 0;
 		}
-		*./
+		*/
 		extern u32 ps_bump_mode;
 		if ((ps_bump_mode == 1) || (r2_sun_static))
 		{
@@ -511,4 +354,3 @@ void	uber_deffer_model(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspe
 
 	if (!DO_NOT_FINISH)		C.r_End();
 }
-*/

@@ -46,8 +46,6 @@ enum {
 ENGINE_API extern	u32			psCurrentVidMode[];
 ENGINE_API extern	u32			psCurrentBPP;
 ENGINE_API extern	Flags32		psDeviceFlags;
-ENGINE_API extern	u32			psWindowMode;
-ENGINE_API extern	xr_token	WindowMode_token[];
 
 // game path definition
 #define _game_data_				"$game_data$"
