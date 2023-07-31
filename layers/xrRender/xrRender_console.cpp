@@ -43,11 +43,10 @@ xr_token aa_quality_token[] = {
 
 u32		ps_ao = 2;
 xr_token ao_token[] = {
-	{ "st_opt_off",						0											},
+	{ "st_opt_off",					0											},
 	{ "st_opt_ssao",				1											},
 	{ "st_opt_hdao",				2											},
 	{ "st_opt_hbao",				3											},
-//	{ "st_opt_gtao",				4											},
 	{ 0,							0											} 
 };
 

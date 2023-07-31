@@ -819,7 +819,11 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.Tshadows);
 	++len;
 
-	////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Дорогие ревьюеры - главный вопрос этого ревью: "Наху... Извините. Зачем это нужно?"
+//Ответ - ни флаги, ни "рулетки" с разными дефайнами с кешем шейдеров НЕ РА БО ТА ЮТ. Почему? Я не знаю, я пытался это исправить, но мои навыки не позволили найти суть проблемы.
+//Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_MBLUR)) {
 		sprintf(c_mblur, "%d", 1);
@@ -883,21 +887,6 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + (char)ps_ao_quality;
-	++len;
-
-	/********************************************BLUR**********************************************/
-
-	int ao_blur = ps_r2_ls_flags_ext.test(R2FLAGEXT_AO_BLUR);
-	if (RImplementation.o.advancedpp && ao_blur)
-	{
-		sprintf(c_ao_blur, "%d", ao_blur);
-		defines[def_it].Name = "USE_AO_BLUR";
-		defines[def_it].Definition = c_ao_blur;
-		def_it++;
-		strcat(sh_name, c_ao_blur);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ao_blur);
 	++len;
 
 	/********************************************USING*********************************************/
@@ -977,12 +966,6 @@ HRESULT	CRender::shader_compile(
 	}
 	sh_name[len] = '0' + char(o.forcegloss);
 	++len;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Дорогие ревьюеры - главный вопрос этого ревью: "Наху... Извините. Зачем это нужно?"
-//Ответ - ни флаги, ни "рулетки" с разными дефайнами с кешем шейдеров НЕ РА БО ТА ЮТ. Почему? Я не знаю, я пытался это исправить, но мои навыки не позволили найти суть проблемы.
-//Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	int vignette = ps_r2_pp_flags.test(R2FLAG_VIGNETTE);
 	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
@@ -1092,163 +1075,6 @@ HRESULT	CRender::shader_compile(
 	{
 		sh_name[len] = '0'; ++len;
 	}
-	//////////////////////////////////////////////////////////////////////////
-	// Bump types
-	//////////////////////////////////////////////////////////////////////////
-
-	if (RImplementation.o.sunstatic || ps_bump_mode == 1)
-	{
-		sprintf(c_normal_mapping, "%d", 1);
-		defines[def_it].Name = "USE_NORMAL_MAPPING";
-		defines[def_it].Definition = c_normal_mapping;
-		def_it++;
-		strcat(sh_name, c_normal_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_bump_mode);
-	++len;
-
-	if (!RImplementation.o.advancedpp || ps_bump_mode == 2)
-	{
-		sprintf(c_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_PARALLAX";
-		defines[def_it].Definition = c_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_bump_mode);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_bump_mode == 3)
-	{
-		sprintf(c_steep_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_STEEP_PARALLAX";
-		defines[def_it].Definition = c_steep_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_steep_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_bump_mode);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_bump_mode == 4)
-	{
-		sprintf(c_parallax_occlusion_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_PARALLAX_OCCLUSION";
-		defines[def_it].Definition = c_parallax_occlusion_mapping;
-		def_it++;
-		strcat(sh_name, c_parallax_occlusion_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_bump_mode);
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////
-	// Texture detail bump types
-	//////////////////////////////////////////////////////////////////////////
-
-	if (RImplementation.o.sunstatic || ps_tdetail_bump_mode == 1)
-	{
-		sprintf(c_tdetail_normal_mapping, "%d", 1);
-		defines[def_it].Name = "USE_TDETAIL_NORMAL_MAPPING";
-		defines[def_it].Definition = c_tdetail_normal_mapping;
-		def_it++;
-		strcat(sh_name, c_tdetail_normal_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
-	++len;
-
-	if (!RImplementation.o.advancedpp || ps_tdetail_bump_mode == 2)
-	{
-		sprintf(c_tdetail_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_TDETAIL_PARALLAX";
-		defines[def_it].Definition = c_tdetail_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_tdetail_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_tdetail_bump_mode == 3)
-	{
-		sprintf(c_tdetail_steep_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_TDETAIL_STEEP_PARALLAX";
-		defines[def_it].Definition = c_tdetail_steep_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_tdetail_steep_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_tdetail_bump_mode == 4)
-	{
-		sprintf(c_tdetail_parallax_occlusion_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_TDETAIL_PARALLAX_OCCLUSION";
-		defines[def_it].Definition = c_tdetail_parallax_occlusion_mapping;
-		def_it++;
-		strcat(sh_name, c_tdetail_parallax_occlusion_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_tdetail_bump_mode);
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////
-	// Terrain detail bump types
-	//////////////////////////////////////////////////////////////////////////
-
-	if (RImplementation.o.sunstatic || ps_terrain_bump_mode == 1)
-	{
-		sprintf(c_terrain_normal_mapping, "%d", 1);
-		defines[def_it].Name = "USE_TERRAIN_NORMAL_MAPPING";
-		defines[def_it].Definition = c_terrain_normal_mapping;
-		def_it++;
-		strcat(sh_name, c_terrain_normal_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_terrain_bump_mode);
-	++len;
-
-	if (!RImplementation.o.advancedpp || ps_terrain_bump_mode == 2)
-	{
-		sprintf(c_terrain_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_TERRAIN_PARALLAX";
-		defines[def_it].Definition = c_terrain_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_terrain_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_terrain_bump_mode);
-	++len;
-
-	if (RImplementation.o.advancedpp || ps_terrain_bump_mode == 3)
-	{
-		sprintf(c_terrain_steep_parallax_mapping, "%d", 1);
-		defines[def_it].Name = "ALLOW_TERRAIN_STEEP_PARALLAX";
-		defines[def_it].Definition = c_terrain_steep_parallax_mapping;
-		def_it++;
-		strcat(sh_name, c_terrain_steep_parallax_mapping);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(ps_terrain_bump_mode);
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////
-	int gbuffer_opt = ps_r2_ls_flags_ext.test(R2FLAGEXT_GBUFFER_OPT);
-	if (gbuffer_opt)
-	{
-		sprintf(c_gbuffer_opt, "%d", gbuffer_opt);
-		defines[def_it].Name = "GBUFFER_OPTIMIZATION";
-		defines[def_it].Definition = c_gbuffer_opt;
-		def_it++;
-		strcat(sh_name, c_gbuffer_opt);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(gbuffer_opt);
-	++len;
 	//////////////////////////////////////////////////////////////////////////
 
 	if (o.forceskinw) {

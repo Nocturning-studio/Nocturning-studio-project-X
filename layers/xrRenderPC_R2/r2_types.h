@@ -23,11 +23,11 @@
 #define		r2_RT_bloom1		"$user$bloom1"			// ---
 #define		r2_RT_bloom2		"$user$bloom2"			// ---
 
-#define		r2_RT_ao1			"$user$ao1"				// ---
-#define		r2_RT_ao2			"$user$ao2"				// ---
-#define		r2_RT_ao3			"$user$ao3"				// ---
-#define		r2_RT_ao4			"$user$ao4"				// ---
-#define		r2_RT_blurred_position "$user$blurred_position"// ---
+#define		r2_RT_downsampled_position "$user$blurred_position"// ---
+#define		r2_RT_ao_base			"$user$ao_base"		// ---
+#define		r2_RT_ao_blurred1	"$user$ao_blurred1"	// ---
+#define		r2_RT_ao_blurred2	"$user$ao_blurred2"	// ---
+#define		r2_RT_ao			"$user$ao"			// ---
 
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
 #define		r2_RT_luminance_t8	"$user$lum_t8"			// --- temp

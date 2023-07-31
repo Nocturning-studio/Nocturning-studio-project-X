@@ -19,39 +19,51 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 
 	switch (C.iElement)
 	{
-	case 0: //Read secondary RT and blur AO
-		C.r_Pass("null", "downsample", FALSE, FALSE, FALSE);
+	case 0:
+		C.r_Pass("null", "ao_phase_downsample", FALSE, FALSE, FALSE);
 		C.r_Sampler_clf("s_position", r2_RT_P);
 		C.r_End();
 		break;
-	case 1: // combine
-		C.r_Pass("null", "ao_build", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_position", r2_RT_P);
-		C.r_Sampler_clf("s_position_blurred", r2_RT_blurred_position);
+	case 1:
+		C.r_Pass("null", "ao_phase_ssao", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_normal", r2_RT_N);
+		C.r_Sampler_rtf("s_position", r2_RT_P);
+		C.r_Sampler_clf("s_position_blurred", r2_RT_downsampled_position);
 		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
 		jitter(C);
 		C.r_End();
 		break;
-	case 2: //Read previous RT and blur AO
-		C.r_Pass("null", "ao_filter1", FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_ao", r2_RT_ao1);
+	case 2:
+		C.r_Pass("null", "ao_phase_hdao", FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf("s_normal", r2_RT_N);
 		C.r_Sampler_rtf("s_position", r2_RT_P);
-		C.r_Sampler_clf("s_position_blurred", r2_RT_blurred_position);
+		C.r_Sampler_clf("s_position_blurred", r2_RT_downsampled_position);
+		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
+		jitter(C);
 		C.r_End();
 		break;
-	case 3: //Read secondary RT and blur AO
-		C.r_Pass("null", "ao_filter2", FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_ao_blurred", r2_RT_ao2);
+	case 3:
+		C.r_Pass("null", "ao_phase_hbao", FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf("s_normal", r2_RT_N);
 		C.r_Sampler_rtf("s_position", r2_RT_P);
-		C.r_Sampler_clf("s_position_blurred", r2_RT_blurred_position);
+		C.r_Sampler_clf("s_position_blurred", r2_RT_downsampled_position);
+		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
+		jitter(C);
 		C.r_End();
 		break;
-	case 4: //Read secondary RT and blur AO
-		C.r_Pass("null", "ao_filter3", FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_ao_blurred1", r2_RT_ao3);
-		C.r_Sampler_rtf("s_position", r2_RT_P);
-		C.r_Sampler_clf("s_position_blurred", r2_RT_blurred_position);
+	case 4:
+		C.r_Pass("null", "ao_phase_diagonal_filter", FALSE, FALSE, FALSE);
+		C.r_Sampler_clf("s_ao", r2_RT_ao_base);
+		C.r_End();
+		break;
+	case 5:
+		C.r_Pass("null", "ao_phase_strided_filter", FALSE, FALSE, FALSE);
+		C.r_Sampler_clf("s_ao", r2_RT_ao_blurred1);
+		C.r_End();
+		break;
+	case 6:
+		C.r_Pass("null", "ao_phase_finalize", FALSE, FALSE, FALSE);
+		C.r_Sampler_clf("s_ao", r2_RT_ao_blurred2);
 		C.r_End();
 		break;
 	}

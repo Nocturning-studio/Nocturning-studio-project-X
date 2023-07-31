@@ -18,32 +18,23 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N				);
 		C.r_Sampler_rtf		("s_diffuse",		r2_RT_albedo		);
 		C.r_Sampler_rtf		("s_accumulator",	r2_RT_accum			);
-		C.r_Sampler_rtf		("s_depth",			r2_RT_depth			);
 		C.r_Sampler_rtf		("s_tonemap",		r2_RT_luminance_cur	);
 		C.r_Sampler_clw		("s_material",		r2_material			);
-		C.r_Sampler_clf		("s_ao",			r2_RT_ao1			);
-		C.r_Sampler_clf		("s_ao_blurred",	r2_RT_ao2			);
-		C.r_Sampler_clf		("s_ao_blurred1",	r2_RT_ao3			);
-		C.r_Sampler_clf		("s_ao_blurred2",	r2_RT_ao4			);
-		C.r_Sampler_clf		("s_position_blurred",	r2_RT_blurred_position);
+		C.r_Sampler_clf		("s_ao",			r2_RT_ao			);
+		C.r_Sampler_clf		("s_ao_base",		r2_RT_ao_base		);
+		C.r_Sampler_clf		("s_ao_blurred1",	r2_RT_ao_blurred1	);
+		C.r_Sampler_clf		("s_ao_blurred2",	r2_RT_ao_blurred2	);
 		C.r_Sampler_clf		("env_s0",			r2_T_envs0			);
 		C.r_Sampler_clf		("env_s1",			r2_T_envs1			);
 		C.r_Sampler_clf		("sky_s0",			r2_T_sky0			);
 		C.r_Sampler_clf		("sky_s1",			r2_T_sky1			);
 		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
-		C.r_Sampler_tex		("s_blue_noise",	"noise\\blue_noise_texture");
-		C.r_Sampler_tex		("s_debug_mask",	"ed\\debug_mask");
+
+		C.r_Sampler_tex		("s_blue_noise",			"noise\\blue_noise_texture");
+		C.r_Sampler_tex		("s_debug_mask",			"ed\\debug_mask");
 		C.r_Sampler_tex		("s_debug_diagonal_mask",	"ed\\debug_diagonal_mask");
 		C.r_Sampler_tex		("s_debug_triple_mask",		"ed\\debug_triple_mask");
-
-		if (RImplementation.o.HW_smap) {
-			if (RImplementation.o.HW_smap_PCF)	C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-			else {
-				C.r_Sampler_rtf("s_smap", r2_RT_smap_depth);
-			}
-		}
-		else
-			C.r_Sampler_rtf("s_smap", r2_RT_smap_surf);
+		C.r_Sampler_tex		("s_debug_quadro_mask",		"ed\\debug_quadro_mask");
 
 		jitter(C);
 		C.r_End				();

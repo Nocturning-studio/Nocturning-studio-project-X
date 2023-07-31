@@ -60,11 +60,11 @@ public:
 	ref_texture					t_LUM_dest		;	// destination & usage for current frame
 
 	// ao
-	ref_rt						rt_ao;
+	ref_rt						rt_downsampled_position;
+	ref_rt						rt_ao_base;
 	ref_rt						rt_ao_blurred1;
 	ref_rt						rt_ao_blurred2;
-	ref_rt						rt_ao_blurred3;
-	ref_rt						rt_blurred_position;
+	ref_rt						rt_ao;
 
 	// env
 	ref_texture					t_envmap_0		;	// env-0
@@ -213,7 +213,15 @@ public:
 	void						accum_volumetric		(light* L);
 	void						accum_reflected			(light* L);
 	void						phase_bloom				();
+
+	void						phase_downsample		();
+	void						phase_create_ao			();
+	void						phase_diagonal_filter	();
+	void						phase_strided_filter	();
+	void						phase_finalize();
+	void						phase_blur				();
 	void						phase_ao				();
+
 	void						phase_luminance			();
 	void						phase_combine			();
 	void						phase_combine_volumetric();
