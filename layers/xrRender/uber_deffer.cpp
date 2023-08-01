@@ -26,7 +26,6 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		else															lmap = false;
 	}
 
-
 	string256		ps,vs,dt,dtA,dtB;
 	strconcat		(sizeof(vs),vs,"deffer_", _vspec, lmap?"_lmh":""	);
 	strconcat		(sizeof(ps),ps,"deffer_", _pspec, lmap?"_lmh":""	);
@@ -34,63 +33,41 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 
 	if	(_aref)		{ strcat(ps,"_aref");	}
 
-	if	(!bump)		{
-		fnameA[0] = fnameB[0] = 0;
-		strcat			(vs,"_flat");
-		strcat			(ps,"_flat");
-		if (hq && (C.bDetail_Diffuse || C.bDetail_Bump)) {
-			strcat(vs, "_d");
-			if (C.bDetail_Bump)
-				strcat(ps, "_d_db");	//	bump & detail & hq
-			else
-				strcat(ps, "_d");
-		}
-	} else {
+	if (bump)
 		strcpy			(fnameA,_t.bump_get().c_str());
+	else
+		strcpy			(fnameA, "ed\\ed_dummy_bump");
 		strconcat		(sizeof(fnameB),fnameB,fnameA,"#");
-		/*
-		// KD: forming bump name if detail bump needed
-		if (C.bDetail_Bump)
-		{
-			strcpy_s		(dtA,dt);
-			strconcat		(sizeof(dtA),dtA,dtA,"_bump");
-			strconcat		(sizeof(dtB),dtB,dtA,"#");
-		} else {
-			dtA[0] = dtB[0] = 0;
-		}
-		*/
-		extern u32 ps_bump_mode;
-		if ((ps_bump_mode == 1) || (r2_sun_static))
-		{
-			strcat(vs, "_bump");
-			strcat(ps, "_bump");
-		}
-		else if ((ps_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
-		{
-			strcat(vs, "_parallax");
-			strcat(ps, "_parallax");
-		}
-		if ((ps_bump_mode == 3) && (r2_advanced_pp))
-		{
-			strcat(vs, "_steep_parallax");
-			strcat(ps, "_steep_parallax");
-		}
+	extern u32 ps_bump_mode;
+	if ((ps_bump_mode == 1) || (r2_sun_static))
+	{
+		strcat(vs, "_bump");
+		strcat(ps, "_bump");
+	}
+	else if ((ps_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+	{
+		strcat(vs, "_bump");
+		strcat(ps, "_parallax");
+	}
+	if ((ps_bump_mode == 3) && (r2_advanced_pp))
+	{
+		strcat(vs, "_bump");
+		strcat(ps, "_steep_parallax");
+	}
 		
-		if (hq && (C.bDetail_Diffuse || C.bDetail_Bump) )	{
-			strcat		(vs,"_d"	);
-			if (C.bDetail_Bump) {
-				extern u32 ps_tdetail_bump_mode;
-				if ((ps_tdetail_bump_mode == 1) || (r2_sun_static))
-				strcat(ps, "_db");	//	bump & detail & hq (bump mapping)
-				else if ((ps_tdetail_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
-				strcat(ps, "_dp");	//	bump & detail & hq (parallax mapping)
-				else if ((ps_tdetail_bump_mode == 3) && (r2_advanced_pp))
-				strcat(ps, "_ds");	//	bump & detail & hq (steep parallax mapping)
-			}
-			else
-				strcat(ps,"_d"		);
+	if (hq && (C.bDetail_Diffuse || C.bDetail_Bump) )	{
+		strcat		(vs,"_d"	);
+		if (C.bDetail_Bump) {
+			extern u32 ps_tdetail_bump_mode;
+			if ((ps_tdetail_bump_mode == 1) || (r2_sun_static))
+			strcat(ps, "_db");	//	bump & detail & hq (bump mapping)
+			else if ((ps_tdetail_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+			strcat(ps, "_dp");	//	bump & detail & hq (parallax mapping)
+			else if ((ps_tdetail_bump_mode == 3) && (r2_advanced_pp))
+			strcat(ps, "_ds");	//	bump & detail & hq (steep parallax mapping)
 		}
-		
+		else
+			strcat(ps,"_d"		);
 	}
 
 	if (C.bDetail_Bump)
@@ -104,7 +81,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	}
 
 	// HQ
-	if (bump && hq)		{
+	if (hq)		{
 		strcat			(vs,"-hq");
 		strcat			(ps,"-hq");
 	}

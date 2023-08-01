@@ -7,6 +7,9 @@
 
 #include "blender_BmmD.h"
 
+extern ENGINE_API BOOL r2_sun_static;
+extern ENGINE_API BOOL r2_advanced_pp;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -159,9 +162,24 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer
-		uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
+		//uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
+		extern u32 ps_terrain_bump_mode;
+		if ((ps_bump_mode == 1) || (r2_sun_static))
+			C.r_Pass("deffer_terrain", "deffer_terrain", TRUE);
+		else if ((ps_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+			C.r_Pass("deffer_terrain", "deffer_terrain_parallax", TRUE);
+		if ((ps_bump_mode == 3) && (r2_advanced_pp))
+			C.r_Pass("deffer_terrain", "deffer_terrain_steep_parallax", TRUE);
+
 		C.r_Sampler		("s_mask",	mask);
 		C.r_Sampler		("s_lmap",	C.L_textures[1]);
+
+		if (ps_debug_textures == 1)
+			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
+		else if (ps_debug_textures == 2)
+			C.r_Sampler_tex("s_base", "ed\\debug_white");
+		else
+			C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 		if (ps_debug_textures == 1)
 		{
@@ -198,8 +216,16 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_End			();
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer
-		uber_deffer		(C, false,	"base","impl",false,oT2_Name[0]?oT2_Name:0,true);
-		C.r_Sampler		("s_lmap",	C.L_textures[1]);
+		C.r_Pass("deffer_terrain_lq", "deffer_terrain_lq", TRUE);
+		if (ps_debug_textures == 1)
+			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
+		else if (ps_debug_textures == 2)
+			C.r_Sampler_tex("s_base", "ed\\debug_white");
+		else
+			C.r_Sampler("s_base", C.L_textures[0]);
+
+		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler("s_detail", oT2_Name);
 		C.r_End			();
 		break;
 	case SE_R2_SHADOW:			// smap
