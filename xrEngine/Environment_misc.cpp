@@ -238,6 +238,11 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 	lens_flare_id = "";
 	tb_id = "";
 
+	m_fTreeAmplitude = 0.005f;
+	m_fTreeSpeed = 1.00f;
+	m_fTreeRotation = 10.0f;
+	m_fTreeWave.set(.1f, .01f, .11f);
+
 	env_ambient = NULL;
 }
 
@@ -301,6 +306,15 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 
 	if (config.line_exist(m_identifier.c_str(), "water_intensity"))
 		m_fWaterIntensity = config.r_float(m_identifier.c_str(), "water_intensity");
+
+	m_fTreeAmplitude = pSettings->line_exist(S, "trees_amplitude") ? pSettings->r_float(S, "trees_amplitude") : 0.005f;
+	m_fTreeSpeed = pSettings->line_exist(S, "trees_speed") ? pSettings->r_float(S, "trees_speed") : 1.00f;
+	m_fTreeRotation = pSettings->line_exist(S, "trees_rotation") ? pSettings->r_float(S, "trees_rotation") : 10.0f;
+
+	if (pSettings->line_exist(S, "trees_wave"))
+		m_fTreeWave = pSettings->r_fvector3(S, "trees_wave");
+	else
+		m_fTreeWave.set(.1f, .01f, .11f);
 
 	C_CHECK(clouds_color);
 	C_CHECK(sky_color);
@@ -423,6 +437,12 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	// wind
 	wind_velocity = fi * A.wind_velocity + f * B.wind_velocity;
 	wind_direction = fi * A.wind_direction + f * B.wind_direction;
+
+	//trees
+	m_fTreeAmplitude = fi * A.m_fTreeAmplitude + f * B.m_fTreeAmplitude;
+	m_fTreeSpeed = fi * A.m_fTreeSpeed + f * B.m_fTreeSpeed;
+	m_fTreeRotation = fi * A.m_fTreeRotation + f * B.m_fTreeRotation;
+	m_fTreeWave.lerp(A.m_fTreeWave, B.m_fTreeWave, f);
 
 	m_fSunShaftsIntensity = fi * A.m_fSunShaftsIntensity + f * B.m_fSunShaftsIntensity;
 	m_fWaterIntensity = fi * A.m_fWaterIntensity + f * B.m_fWaterIntensity;
