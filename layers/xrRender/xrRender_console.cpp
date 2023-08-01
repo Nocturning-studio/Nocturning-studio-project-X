@@ -151,6 +151,14 @@ xr_token dof_quality_token[] = {
 	{ 0,							0											}
 };
 
+u32		ps_vignette_mode = 2;
+xr_token vignette_mode_token[] = {
+	{ "st_opt_disabled",			0											},
+	{ "st_opt_static",				1											},
+	{ "st_opt_dynamic",				2											},
+	{ 0,							0											}
+};
+
 // Common
 //int		ps_r__Supersample			= 1		;
 int			ps_r__LightSleepFrames = 10;
@@ -576,7 +584,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
 	CMD3(CCC_Mask,  "r2_ao_blur", &ps_r2_ls_flags_ext, R2FLAGEXT_AO_BLUR);
 
-	CMD3(CCC_Mask, "r2_vignette", &ps_r2_pp_flags, R2FLAG_VIGNETTE);
+	CMD3(CCC_Mask, "r2_sepia", &ps_r2_pp_flags, R2FLAG_SEPIA);
+	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
 

@@ -111,6 +111,8 @@ extern ECORE_API u32			ps_aa_quality;
 extern ECORE_API u32			ps_ao;
 extern ECORE_API u32			ps_ao_quality;
 
+extern ECORE_API u32			ps_vignette_mode;
+
 extern ECORE_API u32			ps_debug_frame_layers;
 
 extern ECORE_API u32			ps_sun_quality;
@@ -154,11 +156,11 @@ enum
 	R2FLAG_SOFT_WATER						= (1 << 17),
 	R2FLAG_SOFT_PARTICLES					= (1 << 18),
 	R2FLAG_SOFT_FOG							= (1 << 19),
-	R2FLAG_VIGNETTE							= (1 << 20),
-	R2FLAG_CHROMATIC_ABBERATION				= (1 << 21),
-	R2FLAG_BLOOM							= (1 << 22),
-	R2FLAG_DOF								= (1 << 23),
-	R2FLAG_MBLUR							= (1 << 24)
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 20),
+	R2FLAG_BLOOM							= (1 << 21),
+	R2FLAG_DOF								= (1 << 22),
+	R2FLAG_MBLUR							= (1 << 23),
+	R2FLAG_SEPIA							= (1 << 24)
 };
 
 enum

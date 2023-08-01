@@ -243,6 +243,10 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 	m_fTreeRotation = 10.0f;
 	m_fTreeWave.set(.1f, .01f, .11f);
 
+	m_SepiaColor.set(1.0f, 1.0f, 1.0f);
+	m_SepiaPower = 0.0f;
+	m_VignettePower = 0.2f;
+
 	env_ambient = NULL;
 }
 
@@ -315,6 +319,15 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 		m_fTreeWave = config.r_fvector3(m_identifier.c_str(), "trees_wave");
 	else
 		m_fTreeWave.set(.1f, .01f, .11f);
+
+	if (config.line_exist(m_identifier.c_str(), "sepia_color"))
+		m_SepiaColor = config.r_fvector3(m_identifier.c_str(), "sepia_color");
+
+	if (config.line_exist(m_identifier.c_str(), "sepia_power"))
+		m_SepiaPower = config.r_float(m_identifier.c_str(), "sepia_power");
+
+	if (config.line_exist(m_identifier.c_str(), "vignette_power"))
+		m_VignettePower = config.r_float(m_identifier.c_str(), "vignette_power");
 
 	C_CHECK(clouds_color);
 	C_CHECK(sky_color);
@@ -446,6 +459,10 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 
 	m_fSunShaftsIntensity = fi * A.m_fSunShaftsIntensity + f * B.m_fSunShaftsIntensity;
 	m_fWaterIntensity = fi * A.m_fWaterIntensity + f * B.m_fWaterIntensity;
+
+	m_SepiaColor.lerp(A.m_SepiaColor, B.m_SepiaColor, f);
+	m_SepiaPower = fi * A.m_SepiaPower + f * B.m_SepiaPower;
+	m_VignettePower = fi * A.m_VignettePower + f * B.m_VignettePower;
 
 	// colors
 //.	sky_color.lerp			(A.sky_color,B.sky_color,f).add(Mdf.sky_color).mul(modif_power);

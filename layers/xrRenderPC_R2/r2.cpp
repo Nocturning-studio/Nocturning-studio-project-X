@@ -700,6 +700,7 @@ HRESULT	CRender::shader_compile(
 
 	char c_vignette[32];
 	char c_chroma_abb[32];
+	char c_sepia[32];
 	char c_bloom[32];
 
 	char c_soft_water[32];
@@ -967,17 +968,30 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.forcegloss);
 	++len;
 
-	int vignette = ps_r2_pp_flags.test(R2FLAG_VIGNETTE);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_VIGNETTE))
+	int vignette = ps_vignette_mode;
+	if (RImplementation.o.advancedpp)
 	{
 		sprintf(c_vignette, "%d", vignette);
-		defines[def_it].Name = "USE_VIGNETTE";
+		defines[def_it].Name = "VIGNETTE_MODE";
 		defines[def_it].Definition = c_vignette;
 		def_it++;
 		strcat(sh_name, c_vignette);
 		len += 1;
 	}
 	sh_name[len] = '0' + char(vignette);
+	++len;
+
+	int sepia = ps_r2_pp_flags.test(R2FLAG_SEPIA);
+	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_SEPIA))
+	{
+		sprintf(c_sepia, "%d", c_sepia);
+		defines[def_it].Name = "USE_SEPIA";
+		defines[def_it].Definition = c_sepia;
+		def_it++;
+		strcat(sh_name, c_sepia);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(c_sepia);
 	++len;
 
 	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);

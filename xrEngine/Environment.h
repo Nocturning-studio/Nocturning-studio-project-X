@@ -173,6 +173,11 @@ public:
 	float				m_fTreeRotation;
 	Fvector3			m_fTreeWave;
 
+	//Deathman(Очередное ЧСВ в коде указало свой ник): Кинематографические инструменты
+	Fvector3			m_SepiaColor;
+	float				m_SepiaPower;
+	float				m_VignettePower;
+
 	CEnvAmbient* env_ambient;
 
 	CEnvDescriptor(shared_str const& identifier);

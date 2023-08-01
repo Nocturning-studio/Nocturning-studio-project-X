@@ -171,7 +171,6 @@ void	CRenderTarget::phase_combine()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	// Actually motion blur
 	if (1)
 	{
 		// 
@@ -228,10 +227,13 @@ void	CRenderTarget::phase_combine()
 
 	g_pGamePersistent->Environment().RenderFlares();	// lens-flares
 
+	if (ps_aa >= 2) {
+		phase_antialiasing();
+	}
+
 	// combine_3
 	if (1)
 	{
-		//u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 		u_setrt(rt_Color, NULL, NULL, NULL);
 
 		RCache.set_CullMode(CULL_NONE);
@@ -262,30 +264,20 @@ void	CRenderTarget::phase_combine()
 		//Set pass
 		RCache.set_Element(s_combine->E[3]);
 
-		//Unifoms
-		Fvector2	vDofKernel;
-		Fvector3	dof;
-		vDofKernel.set(0.5f / w, 0.5f / h);
-		vDofKernel.mul(ps_r2_dof_kernel_size);
+		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
+		Fvector4 SepiaParams;
+		Fvector4 VignettePower;
+		SepiaParams.set(envdesc->m_SepiaColor.x, envdesc->m_SepiaColor.y, envdesc->m_SepiaColor.z, envdesc->m_SepiaPower);
+		VignettePower.set(envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower);
 
-		if(ps_r2_pp_flags.test(R2FLAG_DOF))
-			g_pGamePersistent->GetCurrentDof(dof);
-
-		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
-		RCache.set_c("m_current", m_current);
-		RCache.set_c("m_previous", m_previous);
-		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
+		RCache.set_c("sepia_params", SepiaParams);
+		RCache.set_c("vignette_power", VignettePower);
 
 		//Set geometry
 		RCache.set_Geometry(g_combine);
 
 		//Draw
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-	}
-
-	if (ps_aa >= 2) {
-		phase_antialiasing();
 	}
 
 	//	PP-if required
