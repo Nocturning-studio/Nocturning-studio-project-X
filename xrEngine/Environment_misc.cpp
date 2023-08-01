@@ -307,12 +307,12 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	if (config.line_exist(m_identifier.c_str(), "water_intensity"))
 		m_fWaterIntensity = config.r_float(m_identifier.c_str(), "water_intensity");
 
-	m_fTreeAmplitude = pSettings->line_exist(S, "trees_amplitude") ? pSettings->r_float(S, "trees_amplitude") : 0.005f;
-	m_fTreeSpeed = pSettings->line_exist(S, "trees_speed") ? pSettings->r_float(S, "trees_speed") : 1.00f;
-	m_fTreeRotation = pSettings->line_exist(S, "trees_rotation") ? pSettings->r_float(S, "trees_rotation") : 10.0f;
+	m_fTreeAmplitude = config.line_exist(m_identifier.c_str(), "trees_amplitude") ? config.r_float(m_identifier.c_str(), "trees_amplitude") : 0.005f;
+	m_fTreeSpeed = config.line_exist(m_identifier.c_str(), "trees_speed") ? config.r_float(m_identifier.c_str(), "trees_speed") : 1.00f;
+	m_fTreeRotation = config.line_exist(m_identifier.c_str(), "trees_rotation") ? config.r_float(m_identifier.c_str(), "trees_rotation") : 10.0f;
 
-	if (pSettings->line_exist(S, "trees_wave"))
-		m_fTreeWave = pSettings->r_fvector3(S, "trees_wave");
+	if (config.line_exist(m_identifier.c_str(), "trees_wave"))
+		m_fTreeWave = config.r_fvector3(m_identifier.c_str(), "trees_wave");
 	else
 		m_fTreeWave.set(.1f, .01f, .11f);
 

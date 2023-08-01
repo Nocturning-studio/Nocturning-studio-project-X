@@ -101,17 +101,17 @@ struct	FTreeVisual_setup
 	{
 		dwFrame					= Device.dwFrame;
 
-		CEnvDescriptor& desc = g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
 
 		// Calc wind-vector3, scale
-		float	tm_rot = PI_MUL_2 * Device.fTimeGlobal / desc.m_fTreeRotation;
+		float	tm_rot = PI_MUL_2 * Device.fTimeGlobal / desc->m_fTreeRotation;
 		wind.set(_sin(tm_rot), 0, _cos(tm_rot), 0);
 		wind.normalize();
-		wind.mul(desc.m_fTreeAmplitude);	// dir1*amplitude
+		wind.mul(desc->m_fTreeAmplitude);	// dir1*amplitude
 		scale = 1.f / float(FTreeVisual_quant);
 
 		// setup constants
-		wave.set(desc.m_fTreeWave.x, desc.m_fTreeWave.y, desc.m_fTreeWave.z, Device.fTimeGlobal * desc.m_fTreeSpeed);			// wave
+		wave.set(desc->m_fTreeWave.x, desc->m_fTreeWave.y, desc->m_fTreeWave.z, Device.fTimeGlobal * desc->m_fTreeSpeed);			// wave
 		wave.div(PI_MUL_2);
 	}
 };
