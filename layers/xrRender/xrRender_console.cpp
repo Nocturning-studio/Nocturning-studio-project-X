@@ -25,10 +25,10 @@ xr_token							qeffpreset_token[] = {
 
 u32		ps_aa = 1;
 xr_token							aa_token[] = {
-	{ "st_opt_off",					1											},
-	{ "st_opt_dlaa",				2											},
-	{ "st_opt_dlaa_force_edge_detect", 3										},
-	{ "st_opt_fxaa",				4											},
+	{ "st_opt_disabled",			0											},
+	{ "st_opt_dlaa",				1											},
+	{ "st_opt_dlaa_force_edge_detect", 2										},
+	{ "st_opt_fxaa",				3											},
 	{ 0,							0											} 
 };
 
@@ -112,7 +112,6 @@ xr_token bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
@@ -121,7 +120,6 @@ xr_token tdetail_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
-//	{ "st_opt_parallax_occlusion_mapping",4										},
 	{ 0,							0											}
 };
 
