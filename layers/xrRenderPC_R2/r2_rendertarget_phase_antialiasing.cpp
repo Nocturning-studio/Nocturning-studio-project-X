@@ -32,6 +32,9 @@ void CRenderTarget::phase_antialiasing()
 	//Set pass
 	switch (ps_aa)
 	{
+	case 1: //None
+		RCache.set_Element(s_aa->E[0]);
+		break;
 	case 2: //DLAA
 		RCache.set_Element(s_aa->E[1]);
 		break;

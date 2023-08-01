@@ -39,7 +39,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		jitter(C);
 		C.r_End				();
 		break;
-	case 1:	// aa-edge-detection + AA :)
+	case 1:
 		C.r_Pass			("null",			"combine_2",		FALSE,	FALSE,	FALSE);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
@@ -48,7 +48,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
 		C.r_End				();
 		break;
-	case 2:	// non-AA
+	case 2:
 		C.r_Pass			("null",			"combine_2_distorted",	FALSE,	FALSE,	FALSE);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);

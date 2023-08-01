@@ -173,7 +173,6 @@ void	CRenderTarget::phase_combine()
 
 	if (1)
 	{
-		// 
 		struct v_aa {
 			Fvector4	p;
 			Fvector2	uv0;
@@ -205,7 +204,7 @@ void	CRenderTarget::phase_combine()
 		vDofKernel.mul(ps_r2_dof_kernel_size);
 
 		// Draw COLOR
-		RCache.set_Element(s_combine->E[bDistort ? 1 : 2]);	// look at blender_combine.cpp
+		RCache.set_Element(s_combine->E[bDistort ? 2 : 1]);	// look at blender_combine.cpp
 
 		Fvector3					dof;
 
@@ -220,16 +219,16 @@ void	CRenderTarget::phase_combine()
 		RCache.set_c("m_current", m_current);
 		RCache.set_c("m_previous", m_previous);
 		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
+
 		RCache.set_Geometry(g_aa_AA);
+
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 	RCache.set_Stencil(FALSE);
 
 	g_pGamePersistent->Environment().RenderFlares();	// lens-flares
 
-	if (ps_aa >= 2) {
-		phase_antialiasing();
-	}
+	phase_antialiasing();
 
 	// combine_3
 	if (1)
