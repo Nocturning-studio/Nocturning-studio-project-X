@@ -160,7 +160,8 @@ enum
 	R2FLAG_BLOOM							= (1 << 21),
 	R2FLAG_DOF								= (1 << 22),
 	R2FLAG_MBLUR							= (1 << 23),
-	R2FLAG_SEPIA							= (1 << 24)
+	R2FLAG_SEPIA							= (1 << 24),
+	R2FLAG_PHOTO_GRID						= (1 << 25)
 };
 
 enum

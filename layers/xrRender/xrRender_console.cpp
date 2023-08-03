@@ -585,6 +585,7 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
+	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_pp_flags, R2FLAG_PHOTO_GRID);
 
 	Fvector	tw_min, tw_max;
 	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);

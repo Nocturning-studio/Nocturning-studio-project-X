@@ -702,6 +702,7 @@ HRESULT	CRender::shader_compile(
 	char c_chroma_abb[32];
 	char c_sepia[32];
 	char c_bloom[32];
+	char c_photo_grid[32];
 
 	char c_soft_water[32];
 	char c_soft_particles[32];
@@ -992,6 +993,19 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(c_sepia);
+	++len;
+
+	int photo_grid = ps_r2_pp_flags.test(R2FLAG_PHOTO_GRID);
+	if (ps_r2_pp_flags.test(R2FLAG_PHOTO_GRID))
+	{
+		sprintf(c_photo_grid, "%d", photo_grid);
+		defines[def_it].Name = "USE_PHOTO_GRID";
+		defines[def_it].Definition = c_photo_grid;
+		def_it++;
+		strcat(sh_name, c_photo_grid);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(R2FLAG_PHOTO_GRID);
 	++len;
 
 	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);
