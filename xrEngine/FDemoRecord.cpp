@@ -265,6 +265,7 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 				pApp->pFontSystem->OutNext("ESC");
 				pApp->pFontSystem->OutNext("F11");
 				pApp->pFontSystem->OutNext("F12");
+				pApp->pFontSystem->OutNext("Mouse Wheel");
 				pApp->pFontSystem->SetAligment(CGameFont::alLeft);
 				pApp->pFontSystem->OutSetI(0, +.05f);
 				pApp->pFontSystem->OutNext("= Append Key");
@@ -272,6 +273,7 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 				pApp->pFontSystem->OutNext("= Quit");
 				pApp->pFontSystem->OutNext("= Level Map ScreenShot");
 				pApp->pFontSystem->OutNext("= ScreenShot");
+				pApp->pFontSystem->OutNext("= Depth of field");
 			}
 		}
 
@@ -395,9 +397,9 @@ void CDemoRecord::IR_OnMouseWheel(int direction)
 		g_pGamePersistent->GetCurrentDof(dof_params);
 
 		if (direction > 0)
-			dof_params.z += 5;
+			dof_params.z += 10;
 		else
-			dof_params.z < 5 ? dof_params.z -= 5 : dof_params.z = 5;
+			dof_params.z < 10 ? dof_params.z -= 10 : dof_params.z = 10;
 
 		g_pGamePersistent->SetBaseDof(dof_params);
 	}
