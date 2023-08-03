@@ -1143,7 +1143,7 @@ HRESULT	CRender::shader_compile(
 	if (ps_debug_frame_layers)
 	{
 		sprintf(c_debug_frame_layers, "%d", ps_debug_frame_layers);
-		defines[def_it].Name = "DEBUG_FRAME_LAYERS";
+		defines[def_it].Name = "DEBUG_VIEW_MODE";
 		defines[def_it].Definition = c_debug_frame_layers;
 		def_it++;
 		strcat(sh_name, c_debug_frame_layers);

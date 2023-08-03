@@ -29,6 +29,7 @@ xr_token							aa_token[] = {
 	{ "st_opt_dlaa",				1											},
 	{ "st_opt_dlaa_force_edge_detect", 2										},
 	{ "st_opt_fxaa",				3											},
+	{ "st_opt_fxaa_2x",				4											},
 	{ 0,							0											} 
 };
 
@@ -85,17 +86,15 @@ xr_token debug_frame_layers_token[] = {
 	{ "gbuffer_position",			2											},
 	{ "gbuffer_normal",				3											},
 	{ "gbuffer_gloss",				4											},
-	{ "gbuffer_hemisphere",			5											},
+	{ "gbuffer_lightmap_ao",		5											},
 	{ "gbuffer_material",			6											},
 	{ "gbuffer_split",				7											},
-	{ "accumulator_light",			8											},
-	{ "accumulator_specular",		9											},
+	{ "light_diffuse",				8											},
+	{ "light_specular",				9											},
 	{ "real_time_ao",				10											},
-	{ "real_time_ao_with_hemi",		11											},
-	{ "split_with_real_time_ao_and_without", 12									},
-	{ "split_with_hemisphere_and_without",	 13									},
-	{ "split_ao_blur_stages",				 14									},
-	{ "full_ao_with_light",			15											},
+	{ "real_time_ao_with_lightmap_ao",		11											},
+	{ "split_ao_blur_stages",		12											},
+	{ "full_light",					13											},
 	{ 0,							0											}
 };
 

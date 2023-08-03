@@ -25,7 +25,6 @@ public:
 	IBlender*					b_accum_reflected;
 	IBlender*					b_bloom;
 	IBlender*					b_ao;
-	IBlender*					b_aa;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
 #ifdef DEBUG
