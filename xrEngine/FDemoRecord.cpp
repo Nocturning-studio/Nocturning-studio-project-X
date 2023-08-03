@@ -13,6 +13,7 @@
 #include "xr_object.h"
 #include "render.h"
 #include "CustomHUD.h"
+#include "IGame_Persistent.h"
 
 CDemoRecord* xrDemoRecord = 0;
 
@@ -383,6 +384,25 @@ void CDemoRecord::IR_OnMouseHold(int btn)
 	switch (btn) {
 	case 0:			m_vT.z += 1.0f; break; // Move Backward
 	case 1:			m_vT.z -= 1.0f; break; // Move Forward
+	}
+}
+
+void CDemoRecord::IR_OnMouseWheel(int direction)
+{
+	Fvector3 dof_params;
+	if (g_pGamePersistent)
+	{
+		g_pGamePersistent->GetCurrentDof(dof_params);
+
+		if (direction > 0)
+		{
+			dof_params.z += 10;
+		}
+		else
+		{
+			dof_params.z -= 10;
+		}
+		g_pGamePersistent->SetEffectorDOF(dof_params);
 	}
 }
 

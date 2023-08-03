@@ -81,9 +81,9 @@ public:
 
 	virtual bool		CanBePaused				();
 
-			void		SetPickableEffectorDOF	(bool bSet);
-			void		SetEffectorDOF			(const Fvector& needed_dof);
-			void		RestoreEffectorDOF		();
+	virtual void		SetPickableEffectorDOF	(bool bSet);
+	virtual void		SetEffectorDOF			(const Fvector& needed_dof);
+	virtual void		RestoreEffectorDOF		();
 
 	virtual void		GetCurrentDof			(Fvector3& dof);
 	virtual void		SetBaseDof				(const Fvector3& dof);

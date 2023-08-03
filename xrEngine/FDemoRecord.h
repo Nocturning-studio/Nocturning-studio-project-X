@@ -56,6 +56,7 @@ public:
 	virtual void IR_OnKeyboardHold(int dik);
 	virtual void IR_OnMouseMove(int dx, int dy);
 	virtual void IR_OnMouseHold(int btn);
+	virtual void IR_OnMouseWheel(int direction);
 
 	virtual BOOL Overlapped() { return m_bOverlapped; }
 	virtual	BOOL Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar, float& fAspect);
