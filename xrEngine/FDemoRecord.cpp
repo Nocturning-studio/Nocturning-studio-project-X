@@ -395,14 +395,11 @@ void CDemoRecord::IR_OnMouseWheel(int direction)
 		g_pGamePersistent->GetCurrentDof(dof_params);
 
 		if (direction > 0)
-		{
-			dof_params.z += 10;
-		}
+			dof_params.z += 5;
 		else
-		{
-			dof_params.z -= 10;
-		}
-		g_pGamePersistent->SetEffectorDOF(dof_params);
+			dof_params.z < 5 ? dof_params.z -= 5 : dof_params.z = 5;
+
+		g_pGamePersistent->SetBaseDof(dof_params);
 	}
 }
 
