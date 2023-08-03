@@ -277,7 +277,7 @@ float		ps_r2_slight_fade = 1.f;				// 1.f
 
 //	x - min (0), y - focus (1.4), z - max (100)
 Fvector3	ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f);
-float		ps_r2_dof_sky = 30;				//	distance to sky
+float		ps_r2_dof_sky = 300;				//	distance to sky
 float		ps_r2_dof_kernel_size = 5.0f;						//	7.0f
 
 
