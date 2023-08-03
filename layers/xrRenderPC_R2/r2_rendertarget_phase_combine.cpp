@@ -325,7 +325,7 @@ void	CRenderTarget::phase_combine()
 	}
 
 	// combine_4
-	if (0)
+	if (1)
 	{
 		u_setrt(rt_Color, NULL, NULL, NULL);
 
