@@ -316,9 +316,7 @@ public:
 	// game
 	IC SGameMtlPair*	GetMaterialPair		(u16 idx0, u16 idx1)
     {
-        if(!((idx0<material_count)&&(idx1<material_count)));
-        Msg("!Material has no pair");
-
+        VERIFY((idx0<material_count)&&(idx1<material_count));
         return material_pairs_rt[idx1*material_count+idx0];
     }
 #endif
