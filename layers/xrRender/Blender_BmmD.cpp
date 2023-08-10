@@ -164,11 +164,11 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	case SE_R2_NORMAL_HQ: 		// deffer
 		//uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
 		extern u32 ps_terrain_bump_mode;
-		if ((ps_bump_mode == 1) || (r2_sun_static))
+		if ((ps_terrain_bump_mode == 1) || (r2_sun_static))
 			C.r_Pass("deffer_terrain", "deffer_terrain", TRUE);
-		else if ((ps_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+		else if ((ps_terrain_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
 			C.r_Pass("deffer_terrain", "deffer_terrain_parallax", TRUE);
-		if ((ps_bump_mode == 3) && (r2_advanced_pp))
+		if ((ps_terrain_bump_mode == 3) && (r2_advanced_pp))
 			C.r_Pass("deffer_terrain", "deffer_terrain_steep_parallax", TRUE);
 
 		C.r_Sampler		("s_mask",	mask);
