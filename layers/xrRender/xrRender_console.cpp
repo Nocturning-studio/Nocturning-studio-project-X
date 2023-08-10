@@ -226,7 +226,7 @@ Flags32 ps_r2_pp_flags =
 Flags32		ps_r2_ls_flags_ext = { R2FLAGEXT_AO_BLUR };
 
 float		ps_r2_df_parallax_h = 0.02f;
-float		ps_r2_df_parallax_range = 75.f;
+float		ps_r2_detalization_distance = 75.f;
 float		ps_r2_tonemap_middlegray = 1.f;			// r2-only
 float		ps_r2_tonemap_adaptation = 1.f;				// r2-only
 float		ps_r2_tonemap_low_lum = 0.0001f;			// r2-only
@@ -735,6 +735,8 @@ void		xrRender_initconsole()
 	CMD4(CCC_Integer, "r2_gi_photons", &ps_r2_GI_photons, 8, 256);
 	CMD4(CCC_Float, "r2_gi_refl", &ps_r2_GI_refl, EPS_L, 0.99f);
 
+	CMD4(CCC_Float, "r2_detalization_distance", &ps_r2_detalization_distance, 5.0f, 175.0f);
+
 	CMD4(CCC_Integer, "r2_wait_sleep", &ps_r2_wait_sleep, 0, 1);
 
 #ifdef DEBUG
@@ -750,7 +752,6 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
 
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
-	//	CMD4(CCC_Float,		"r2_parallax_range",	&ps_r2_df_parallax_range,	5.0f,	175.0f	);
 
 	CMD4(CCC_Float, "r2_slight_fade", &ps_r2_slight_fade, .02f, 2.f);
 
