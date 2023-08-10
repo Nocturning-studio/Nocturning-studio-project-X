@@ -56,8 +56,8 @@ void	CRenderTarget::phase_combine()
 		m_previous.mul(m_saved_viewproj, m_invview);
 		m_current.set(Device.mProject);
 		m_saved_viewproj.set(Device.mFullTransform);
-		float	scale = ps_r2_mblur / 2.f;
-		m_blur_scale.set(scale, -scale);// .div(12.f);
+		float scale = ps_r2_mblur / 2.f;
+		m_blur_scale.set(scale, -scale);
 	}
 
 	// Draw full-screen quad textured with our scene image
@@ -199,23 +199,9 @@ void	CRenderTarget::phase_combine()
 		pv->p.set(float(_w + EPS), EPS, EPS, 1.f); pv->uv0.set(p1.x, p0.y); pv->uv1.set(p1.x - ddw, p0.y - ddh); pv->uv2.set(p1.x + ddw, p0.y + ddh); pv->uv3.set(p1.x + ddw, p0.y - ddh); pv->uv4.set(p1.x - ddw, p0.y + ddh); pv->uv5.set(p1.x - ddw, p0.y, p0.y, p1.x + ddw); pv->uv6.set(p1.x, p0.y - ddh, p0.y + ddh, p1.x); pv++;
 		RCache.Vertex.Unlock(4, g_aa_AA->vb_stride);
 
-		Fvector2	vDofKernel;
-		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
-		vDofKernel.mul(ps_r2_dof_kernel_size);
-
 		// Draw COLOR
 		RCache.set_Element(s_combine->E[bDistort ? 2 : 1]);	// look at blender_combine.cpp
 
-		Fvector3					dof;
-
-		if (ps_r2_pp_flags.test(R2FLAG_DOF))
-			g_pGamePersistent->GetCurrentDof(dof);
-
-		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
-		RCache.set_c("e_barrier", ps_r2_aa_barier.x, ps_r2_aa_barier.y, ps_r2_aa_barier.z, 0);
-		RCache.set_c("e_weights", ps_r2_aa_weight.x, ps_r2_aa_weight.y, ps_r2_aa_weight.z, 0);
-		RCache.set_c("e_kernel", ps_r2_aa_kernel, ps_r2_aa_kernel, ps_r2_aa_kernel, 0);
 		RCache.set_c("m_current", m_current);
 		RCache.set_c("m_previous", m_previous);
 		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
@@ -357,11 +343,21 @@ void	CRenderTarget::phase_combine()
 		//Set pass
 		RCache.set_Element(s_combine->E[5]);
 
+		Fvector3 dof;
+		g_pGamePersistent->GetCurrentDof(dof);
+
+		Fvector2 vDofKernel;
+		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
+		vDofKernel.mul(ps_r2_dof_kernel_size);
+
 		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
 		Fvector4 SepiaParams;
 		Fvector4 VignettePower;
 		SepiaParams.set(envdesc->m_SepiaColor.x, envdesc->m_SepiaColor.y, envdesc->m_SepiaColor.z, envdesc->m_SepiaPower);
 		VignettePower.set(envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower);
+
+		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
+		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 
 		RCache.set_c("sepia_params", SepiaParams);
 		RCache.set_c("vignette_power", VignettePower);
