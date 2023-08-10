@@ -1,18 +1,14 @@
 #include "stdafx.h"
 #include "EffectorBobbing.h"
 
-
 #include "actor.h"
 #include "actor_defs.h"
 
-
 #define BOBBING_SECT "bobbing_effector"
 
-#define CROUCH_FACTOR	0.75f
+#define CROUCH_FACTOR	0.5f
+#define ZOOM_FACTOR		0.5f
 #define SPEED_REMINDER	5.f 
-
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -42,8 +38,7 @@ void CEffectorBobbing::SetState(u32 mstate, bool limping, bool ZoomMode){
 	m_bZoomMode		= ZoomMode;
 }
 
-
-BOOL CEffectorBobbing::Process		(Fvector &p, Fvector &d, Fvector &n, float& /**fFov/**/, float& /**fFar/**/, float& /**fAspect/**/)
+BOOL CEffectorBobbing::Process		(Fvector &p, Fvector &d, Fvector &n, float& fFov, float& fFar, float& fAspect)
 {
 	fTime			+= Device.fTimeDelta;
 	if (dwMState&ACTOR_DEFS::mcAnyMove){
@@ -63,7 +58,13 @@ BOOL CEffectorBobbing::Process		(Fvector &p, Fvector &d, Fvector &n, float& /**f
 		
 		// apply footstep bobbing effect
 		Fvector dangle;
-		float k		= ((dwMState& ACTOR_DEFS::mcCrouch)?CROUCH_FACTOR:1.f);
+
+		float k = 1.f; 
+
+		if(dwMState & ACTOR_DEFS::mcCrouch)
+			k *= CROUCH_FACTOR;
+		if (m_bZoomMode)
+			k *= ZOOM_FACTOR;
 
 		float A, ST;
 
@@ -79,8 +80,8 @@ BOOL CEffectorBobbing::Process		(Fvector &p, Fvector &d, Fvector &n, float& /**f
 		}
 		else
 		{
-			A	= m_fAmplitudeWalk*k;
-			ST	= m_fSpeedWalk*fTime*k;
+			A = m_fAmplitudeWalk * k;
+			ST = m_fSpeedWalk * fTime * k;
 		}
 	
 		float _sinA	= _abs(_sin(ST)*A)*fReminderFactor;
