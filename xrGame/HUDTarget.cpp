@@ -235,6 +235,7 @@ void CHUDTarget::Render()
 
 	//отрендерить кружочек или крестик
 	if(!m_bShowCrosshair){
+/*
 		// actual rendering
 		u32			vOffset;
 		FVF::TL*	pv		= (FVF::TL*)RCache.Vertex.Lock(4,hGeom.stride(),vOffset);
@@ -264,6 +265,7 @@ void CHUDTarget::Render()
 		RCache.set_Shader	(hShader);
 		RCache.set_Geometry	(hGeom);
 		RCache.Render		(D3DPT_TRIANGLELIST,vOffset,0,4,0,2);
+*/
 	}else{
 		//отрендерить прицел
 		HUDCrosshair.cross_color	= C;

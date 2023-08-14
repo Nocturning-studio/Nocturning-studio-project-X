@@ -15,12 +15,17 @@
 #include "UI/UIGameTutorial.h"
 #include "string_table.h"
 #include "object_broker.h"
+#include "../xrEngine/xr_ioc_cmd.h"
 
 using namespace luabind;
 
-
 CUISequencer* g_tutorial = NULL;
 CUISequencer* g_tutorial2 = NULL;
+
+bool tutorial_is_allowed()
+{
+	return ps_game_ls_flags.test(TUTORIALS_ENABLE);
+}
 
 void start_tutorial(LPCSTR name)
 {
@@ -113,6 +118,7 @@ void game_sv_GameState::script_register(lua_State *L)
 	.def("getRP",				&game_sv_GameState::getRP)
 	.def("getRPcount",			&game_sv_GameState::getRPcount),
 
+	def("tutorial_is_allowed",  &tutorial_is_allowed),
 	def("start_tutorial",		&start_tutorial),
 	def("has_active_tutorial",	&has_active_tutotial),
 	def("translate_string",		&translate_string)

@@ -17,6 +17,7 @@
 
 extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
 extern ENGINE_API Flags32 ps_weather_ls_flags = { WEATHER_EFFECTS };
+extern ENGINE_API Flags32 ps_game_ls_flags = { INTRO_ENABLE | TUTORIALS_ENABLE };
 
 extern xr_token* vid_mode_token;
 
@@ -682,7 +683,8 @@ void CCC_Register()
 	CMD2(CCC_Float, "snd_volume_eff", &psSoundVEffects);
 	CMD2(CCC_Float, "snd_volume_music", &psSoundVMusic);
 	CMD2(CCC_Float, "snd_volume_weapon_shooting", &psSoundVWeaponShooting);
-	CMD2(CCC_Float, "snd_volume_master", &psSoundVFactor);
+	CMD2(CCC_Float, "snd_volume_master", &psSoundVMaster);
+	CMD2(CCC_Float, "snd_volume_ambient", &psSoundVAmbient);
 	CMD1(CCC_SND_Restart, "snd_restart");
 	CMD3(CCC_Mask, "snd_acceleration", &psSoundFlags, ss_Hardware);
 	CMD3(CCC_Mask, "snd_efx", &psSoundFlags, ss_EAX);
@@ -715,6 +717,9 @@ void CCC_Register()
 #endif
 
 	CMD3(CCC_Mask, "weather_effects", &ps_weather_ls_flags, WEATHER_EFFECTS);
+
+	CMD3(CCC_Mask, "game_intro_enable", &ps_game_ls_flags, INTRO_ENABLE);
+	CMD3(CCC_Mask, "game_tutorials_enable", &ps_game_ls_flags, TUTORIALS_ENABLE);
 
 	CMD1(CCC_r2, "renderer");
 	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);

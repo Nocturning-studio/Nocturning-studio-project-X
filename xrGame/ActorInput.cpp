@@ -150,11 +150,14 @@ void CActor::IR_OnKeyboardPress(int cmd)
 				if(itm)
 				{
 					inventory().Eat				(itm);
-					SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
-					_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
-					string1024					str;
-					strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->Name());
-					_s->wnd()->SetText			(str);
+					if (psHUD_Flags.test(HUD_DRAW))
+					{
+						SDrawStaticStruct* _s = HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
+						_s->m_endTime = Device.fTimeGlobal + 3.0f;// 3sec
+						string1024					str;
+						strconcat(sizeof(str), str, *CStringTable().translate("st_item_used"), ": ", itm->Name());
+						_s->wnd()->SetText(str);
+					}
 				}
 			}
 		}break;

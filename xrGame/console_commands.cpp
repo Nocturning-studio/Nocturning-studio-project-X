@@ -450,11 +450,14 @@ public:
 #ifdef DEBUG
 		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("game_saved", true);
-		_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
-		string_path					save_name;
-		strconcat					(sizeof(save_name),save_name,*CStringTable().translate("st_game_saved"),": ", S);
-		_s->wnd()->SetText			(save_name);
+		if (psHUD_Flags.test(HUD_DRAW))
+		{
+			SDrawStaticStruct* _s = HUD().GetUI()->UIGame()->AddCustomStatic("game_saved", true);
+			_s->m_endTime = Device.fTimeGlobal + 3.0f;// 3sec
+			string_path					save_name;
+			strconcat(sizeof(save_name), save_name, *CStringTable().translate("st_game_saved"), ": ", S);
+			_s->wnd()->SetText(save_name);
+		}
 
 		strcat					(S,".dds");
 		FS.update_path			(S1,"$game_saves$",S);

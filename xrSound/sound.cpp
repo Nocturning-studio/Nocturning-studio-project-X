@@ -16,6 +16,7 @@ void CSound_manager_interface::_create(u64 window)
 	{
 		psSoundVEffects = 0.0f;
 		psSoundVFactor = 0.0f;
+		psSoundVMaster = 0.0f;
 		psSoundVMusic = 0.0f;
 		//SoundRender->bPresent = FALSE;
 		//return;

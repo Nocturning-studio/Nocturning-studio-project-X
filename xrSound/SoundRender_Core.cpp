@@ -19,9 +19,11 @@ float psSoundRolloff = 0.75f;
 u32 psSoundModel = 0;
 float psSoundVEffects = 1.0f;
 float psSoundVFactor = 1.0f;
+float psSoundVMaster = 1.0f;
 
 float psSoundVMusic = 0.7f;
 float psSoundVWeaponShooting = 0.7f;
+float psSoundVAmbient = 1.0f;
 int psSoundCacheSizeMB = 16;
 
 CSoundRender_Core *SoundRender = 0;

@@ -14,6 +14,13 @@ enum
 	WEATHER_EFFECTS = (1ul << 1ul)
 };
 
+extern ENGINE_API Flags32 ps_game_ls_flags;
+enum
+{
+	INTRO_ENABLE = (1ul << 1ul),
+	TUTORIALS_ENABLE = (1ul << 2ul)
+};
+
 #define CMD0(cls)					{ static cls x##cls();				Console->AddCommand(&x##cls);}
 #define CMD1(cls,p1)				{ static cls x##cls(p1);			Console->AddCommand(&x##cls);}
 #define CMD2(cls,p1,p2)				{ static cls x##cls(p1,p2);			Console->AddCommand(&x##cls);}
