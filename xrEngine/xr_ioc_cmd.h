@@ -14,6 +14,12 @@ enum
 	WEATHER_EFFECTS = (1ul << 1ul)
 };
 
+extern ENGINE_API Flags32 ps_effectors_ls_flags;
+enum
+{
+	VIEW_BOBBING_ENABLED = (1ul << 1ul)
+};
+
 extern ENGINE_API Flags32 ps_game_ls_flags;
 enum
 {

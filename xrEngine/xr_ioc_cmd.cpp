@@ -17,6 +17,7 @@
 
 extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
 extern ENGINE_API Flags32 ps_weather_ls_flags = { WEATHER_EFFECTS };
+extern ENGINE_API Flags32 ps_effectors_ls_flags = { VIEW_BOBBING_ENABLED };
 extern ENGINE_API Flags32 ps_game_ls_flags = { INTRO_ENABLE | TUTORIALS_ENABLE };
 
 extern xr_token* vid_mode_token;
@@ -710,6 +711,7 @@ void CCC_Register()
 	// Camera
 	CMD2(CCC_Float, "cam_inert", &psCamInert);
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
+	CMD3(CCC_Mask, "view_bobbing_enable", &ps_effectors_ls_flags, VIEW_BOBBING_ENABLED);
 	CMD3(CCC_Mask, "cam_psp", &ps_psp_ls_flags, PSP_VIEW);
 
 #ifndef DEDICATED_SERVER

@@ -1086,12 +1086,15 @@ void CActor::shedule_Update	(u32 DT)
 	inherited::shedule_Update	(DT);
 
 	//эффектор включаемый при ходьбе
-	if (!pCamBobbing)
+	if (ps_effectors_ls_flags.test(VIEW_BOBBING_ENABLED))
 	{
-		pCamBobbing = xr_new<CEffectorBobbing>	();
-		Cameras().AddCamEffector			(pCamBobbing);
+		if (!pCamBobbing)
+		{
+			pCamBobbing = xr_new<CEffectorBobbing>();
+			Cameras().AddCamEffector(pCamBobbing);
+		}
+		pCamBobbing->SetState(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 	}
-	pCamBobbing->SetState						(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
 	//звук тяжелого дыхания при уталости и хромании
 	if(this==Level().CurrentControlEntity() && !g_dedicated_server )
