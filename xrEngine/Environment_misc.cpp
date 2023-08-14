@@ -25,6 +25,7 @@ bool	CEnvModifier::load(IReader* fs)
 	far_plane = fs->r_float();	// 4
 	fs->r_fvector3(fog_color);		// 4*3=12
 	fog_density = fs->r_float();	// 4
+	height_fog_intensity = fs->r_float();
 	fs->r_fvector3(ambient);			// 4*3=12
 	fs->r_fvector3(sky_color);		// 4*3=12
 	fs->r_fvector3(hemi_color);		// 4*3=12
@@ -57,7 +58,11 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		fog_density += M.fog_density * _power;
 		use_flags.set(eFogDensity, TRUE);
 	}
-
+	if (M.use_flags.test(eHeightFogDensity))
+	{
+		height_fog_intensity += M.height_fog_intensity * _power;
+		use_flags.set(eHeightFogDensity, TRUE);
+	}
 	if (M.use_flags.test(eAmbientColor))
 	{
 		ambient.mad(M.ambient, _power);
@@ -216,6 +221,7 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 
 	fog_color.set(1, 1, 1);
 	fog_density = 0.0f;
+	height_fog_intensity = 0.0001f;
 	fog_distance = 400.0f;
 
 	rain_density = 0.0f;
@@ -278,6 +284,12 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	fog_color = config.r_fvector3(m_identifier.c_str(), "fog_color");
 	fog_density = config.r_float(m_identifier.c_str(), "fog_density");
 	fog_distance = config.r_float(m_identifier.c_str(), "fog_distance");
+
+	if (config.line_exist(m_identifier.c_str(), "height_fog_intensity"))
+		height_fog_intensity = config.r_float(m_identifier.c_str(), "height_fog_intensity");
+	else
+		height_fog_intensity = 0.0001f;
+
 	rain_density = config.r_float(m_identifier.c_str(), "rain_density");		clamp(rain_density, 0.f, 1.f);
 	rain_color = config.r_fvector3(m_identifier.c_str(), "rain_color");
 	wind_velocity = config.r_float(m_identifier.c_str(), "wind_velocity");
@@ -442,6 +454,13 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	fog_distance = (fi * A.fog_distance + f * B.fog_distance);
 	fog_near = (1.0f - fog_density) * 0.85f * fog_distance;
 	fog_far = 0.99f * fog_distance;
+
+	height_fog_intensity = (fi * A.height_fog_intensity + f * B.height_fog_intensity);
+	if (Mdf.use_flags.test(eHeightFogDensity))
+	{
+		height_fog_intensity += Mdf.height_fog_intensity;
+		height_fog_intensity *= modif_power;
+	}
 
 	rain_density = fi * A.rain_density + f * B.rain_density;
 	rain_color.lerp(A.rain_color, B.rain_color, f);

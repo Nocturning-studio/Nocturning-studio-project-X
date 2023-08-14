@@ -47,8 +47,11 @@ public:
 	float				power;
 
 	float				far_plane;
+
 	Fvector3			fog_color;
 	float				fog_density;
+	float				height_fog_intensity;
+
 	Fvector3			ambient;
 	Fvector3			sky_color;
 	Fvector3			hemi_color;
@@ -147,6 +150,7 @@ public:
 	Fvector3			fog_color;
 	float				fog_density;
 	float				fog_distance;
+	float				height_fog_intensity;
 
 	float				rain_density;
 	Fvector3			rain_color;

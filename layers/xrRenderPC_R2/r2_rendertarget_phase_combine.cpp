@@ -442,7 +442,7 @@ void CRenderTarget::phase_combine_volumetric()
 		Fvector4	envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
 
 
-		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z,		0 };
+		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z, 0 };
 		envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.z *= 2 * ps_r2_sun_lumscale_hemi;
