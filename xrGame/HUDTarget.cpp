@@ -146,12 +146,12 @@ void CHUDTarget::Render()
 	F->SetAligment		(CGameFont::alCenter);
 	F->OutSetI			(0.f,0.05f);
 
-	if (psHUD_Flags.test(HUD_CROSSHAIR_DIST)){
+	if (psHUD_Flags.test(HUD_CROSSHAIR_DIST) && psHUD_Flags.test(HUD_DRAW)){
 		F->SetColor		(C);
 		F->OutNext		("%4.1f",RQ.range);
 	}
 
-	if (psHUD_Flags.test(HUD_INFO)){ 
+	if (psHUD_Flags.test(HUD_INFO) && psHUD_Flags.test(HUD_DRAW)){
 		if (RQ.O){
 			CEntityAlive*	E		= smart_cast<CEntityAlive*>	(RQ.O);
 			CEntityAlive*	pCurEnt = smart_cast<CEntityAlive*>	(Level().CurrentEntity());
