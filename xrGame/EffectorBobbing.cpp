@@ -9,7 +9,7 @@
 
 #define GLOBAL_VIEW_BOBBING_FACTOR 0.75f
 #define SPRINT_FACTOR   1.1f
-#define STRAFE_FACTOR   0.9f
+#define STRAFE_FACTOR   0.75f
 #define CROUCH_FACTOR	0.5f
 #define ZOOM_FACTOR		0.5f
 
