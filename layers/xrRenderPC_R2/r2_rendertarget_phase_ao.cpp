@@ -6,9 +6,6 @@ void CRenderTarget::phase_create_ao()
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
-	Fmatrix	m_v2w;			
-	m_v2w.invert(Device.mView);
-
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
@@ -58,9 +55,6 @@ void CRenderTarget::phase_create_ao()
 
 	//Set geometry
 	RCache.set_Geometry(g_combine);
-
-	//Set constants
-	RCache.set_c("m_v2w", m_v2w);
 
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);

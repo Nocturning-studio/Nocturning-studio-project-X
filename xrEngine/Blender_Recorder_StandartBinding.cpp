@@ -303,6 +303,16 @@ static class cl_screen_params : public R_constant_setup
 	}
 } binder_screen_params;
 
+static class cl_v2w final : public R_constant_setup
+{
+	void setup(R_constant* C) override
+	{
+		Fmatrix	m_v2w;
+		m_v2w.invert(Device.mView);
+		RCache.set_c(C, m_v2w);
+	}
+} binder_v2w;
+
 // Standart constant-binding
 void	CBlender_Compile::SetMapping()
 {
@@ -314,6 +324,7 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("m_WV", &binder_wv);
 	r_Constant("m_VP", &binder_vp);
 	r_Constant("m_WVP", &binder_wvp);
+	r_Constant("m_v2w", &binder_v2w);
 
 	r_Constant("m_xform_v", &tree_binder_m_xform_v);
 	r_Constant("m_xform", &tree_binder_m_xform);

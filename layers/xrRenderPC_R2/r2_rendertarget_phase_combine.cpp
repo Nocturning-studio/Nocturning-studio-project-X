@@ -64,7 +64,6 @@ void	CRenderTarget::phase_combine()
 	if (!_menu_pp)
 	{
 		// Compute params
-		Fmatrix		m_v2w;			m_v2w.invert(Device.mView);
 		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
 		const float minamb = 0.001f;
 		Fvector4	ambclr = { _max(envdesc->ambient.x * 2,minamb),	_max(envdesc->ambient.y * 2,minamb),			_max(envdesc->ambient.z * 2,minamb),	0 };
@@ -113,7 +112,6 @@ void	CRenderTarget::phase_combine()
 		RCache.set_Element(s_combine->E[0]);
 		RCache.set_Geometry(g_combine_VP);
 
-		RCache.set_c("m_v2w", m_v2w);
 		RCache.set_c("L_ambient", ambclr);
 
 		RCache.set_c("Ldynamic_color", sunclr);
@@ -435,7 +433,6 @@ void CRenderTarget::phase_combine_volumetric()
 	RCache.set_ColorWriteEnable(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 	{
 		// Compute params
-		Fmatrix		m_v2w;			m_v2w.invert(Device.mView);
 		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
 		const float minamb = 0.001f;
 		Fvector4	ambclr = { _max(envdesc->ambient.x * 2,minamb),	_max(envdesc->ambient.y * 2,minamb),			_max(envdesc->ambient.z * 2,minamb),	0 };
@@ -495,7 +492,6 @@ void CRenderTarget::phase_combine_volumetric()
 		RCache.set_Element(s_combine_volumetric->E[0]);
 		RCache.set_Geometry(g_combine_VP);
 
-		RCache.set_c("m_v2w", m_v2w);
 		RCache.set_c("L_ambient", ambclr);
 
 		RCache.set_c("Ldynamic_color", sunclr);
