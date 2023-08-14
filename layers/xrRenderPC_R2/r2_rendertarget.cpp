@@ -323,7 +323,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//AO
-	if (ps_ao >= 0 && RImplementation.o.advancedpp)
+	if (ps_ao >= 1 && RImplementation.o.advancedpp)
 	{
 		u32 Weight = Device.dwWidth, 
 			Height = Device.dwHeight;
@@ -333,8 +333,8 @@ CRenderTarget::CRenderTarget		()
 
 		if (ps_ao == 1)
 		{
-			BaseAOTexWeight /= 2;
-			BaseAOTexHeight /= 2;
+			BaseAOTexWeight *= 0.25f;
+			BaseAOTexHeight *= 0.25f;
 		}
 
 		//Create rendertarget
