@@ -24,6 +24,7 @@ void	CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.PassSET_ZB		(TRUE,FALSE,TRUE	);	// force inverted Z-Buffer
 		C.r_Sampler_rtf		("s_position",		r2_RT_P			);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N			);
+		C.r_Sampler_rtf		("s_diffuse",		r2_RT_albedo	);
 		C.r_Sampler_clw		("s_material",		r2_material		);
 		C.r_Sampler_rtf		("s_accumulator",	r2_RT_accum		);
 		C.r_Sampler			("s_lmap",			r2_sunmask		);
@@ -48,6 +49,7 @@ void	CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Pass			("accum_volume",			"accum_sun_cascade_far",	false,	TRUE,	FALSE,blend,D3DBLEND_ONE,dest);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P			);
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N			);
+		C.r_Sampler_rtf		("s_diffuse",		r2_RT_albedo	);
 		C.r_Sampler_clw		("s_material",		r2_material		);
 		C.r_Sampler_rtf		("s_accumulator",	r2_RT_accum		);
 		C.r_Sampler			("s_lmap",			r2_sunmask		);
