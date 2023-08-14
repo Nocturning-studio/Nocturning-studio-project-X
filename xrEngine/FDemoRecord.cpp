@@ -16,7 +16,10 @@
 #include "IGame_Persistent.h"
 
 CDemoRecord* xrDemoRecord = 0;
-
+//////////////////////////////////////////////////////////////////////
+#ifdef DEBUG
+#define DEBUG_DEMO_RECORD
+#endif
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -47,6 +50,11 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 		m_vAngularVelocity.set(0, 0, 0);
 		iCount = 0;
 
+		m_fFov = Device.fFOV;
+
+		if (g_pGamePersistent)
+			g_pGamePersistent->GetCurrentDof(m_vGlobalDepthOfFieldParameters);
+
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
 		m_bMakeCubeMap = FALSE;
@@ -72,7 +80,11 @@ CDemoRecord::~CDemoRecord()
 {
 	if (file) {
 		IR_Release();	// release input
+
 		FS.w_close(file);
+
+		if(g_pGamePersistent)
+			g_pGamePersistent->SetBaseDof(m_vGlobalDepthOfFieldParameters);
 	}
 }
 
@@ -230,6 +242,41 @@ void CDemoRecord::MakeCubeMapFace(Fvector& D, Fvector& N)
 	m_Stage++;
 }
 
+void CDemoRecord::ShowInputInfo()
+{
+	if (psHUD_Flags.test(HUD_DRAW)) {
+		if ((Device.dwTimeGlobal / 750) % 3 != 0) {
+			//pApp->pFontSystem->SetSizeI	(0.02f);
+			pApp->pFontSystem->SetColor(color_rgba(255, 0, 0, 255));
+			pApp->pFontSystem->SetAligment(CGameFont::alCenter);
+			pApp->pFontSystem->OutSetI(0, -.05f);
+
+			pApp->pFontSystem->OutNext("%s", "RECORDING");
+			pApp->pFontSystem->OutNext("Key frames count: %d", iCount);
+
+			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
+			pApp->pFontSystem->OutSetI(-0.2f, +.05f);
+			pApp->pFontSystem->OutNext("SPACE");
+			pApp->pFontSystem->OutNext("BACK");
+			pApp->pFontSystem->OutNext("ESC");
+			pApp->pFontSystem->OutNext("F11");
+			pApp->pFontSystem->OutNext("F12");
+			pApp->pFontSystem->OutNext("G + Mouse Wheel");
+			pApp->pFontSystem->OutNext("F + Mouse Wheel");
+
+			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
+			pApp->pFontSystem->OutSetI(0, +.05f);
+			pApp->pFontSystem->OutNext("= Append Key");
+			pApp->pFontSystem->OutNext("= Cube Map");
+			pApp->pFontSystem->OutNext("= Quit");
+			pApp->pFontSystem->OutNext("= Level Map ScreenShot");
+			pApp->pFontSystem->OutNext("= ScreenShot");
+			pApp->pFontSystem->OutNext("= Depth of field");
+			pApp->pFontSystem->OutNext("= Field of view");
+		}
+	}
+}
+
 BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float& fFar, float& fAspect)
 {
 	if (0 == file)	return TRUE;
@@ -250,32 +297,7 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 		fAspect = 1.f;
 	}
 	else {
-		if (psHUD_Flags.test(HUD_DRAW)) {
-			if ((Device.dwTimeGlobal / 750) % 3 != 0) {
-				//				pApp->pFontSystem->SetSizeI	(0.02f);
-				pApp->pFontSystem->SetColor(color_rgba(255, 0, 0, 255));
-				pApp->pFontSystem->SetAligment(CGameFont::alCenter);
-				pApp->pFontSystem->OutSetI(0, -.05f);
-				pApp->pFontSystem->OutNext("%s", "RECORDING");
-				pApp->pFontSystem->OutNext("Key frames count: %d", iCount);
-				pApp->pFontSystem->SetAligment(CGameFont::alLeft);
-				pApp->pFontSystem->OutSetI(-0.2f, +.05f);
-				pApp->pFontSystem->OutNext("SPACE");
-				pApp->pFontSystem->OutNext("BACK");
-				pApp->pFontSystem->OutNext("ESC");
-				pApp->pFontSystem->OutNext("F11");
-				pApp->pFontSystem->OutNext("F12");
-				pApp->pFontSystem->OutNext("Mouse Wheel");
-				pApp->pFontSystem->SetAligment(CGameFont::alLeft);
-				pApp->pFontSystem->OutSetI(0, +.05f);
-				pApp->pFontSystem->OutNext("= Append Key");
-				pApp->pFontSystem->OutNext("= Cube Map");
-				pApp->pFontSystem->OutNext("= Quit");
-				pApp->pFontSystem->OutNext("= Level Map ScreenShot");
-				pApp->pFontSystem->OutNext("= ScreenShot");
-				pApp->pFontSystem->OutNext("= Depth of field");
-			}
-		}
+		ShowInputInfo();
 
 		m_vVelocity.lerp(m_vVelocity, m_vT, 0.3f);
 		m_vAngularVelocity.lerp(m_vAngularVelocity, m_vR, 0.3f);
@@ -321,6 +343,8 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
+
+		fFov = m_fFov;
 	}
 	return TRUE;
 }
@@ -389,19 +413,107 @@ void CDemoRecord::IR_OnMouseHold(int btn)
 	}
 }
 
-void CDemoRecord::IR_OnMouseWheel(int direction)
+void CDemoRecord::ChangeDepthOfField(int direction)
 {
-	Fvector3 dof_params;
+	Fvector3 dof_params_old;
+	Fvector3 dof_params_actual;
+
 	if (g_pGamePersistent)
 	{
-		g_pGamePersistent->GetCurrentDof(dof_params);
+		g_pGamePersistent->GetCurrentDof(dof_params_old);
+
+		dof_params_actual = dof_params_old;
 
 		if (direction > 0)
-			dof_params.z += 10;
+			dof_params_actual.z = dof_params_old.z + 10.0f;
 		else
-			dof_params.z < 10 ? dof_params.z -= 10 : dof_params.z = 10;
+			dof_params_actual.z = dof_params_old.z - 10.0f;
 
-		g_pGamePersistent->SetBaseDof(dof_params);
+		if (dof_params_actual.z <= 2.999f)
+		{
+#ifdef DEBUG_DEMO_RECORD
+			Msg("CDemoRecord::ChangeDepthOfField - far parameter < 3");
+#endif
+			dof_params_actual.z = 3.0f;
+		}
+
+		g_pGamePersistent->SetBaseDof(dof_params_actual);
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::ChangeDepthOfField - function successfully change depth of field parameters");
+		Msg("CDemoRecord::ChangeDepthOfField - depth of field parameters old: near = %d, focus = %d, far = %d", dof_params_old.x, dof_params_old.y, dof_params_old.z);
+		Msg("CDemoRecord::ChangeDepthOfField - depth of field parameters actual: near = %d, focus = %d, far = %d", dof_params_actual.x, dof_params_actual.y, dof_params_actual.z);
+#endif
+	}
+#ifdef DEBUG_DEMO_RECORD
+	else
+	{
+		Msg("CDemoRecord::ChangeDepthOfField - function was called before create IGame_Persistent. Going next");
+	}
+#endif
+}
+
+void CDemoRecord::ChangeFieldOfView(int direction)
+{
+	float m_fFov_old = Device.fFOV;
+	float m_fFov_actual;
+
+	if (direction > 0)
+		m_fFov_actual = m_fFov_old + 1.0f;
+	else
+		m_fFov_actual = m_fFov_old - 1.0f;
+
+	if (m_fFov_actual <= 2.28f)
+	{
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::ChangeFieldOfView - field of view parameter < 2.29 degrees. Set 2.29 degrees");
+#endif
+		m_fFov_actual = 2.28f;
+	}
+	else if (m_fFov_actual >= 113.001f)
+	{
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::ChangeFieldOfView - field of view parameter > 113 degrees. Set 113 degrees");
+#endif
+		m_fFov_actual = 113.0f;
+	}
+
+	if (m_fFov < m_fFov_actual)
+	{
+		while (m_fFov < m_fFov_actual)
+		{
+			m_fFov += 0.00001f;
+		}
+	}
+
+	if (m_fFov > m_fFov_actual)
+	{
+		while (m_fFov > m_fFov_actual)
+		{
+			m_fFov -= 0.00001f;
+		}
+	}
+#ifdef DEBUG_DEMO_RECORD
+	Msg("CDemoRecord::ChangeFieldOfView - function successfully change field of view parameter");
+	Msg("CDemoRecord::ChangeFieldOfView - field of view value old: %d", m_fFov_old);
+	Msg("CDemoRecord::ChangeFieldOfView - field of view value actual: %d", m_fFov_actual);
+#endif
+}
+
+void CDemoRecord::IR_OnMouseWheel(int direction)
+{
+	if (IR_GetKeyState(DIK_G))
+	{
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::IR_OnMouseWheel - Whell mode is DepthOfFieldChanger");
+#endif
+		ChangeDepthOfField(direction);
+	}
+	else if (IR_GetKeyState(DIK_F))
+	{
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::IR_OnMouseWheel - Whell mode is FieldOfViewChanger");
+#endif
+		ChangeFieldOfView(direction);
 	}
 }
 

@@ -16,7 +16,7 @@ class ENGINE_API CDemoRecord :
 {
 private:
 	int			iCount;
-	IWriter* file;
+	IWriter*	file;
 	Fvector		m_HPB;
 	Fvector		m_Position;
 	Fmatrix		m_Camera;
@@ -26,6 +26,8 @@ private:
 	Fvector		m_vR;
 	Fvector		m_vVelocity;
 	Fvector		m_vAngularVelocity;
+	float		m_fFov;
+	Fvector		m_vGlobalDepthOfFieldParameters;
 
 	BOOL		m_bMakeCubeMap;
 	BOOL		m_bMakeScreenshot;
@@ -48,9 +50,13 @@ private:
 	void		MakeCubemap();
 	void		MakeScreenshot();
 	void		MakeLevelMapScreenshot();
+	void		ShowInputInfo();
 public:
 	CDemoRecord(const char* name, float life_time = 60 * 60 * 1000);
 	virtual		~CDemoRecord();
+
+	void		ChangeDepthOfField(int direction);
+	void		ChangeFieldOfView(int direction);
 
 	virtual void IR_OnKeyboardPress(int dik);
 	virtual void IR_OnKeyboardHold(int dik);
