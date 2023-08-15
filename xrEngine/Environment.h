@@ -50,7 +50,8 @@ public:
 
 	Fvector3			fog_color;
 	float				fog_density;
-	float				height_fog_intensity;
+	float				vertical_fog_intensity;
+	float				vertical_fog_height;
 
 	Fvector3			ambient;
 	Fvector3			sky_color;
@@ -150,7 +151,8 @@ public:
 	Fvector3			fog_color;
 	float				fog_density;
 	float				fog_distance;
-	float				height_fog_intensity;
+	float				vertical_fog_intensity;
+	float				vertical_fog_height;
 
 	float				rain_density;
 	Fvector3			rain_color;

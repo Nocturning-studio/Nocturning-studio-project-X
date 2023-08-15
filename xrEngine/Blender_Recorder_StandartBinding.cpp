@@ -169,20 +169,35 @@ class cl_fog_color : public R_constant_setup {
 	}
 };	static cl_fog_color		binder_fog_color;
 
-static class cl_height_fog final : public R_constant_setup
+static class cl_vertical_fog_intensity final : public R_constant_setup
 {
 	u32	marker;
-	Fvector4 HeightFogIntensity;
+	Fvector4 VerticalFogIntensity;
 	void setup(R_constant* C) override
 	{
 		if (marker != Device.dwFrame) 
 		{
 			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
-			HeightFogIntensity.set(desc->height_fog_intensity, 0, 0, 0);
+			VerticalFogIntensity.set(desc->vertical_fog_intensity, 0, 0, 0);
 		}
-		RCache.set_c(C, HeightFogIntensity);
+		RCache.set_c(C, VerticalFogIntensity);
 	}
-} binder_height_fog;
+} binder_vertical_fog_intensity;
+
+static class cl_vertical_fog_height final : public R_constant_setup
+{
+	u32	marker;
+	Fvector4 VerticalFogHeight;
+	void setup(R_constant* C) override
+	{
+		if (marker != Device.dwFrame)
+		{
+			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
+			VerticalFogHeight.set(desc->vertical_fog_height, 0, 0, 0);
+		}
+		RCache.set_c(C, VerticalFogHeight);
+	}
+} binder_vertical_fog_height;
 
 // times
 class cl_times : public R_constant_setup {
@@ -364,7 +379,8 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("fog_plane", &binder_fog_plane);
 	r_Constant("fog_params", &binder_fog_params);
 	r_Constant("fog_color", &binder_fog_color);
-	r_Constant("height_fog_intensity", &binder_height_fog);
+	r_Constant("vertical_fog_intensity", &binder_vertical_fog_intensity);
+	r_Constant("vertical_fog_height", &binder_vertical_fog_height);
 #endif
 	// env-params
 	r_Constant("env_color", &binder_env_color);

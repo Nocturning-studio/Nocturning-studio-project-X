@@ -25,7 +25,8 @@ bool	CEnvModifier::load(IReader* fs)
 	far_plane = fs->r_float();	// 4
 	fs->r_fvector3(fog_color);		// 4*3=12
 	fog_density = fs->r_float();	// 4
-	height_fog_intensity = fs->r_float();
+	vertical_fog_intensity = fs->r_float();
+	vertical_fog_height = fs->r_float();
 	fs->r_fvector3(ambient);			// 4*3=12
 	fs->r_fvector3(sky_color);		// 4*3=12
 	fs->r_fvector3(hemi_color);		// 4*3=12
@@ -58,10 +59,15 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		fog_density += M.fog_density * _power;
 		use_flags.set(eFogDensity, TRUE);
 	}
-	if (M.use_flags.test(eHeightFogDensity))
+	if (M.use_flags.test(eVerticalFogIntensity))
 	{
-		height_fog_intensity += M.height_fog_intensity * _power;
-		use_flags.set(eHeightFogDensity, TRUE);
+		vertical_fog_intensity += M.vertical_fog_intensity * _power;
+		use_flags.set(eVerticalFogIntensity, TRUE);
+	}
+	if (M.use_flags.test(eVerticalFogHeight))
+	{
+		vertical_fog_height += M.vertical_fog_height * _power;
+		use_flags.set(eVerticalFogHeight, TRUE);
 	}
 	if (M.use_flags.test(eAmbientColor))
 	{
@@ -217,11 +223,12 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 	sky_color.set(1, 1, 1);
 	sky_rotation = 0.0f;
 
-	far_plane = 400.0f;;
+	far_plane = 400.0f;
 
 	fog_color.set(1, 1, 1);
 	fog_density = 0.0f;
-	height_fog_intensity = 0.0001f;
+	vertical_fog_intensity = 0.0001f;
+	vertical_fog_height = 0.8f;
 	fog_distance = 400.0f;
 
 	rain_density = 0.0f;
@@ -285,10 +292,15 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	fog_density = config.r_float(m_identifier.c_str(), "fog_density");
 	fog_distance = config.r_float(m_identifier.c_str(), "fog_distance");
 
-	if (config.line_exist(m_identifier.c_str(), "height_fog_intensity"))
-		height_fog_intensity = config.r_float(m_identifier.c_str(), "height_fog_intensity");
+	if (config.line_exist(m_identifier.c_str(), "vertical_fog_intensity"))
+		vertical_fog_intensity = config.r_float(m_identifier.c_str(), "vertical_fog_intensity");
 	else
-		height_fog_intensity = 0.0001f;
+		vertical_fog_intensity = 0.0001f;
+
+	if (config.line_exist(m_identifier.c_str(), "vertical_fog_height"))
+		vertical_fog_height = config.r_float(m_identifier.c_str(), "vertical_fog_height");
+	else
+		vertical_fog_height = 0.8f;
 
 	rain_density = config.r_float(m_identifier.c_str(), "rain_density");		clamp(rain_density, 0.f, 1.f);
 	rain_color = config.r_fvector3(m_identifier.c_str(), "rain_color");
@@ -455,11 +467,18 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	fog_near = (1.0f - fog_density) * 0.85f * fog_distance;
 	fog_far = 0.99f * fog_distance;
 
-	height_fog_intensity = (fi * A.height_fog_intensity + f * B.height_fog_intensity);
-	if (Mdf.use_flags.test(eHeightFogDensity))
+	vertical_fog_intensity = (fi * A.vertical_fog_intensity + f * B.vertical_fog_intensity);
+	if (Mdf.use_flags.test(eVerticalFogIntensity))
 	{
-		height_fog_intensity += Mdf.height_fog_intensity;
-		height_fog_intensity *= modif_power;
+		vertical_fog_intensity += Mdf.vertical_fog_intensity;
+		vertical_fog_intensity *= modif_power;
+	}
+
+	vertical_fog_height = (fi * A.vertical_fog_height + f * B.vertical_fog_height);
+	if (Mdf.use_flags.test(eVerticalFogHeight))
+	{
+		vertical_fog_height += Mdf.vertical_fog_height;
+		vertical_fog_height *= modif_power;
 	}
 
 	rain_density = fi * A.rain_density + f * B.rain_density;

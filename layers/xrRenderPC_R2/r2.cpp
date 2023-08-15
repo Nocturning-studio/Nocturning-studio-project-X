@@ -706,7 +706,8 @@ HRESULT	CRender::shader_compile(
 
 	char c_soft_water[32];
 	char c_soft_particles[32];
-	char c_soft_fog[32];
+
+	char c_fog_quality[32];
 
 	char c_normal_mapping[32];
 	char c_parallax_mapping[32];
@@ -1075,17 +1076,16 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_shadow_filtering);
 	++len;
 
-	int soft_fog = ps_r2_ls_flags.test(R2FLAG_SOFT_FOG);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_FOG))
+	if (RImplementation.o.advancedpp && ps_fog_quality)
 	{
-		sprintf(c_soft_fog, "%d", soft_fog);
-		defines[def_it].Name = "USE_SOFT_FOG";
-		defines[def_it].Definition = c_soft_fog;
+		sprintf(c_fog_quality, "%d", ps_fog_quality);
+		defines[def_it].Name = "FOG_QUALITY";
+		defines[def_it].Definition = c_fog_quality;
 		def_it++;
-		strcat(sh_name, c_soft_fog);
-		len += 1;
+		strcat(sh_name, c_fog_quality);
+		len += 4;
 	}
-	sh_name[len] = '0' + char(soft_fog);
+	sh_name[len] = '0' + (char)ps_fog_quality;
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////

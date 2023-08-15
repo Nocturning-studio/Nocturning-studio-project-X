@@ -125,6 +125,8 @@ extern ECORE_API u32			ps_bump_mode;
 extern ECORE_API u32			ps_tdetail_bump_mode;
 extern ECORE_API u32			ps_terrain_bump_mode;
 
+extern ECORE_API u32			ps_fog_quality;
+
 //	x - min (0), y - focus (1.4), z - max (100)
 extern ECORE_API Fvector3		ps_r2_dof;
 extern ECORE_API float			ps_r2_dof_sky;				//	distance to sky
@@ -155,13 +157,12 @@ enum
 
 	R2FLAG_SOFT_WATER						= (1 << 17),
 	R2FLAG_SOFT_PARTICLES					= (1 << 18),
-	R2FLAG_SOFT_FOG							= (1 << 19),
-	R2FLAG_CHROMATIC_ABBERATION				= (1 << 20),
-	R2FLAG_BLOOM							= (1 << 21),
-	R2FLAG_DOF								= (1 << 22),
-	R2FLAG_MBLUR							= (1 << 23),
-	R2FLAG_SEPIA							= (1 << 24),
-	R2FLAG_PHOTO_GRID						= (1 << 25)
+	R2FLAG_CHROMATIC_ABBERATION				= (1 << 19),
+	R2FLAG_BLOOM							= (1 << 20),
+	R2FLAG_DOF								= (1 << 21),
+	R2FLAG_MBLUR							= (1 << 22),
+	R2FLAG_SEPIA							= (1 << 23),
+	R2FLAG_PHOTO_GRID						= (1 << 24)
 };
 
 enum

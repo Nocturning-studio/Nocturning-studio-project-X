@@ -148,6 +148,15 @@ xr_token dof_quality_token[] = {
 	{ 0,							0											}
 };
 
+u32		ps_fog_quality = 2;
+xr_token fog_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_ultra",				4											},
+	{ 0,							0											}
+};
+
 u32		ps_vignette_mode = 2;
 xr_token vignette_mode_token[] = {
 	{ "st_opt_disabled",			0											},
@@ -572,7 +581,7 @@ void		xrRender_initconsole()
 {
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
-	CMD3(CCC_Mask, "r2_soft_fog", &ps_r2_ls_flags, R2FLAG_SOFT_FOG);
+	CMD3(CCC_Token, "r2_fog_quality", &ps_fog_quality, fog_quality_token);
 
 	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
