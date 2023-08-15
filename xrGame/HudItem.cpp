@@ -199,7 +199,7 @@ void CHudItem::StopHudInertion()
 }
 
 static const float PITCH_OFFSET_R	= 0.0000f;//0.017f;
-static const float PITCH_OFFSET_N	= 0.024f;
+static const float PITCH_OFFSET_N	= 0.00024f;
 static const float PITCH_OFFSET_D	= 0.075f;//0.02f;
 static const float ORIGIN_OFFSET	= -0.05f;
 static const float TENDTO_SPEED		= 5.f;
