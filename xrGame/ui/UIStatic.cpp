@@ -201,6 +201,11 @@ void CUIStatic::DrawTexture(){
 	}
 }
 
+bool is_in_2_(const Frect& b1, const Frect& b2) 
+{
+	return (b1.x1 < b2.x1) && (b1.x2 > b2.x2) && (b1.y1 < b2.y1) && (b1.y2 > b2.y2);
+}
+
 void CUIStatic::Update()
 {
 	inherited::Update();
@@ -261,18 +266,9 @@ void CUIStatic::Update()
 			SetWndSize			(Fvector2().set(m_xxxRect.width(),m_xxxRect.height()));
 		}
 	}
-	UpdateHintShow();
-}
 
-//Thaks Hrust for this function. Now don't work, fix it if you can 
-bool is_in2(const Frect& b1, const Frect& b2);
-void  CUIStatic::UpdateHintShow()
-{
-
-	if (CursorOverWindow() && m_hint_text.size() && !g_btnHint->Owner() /*&& Device.dwTimeGlobal > m_dwFocusReceiveTime  + 500 - don't work in pause mode*/)
+	if (CursorOverWindow() && m_hint_text.size() && !g_btnHint->Owner() && Device.dwTimeGlobal > m_dwFocusReceiveTime + 500)
 	{
-		//Msg("UpdateHintShow - CursorOverWindow() && m_hint_text.size() && !g_btnHint->Owner()");
-
 		g_btnHint->SetHintText(this, *m_hint_text);
 
 		Fvector2 c_pos = GetUICursor()->GetCursorPosition();
@@ -285,12 +281,12 @@ void  CUIStatic::UpdateHintShow()
 		r.add(c_pos.x, c_pos.y);
 
 		r.sub(0.0f, r.height());
-		if (false == is_in2(vis_rect, r))
+		if (false == is_in_2_(vis_rect, r))
 			r.sub(r.width(), 0.0f);
-		if (false == is_in2(vis_rect, r))
+		if (false == is_in_2_(vis_rect, r))
 			r.add(0.0f, r.height());
 
-		if (false == is_in2(vis_rect, r))
+		if (false == is_in_2_(vis_rect, r))
 			r.add(r.width(), 45.0f);
 
 		g_btnHint->SetWndPos(r.lt);
