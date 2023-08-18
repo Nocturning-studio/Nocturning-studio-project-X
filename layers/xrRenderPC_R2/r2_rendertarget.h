@@ -27,6 +27,7 @@ public:
 	IBlender*					b_ao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
+	IBlender*					b_dof;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -138,6 +139,7 @@ private:
 	ref_shader					s_combine_dbg_Accumulator;
 	ref_shader					s_combine;
 	ref_shader					s_combine_volumetric;
+	ref_shader					s_dof;
 public:
 	ref_shader					s_postprocess;
 	ref_geom					g_postprocess;
@@ -217,7 +219,6 @@ public:
 	void						accum_reflected			(light* L);
 	void						phase_bloom				();
 
-	void						phase_downsample		();
 	void						phase_create_ao			();
 	void						phase_diagonal_filter	();
 	void						phase_strided_filter	();
@@ -229,6 +230,9 @@ public:
 	void						phase_combine			();
 	void						phase_combine_volumetric();
 	void						phase_antialiasing		();
+	void						depth_of_field_pass_first();
+	void						depth_of_field_pass_second();
+	void						phase_depth_of_field	();
 	void						phase_pp				();
 
 	virtual void				set_blur				(float	f)		{ param_blur=f;						}

@@ -249,6 +249,9 @@
     <ClInclude Include="Blender_ao_build.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="Blender_depth_of_field.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -553,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ao.cpp">
       <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_depth_of_field.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_depth_of_field.cpp">
+      <Filter>Shading templates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

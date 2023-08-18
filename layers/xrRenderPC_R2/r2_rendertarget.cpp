@@ -11,6 +11,7 @@
 #include "blender_bloom_build.h"
 #include "blender_ao_build.h"
 #include "blender_luminance.h"
+#include "blender_depth_of_field.h"
 #include "r2_rendertarget.h"
 
 void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -209,6 +210,7 @@ CRenderTarget::CRenderTarget		()
 	b_bloom							= xr_new<CBlender_bloom_build>			();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
+	b_dof							= xr_new<CBlender_depth_of_field>		();
 
 	//	NORMAL
 	{
@@ -491,6 +493,13 @@ CRenderTarget::CRenderTarget		()
 				R_CHK						(t_noise_surf[it]->UnlockRect(0));
 			}
 		}
+	}
+
+	//Depth of field
+	if (ps_r2_pp_flags.test(R2FLAG_DOF))
+	{
+		//Create shader resource
+		s_dof.create(b_dof, "r2\\dof");
 	}
 
 	// PP
