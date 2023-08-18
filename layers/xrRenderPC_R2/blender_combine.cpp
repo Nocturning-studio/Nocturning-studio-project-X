@@ -76,7 +76,6 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
 		C.r_Sampler_tex		("s_vignette",		"vfx\\vfx_vignette");
-		C.r_Sampler_tex		("s_photo_grid",	"vfx\\vfx_photo_grid");
 		C.r_End();
 		break;
 	}

@@ -29,6 +29,7 @@ private:
 	float		m_fFov;
 	Fvector		m_vGlobalDepthOfFieldParameters;
 	bool		m_bAutofocusEnabled;
+	bool		m_bGridEnabled;
 
 	BOOL		m_bMakeCubeMap;
 	BOOL		m_bMakeScreenshot;
@@ -59,6 +60,7 @@ public:
 	void		ChangeDepthOfField(int direction);
 	void		ChangeFieldOfView(int direction);
 	void		SwitchAutofocusState();
+	void		SwitchGridState();
 
 	virtual void IR_OnKeyboardPress(int dik);
 	virtual void IR_OnKeyboardHold(int dik);

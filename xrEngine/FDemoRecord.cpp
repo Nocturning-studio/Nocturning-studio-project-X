@@ -55,6 +55,7 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 		if (g_pGamePersistent)
 			g_pGamePersistent->GetCurrentDof(m_vGlobalDepthOfFieldParameters);
 		m_bAutofocusEnabled = false;
+		m_bGridEnabled = false;
 
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
@@ -89,6 +90,7 @@ CDemoRecord::~CDemoRecord()
 			g_pGamePersistent->SetBaseDof(m_vGlobalDepthOfFieldParameters);
 			g_pGamePersistent->SetPickableEffectorDOF(false);
 		}
+		Console->Execute("r2_photo_grid off");
 	}
 }
 
@@ -268,6 +270,7 @@ void CDemoRecord::ShowInputInfo()
 			pApp->pFontSystem->OutNext("G + Mouse Wheel");
 			pApp->pFontSystem->OutNext("F + Mouse Wheel");
 			pApp->pFontSystem->OutNext("H");
+			pApp->pFontSystem->OutNext("V");
 
 			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
 			pApp->pFontSystem->OutSetI(0, +.05f);
@@ -279,6 +282,7 @@ void CDemoRecord::ShowInputInfo()
 			pApp->pFontSystem->OutNext("= Depth of field");
 			pApp->pFontSystem->OutNext("= Field of view");
 			pApp->pFontSystem->OutNext("= Autofocus");
+			pApp->pFontSystem->OutNext("= Grid");
 		}
 	}
 }
@@ -384,6 +388,23 @@ void CDemoRecord::SwitchAutofocusState()
 	}
 }
 
+//Решение действовать через консоль чудовищное, в будущем нужно заменить смену флага через консоль на смену через флаг общих команд для всех рендеров
+void CDemoRecord::SwitchGridState()
+{
+	if (m_bGridEnabled == false)
+	{
+		m_bGridEnabled = true;
+		Console->Execute("r2_photo_grid on");
+		Msg("CDemoRecord::SwitchGridState - method change m_bGridEnabled to state enabled and activate r2_photo_grid");
+	}
+	else
+	{
+		m_bGridEnabled = false;
+		Console->Execute("r2_photo_grid off");
+		Msg("CDemoRecord::SwitchGridState - method change m_bGridEnabled to state disabled and deactivate r2_photo_grid");
+	}
+}
+
 void CDemoRecord::IR_OnKeyboardPress(int dik)
 {
 	if (dik == DIK_GRAVE)
@@ -395,6 +416,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	if (dik == DIK_F12)		MakeScreenshot();
 	if (dik == DIK_ESCAPE)	fLifeTime = -1;
 	if (dik == DIK_H)		SwitchAutofocusState();
+	if (dik == DIK_V)		SwitchGridState();
 	if (dik == DIK_RETURN)
 	{
 		if (g_pGameLevel->CurrentEntity())
@@ -495,9 +517,9 @@ void CDemoRecord::ChangeFieldOfView(int direction)
 	float m_fFov_actual;
 
 	if (direction > 0)
-		m_fFov_actual = m_fFov_old + 1.0f;
+		m_fFov_actual = m_fFov_old + 0.5f;
 	else
-		m_fFov_actual = m_fFov_old - 1.0f;
+		m_fFov_actual = m_fFov_old - 0.5f;
 
 	if (m_fFov_actual <= 2.28f)
 	{

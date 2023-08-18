@@ -370,6 +370,9 @@ void	CRenderTarget::phase_combine()
 	if (ps_r2_pp_flags.test(R2FLAG_DOF))
 		phase_depth_of_field();
 
+	if (ps_r2_pp_flags.test(R2FLAG_PHOTO_GRID))
+		phase_photo_grid();
+
 	//	PP-if required
 	if (PP_Complex) {
 		phase_pp();

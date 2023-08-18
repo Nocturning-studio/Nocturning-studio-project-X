@@ -28,6 +28,7 @@ public:
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
 	IBlender*					b_dof;
+	IBlender*					b_photo_grid;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -140,6 +141,7 @@ private:
 	ref_shader					s_combine;
 	ref_shader					s_combine_volumetric;
 	ref_shader					s_dof;
+	ref_shader					s_photo_grid;
 public:
 	ref_shader					s_postprocess;
 	ref_geom					g_postprocess;
@@ -229,6 +231,7 @@ public:
 	void						phase_luminance			();
 	void						phase_combine			();
 	void						phase_combine_volumetric();
+	void						phase_photo_grid		();
 	void						phase_antialiasing		();
 	void						depth_of_field_pass_first();
 	void						depth_of_field_pass_second();
