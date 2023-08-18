@@ -54,6 +54,7 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 
 		if (g_pGamePersistent)
 			g_pGamePersistent->GetCurrentDof(m_vGlobalDepthOfFieldParameters);
+		m_bAutofocusEnabled = false;
 
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
@@ -83,8 +84,11 @@ CDemoRecord::~CDemoRecord()
 
 		FS.w_close(file);
 
-		if(g_pGamePersistent)
+		if (g_pGamePersistent)
+		{
 			g_pGamePersistent->SetBaseDof(m_vGlobalDepthOfFieldParameters);
+			g_pGamePersistent->SetPickableEffectorDOF(false);
+		}
 	}
 }
 
@@ -263,6 +267,7 @@ void CDemoRecord::ShowInputInfo()
 			pApp->pFontSystem->OutNext("F12");
 			pApp->pFontSystem->OutNext("G + Mouse Wheel");
 			pApp->pFontSystem->OutNext("F + Mouse Wheel");
+			pApp->pFontSystem->OutNext("H");
 
 			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
 			pApp->pFontSystem->OutSetI(0, +.05f);
@@ -273,6 +278,7 @@ void CDemoRecord::ShowInputInfo()
 			pApp->pFontSystem->OutNext("= ScreenShot");
 			pApp->pFontSystem->OutNext("= Depth of field");
 			pApp->pFontSystem->OutNext("= Field of view");
+			pApp->pFontSystem->OutNext("= Autofocus");
 		}
 	}
 }
@@ -349,6 +355,35 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 	return TRUE;
 }
 
+void CDemoRecord::SwitchAutofocusState()
+{
+	if (m_bAutofocusEnabled == false)
+	{
+		m_bAutofocusEnabled = true;
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchAutofocusState - method change m_bAutofocusEnabled to state enabled");
+#endif
+	}
+	else
+	{
+		m_bAutofocusEnabled = false;
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchAutofocusState - method change m_bAutofocusEnabled to state disabled");
+#endif
+	}
+
+	if (g_pGamePersistent)
+	{
+		g_pGamePersistent->SetPickableEffectorDOF(m_bAutofocusEnabled);
+	}
+	else
+	{
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchAutofocusState - method called before g_pGamePersistent was created. Abort.");
+#endif
+	}
+}
+
 void CDemoRecord::IR_OnKeyboardPress(int dik)
 {
 	if (dik == DIK_GRAVE)
@@ -359,6 +394,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	if (dik == DIK_F11)		MakeLevelMapScreenshot();
 	if (dik == DIK_F12)		MakeScreenshot();
 	if (dik == DIK_ESCAPE)	fLifeTime = -1;
+	if (dik == DIK_H)		SwitchAutofocusState();
 	if (dik == DIK_RETURN)
 	{
 		if (g_pGameLevel->CurrentEntity())
@@ -429,17 +465,18 @@ void CDemoRecord::ChangeDepthOfField(int direction)
 		else
 			dof_params_actual.z = dof_params_old.z - 10.0f;
 
-		if (dof_params_actual.z <= 2.999f)
+		if (dof_params_actual.z <= 4.999f)
 		{
 #ifdef DEBUG_DEMO_RECORD
-			Msg("CDemoRecord::ChangeDepthOfField - far parameter < 3");
+			Msg("CDemoRecord::ChangeDepthOfField - far parameter < 5");
 #endif
-			dof_params_actual.z = 3.0f;
+			dof_params_actual.z = 5.0f;
 		}
 
 		g_pGamePersistent->SetBaseDof(dof_params_actual);
+
 #ifdef DEBUG_DEMO_RECORD
-		Msg("CDemoRecord::ChangeDepthOfField - function successfully change depth of field parameters");
+		Msg("CDemoRecord::ChangeDepthOfField - method successfully change depth of field parameters");
 		Msg("CDemoRecord::ChangeDepthOfField - depth of field parameters old: near = %d, focus = %d, far = %d", dof_params_old.x, dof_params_old.y, dof_params_old.z);
 		Msg("CDemoRecord::ChangeDepthOfField - depth of field parameters actual: near = %d, focus = %d, far = %d", dof_params_actual.x, dof_params_actual.y, dof_params_actual.z);
 #endif
@@ -447,7 +484,7 @@ void CDemoRecord::ChangeDepthOfField(int direction)
 #ifdef DEBUG_DEMO_RECORD
 	else
 	{
-		Msg("CDemoRecord::ChangeDepthOfField - function was called before create IGame_Persistent. Going next");
+		Msg("CDemoRecord::ChangeDepthOfField - method was called before create IGame_Persistent. Going next");
 	}
 #endif
 }
@@ -493,7 +530,7 @@ void CDemoRecord::ChangeFieldOfView(int direction)
 		}
 	}
 #ifdef DEBUG_DEMO_RECORD
-	Msg("CDemoRecord::ChangeFieldOfView - function successfully change field of view parameter");
+	Msg("CDemoRecord::ChangeFieldOfView - method successfully change field of view parameter");
 	Msg("CDemoRecord::ChangeFieldOfView - field of view value old: %d", m_fFov_old);
 	Msg("CDemoRecord::ChangeFieldOfView - field of view value actual: %d", m_fFov_actual);
 #endif
