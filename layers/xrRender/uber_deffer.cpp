@@ -117,6 +117,9 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 
 	if (lmap)C.r_Sampler("s_hemi",	C.L_textures[2],	false,	D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,		D3DTEXF_NONE,	D3DTEXF_LINEAR);
 
+	C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
+	C.r_Sampler_tex("s_perlin_noise", "noise\\perlin_noise_texture");
+
 	RImplementation.clearAllShaderOptions();
 
 	if (!DO_NOT_FINISH)		C.r_End	();
