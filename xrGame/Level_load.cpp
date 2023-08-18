@@ -114,15 +114,18 @@ BOOL CLevel::Load_GameSpecific_After()
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
 	}
 
-	
-	if (!g_dedicated_server)
+	if (!g_dedicated_server && game && (GameID() != GAME_SINGLE))
 	{
-		if (pLevel->section_exist("level_weather") && pLevel->line_exist("level_weather", "weather"))
-			GamePersistent().Environment().SetWeather(pLevel->r_string("level_weather", "weather"));
-		//else
-			//GamePersistent().Environment().SetWeather(GamePersistent().Environment().m_FirstWeather);
+		CInifile& gameLtx = *pGameIni;
+		if (gameLtx.section_exist(Level().name())) 
+		{
+			if (gameLtx.line_exist(Level().name(), "weathers")) 
+			{
+				LPCSTR weathers_sect = gameLtx.r_string(Level().name(), "weathers");
+				GamePersistent().Environment().SetWeather(weathers_sect);
+			}
+		}
 	}
-	
 
 	BlockCheatLoad();
 	return TRUE;
