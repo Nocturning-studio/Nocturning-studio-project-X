@@ -56,6 +56,12 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 			g_pGamePersistent->GetCurrentDof(m_vGlobalDepthOfFieldParameters);
 		m_bAutofocusEnabled = false;
 		m_bGridEnabled = false;
+		m_bBordersEnabled = false;
+		m_bShowInputInfo = true;
+		m_bWatermarkEnabled = false;
+
+		m_bGlobalHudDraw = psHUD_Flags.test(HUD_DRAW);
+		psHUD_Flags.set(HUD_DRAW, false);
 
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
@@ -91,6 +97,9 @@ CDemoRecord::~CDemoRecord()
 			g_pGamePersistent->SetPickableEffectorDOF(false);
 		}
 		Console->Execute("r2_photo_grid off");
+		Console->Execute("r2_cinema_borders off");		
+		Console->Execute("r2_watermark off");
+		psHUD_Flags.set(HUD_DRAW, m_bGlobalHudDraw);
 	}
 }
 
@@ -248,43 +257,60 @@ void CDemoRecord::MakeCubeMapFace(Fvector& D, Fvector& N)
 	m_Stage++;
 }
 
+void CDemoRecord::SwitchShowInputInfo()
+{
+	if (m_bShowInputInfo == true)
+	{
+		m_bShowInputInfo = false;
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchShowInputInfo - method change m_bShowInputInfo to state enabled");
+#endif
+	}
+	else
+	{
+		m_bShowInputInfo = true;
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchShowInputInfo - method change m_bShowInputInfo to state disabled");
+#endif
+	}
+}
+
 void CDemoRecord::ShowInputInfo()
 {
-	if (psHUD_Flags.test(HUD_DRAW)) {
-		if ((Device.dwTimeGlobal / 750) % 3 != 0) {
-			//pApp->pFontSystem->SetSizeI	(0.02f);
-			pApp->pFontSystem->SetColor(color_rgba(255, 0, 0, 255));
-			pApp->pFontSystem->SetAligment(CGameFont::alCenter);
-			pApp->pFontSystem->OutSetI(0, -.05f);
+	pApp->pFontSystem->SetColor(color_rgba(255, 255, 255, 127));
+	pApp->pFontSystem->SetAligment(CGameFont::alCenter);
+	pApp->pFontSystem->OutSetI(0, -.05f);
 
-			pApp->pFontSystem->OutNext("%s", "RECORDING");
-			pApp->pFontSystem->OutNext("Key frames count: %d", iCount);
+	pApp->pFontSystem->OutNext("%s", "RECORDING");
+	pApp->pFontSystem->OutNext("Key frames count: %d", iCount);
 
-			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
-			pApp->pFontSystem->OutSetI(-0.2f, +.05f);
-			pApp->pFontSystem->OutNext("SPACE");
-			pApp->pFontSystem->OutNext("BACK");
-			pApp->pFontSystem->OutNext("ESC");
-			pApp->pFontSystem->OutNext("F11");
-			pApp->pFontSystem->OutNext("F12");
-			pApp->pFontSystem->OutNext("G + Mouse Wheel");
-			pApp->pFontSystem->OutNext("F + Mouse Wheel");
-			pApp->pFontSystem->OutNext("H");
-			pApp->pFontSystem->OutNext("V");
+	pApp->pFontSystem->SetAligment(CGameFont::alLeft);
+	pApp->pFontSystem->OutSetI(-0.2f, +.05f);
+	pApp->pFontSystem->OutNext("J");
+	pApp->pFontSystem->OutNext("SPACE");
+	pApp->pFontSystem->OutNext("BACK");
+	pApp->pFontSystem->OutNext("ESC");
+	pApp->pFontSystem->OutNext("F11");
+	pApp->pFontSystem->OutNext("F12");
+	pApp->pFontSystem->OutNext("G + Mouse Wheel");
+	pApp->pFontSystem->OutNext("F + Mouse Wheel");
+	pApp->pFontSystem->OutNext("H");
+	pApp->pFontSystem->OutNext("V");
+	pApp->pFontSystem->OutNext("B");
 
-			pApp->pFontSystem->SetAligment(CGameFont::alLeft);
-			pApp->pFontSystem->OutSetI(0, +.05f);
-			pApp->pFontSystem->OutNext("= Append Key");
-			pApp->pFontSystem->OutNext("= Cube Map");
-			pApp->pFontSystem->OutNext("= Quit");
-			pApp->pFontSystem->OutNext("= Level Map ScreenShot");
-			pApp->pFontSystem->OutNext("= ScreenShot");
-			pApp->pFontSystem->OutNext("= Depth of field");
-			pApp->pFontSystem->OutNext("= Field of view");
-			pApp->pFontSystem->OutNext("= Autofocus");
-			pApp->pFontSystem->OutNext("= Grid");
-		}
-	}
+	pApp->pFontSystem->SetAligment(CGameFont::alLeft);
+	pApp->pFontSystem->OutSetI(0, +.05f);
+	pApp->pFontSystem->OutNext("= Draw this help");
+	pApp->pFontSystem->OutNext("= Append Key");
+	pApp->pFontSystem->OutNext("= Cube Map");
+	pApp->pFontSystem->OutNext("= Quit");
+	pApp->pFontSystem->OutNext("= Level Map ScreenShot");
+	pApp->pFontSystem->OutNext("= ScreenShot");
+	pApp->pFontSystem->OutNext("= Depth of field");
+	pApp->pFontSystem->OutNext("= Field of view");
+	pApp->pFontSystem->OutNext("= Autofocus");
+	pApp->pFontSystem->OutNext("= Grid");
+	pApp->pFontSystem->OutNext("= Cinema borders");
 }
 
 BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float& fFar, float& fAspect)
@@ -307,7 +333,8 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 		fAspect = 1.f;
 	}
 	else {
-		ShowInputInfo();
+		if (m_bShowInputInfo == true)
+			ShowInputInfo();
 
 		m_vVelocity.lerp(m_vVelocity, m_vT, 0.3f);
 		m_vAngularVelocity.lerp(m_vAngularVelocity, m_vR, 0.3f);
@@ -395,13 +422,58 @@ void CDemoRecord::SwitchGridState()
 	{
 		m_bGridEnabled = true;
 		Console->Execute("r2_photo_grid on");
+#ifdef DEBUG_DEMO_RECORD
 		Msg("CDemoRecord::SwitchGridState - method change m_bGridEnabled to state enabled and activate r2_photo_grid");
+#endif
 	}
 	else
 	{
 		m_bGridEnabled = false;
 		Console->Execute("r2_photo_grid off");
+#ifdef DEBUG_DEMO_RECORD
 		Msg("CDemoRecord::SwitchGridState - method change m_bGridEnabled to state disabled and deactivate r2_photo_grid");
+#endif
+	}
+}
+
+//Решение действовать через консоль чудовищное, в будущем нужно заменить смену флага через консоль на смену через флаг общих команд для всех рендеров
+void CDemoRecord::SwitchCinemaBordersState()
+{
+	if (m_bBordersEnabled == false)
+	{
+		m_bBordersEnabled = true;
+		Console->Execute("r2_cinema_borders on");
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchCinemaBordersState - method change m_bBordersEnabled to state enabled and activate r2_cinema_borders");
+#endif
+	}
+	else
+	{
+		m_bBordersEnabled = false;
+		Console->Execute("r2_cinema_borders off");
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchCinemaBordersState - method change m_bBordersEnabled to state disabled and deactivate r2_cinema_borders");
+#endif
+	}
+}
+
+void CDemoRecord::SwitchWatermarkVisibility()
+{
+	if (m_bWatermarkEnabled == false)
+	{
+		m_bWatermarkEnabled = true;
+		Console->Execute("r2_watermark on");
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchWatermarkVisibility - method change m_bWatermarkEnabled to state enabled and activate r2_watermark");
+#endif
+	}
+	else
+	{
+		m_bWatermarkEnabled = false;
+		Console->Execute("r2_watermark off");
+#ifdef DEBUG_DEMO_RECORD
+		Msg("CDemoRecord::SwitchWatermarkVisibility - method change m_bWatermarkEnabled to state disabled and deactivate r2_watermark");
+#endif
 	}
 }
 
@@ -417,6 +489,9 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	if (dik == DIK_ESCAPE)	fLifeTime = -1;
 	if (dik == DIK_H)		SwitchAutofocusState();
 	if (dik == DIK_V)		SwitchGridState();
+	if (dik == DIK_B)		SwitchCinemaBordersState();
+	if (dik == DIK_J)		SwitchShowInputInfo();
+	if (dik == DIK_N)		SwitchWatermarkVisibility();
 	if (dik == DIK_RETURN)
 	{
 		if (g_pGameLevel->CurrentEntity())

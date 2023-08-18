@@ -162,7 +162,9 @@ enum
 	R2FLAG_DOF								= (1 << 21),
 	R2FLAG_MBLUR							= (1 << 22),
 	R2FLAG_SEPIA							= (1 << 23),
-	R2FLAG_PHOTO_GRID						= (1 << 24)
+	R2FLAG_PHOTO_GRID						= (1 << 24),
+	R2FLAG_CINEMA_BORDERS					= (1 << 25),
+	R2FLAG_WATERMARK						= (1 << 26)
 };
 
 enum

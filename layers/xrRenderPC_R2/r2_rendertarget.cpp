@@ -12,7 +12,7 @@
 #include "blender_ao_build.h"
 #include "blender_luminance.h"
 #include "blender_depth_of_field.h"
-#include "blender_photo_grid.h"
+#include "blender_frame_overlay.h"
 #include "r2_rendertarget.h"
 
 void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -212,7 +212,7 @@ CRenderTarget::CRenderTarget		()
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 	b_dof							= xr_new<CBlender_depth_of_field>		();
-	b_photo_grid					= xr_new<CBlender_photo_grid>			();
+	b_frame_overlay					= xr_new<CBlender_frame_overlay>		();
 
 	//	NORMAL
 	{
@@ -498,7 +498,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//Create shader resource for fog
-	s_photo_grid.create(b_photo_grid, "r2\\photo_grid");
+	s_frame_overlay.create(b_frame_overlay, "r2\\frame overlay");
 
 	//Depth of field
 	if (ps_r2_pp_flags.test(R2FLAG_DOF))
@@ -559,7 +559,7 @@ CRenderTarget::~CRenderTarget	()
 	accum_point_geom_destroy	();
 
 	// Blenders
-	xr_delete					(b_photo_grid			);
+	xr_delete					(b_frame_overlay		);
 	xr_delete					(b_dof					);
 	xr_delete					(b_combine				);
 	xr_delete					(b_luminance			);

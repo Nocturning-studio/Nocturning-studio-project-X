@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 
-void CRenderTarget::depth_of_field_pass_first()
+void CRenderTarget::photo_grid()
 {
 	u_setrt(rt_Color, NULL, NULL, NULL);
 
@@ -31,16 +31,7 @@ void CRenderTarget::depth_of_field_pass_first()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	//Set pass
-	RCache.set_Element(s_dof->E[0]);
-
-	Fvector3 dof;
-	Fvector2 vDofKernel;
-	g_pGamePersistent->GetCurrentDof(dof);
-	vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
-	vDofKernel.mul(ps_r2_dof_kernel_size);
-
-	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+	RCache.set_Element(s_frame_overlay->E[0]);
 
 	//Set geometry
 	RCache.set_Geometry(g_combine);
@@ -49,7 +40,7 @@ void CRenderTarget::depth_of_field_pass_first()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::depth_of_field_pass_second()
+void CRenderTarget::cinema_borders()
 {
 	u_setrt(rt_Color, NULL, NULL, NULL);
 
@@ -79,16 +70,7 @@ void CRenderTarget::depth_of_field_pass_second()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	//Set pass
-	RCache.set_Element(s_dof->E[1]);
-
-	Fvector3 dof;
-	Fvector2 vDofKernel;
-	g_pGamePersistent->GetCurrentDof(dof);
-	vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
-	vDofKernel.mul(ps_r2_dof_kernel_size);
-
-	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+	RCache.set_Element(s_frame_overlay->E[1]);
 
 	//Set geometry
 	RCache.set_Geometry(g_combine);
@@ -97,10 +79,51 @@ void CRenderTarget::depth_of_field_pass_second()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_depth_of_field()
+void CRenderTarget::watermark()
 {
-	depth_of_field_pass_first();
+	u_setrt(rt_Color, NULL, NULL, NULL);
 
-	if(ps_dof_quality >= 3)
-	depth_of_field_pass_second();
+	RCache.set_CullMode(CULL_NONE);
+	RCache.set_Stencil(FALSE);
+
+	//Constants
+	u32 Offset = 0;
+	u32 C = color_rgba(0, 0, 0, 255);
+
+	float w = float(Device.dwWidth);
+	float h = float(Device.dwHeight);
+
+	float d_Z = EPS_S;
+	float d_W = 1.f;
+
+	Fvector2 p0, p1;
+	p0.set(0.5f / w, 0.5f / h);
+	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
+
+	//Fill vertex buffer
+	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	RCache.Vertex.Unlock(4, g_combine->vb_stride);
+
+	//Set pass
+	RCache.set_Element(s_frame_overlay->E[2]);
+
+	//Set geometry
+	RCache.set_Geometry(g_combine);
+
+	//Draw
+	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+}
+
+void CRenderTarget::draw_overlays()
+{
+	if (ps_r2_pp_flags.test(R2FLAG_PHOTO_GRID))
+		photo_grid();
+	if (ps_r2_pp_flags.test(R2FLAG_CINEMA_BORDERS))
+		cinema_borders();
+	if (ps_r2_pp_flags.test(R2FLAG_WATERMARK))
+		watermark();
 }

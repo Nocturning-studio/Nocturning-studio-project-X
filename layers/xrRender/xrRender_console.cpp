@@ -595,6 +595,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
 	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_pp_flags, R2FLAG_PHOTO_GRID);
+	CMD3(CCC_Mask, "r2_cinema_borders", &ps_r2_pp_flags, R2FLAG_CINEMA_BORDERS);
+	CMD3(CCC_Mask, "r2_watermark", &ps_r2_pp_flags, R2FLAG_WATERMARK);
 
 	Fvector	tw_min, tw_max;
 	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);

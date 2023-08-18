@@ -1,11 +1,11 @@
 #pragma once
 
-class CBlender_photo_grid : public IBlender
+class CBlender_frame_overlay : public IBlender
 {
 public:
 	virtual LPCSTR getComment()
 	{
-		return "INTERNAL: Depth of field";
+		return "INTERNAL: Frame overlay";
 	}
 
 	virtual BOOL canBeDetailed()
@@ -20,6 +20,6 @@ public:
 
 	virtual void Compile(CBlender_Compile& C);
 
-	CBlender_photo_grid();
-	virtual ~CBlender_photo_grid();
+	CBlender_frame_overlay();
+	virtual ~CBlender_frame_overlay();
 };

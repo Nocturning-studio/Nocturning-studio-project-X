@@ -30,6 +30,10 @@ private:
 	Fvector		m_vGlobalDepthOfFieldParameters;
 	bool		m_bAutofocusEnabled;
 	bool		m_bGridEnabled;
+	bool		m_bBordersEnabled;
+	bool		m_bWatermarkEnabled;
+	bool		m_bShowInputInfo;
+	bool		m_bGlobalHudDraw;
 
 	BOOL		m_bMakeCubeMap;
 	BOOL		m_bMakeScreenshot;
@@ -61,6 +65,9 @@ public:
 	void		ChangeFieldOfView(int direction);
 	void		SwitchAutofocusState();
 	void		SwitchGridState();
+	void		SwitchCinemaBordersState();
+	void		SwitchWatermarkVisibility();
+	void		SwitchShowInputInfo();
 
 	virtual void IR_OnKeyboardPress(int dik);
 	virtual void IR_OnKeyboardHold(int dik);
