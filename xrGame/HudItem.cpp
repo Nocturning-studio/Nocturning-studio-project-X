@@ -165,7 +165,9 @@ void CHudItem::Deactivate()
 	OnHiddenItem ();
 }
 
-
+void CHudItem::UpdateHudAdditonal(Fmatrix& hud_trans)
+{
+}
 
 void CHudItem::UpdateHudPosition	()
 {
@@ -185,10 +187,6 @@ void CHudItem::UpdateHudPosition	()
 	}
 }
 
-void CHudItem::UpdateHudAdditonal		(Fmatrix& hud_trans)
-{
-}
-
 void CHudItem::StartHudInertion()
 {
 	m_bInertionEnable = true;
@@ -198,9 +196,14 @@ void CHudItem::StopHudInertion()
 	m_bInertionEnable = false;
 }
 
-static const float PITCH_OFFSET_R	= 0.0000f;//0.017f;
+static const float PITCH_OFFSET_R	= 0.017f;
 static const float PITCH_OFFSET_N	= 0.00024f;
-static const float PITCH_OFFSET_D	= 0.075f;//0.02f;
+static const float PITCH_OFFSET_D	= 0.08f;//0.02f;
+
+static const float ZOOM_PITCH_OFFSET_R = 0.0000f;//0.017f;
+static const float ZOOM_PITCH_OFFSET_N = 0.00024f;
+static const float ZOOM_PITCH_OFFSET_D = 0.075f;//0.02f;
+
 static const float ORIGIN_OFFSET	= -0.05f;
 static const float TENDTO_SPEED		= 5.f;
 
@@ -208,7 +211,7 @@ void CHudItem::UpdateHudInertion		(Fmatrix& hud_trans)
 {
 	if (m_pHUD)// && m_bInertionAllow && m_bInertionEnable)
 	{
-		Fmatrix								xform;//,xform_orig; 
+		Fmatrix								xform;
 		Fvector& origin						= hud_trans.c; 
 		xform								= hud_trans;
 
@@ -234,11 +237,19 @@ void CHudItem::UpdateHudInertion		(Fmatrix& hud_trans)
 
 		// pitch compensation
 		float pitch		= angle_normalize_signed(xform.k.getP());
-		origin.mad		(xform.k,	-pitch * PITCH_OFFSET_D);
-		origin.mad		(xform.i,	-pitch * PITCH_OFFSET_R);
-		origin.mad		(xform.j,	-pitch * PITCH_OFFSET_N);
 
-		// calc moving inertion
+		if (Actor()->IsZoomAimingMode())
+		{
+			origin.mad(xform.k, -pitch * ZOOM_PITCH_OFFSET_D);
+			origin.mad(xform.i, -pitch * ZOOM_PITCH_OFFSET_R);
+			origin.mad(xform.j, -pitch * ZOOM_PITCH_OFFSET_N);
+		}
+		else
+		{
+			origin.mad(xform.k, -pitch * PITCH_OFFSET_D);
+			origin.mad(xform.i, -pitch * PITCH_OFFSET_R);
+			origin.mad(xform.j, -pitch * PITCH_OFFSET_N);
+		}
 	}
 }
 
