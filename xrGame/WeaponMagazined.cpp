@@ -872,7 +872,7 @@ void CWeaponMagazined::InitAddons()
 			m_iScopeY	 = pSettings->r_s32(cNameSect(),"scope_y");
 
 			shared_str scope_tex_name;
-			if ((Device.dwWidth) / float(Device.dwHeight) > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f))
+			if (((Device.dwWidth) / float(Device.dwHeight) > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f)) && pSettings->line_exist(m_sScopeName, "scope_texture_16_9"))
 				scope_tex_name = pSettings->r_string(m_sScopeName, "scope_texture_16_9");
 			else
 				scope_tex_name = pSettings->r_string(m_sScopeName, "scope_texture");
@@ -888,7 +888,7 @@ void CWeaponMagazined::InitAddons()
 		{
 			m_fScopeZoomFactor = pSettings->r_float	(cNameSect(), "scope_zoom_factor");
 			shared_str scope_tex_name;
-			if ((Device.dwWidth) / float(Device.dwHeight) > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f))
+			if (((Device.dwWidth) / float(Device.dwHeight) > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f)) && pSettings->line_exist(cNameSect(), "scope_texture_16_9"))
 				scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture_16_9");
 			else
 				scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
@@ -896,7 +896,6 @@ void CWeaponMagazined::InitAddons()
 			if(m_UIScope) xr_delete(m_UIScope);
 			m_UIScope = xr_new<CUIStaticItem>();
 			m_UIScope->Init(*scope_tex_name, "hud\\default", 0, 0, alNone);
-
 		}
 	}
 	else
