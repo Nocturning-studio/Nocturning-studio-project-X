@@ -333,8 +333,6 @@ void CWeapon::Load		(LPCSTR section)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//(Deathman, подглядев у Morrey) дисперсия стрельбы в прицеле
-#pragma todo("Deathman to all: Замените пожалуйста мой дебилизм на нормальную реализацию из зова Припяти")
-
 	zoom_camMaxAngle		= camMaxAngle;
 	zoom_camRelaxSpeed		= camRelaxSpeed;
 	zoom_camRelaxSpeed_AI	= camRelaxSpeed_AI;
@@ -838,12 +836,10 @@ void CWeapon::UpdatePosition(const Fmatrix& trans)
 	VERIFY				(!fis_zero(DET(renderable.xform)));
 }
 
-
 bool CWeapon::Action(s32 cmd, u32 flags) 
 {
 	if(inherited::Action(cmd, flags)) return true;
 
-	
 	switch(cmd) 
 	{
 		case kWPN_FIRE: 
@@ -897,13 +893,24 @@ bool CWeapon::Action(s32 cmd, u32 flags)
 		case kWPN_ZOOM:
 			if(IsZoomEnabled())
 			{
-                if(flags&CMD_START && !IsPending())
-					OnZoomIn();
-                else if(IsZoomed())
-					OnZoomOut();
+				if (psWpnZoomButtonMode == 1) //If zoom mode changing by button click
+				{
+					if (flags & CMD_START && !IsPending())
+						IsZoomed() ? OnZoomOut() : OnZoomIn(); //Если актер в зуме то выходим из него по нажатию кнопки, если нет то входим
+				}
+				else if (psWpnZoomButtonMode == 2) //If zoom mode changing by button hold
+				{
+					if (flags & CMD_START && !IsPending())
+						OnZoomIn();
+					else if (IsZoomed())
+						OnZoomOut();
+				}
 				return true;
-			}else 
+			}
+			else
+			{
 				return false;
+			}
 
 		case kWPN_ZOOM_INC:
 		case kWPN_ZOOM_DEC:

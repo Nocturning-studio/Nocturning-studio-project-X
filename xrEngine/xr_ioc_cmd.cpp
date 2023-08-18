@@ -36,6 +36,12 @@ xr_token							vid_bpp_token[] = {
 	{ 0,							0											}
 };
 
+xr_token							wpn_zoom_button_mode[] = {
+	{ "st_opt_press",				1											},
+	{ "st_opt_hold",				2											},
+	{ 0,							0											}
+};
+
 void IConsole_Command::add_to_LRU(shared_str const& arg)
 {
 	if (arg.size() == 0 || bEmptyArgsHandled)
@@ -707,6 +713,8 @@ void CCC_Register()
 	CMD3(CCC_Mask, "mouse_invert", &psMouseInvert, 1);
 	psMouseSens = 0.12f;
 	CMD4(CCC_Float, "mouse_sens", &psMouseSens, 0.05f, 0.6f);
+
+	CMD3(CCC_Token, "wpn_zoom_button_mode", &psWpnZoomButtonMode, wpn_zoom_button_mode);
 
 	// Camera
 	CMD2(CCC_Float, "cam_inert", &psCamInert);

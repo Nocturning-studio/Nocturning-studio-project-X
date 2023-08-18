@@ -13,3 +13,6 @@ Flags32		psDeviceFlags = { rsFullscreen | rsDetails | mtPhysics | mtSound | mtNe
 
 // textures
 int			psTextureLOD = 0;
+
+//Weapon
+u32	psWpnZoomButtonMode = 2;
