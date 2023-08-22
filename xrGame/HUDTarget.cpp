@@ -188,7 +188,7 @@ void CHUDTarget::Render()
 					fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
 				}
 				else 
-					if (l_pI && our_inv_owner && RQ.range < 2.0f*our_inv_owner->inventory().GetTakeDist())
+					if (l_pI && our_inv_owner && RQ.range < 2.0f*our_inv_owner->inventory().GetTakeDist()*2.0f)
 					{
 						if (fuzzyShowInfo>0.5f){
 							F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));

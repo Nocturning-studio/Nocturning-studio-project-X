@@ -91,25 +91,24 @@ CActor::CActor() : CEntityAlive()
 {
 	encyclopedia_registry	= xr_new<CEncyclopediaRegistryWrapper	>();
 	game_news_registry		= xr_new<CGameNewsRegistryWrapper		>();
+
 	// Cameras
 	cameras[eacFirstEye]	= xr_new<CCameraFirstEye>				(this);
 	cameras[eacFirstEye]->Load("actor_firsteye_cam");
 
-	//if (strstr(Core.Params, "-psp"))
 	if (ps_psp_ls_flags.test(PSP_VIEW))
+	{
 		psActorFlags.set(AF_PSP, TRUE);
-	else
-		psActorFlags.set(AF_PSP, FALSE);
-
-	if( psActorFlags.test(AF_PSP) )
-	{
-		cameras[eacLookAt]		= xr_new<CCameraLook2>				(this);
+		cameras[eacLookAt] = xr_new<CCameraLook2>(this);
 		cameras[eacLookAt]->Load("actor_look_cam_psp");
-	}else
+	}
+	else
 	{
-		cameras[eacLookAt]		= xr_new<CCameraLook>				(this);
+		psActorFlags.set(AF_PSP, FALSE);
+		cameras[eacLookAt] = xr_new<CCameraLook>(this);
 		cameras[eacLookAt]->Load("actor_look_cam");
 	}
+
 	cameras[eacFreeLook]	= xr_new<CCameraLook>					(this);
 	cameras[eacFreeLook]->Load("actor_free_cam");
 
@@ -137,14 +136,12 @@ CActor::CActor() : CEntityAlive()
 	m_fRunFactor			= 2.f;
 	m_fCrouchFactor			= 0.2f;
 	m_fClimbFactor			= 1.f;
-	m_fCamHeightFactor		= 0.87f;
+	m_fCamHeightFactor		= 1.0f;
 
 	m_fFallTime				=	s_fFallTime;
 	m_bAnimTorsoPlayed		=	false;
 
 	m_pPhysicsShell			=	NULL;
-
-
 
 	m_holder				=	NULL;
 	m_holderID				=	u16(-1);
@@ -154,7 +151,6 @@ CActor::CActor() : CEntityAlive()
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
-#pragma todo("Deathman to Deathman: заметка для NSBMP")
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
@@ -919,7 +915,11 @@ void CActor::UpdateCL	()
 			HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
 
-			psHUD_Flags.set( HUD_CROSSHAIR_RT2, pWeapon->show_crosshair() );
+			bool bShowCrosshair = pWeapon->show_crosshair();
+			if (!eacFirstEye == cam_active)
+				bShowCrosshair = true;
+
+			psHUD_Flags.set( HUD_CROSSHAIR_RT2, bShowCrosshair);
 			psHUD_Flags.set( HUD_DRAW_RT,		pWeapon->show_indicators() );
 		}
 
@@ -1134,13 +1134,18 @@ void CActor::shedule_Update	(u32 DT)
 	}
 	
 	//если в режиме HUD, то сама модель актера не рисуется
-	if(!character_physics_support()->IsRemoved())
-										setVisible				(!HUDview	());
+	if (!character_physics_support()->IsRemoved())
+		setVisible(!HUDview	());
 	//что актер видит перед собой
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 	
+	float TakeDistMultiplier;
+	if (eacFirstEye == cam_active)
+		TakeDistMultiplier = 1.0f;
+	else
+		TakeDistMultiplier = 2.0f;
 
-	if(!input_external_handler_installed() && RQ.O &&  RQ.range<inventory().GetTakeDist()) 
+	if(!input_external_handler_installed() && RQ.O &&  RQ.range<inventory().GetTakeDist() * TakeDistMultiplier)
 	{
 		m_pObjectWeLookingAt			= smart_cast<CGameObject*>(RQ.O);
 		

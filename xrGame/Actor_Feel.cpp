@@ -127,7 +127,7 @@ void CActor::PickupModeUpdate()
 	}
 
 	//. ????? GetNearest ?????
-	feel_touch_update	(Position(), /*inventory().GetTakeDist()*/m_fPickupInfoRadius);
+	feel_touch_update	(Position(), m_fPickupInfoRadius);
 	
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
