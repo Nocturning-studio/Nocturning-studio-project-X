@@ -337,12 +337,11 @@ CRenderTarget::CRenderTarget		()
 
 		if (ps_ao == 1)
 		{
-			BaseAOTexWeight *= 0.25f;
-			BaseAOTexHeight *= 0.25f;
+			BaseAOTexWeight *= 0.75f;
+			BaseAOTexHeight *= 0.75f;
 		}
 
 		//Create rendertarget
-		rt_downsampled_position.create(r2_RT_downsampled_position, Weight, Height, D3DFMT_A8R8G8B8);
 		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);
 		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);
 		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);

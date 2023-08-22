@@ -23,7 +23,6 @@
 #define		r2_RT_bloom1		"$user$bloom1"			// ---
 #define		r2_RT_bloom2		"$user$bloom2"			// ---
 
-#define		r2_RT_downsampled_position "$user$blurred_position"// ---
 #define		r2_RT_ao_base			"$user$ao_base"		// ---
 #define		r2_RT_ao_blurred1	"$user$ao_blurred1"	// ---
 #define		r2_RT_ao_blurred2	"$user$ao_blurred2"	// ---

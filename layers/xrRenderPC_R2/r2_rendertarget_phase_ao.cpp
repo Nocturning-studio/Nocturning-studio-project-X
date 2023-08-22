@@ -11,8 +11,8 @@ void CRenderTarget::phase_create_ao()
 
 	if (ps_ao == 1)
 	{
-		w *= 0.25f;
-		h *= 0.25f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -56,6 +56,9 @@ void CRenderTarget::phase_create_ao()
 	//Set geometry
 	RCache.set_Geometry(g_combine);
 
+	//Set constants
+	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
+
 	//Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
@@ -71,8 +74,8 @@ void CRenderTarget::phase_diagonal_filter()
 
 	if (ps_ao == 1)
 	{
-		w *= 0.25f;
-		h *= 0.25f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -123,8 +126,8 @@ void CRenderTarget::phase_strided_filter()
 
 	if (ps_ao == 1)
 	{
-		w *= 0.25f;
-		h *= 0.25f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;

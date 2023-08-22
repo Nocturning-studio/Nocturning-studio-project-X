@@ -62,7 +62,6 @@ public:
 	ref_texture					t_LUM_dest		;	// destination & usage for current frame
 
 	// ao
-	ref_rt						rt_downsampled_position;
 	ref_rt						rt_ao_base;
 	ref_rt						rt_ao_blurred1;
 	ref_rt						rt_ao_blurred2;
