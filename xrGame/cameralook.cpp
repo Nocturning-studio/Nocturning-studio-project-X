@@ -78,6 +78,7 @@ void CCameraLook::OnActivate( CCameraBase* old_cam )
 	if (yaw<-PI_MUL_2)yaw+=PI_MUL_2;
 }
 
+#pragma todo("Deathman to Deathman: v1.5 feature #2")
 #include "../xrEngine/xr_input.h"
 #include "visual_memory_manager.h"
 #include "actor_memory.h"
