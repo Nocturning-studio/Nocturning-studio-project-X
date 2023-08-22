@@ -63,6 +63,9 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 		m_bGlobalHudDraw = psHUD_Flags.test(HUD_DRAW);
 		psHUD_Flags.set(HUD_DRAW, false);
 
+		m_bGlobalCrosshairDraw = psHUD_Flags.test(HUD_CROSSHAIR);
+		psHUD_Flags.set(HUD_CROSSHAIR, false);
+
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);
 		m_bMakeCubeMap = FALSE;
@@ -96,10 +99,13 @@ CDemoRecord::~CDemoRecord()
 			g_pGamePersistent->SetBaseDof(m_vGlobalDepthOfFieldParameters);
 			g_pGamePersistent->SetPickableEffectorDOF(false);
 		}
+
 		Console->Execute("r2_photo_grid off");
 		Console->Execute("r2_cinema_borders off");		
 		Console->Execute("r2_watermark off");
+
 		psHUD_Flags.set(HUD_DRAW, m_bGlobalHudDraw);
+		psHUD_Flags.set(HUD_CROSSHAIR, m_bGlobalCrosshairDraw);
 	}
 }
 

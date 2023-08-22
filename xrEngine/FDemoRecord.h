@@ -34,6 +34,7 @@ private:
 	bool		m_bWatermarkEnabled;
 	bool		m_bShowInputInfo;
 	bool		m_bGlobalHudDraw;
+	bool		m_bGlobalCrosshairDraw;
 
 	BOOL		m_bMakeCubeMap;
 	BOOL		m_bMakeScreenshot;
