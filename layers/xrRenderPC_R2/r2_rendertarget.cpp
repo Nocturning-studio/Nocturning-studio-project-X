@@ -332,8 +332,8 @@ CRenderTarget::CRenderTarget		()
 		u32 Weight = Device.dwWidth, 
 			Height = Device.dwHeight;
 
-		u32 BaseAOTexWeight = Weight,
-			BaseAOTexHeight = Height;
+		float BaseAOTexWeight = Weight,
+			  BaseAOTexHeight = Height;
 
 		if (ps_ao == 1)
 		{
