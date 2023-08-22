@@ -371,8 +371,6 @@ public:
 	float					camMaxAngleHorz;
 	float					camStepAngleHorz;
 
-#pragma todo("Deathman to all: Замените пожалуйста мой дебилизм на нормальную реализацию из зова Припяти")
-
 	float					zoom_camMaxAngle;
 	float					zoom_camRelaxSpeed;
 	float					zoom_camRelaxSpeed_AI;
