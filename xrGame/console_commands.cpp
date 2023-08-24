@@ -331,13 +331,13 @@ public:
 
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) {
-		/*#ifndef DEBUG
-				if (GameID() != GAME_SINGLE)
-				{
-					Msg("For this game type Demo Play is disabled.");
-					return;
-				};
-		#endif*/
+#ifndef MASTER_GOLD
+		if (GameID() != GAME_SINGLE)
+		{
+			Msg("For this game type Demo Play is disabled.");
+			return;
+		};
+#endif
 		Console->Hide	();
 		string_path		fn_; 
 		strconcat		(sizeof(fn_),fn_, args, ".xrdemo");
@@ -354,13 +354,13 @@ public:
 	  IConsole_Command(N) 
 	  { bEmptyArgsHandled = TRUE; };
 	  virtual void Execute(LPCSTR args) {
-		  /*#ifndef DEBUG
-				  if (GameID() != GAME_SINGLE)
-				  {
-					  Msg("For this game type Demo Play is disabled.");
-					  return;
-				  };
-		  #endif*/
+#ifndef MASTER_GOLD
+		if (GameID() != GAME_SINGLE)
+		{
+			Msg("For this game type Demo Play is disabled.");
+			return;
+		};
+#endif
 		  if (0==g_pGameLevel)
 		  {
 			  Msg	("! There are no level(s) started");
