@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Last modified: 24.08.2022
+// Modifier: Deathman
+// Nocturning studio for NS Project X
+// Message - запрещаю переносить куда-либо, потому что реализовано чудовищно и будет переделываться,
+// Либо делайте сами нормально, либо используйте только в рамках NSPX и помогайте улучшать
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma todo("Deathman to Deathman: найти причину того, почему при выводе диалога с согласием на переход на другой уровень fov увеличивается с постоянной скоростью")
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <math.h>
 #include "stdafx.h"
 #include "EffectorBobbing.h"
@@ -79,7 +88,7 @@ BOOL CEffectorBobbing::Process		(Fvector &p, Fvector &d, Fvector &n, float& fFov
 		M.k.set		(d);
 		M.i.crossproduct(n,d);
 		M.c.set		(p);
-		
+
 		if (dwMState & ACTOR_DEFS::mcSprint)
 			fFov *= SPRINT_FOV_MODIFIER_FACTOR;
 		if (dwMState & ACTOR_DEFS::mcFwd)
