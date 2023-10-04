@@ -25,6 +25,7 @@ void CSoundRender_Core::update(const Fvector &P, const Fvector &D, const Fvector
 		return;
 	bLocked = TRUE;
 
+
 	float new_tm = Timer.GetElapsed_sec();
 	fTimer_Delta = new_tm - fTimer_Value;
 	float dt_sec = fTimer_Delta;

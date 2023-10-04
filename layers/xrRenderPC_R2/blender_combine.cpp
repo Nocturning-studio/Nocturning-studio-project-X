@@ -31,6 +31,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
 
 		C.r_Sampler_tex		("s_blue_noise",			"noise\\blue_noise_texture");
+		C.r_Sampler_tex		("s_perlin_noise",			"noise\\perlin_noise_texture");
 		C.r_Sampler_tex		("s_debug_mask",			"ed\\debug_mask");
 		C.r_Sampler_tex		("s_debug_diagonal_mask",	"ed\\debug_diagonal_mask");
 		C.r_Sampler_tex		("s_debug_triple_mask",		"ed\\debug_triple_mask");

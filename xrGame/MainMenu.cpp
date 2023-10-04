@@ -673,11 +673,13 @@ LPCSTR CMainMenu::GetGSVer()
 {
 	static string256	buff;
 	static string256	buff2;
+
 	if(m_pGameSpyFull)
 	{
 #pragma todo("Deathman to Deathman: Сделать свою функцию версии NSPX")
-		strcpy(buff2, "1.4 resurrected");//m_pGameSpyFull->GetGameVersion(buff));
-	}else
+		strcpy(buff2, "1.4.1");//m_pGameSpyFull->GetGameVersion(buff));
+	}
+	else
 	{
 		buff[0]		= 0;
 		buff2[0]	= 0;
