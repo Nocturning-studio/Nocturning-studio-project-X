@@ -151,6 +151,7 @@ public:
 	Fvector3			fog_color;
 	float				fog_density;
 	float				fog_distance;
+	float				fog_sky_influence;
 	float				vertical_fog_intensity;
 	float				vertical_fog_height;
 

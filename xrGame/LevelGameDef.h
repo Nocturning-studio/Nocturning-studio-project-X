@@ -37,11 +37,12 @@ enum EEnvModUsedParams {
 	eViewDist							= (1 << 0),
 	eFogColor							= (1 << 1),
 	eFogDensity							= (1 << 2),
-	eAmbientColor						= (1 << 3),
-	eSkyColor							= (1 << 4),
-	eHemiColor							= (1 << 5),
-	eVerticalFogIntensity				= (1 << 6),
-	eVerticalFogHeight					= (1 << 7)
+	eFogSkyInfluence					= (1 << 3),
+	eAmbientColor						= (1 << 4),
+	eSkyColor							= (1 << 5),
+	eHemiColor							= (1 << 6),
+	eVerticalFogIntensity				= (1 << 7),
+	eVerticalFogHeight					= (1 << 8)
 };
 
 extern ECORE_API xr_token rpoint_type[];

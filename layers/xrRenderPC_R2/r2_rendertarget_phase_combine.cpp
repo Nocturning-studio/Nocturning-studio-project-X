@@ -69,7 +69,6 @@ void	CRenderTarget::phase_combine()
 		Fvector4	ambclr = { _max(envdesc->ambient.x * 2,minamb),	_max(envdesc->ambient.y * 2,minamb),			_max(envdesc->ambient.z * 2,minamb),	0 };
 		ambclr.mul(ps_r2_sun_lumscale_amb);
 		Fvector4	envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
-		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z,		0 };
 		envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.z *= 2 * ps_r2_sun_lumscale_hemi;
@@ -118,7 +117,6 @@ void	CRenderTarget::phase_combine()
 		RCache.set_c("Ldynamic_dir", sundir);
 
 		RCache.set_c("env_color", envclr);
-		RCache.set_c("fog_color", fogclr);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
@@ -348,17 +346,8 @@ void	CRenderTarget::phase_combine()
 		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
 		vDofKernel.mul(ps_r2_dof_kernel_size);
 
-		CEnvDescriptorMixer* envdesc = g_pGamePersistent->Environment().CurrentEnv;
-		Fvector4 SepiaParams;
-		Fvector4 VignettePower;
-		SepiaParams.set(envdesc->m_SepiaColor.x, envdesc->m_SepiaColor.y, envdesc->m_SepiaColor.z, envdesc->m_SepiaPower);
-		VignettePower.set(envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower, envdesc->m_VignettePower);
-
 		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
-
-		RCache.set_c("sepia_params", SepiaParams);
-		RCache.set_c("vignette_power", VignettePower);
 
 		//Set geometry
 		RCache.set_Geometry(g_combine);
@@ -445,9 +434,6 @@ void CRenderTarget::phase_combine_volumetric()
 
 		//.		Fvector4	envclr			= { envdesc.sky_color.x*2+EPS,	envdesc.sky_color.y*2+EPS,	envdesc.sky_color.z*2+EPS,	envdesc.weight					};
 		Fvector4	envclr = { envdesc->hemi_color.x * 2 + EPS,	envdesc->hemi_color.y * 2 + EPS,	envdesc->hemi_color.z * 2 + EPS,	envdesc->weight };
-
-
-		Fvector4	fogclr = { envdesc->fog_color.x,	envdesc->fog_color.y,	envdesc->fog_color.z, 0 };
 		envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
 		envclr.z *= 2 * ps_r2_sun_lumscale_hemi;
@@ -503,7 +489,6 @@ void CRenderTarget::phase_combine_volumetric()
 		RCache.set_c("Ldynamic_dir", sundir);
 
 		RCache.set_c("env_color", envclr);
-		RCache.set_c("fog_color", fogclr);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 	RCache.set_ColorWriteEnable();

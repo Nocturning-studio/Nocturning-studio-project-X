@@ -58,16 +58,6 @@ static class cl_parallax : public R_constant_setup {
 	}
 }	binder_parallax;
 //////////////////////////////////////////////////////////////////////////
-static class cl_rain_density : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E->rain_density;
-		RCache.set_c(C, fValue, fValue, fValue, 0);
-	}
-}	binder_rain_density;
-//////////////////////////////////////////////////////////////////////////
 static class cl_sun_far : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
@@ -76,44 +66,6 @@ static class cl_sun_far : public R_constant_setup
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
 }	binder_sun_far;
-//////////////////////////////////////////////////////////////////////////
-static class cl_sun_shafts_intensity : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E->m_fSunShaftsIntensity;
-		RCache.set_c(C, fValue, fValue, fValue, 0);
-	}
-}	binder_sun_shafts_intensity;
-//////////////////////////////////////////////////////////////////////////
-static class cl_water_intensity : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E->m_fWaterIntensity;
-		RCache.set_c(C, fValue, fValue, fValue, 0);
-	}
-}	binder_water_intensity;
-//////////////////////////////////////////////////////////////////////////
-static class cl_pos_decompress_params : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
-		float HorzTan = -VertTan / Device.fASPECT;
-
-		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
-
-	}
-}	binder_pos_decompress_params;
-//////////////////////////////////////////////////////////////////////////
-static class cl_pos_decompress_params2 : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
-	}
-}	binder_pos_decompress_params2;
 //////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
@@ -289,12 +241,7 @@ void CRender::create()
 
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax", &binder_parallax);
-	::Device.Resources->RegisterConstantSetup("water_intensity", &binder_water_intensity);
-	::Device.Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
-	::Device.Resources->RegisterConstantSetup("rain_density", &binder_rain_density);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
-	::Device.Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
-	::Device.Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";

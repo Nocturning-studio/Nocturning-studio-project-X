@@ -128,10 +128,17 @@ class cl_fog_plane : public R_constant_setup {
 			plane.mul(denom);
 
 			// Near/Far
-			float A = g_pGamePersistent->Environment().CurrentEnv->fog_near;
-			float B = 1 / (g_pGamePersistent->Environment().CurrentEnv->fog_far - A);
+			float FogNear = g_pGamePersistent->Environment().CurrentEnv->fog_near;
+			float FogFar = g_pGamePersistent->Environment().CurrentEnv->fog_far;
+			float FarPlane = g_pGamePersistent->Environment().CurrentEnv->far_plane;
 
-			result.set(-plane.x * B, -plane.y * B, -plane.z * B, 1 - (plane.w - A) * B);								// view-plane
+			FogFar = std::min(FogFar, FarPlane);
+
+			float Fog = 1 / (FogFar - FogNear);
+			Fvector4 FogPlane;
+			FogPlane.set(-plane.x * Fog, -plane.y * Fog, -plane.z * Fog, 1 - (plane.w - FogNear) * Fog);
+
+			result.set(FogPlane);
 		}
 		RCache.set_c(C, result);
 	}
@@ -149,6 +156,8 @@ class cl_fog_params : public R_constant_setup {
 			// Near/Far
 			float	n = g_pGamePersistent->Environment().CurrentEnv->fog_near;
 			float	f = g_pGamePersistent->Environment().CurrentEnv->fog_far;
+			float	fp = g_pGamePersistent->Environment().CurrentEnv->far_plane;
+			f = std::min(f, fp);
 			float	r = 1 / (f - n);
 			result.set(-n * r, n, f, r);
 		}
@@ -168,6 +177,36 @@ class cl_fog_color : public R_constant_setup {
 		RCache.set_c(C, result);
 	}
 };	static cl_fog_color		binder_fog_color;
+
+static class cl_fog_density final : public R_constant_setup
+{
+	u32	marker;
+	Fvector4 FogDensity;
+	void setup(R_constant* C) override
+	{
+		if (marker != Device.dwFrame)
+		{
+			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
+			FogDensity.set(desc->fog_density, 0, 0, 0);
+		}
+		RCache.set_c(C, FogDensity);
+	}
+} binder_fog_density;
+
+static class cl_fog_sky_influence final : public R_constant_setup
+{
+	u32	marker;
+	Fvector4 FogDensity;
+	void setup(R_constant* C) override
+	{
+		if (marker != Device.dwFrame)
+		{
+			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
+			FogDensity.set(desc->fog_sky_influence, 0, 0, 0);
+		}
+		RCache.set_c(C, FogDensity);
+	}
+} binder_fog_sky_influence;
 
 static class cl_vertical_fog_intensity final : public R_constant_setup
 {
@@ -199,20 +238,84 @@ static class cl_vertical_fog_height final : public R_constant_setup
 	}
 } binder_vertical_fog_height;
 
-static class cl_fog_density final : public R_constant_setup
+static class cl_rain_density : public R_constant_setup
 {
-	u32	marker;
-	Fvector4 FogDensity;
-	void setup(R_constant* C) override
+	virtual void setup(R_constant* C)
 	{
-		if (marker != Device.dwFrame)
-		{
-			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
-			FogDensity.set(desc->fog_density, 0, 0, 0);
-		}
-		RCache.set_c(C, FogDensity);
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E->rain_density;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
-} binder_fog_density;
+}	binder_rain_density;
+
+static class cl_far_plane : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E->far_plane;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_far_plane;
+
+static class cl_sun_shafts_intensity : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E->m_fSunShaftsIntensity;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_sun_shafts_intensity;
+
+static class cl_water_intensity : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E->m_fWaterIntensity;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_water_intensity;
+
+static class cl_pos_decompress_params : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
+		float HorzTan = -VertTan / Device.fASPECT;
+
+		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
+
+	}
+}	binder_pos_decompress_params;
+
+static class cl_pos_decompress_params2 : public R_constant_setup {
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
+	}
+}	binder_pos_decompress_params2;
+
+static class cl_sepia_params : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		Fvector3 SepiaColor = E->m_SepiaColor;
+		float SepiaPower = E->m_SepiaPower;
+		RCache.set_c(C, SepiaColor.x, SepiaColor.y, SepiaColor.z, SepiaPower);
+	}
+}	binder_sepia_params;
+
+static class cl_vignette_power : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		CEnvDescriptor* E = g_pGamePersistent->Environment().CurrentEnv;
+		float fValue = E->m_VignettePower;
+		RCache.set_c(C, fValue, fValue, fValue, 0);
+	}
+}	binder_vignette_power;
 
 // times
 class cl_times : public R_constant_setup {
@@ -382,9 +485,23 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("fog_params", &binder_fog_params);
 	r_Constant("fog_color", &binder_fog_color);
 	r_Constant("fog_density", &binder_fog_density);
+	r_Constant("fog_sky_influence", &binder_fog_sky_influence);
 	r_Constant("vertical_fog_intensity", &binder_vertical_fog_intensity);
 	r_Constant("vertical_fog_height", &binder_vertical_fog_height);
 #endif
+
+	r_Constant("water_intensity", &binder_water_intensity);
+	r_Constant("sun_shafts_intensity", &binder_sun_shafts_intensity);
+	r_Constant("rain_density", &binder_rain_density);
+
+	r_Constant("sepia_params", &binder_sepia_params);
+	r_Constant("vignette_power", &binder_vignette_power);
+
+	r_Constant("far_plane", &binder_far_plane);
+
+	r_Constant("pos_decompression_params", &binder_pos_decompress_params);
+	r_Constant("pos_decompression_params2", &binder_pos_decompress_params2);
+
 	// env-params
 	r_Constant("env_color", &binder_env_color);
 

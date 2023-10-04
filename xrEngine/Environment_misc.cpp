@@ -54,6 +54,11 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		fog_density += M.fog_density * _power;
 		use_flags.set(eFogDensity, TRUE);
 	}
+//	if (M.use_flags.test(eFogSkyInfluence))
+//	{
+//		fog_sky_influence += M.fog_sky_influence * _power;
+//		use_flags.set(eFogSkyInfluence, TRUE);
+//	}
 	if (M.use_flags.test(eVerticalFogIntensity))
 	{
 		vertical_fog_intensity += M.vertical_fog_intensity * _power;
@@ -222,6 +227,7 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 
 	fog_color.set(1, 1, 1);
 	fog_density = 0.0f;
+	fog_sky_influence = 0.0f;
 	vertical_fog_intensity = 0.0001f;
 	vertical_fog_height = 0.8f;
 	fog_distance = 400.0f;
@@ -286,6 +292,11 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	fog_color = config.r_fvector3(m_identifier.c_str(), "fog_color");
 	fog_density = config.r_float(m_identifier.c_str(), "fog_density");
 	fog_distance = config.r_float(m_identifier.c_str(), "fog_distance");
+
+	if (config.line_exist(m_identifier.c_str(), "fog_sky_influence"))
+		fog_sky_influence = config.r_float(m_identifier.c_str(), "fog_sky_influence");
+	else
+		vertical_fog_intensity = 0.0000f;
 
 	if (config.line_exist(m_identifier.c_str(), "vertical_fog_intensity"))
 		vertical_fog_intensity = config.r_float(m_identifier.c_str(), "vertical_fog_intensity");
@@ -461,6 +472,13 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	fog_distance = (fi * A.fog_distance + f * B.fog_distance);
 	fog_near = (1.0f - fog_density) * 0.85f * fog_distance;
 	fog_far = 0.99f * fog_distance;
+
+	fog_sky_influence = (fi * A.fog_sky_influence + f * B.fog_sky_influence);
+//	if (Mdf.use_flags.test(eFogSkyInfluence))
+//	{
+//		fog_sky_influence += Mdf.fog_sky_influence;
+//		fog_sky_influence *= modif_power;
+//	}
 
 	vertical_fog_intensity = (fi * A.vertical_fog_intensity + f * B.vertical_fog_intensity);
 	if (Mdf.use_flags.test(eVerticalFogIntensity))
