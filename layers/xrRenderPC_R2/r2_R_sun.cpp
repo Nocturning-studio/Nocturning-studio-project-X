@@ -827,7 +827,7 @@ void CRender::render_sun				()
 	r_dsgraph_render_subspace					(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 
 	// IGNORE PORTALS
-	if	(ps_r2_ls_flags.test(R2FLAG_SUN_IGNORE_PORTALS))
+	if	(ps_r2_lighting_flags.test(R2FLAG_SUN_IGNORE_PORTALS))
 	{
 		for		(u32 s=0; s<Sectors.size(); s++)
 		{
@@ -854,7 +854,7 @@ void CRender::render_sun				()
 
 	// Compute REAL sheared xform based on receivers/casters information
 	FPU::m64r			();
-	if	( _abs(m_fCosGamma) < 0.99f && ps_r2_ls_flags.test(R2FLAG_SUN_TSM))
+	if	( _abs(m_fCosGamma) < 0.99f && ps_r2_lighting_flags.test(R2FLAG_SUN_TSM))
 	{
 		//  get the near and the far plane (points) in eye space.
 		D3DXVECTOR3 frustumPnts[8];
@@ -1048,7 +1048,7 @@ void CRender::render_sun				()
 	FPU::m24r				();
 
 	// perform "refit" or "focusing" on relevant
-	if	(ps_r2_ls_flags.test(R2FLAG_SUN_FOCUS))
+	if	(ps_r2_lighting_flags.test(R2FLAG_SUN_FOCUS))
 	{
 		FPU::m64r				();
 
@@ -1144,7 +1144,7 @@ void CRender::render_sun				()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0);
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))
+			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))
 				Details->Render();
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{
@@ -1350,7 +1350,7 @@ void CRender::render_sun_near	()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
+			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))	
 				Details->Render					()	;
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{
@@ -1391,7 +1391,7 @@ void CRender::init_cacades()
 	float size = MAP_SIZE_START;
 	u32 cascade_count = 0;
 
-	switch (ps_sun_quality)
+	switch (ps_r2_sun_quality)
 	{
 	case 1:
 	case 2:
@@ -1418,7 +1418,7 @@ void CRender::init_cacades()
 
 	m_sun_cascades.resize(cascade_count);
 
-	switch (ps_sun_quality)
+	switch (ps_r2_sun_quality)
 	{
 	case 1:
 	case 2: 
@@ -1817,7 +1817,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			RCache.set_xform_view(Fidentity);
 			RCache.set_xform_project(fuckingsun->X.D.combine);
 			r_dsgraph_render_graph(0);
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))
+			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))
 				Details->Render();
 			fuckingsun->X.D.transluent = FALSE;
 			if (bSpecial) {

@@ -156,39 +156,39 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	IBlender::Compile		(C);
 	// codepath is the same, only the shaders differ
 	// ***only pixel shaders differ***
-	extern u32 ps_debug_textures;
+	extern u32 ps_r2_debug_textures;
 	string256				mask;
 	strconcat				(sizeof(mask),mask,C.L_textures[0].c_str(),"_mask");
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer
 		//uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
-		extern u32 ps_terrain_bump_mode;
-		if ((ps_terrain_bump_mode == 1) || (r2_sun_static))
+		extern u32 ps_r2_terrain_bump_mode;
+		if ((ps_r2_terrain_bump_mode == 1) || (r2_sun_static))
 			C.r_Pass("deffer_terrain", "deffer_terrain", TRUE);
-		else if ((ps_terrain_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+		else if ((ps_r2_terrain_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
 			C.r_Pass("deffer_terrain", "deffer_terrain_parallax", TRUE);
-		if ((ps_terrain_bump_mode == 3) && (r2_advanced_pp))
+		if ((ps_r2_terrain_bump_mode == 3) && (r2_advanced_pp))
 			C.r_Pass("deffer_terrain", "deffer_terrain_steep_parallax", TRUE);
 
 		C.r_Sampler		("s_mask",	mask);
 		C.r_Sampler		("s_lmap",	C.L_textures[1]);
 
-		if (ps_debug_textures == 1)
+		if (ps_r2_debug_textures == 1)
 			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-		else if (ps_debug_textures == 2)
+		else if (ps_r2_debug_textures == 2)
 			C.r_Sampler_tex("s_base", "ed\\debug_white");
 		else
 			C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
-		if (ps_debug_textures == 1)
+		if (ps_r2_debug_textures == 1)
 		{
 			C.r_Sampler_tex("s_dt_r", "ed\\debug_uv_checker");
 			C.r_Sampler_tex("s_dt_g", "ed\\debug_uv_checker");
 			C.r_Sampler_tex("s_dt_b", "ed\\debug_uv_checker");
 			C.r_Sampler_tex("s_dt_a", "ed\\debug_uv_checker");
 		}
-		else if (ps_debug_textures == 2)
+		else if (ps_r2_debug_textures == 2)
 		{
 			C.r_Sampler_tex("s_dt_r", "ed\\debug_white");
 			C.r_Sampler_tex("s_dt_g", "ed\\debug_white");
@@ -217,9 +217,9 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer
 		C.r_Pass("deffer_terrain_lq", "deffer_terrain_lq", TRUE);
-		if (ps_debug_textures == 1)
+		if (ps_r2_debug_textures == 1)
 			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-		else if (ps_debug_textures == 2)
+		else if (ps_r2_debug_textures == 2)
 			C.r_Sampler_tex("s_base", "ed\\debug_white");
 		else
 			C.r_Sampler("s_base", C.L_textures[0]);

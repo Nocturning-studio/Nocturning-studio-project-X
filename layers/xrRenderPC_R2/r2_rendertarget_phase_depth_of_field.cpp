@@ -101,6 +101,6 @@ void CRenderTarget::phase_depth_of_field()
 {
 	depth_of_field_pass_first();
 
-	if(ps_dof_quality >= 3)
+	if(ps_r2_dof_quality >= 3)
 	depth_of_field_pass_second();
 }

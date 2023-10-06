@@ -207,7 +207,7 @@ void CRender::Render		()
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
-	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
+	BOOL					bSUN				= ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
 	if (o.sunstatic)		bSUN				= FALSE;
 	// Msg						("sstatic: %s, sun: %s",o.sunstatic?"true":"false", bSUN?"true":"false");
 
@@ -341,6 +341,7 @@ void CRender::Render		()
 
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)	{
+/*
 		// skybox can be drawn here
 		if (0)
 		{
@@ -354,7 +355,7 @@ void CRender::Render		()
 			g_pGamePersistent->Environment().RenderSky	();
 			CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	TRUE				));
 		}
-
+*/
 		// level
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
@@ -388,7 +389,7 @@ void CRender::Render		()
 	// Directional light - fucking sun
 	if (bSUN)	{
 		RImplementation.stats.l_visible		++;
-		if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if( !ps_r2_lighting_flags.is(R2FLAGEXT_SUN_OLD))
 			render_sun_cascades					();
 		else
 		{
@@ -408,7 +409,7 @@ void CRender::Render		()
 	// Lighting, dependant on OCCQ
 	render_lights							(LP_pending);
 
-	if (ps_ao >= 1 && RImplementation.o.advancedpp)
+	if (ps_r2_ao >= 1 && RImplementation.o.advancedpp)
 	Target->phase_ao();
 
 	// Postprocess

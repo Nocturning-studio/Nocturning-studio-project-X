@@ -327,7 +327,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//AO
-	if (ps_ao >= 1 && RImplementation.o.advancedpp)
+	if (ps_r2_ao >= 1 && RImplementation.o.advancedpp)
 	{
 		u32 Weight = Device.dwWidth, 
 			Height = Device.dwHeight;
@@ -335,7 +335,7 @@ CRenderTarget::CRenderTarget		()
 		float BaseAOTexWeight = Weight,
 			  BaseAOTexHeight = Height;
 
-		if (ps_ao == 1)
+		if (ps_r2_ao == 1)
 		{
 			BaseAOTexWeight *= 0.75f;
 			BaseAOTexHeight *= 0.75f;
@@ -500,7 +500,7 @@ CRenderTarget::CRenderTarget		()
 	s_frame_overlay.create(b_frame_overlay, "r2\\frame overlay");
 
 	//Depth of field
-	if (ps_r2_pp_flags.test(R2FLAG_DOF))
+	if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
 	{
 		//Create shader resource
 		s_dof.create(b_dof, "r2\\dof");
@@ -630,7 +630,7 @@ void CRenderTarget::increment_light_marker()
 
 bool CRenderTarget::need_to_render_sunshafts()
 {
-	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts))
+	if (!(RImplementation.o.advancedpp && ps_r2_sun_shafts))
 		return false;
 
 	{

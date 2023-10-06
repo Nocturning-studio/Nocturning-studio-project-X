@@ -120,10 +120,10 @@ void CRenderTarget::watermark()
 
 void CRenderTarget::draw_overlays()
 {
-	if (ps_r2_pp_flags.test(R2FLAG_PHOTO_GRID))
+	if (ps_r2_overlay_flags.test(R2FLAG_PHOTO_GRID))
 		photo_grid();
-	if (ps_r2_pp_flags.test(R2FLAG_CINEMA_BORDERS))
+	if (ps_r2_overlay_flags.test(R2FLAG_CINEMA_BORDERS))
 		cinema_borders();
-	if (ps_r2_pp_flags.test(R2FLAG_WATERMARK))
+	if (ps_r2_overlay_flags.test(R2FLAG_WATERMARK))
 		watermark();
 }

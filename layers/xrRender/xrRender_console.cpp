@@ -1,8 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////
 #include	"stdafx.h"
 #pragma		hdrstop
-
+///////////////////////////////////////////////////////////////////////////////////
 #include	"xrRender_console.h"
-
+///////////////////////////////////////////////////////////////////////////////////
+/*-------------------------------------------------------------------------------*/
+// Render common tokens
+/*-------------------------------------------------------------------------------*/
 u32			ps_Preset = 3;
 xr_token							qpreset_token[] = {
 	{ "Minimum",					0											},
@@ -23,7 +27,18 @@ xr_token							qeffpreset_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_aa = 1;
+u32		ps_vignette_mode = 2;
+xr_token vignette_mode_token[] = {
+	{ "st_opt_disabled",			0											},
+	{ "st_opt_static",				1											},
+	{ "st_opt_dynamic",				2											},
+	{ 0,							0											}
+};
+
+/*-------------------------------------------------------------------------------*/
+// R2a/R2/R2.5 specific tokens
+/*-------------------------------------------------------------------------------*/
+u32		ps_r2_aa = 1;
 xr_token							aa_token[] = {
 	{ "st_opt_disabled",			0											},
 	{ "st_opt_dlaa",				1											},
@@ -33,7 +48,7 @@ xr_token							aa_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_aa_quality = 2;
+u32		ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -42,7 +57,7 @@ xr_token aa_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_ao = 2;
+u32		ps_r2_ao = 2;
 xr_token ao_token[] = {
 	{ "st_opt_off",					0											},
 	{ "st_opt_ssao",				1											},
@@ -51,7 +66,7 @@ xr_token ao_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_ao_quality = 2;
+u32		ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -60,7 +75,7 @@ xr_token ao_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_sun_quality = 1;
+u32		ps_r2_sun_quality = 1;
 xr_token sun_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -70,7 +85,7 @@ xr_token sun_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_shadow_filtering = 1;
+u32		ps_r2_shadow_filtering = 1;
 xr_token shadow_filter_token[] = {
 	{ "st_opt_disable",				0											},
 	{ "st_opt_min",					1											},
@@ -79,7 +94,58 @@ xr_token shadow_filter_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_debug_frame_layers = 0;
+u32			ps_r2_sun_shafts = 2;
+xr_token							qsun_shafts_token[] = {
+	{ "st_opt_off",					0												},
+	{ "st_opt_low",					1												},
+	{ "st_opt_medium",				2												},
+	{ "st_opt_high",				3												},
+	{ 0,							0												}
+};
+
+u32		ps_r2_bump_mode = 2;
+xr_token bump_mode_token[] = {
+	{ "st_opt_normal_mapping",		1											},
+	{ "st_opt_parallax_mapping",	2											},
+	{ "st_opt_steep_parallax_mapping",3											},
+	{ 0,							0											}
+};
+
+u32		ps_r2_tdetail_bump_mode = 2;
+xr_token tdetail_bump_mode_token[] = {
+	{ "st_opt_normal_mapping",		1											},
+	{ "st_opt_parallax_mapping",	2											},
+	{ "st_opt_steep_parallax_mapping",3											},
+	{ 0,							0											}
+};
+
+u32		ps_r2_terrain_bump_mode = 2;
+xr_token terrain_bump_mode_token[] = {
+	{ "st_opt_normal_mapping",		1											},
+	{ "st_opt_parallax_mapping",	2											},
+	{ "st_opt_steep_parallax_mapping",3											},
+	{ 0,							0											}
+};
+
+u32		ps_r2_dof_quality = 2;
+xr_token dof_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_ultra",				4											},
+	{ 0,							0											}
+};
+
+u32		ps_r2_fog_quality = 2;
+xr_token fog_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_ultra",				4											},
+	{ 0,							0											}
+};
+
+u32		ps_r2_debug_frame_layers = 0;
 xr_token debug_frame_layers_token[] = {
 	{ "full_frame",					0											},
 	{ "gbuffer_color",				1											},
@@ -98,7 +164,7 @@ xr_token debug_frame_layers_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_debug_textures = 0;
+u32		ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {
 	{ "disabled",					0											},
 	{ "uv_checker",					1											},
@@ -106,67 +172,10 @@ xr_token ps_debug_textures_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_bump_mode = 2;
-xr_token bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
-	{ 0,							0											}
-};
-
-u32		ps_tdetail_bump_mode = 2;
-xr_token tdetail_bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
-	{ 0,							0											}
-};
-
-u32		ps_terrain_bump_mode = 2;
-xr_token terrain_bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
-	{ 0,							0											}
-};
-
-u32			ps_r_sun_shafts = 2;
-xr_token							qsun_shafts_token[] = {
-	{ "st_opt_off",					0												},
-	{ "st_opt_low",					1												},
-	{ "st_opt_medium",				2												},
-	{ "st_opt_high",				3												},
-	{ 0,							0												}
-};
-
-u32		ps_dof_quality = 2;
-xr_token dof_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
-
-u32		ps_fog_quality = 2;
-xr_token fog_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
-
-u32		ps_vignette_mode = 2;
-xr_token vignette_mode_token[] = {
-	{ "st_opt_disabled",			0											},
-	{ "st_opt_static",				1											},
-	{ "st_opt_dynamic",				2											},
-	{ 0,							0											}
-};
-
-// Common
-//int		ps_r__Supersample			= 1		;
+/*-------------------------------------------------------------------------------*/
+// Render common values
+/*-------------------------------------------------------------------------------*/
+int			ps_r__Supersample = 1;
 int			ps_r__LightSleepFrames = 10;
 
 float		ps_r__Detail_l_ambient = 0.9f;
@@ -187,117 +196,143 @@ float		ps_r__WallmarkSHIFT_V = 0.0001f;
 float		ps_r__GLOD_ssa_start = 256.f;
 float		ps_r__GLOD_ssa_end = 64.f;
 float		ps_r__LOD = 1.f;
-//. float		ps_r__LOD_Power				=  1.5f	;
-float		ps_r__ssaDISCARD = 3.5f;					//RO
-float		ps_r__ssaDONTSORT = 32.f;					//RO
-float		ps_r__ssaHZBvsTEX = 96.f;					//RO
+float		ps_r__ssaDISCARD = 3.5f;
+float		ps_r__ssaDONTSORT = 32.f;
+float		ps_r__ssaHZBvsTEX = 96.f;
 
 int			ps_r__tf_Anisotropic = 4;
 
-// R1
+/*-------------------------------------------------------------------------------*/
+// R1-specific values
+/*-------------------------------------------------------------------------------*/
 float		ps_r1_ssaLOD_A = 64.f;
 float		ps_r1_ssaLOD_B = 48.f;
 float		ps_r1_tf_Mipbias = 0.0f;
-Flags32		ps_r1_flags = { R1FLAG_DLIGHTS };		// r1-only
 float		ps_r1_lmodel_lerp = 0.1f;
 float		ps_r1_dlights_clip = 30.f;
 float		ps_r1_pps_u = 0.f;
 float		ps_r1_pps_v = 0.f;
+int			ps_r1_GlowsPerFrame = 16;
 
-// R1-specific
-int			ps_r1_GlowsPerFrame = 16;					// r1-only
+// R1-specific flags
+Flags32		ps_r1_flags = 
+{ 
+	R1FLAG_DLIGHTS 
+};
 
-// R2
+/*-------------------------------------------------------------------------------*/
+// R2/R2a/R2.5-specific values
+/*-------------------------------------------------------------------------------*/
 float		ps_r2_ssaLOD_A = 48.f;
 float		ps_r2_ssaLOD_B = 32.f;
+float		ps_r2_detalization_distance = 75.f;
+
 float		ps_r2_tf_Mipbias = 0.0f;
 
-// R2-specific
-Flags32 ps_r2_ls_flags =
-{
-	R2FLAG_SUN						|
-	R2FLAG_SUN_IGNORE_PORTALS		|
-	R2FLAG_EXP_DONT_TEST_UNSHADOWED |
-	R2FLAG_USE_NVSTENCIL			|
-	R2FLAG_EXP_SPLIT_SCENE			|
-	R2FLAG_EXP_MT_CALC				|
-	R2FLAG_TONEMAP					|
-	R2FLAG_SUN_FOCUS				|
-	R2FLAG_SUN_TSM
-}; // r2-only
-
-Flags32 ps_r2_pp_flags =
-{
-	R2FLAG_DOF |
-	R2FLAG_MBLUR
-}; // r2.5-only
-
-Flags32		ps_r2_ls_flags_ext = { R2FLAGEXT_AO_BLUR };
-
 float		ps_r2_df_parallax_h = 0.02f;
-float		ps_r2_detalization_distance = 75.f;
-float		ps_r2_tonemap_middlegray = 1.f;			// r2-only
-float		ps_r2_tonemap_adaptation = 1.f;				// r2-only
-float		ps_r2_tonemap_low_lum = 0.0001f;			// r2-only
-float		ps_r2_tonemap_amount = 0.7f;				// r2-only
-float		ps_r2_ls_bloom_kernel_g = 3.0f;				// r2-only
-float		ps_r2_ls_bloom_kernel_b = .7f;				// r2-only
-float		ps_r2_ls_bloom_speed = 100.f;				// r2-only
-float		ps_r2_ls_bloom_kernel_scale = 0.8f;				// r2-only	// gauss
-float		ps_r2_ls_dsm_kernel = .7f;				// r2-only
-float		ps_r2_ls_psm_kernel = .7f;				// r2-only
-float		ps_r2_ls_ssm_kernel = .7f;				// r2-only
-float		ps_r2_ls_bloom_threshold = .2f;				// r2-only
-Fvector		ps_r2_aa_barier = { .8f, .1f, 0 };	// r2-only
-Fvector		ps_r2_aa_weight = { .25f,.25f,0 };	// r2-only
-float		ps_r2_aa_kernel = .5f;				// r2-only
-float		ps_r2_mblur = .5f;				// .5f
-int			ps_r2_GI_depth = 1;				// 1..5
-int			ps_r2_GI_photons = 16;				// 8..64
-float		ps_r2_GI_clip = EPS_L;			// EPS
-float		ps_r2_GI_refl = .9f;				// .9f
-float		ps_r2_ls_depth_scale = 1.00001f;			// 1.00001f
-float		ps_r2_ls_depth_bias = -0.0001f;			// -0.0001f
-float		ps_r2_ls_squality = 1.0f;				// 1.00f
-float		ps_r2_sun_tsm_projection = 0.18f;			// 0.18f
-float		ps_r2_sun_tsm_bias = -0.05f;			// 
-float		ps_r2_sun_near = 12.f;				// 12.0f
-float		ps_r2_sun_far = 150.f;
-float		ps_r2_sun_near_border = 1.0f;			// 1.0f
-float		ps_r2_sun_depth_far_scale = 1.00000f;			// 1.00001f
-float		ps_r2_sun_depth_far_bias = 0.00000f;			// -0.0000f
-float		ps_r2_sun_depth_near_scale = 1.00001f;			// 1.00001f
-float		ps_r2_sun_depth_near_bias = -0.00004f;		// -0.00005f
-float		ps_r2_sun_lumscale = 1.0f;				// 1.0f
-float		ps_r2_sun_lumscale_hemi = 1.0f;				// 1.0f
-float		ps_r2_sun_lumscale_amb = 1.0f;
-float		ps_r2_gmaterial = 0.f;				// 
-float		ps_r2_zfill = 0.1f;				// .1f
 
-float		ps_r2_dhemi_sky_scale = 0.08f;				// 1.5f
+float		ps_r2_tonemap_middlegray = 1.f;			
+float		ps_r2_tonemap_adaptation = 1.f;				
+float		ps_r2_tonemap_low_lum = 0.0001f;			
+float		ps_r2_tonemap_amount = 0.7f;
+
+float		ps_r2_ls_bloom_kernel_g = 3.0f;				
+float		ps_r2_ls_bloom_kernel_b = .7f;				
+float		ps_r2_ls_bloom_speed = 100.f;				
+float		ps_r2_ls_bloom_kernel_scale = 0.8f;		// gauss
+float		ps_r2_ls_bloom_threshold = .2f;
+
+float		ps_r2_ls_dsm_kernel = .7f;				
+float		ps_r2_ls_psm_kernel = .7f;				
+float		ps_r2_ls_ssm_kernel = .7f;
+			
+Fvector		ps_r2_aa_barier = { .8f, .1f, 0 };	
+Fvector		ps_r2_aa_weight = { .25f,.25f,0 };	
+float		ps_r2_aa_kernel = .5f;				
+
+float		ps_r2_mblur = .5f;
+
+Fvector3	ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f); //	x - min (0), y - focus (1.4), z - max (100)
+float		ps_r2_dof_sky = 300;					//	distance to sky
+float		ps_r2_dof_kernel_size = 5.0f;
+
+int			ps_r2_GI_depth = 1;						// 1..5
+int			ps_r2_GI_photons = 16;					// 8..64
+float		ps_r2_GI_clip = EPS_L;					// EPS
+float		ps_r2_GI_refl = .9f;
+
+float		ps_r2_ls_depth_scale = 1.00001f;
+float		ps_r2_ls_depth_bias = -0.0001f;
+float		ps_r2_ls_squality = 1.0f;
+
+float		ps_r2_sun_tsm_projection = 0.18f;
+float		ps_r2_sun_tsm_bias = -0.05f;
+float		ps_r2_sun_near = 12.f;
+float		ps_r2_sun_far = 150.f;
+float		ps_r2_sun_near_border = 1.0f;
+float		ps_r2_sun_depth_far_scale = 1.00000f;
+float		ps_r2_sun_depth_far_bias = 0.00000f;
+float		ps_r2_sun_depth_near_scale = 1.00001f;
+float		ps_r2_sun_depth_near_bias = -0.00004f;
+float		ps_r2_sun_lumscale = 1.0f;
+float		ps_r2_sun_lumscale_hemi = 1.0f;
+float		ps_r2_sun_lumscale_amb = 1.0f;
+
+float		ps_r2_gmaterial = 0.f;
+
+float		ps_r2_zfill = 0.1f;
+
+float		ps_r2_dhemi_sky_scale = 0.08f;
 float		ps_r2_dhemi_light_scale = 0.2f;
 float		ps_r2_dhemi_light_flow = 0.1f;
-float		ps_r2_dhemi_scale = 1.f;				// 1.5f
-int			ps_r2_dhemi_count = 5;				// 5
+float		ps_r2_dhemi_scale = 1.f;
+int			ps_r2_dhemi_count = 5;
+
 int			ps_r2_wait_sleep = 0;
 
-float		ps_r2_lt_smooth = 1.f;				// 1.f
-float		ps_r2_slight_fade = 1.f;				// 1.f
+float		ps_r2_lt_smooth = 1.f;
 
-//	x - min (0), y - focus (1.4), z - max (100)
-Fvector3	ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f);
-float		ps_r2_dof_sky = 300;				//	distance to sky
-float		ps_r2_dof_kernel_size = 5.0f;						//	7.0f
+float		ps_r2_slight_fade = 1.f;
 
-
-//- Mad Max
 float		ps_r2_gloss_factor = 1.0f;
-//- Mad Max
+
+// R2-specific flags
+Flags32 ps_r2_lighting_flags =
+{
+	R2FLAG_SUN |
+	R2FLAG_SUN_IGNORE_PORTALS |
+	R2FLAG_EXP_DONT_TEST_UNSHADOWED |
+	R2FLAG_SUN_FOCUS |
+	R2FLAG_SUN_TSM
+};
+
+Flags32 ps_r2_postprocess_flags =
+{
+	R2FLAG_TONEMAP |
+	R2FLAG_DOF |
+	R2FLAG_MBLUR
+};
+
+Flags32 ps_r2_overlay_flags =
+{
+	0,
+};
+
+Flags32 ps_r2_ls_flags =
+{
+	R2FLAG_USE_NVSTENCIL			|
+	R2FLAG_EXP_SPLIT_SCENE			|
+	R2FLAG_EXP_MT_CALC
+};
+
+/*-------------------------------------------------------------------------------*/
+// Methods
+/*-------------------------------------------------------------------------------*/
 #ifndef _EDITOR
+///////////////////////////////////////////////////////////////////////////////////
 #include	"..\xrEngine\xr_ioconsole.h"
 #include	"..\xrEngine\xr_ioc_cmd.h"
-
-//-----------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_tf_Aniso : public CCC_Integer
 {
 public:
@@ -319,6 +354,7 @@ public:
 		apply();
 	}
 };
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_tf_MipBias : public CCC_Float
 {
 public:
@@ -340,6 +376,7 @@ public:
 		apply();
 	}
 };
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_R2GM : public CCC_Float
 {
 public:
@@ -365,6 +402,7 @@ public:
 		}
 	}
 };
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_Screenshot : public IConsole_Command
 {
 public:
@@ -376,6 +414,7 @@ public:
 		::Render->Screenshot(IRender_interface::SM_NORMAL, image);
 	}
 };
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_ModelPoolStat : public IConsole_Command
 {
 public:
@@ -384,7 +423,7 @@ public:
 		RImplementation.Models->dump();
 	}
 };
-//-----------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////
 class	CCC_Preset : public CCC_Token
 {
 public:
@@ -409,7 +448,7 @@ public:
 		Console->Execute(cmd);
 	}
 };
-//-----------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////
 class	CCC_EffPreset : public CCC_Token
 {
 public:
@@ -430,8 +469,11 @@ public:
 		Console->Execute(cmd);
 	}
 };
+///////////////////////////////////////////////////////////////////////////////////
 #if RENDER==R_R2
+///////////////////////////////////////////////////////////////////////////////////
 #include "r__pixel_calculator.h"
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_BuildSSA : public IConsole_Command
 {
 public:
@@ -441,8 +483,9 @@ public:
 		c.run();
 	}
 };
-#endif
-
+///////////////////////////////////////////////////////////////////////////////////
+#endif //RENDER==R_R2
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofFar : public CCC_Float
 {
 public:
@@ -472,7 +515,7 @@ public:
 	//	CCC_Dof should save all data as well as load from config
 	virtual void	Save(IWriter* F) { ; }
 };
-
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofNear : public CCC_Float
 {
 public:
@@ -502,7 +545,7 @@ public:
 	//	CCC_Dof should save all data as well as load from config
 	virtual void	Save(IWriter* F) { ; }
 };
-
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofFocus : public CCC_Float
 {
 public:
@@ -539,7 +582,7 @@ public:
 	//	CCC_Dof should save all data as well as load from config
 	virtual void	Save(IWriter* F) { ; }
 };
-
+///////////////////////////////////////////////////////////////////////////////////
 class CCC_Dof : public CCC_Vector3
 {
 public:
@@ -574,65 +617,18 @@ public:
 	{
 		sprintf(I, "vector3 in range [%f,%f,%f]-[%f,%f,%f]", min.x, min.y, min.z, max.x, max.y, max.z);
 	}
-
 };
-
+///////////////////////////////////////////////////////////////////////////////////
 void		xrRender_initconsole()
 {
-	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_ls_flags, R2FLAG_SOFT_WATER);
-	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_ls_flags, R2FLAG_SOFT_PARTICLES);
-	CMD3(CCC_Token, "r2_fog_quality", &ps_fog_quality, fog_quality_token);
-
-	CMD3(CCC_Token, "r2_aa_type", &ps_aa, aa_token);
-	CMD3(CCC_Token, "r2_aa_quality", &ps_aa_quality, aa_quality_token);
-
-	CMD3(CCC_Token, "r2_ao_type", &ps_ao, ao_token);
-	CMD3(CCC_Token, "r2_ao_quality", &ps_ao_quality, ao_quality_token);
-	CMD3(CCC_Mask,  "r2_ao_blur", &ps_r2_ls_flags_ext, R2FLAGEXT_AO_BLUR);
-
-	CMD3(CCC_Mask, "r2_sepia", &ps_r2_pp_flags, R2FLAG_SEPIA);
-	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
-	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_pp_flags, R2FLAG_CHROMATIC_ABBERATION);
-	CMD3(CCC_Mask, "r2_bloom", &ps_r2_pp_flags, R2FLAG_BLOOM);
-	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_pp_flags, R2FLAG_PHOTO_GRID);
-	CMD3(CCC_Mask, "r2_cinema_borders", &ps_r2_pp_flags, R2FLAG_CINEMA_BORDERS);
-	CMD3(CCC_Mask, "r2_watermark", &ps_r2_pp_flags, R2FLAG_WATERMARK);
-
 	Fvector	tw_min, tw_max;
-	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);
-	CMD4(CCC_Dof,		"r2_dof",			&ps_r2_dof,		tw_min,		tw_max);
-	CMD4(CCC_DofNear,	"r2_dof_near",		&ps_r2_dof.x,	tw_min.x,	tw_max.x);
-	CMD4(CCC_DofFocus,	"r2_dof_focus",		&ps_r2_dof.y,	tw_min.y,	tw_max.y);
-	CMD4(CCC_DofFar,	"r2_dof_far",		&ps_r2_dof.z,	tw_min.z,	tw_max.z);
-	CMD4(CCC_Float,		"r2_dof_kernel",	&ps_r2_dof_kernel_size,		.0f, 10.f);
-	CMD4(CCC_Float,		"r2_dof_sky",		&ps_r2_dof_sky, -10000.f, 10000.f);
-	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_pp_flags, R2FLAG_DOF);
-	CMD3(CCC_Token,		"r2_dof_quality",	&ps_dof_quality, dof_quality_token);
 
-	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_pp_flags, R2FLAG_MBLUR);
-
-	CMD3(CCC_Token, "r2_sun_shafts", &ps_r_sun_shafts, qsun_shafts_token);
-	CMD3(CCC_Token, "r2_sun_quality", &ps_sun_quality, sun_quality_token);
-	CMD3(CCC_Token, "r2_shadow_filtering", &ps_shadow_filtering, shadow_filter_token);
-
-	CMD3(CCC_Token, "r2_bump_mode", &ps_bump_mode, bump_mode_token);
-	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_tdetail_bump_mode, tdetail_bump_mode_token);
-	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_terrain_bump_mode, terrain_bump_mode_token);
-
-	CMD3(CCC_Token, "r2_debug_render", &ps_debug_frame_layers, debug_frame_layers_token);
-	CMD3(CCC_Token, "r2_debug_textures", &ps_debug_textures, ps_debug_textures_token);
-
-	CMD3(CCC_Mask, "r2_gbuffer_opt", &ps_r2_ls_flags_ext, R2FLAGEXT_GBUFFER_OPT);
-
+	//Render common commands
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 	CMD3(CCC_EffPreset, "eff_preset", &ps_EffPreset, qeffpreset_token);
 
-	// Common
 	CMD1(CCC_Screenshot, "screenshot");
-#ifdef DEBUG
-#if RENDER==R_R2
-	CMD1(CCC_BuildSSA, "build_ssa");
-#endif
+
 	CMD4(CCC_Integer, "r__lsleep_frames", &ps_r__LightSleepFrames, 4, 30);
 	CMD4(CCC_Float, "r__ssa_glod_start", &ps_r__GLOD_ssa_start, 128, 512);
 	CMD4(CCC_Float, "r__ssa_glod_end", &ps_r__GLOD_ssa_end, 16, 96);
@@ -640,17 +636,13 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r__wallmark_shift_v", &ps_r__WallmarkSHIFT_V, 0.0f, 1.f);
 	CMD4(CCC_Float, "r__wallmark_ttl", &ps_r__WallmarkTTL, 1.0f, 5.f * 60.f);
 	CMD1(CCC_ModelPoolStat, "stat_models");
-#endif // DEBUG
 
-	//	CMD4(CCC_Integer,	"r__supersample",		&ps_r__Supersample,			1,		4		);
+	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 16);
 
 	CMD4(CCC_Float, "r__geometry_lod", &ps_r__LOD, 0.1f, 1.2f);
-	//.	CMD4(CCC_Float,		"r__geometry_lod_pow",	&ps_r__LOD_Power,			0,		2		);
 
-	//.	CMD4(CCC_Float,		"r__detail_density",	&ps_r__Detail_density,		.05f,	0.99f	);
 	CMD4(CCC_Float, "r__detail_density", &ps_r__Detail_density, .2f, 0.6f);
 
-#ifdef DEBUG
 	CMD4(CCC_Float, "r__detail_l_ambient", &ps_r__Detail_l_ambient, .5f, .95f);
 	CMD4(CCC_Float, "r__detail_l_aniso", &ps_r__Detail_l_aniso, .1f, .5f);
 
@@ -661,11 +653,10 @@ void		xrRender_initconsole()
 	tw_min.set(EPS, EPS, EPS);
 	tw_max.set(2, 2, 2);
 	CMD4(CCC_Vector3, "r__d_tree_wave", &ps_r__Tree_Wave, tw_min, tw_max);
-#endif // DEBUG
 
 	CMD2(CCC_tf_Aniso, "r__tf_aniso", &ps_r__tf_Anisotropic); //	{1..16}
 
-	// R1
+	//R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r1_ssa_lod_b", &ps_r1_ssaLOD_B, 16, 64);
 	CMD4(CCC_Float, "r1_lmodel_lerp", &ps_r1_lmodel_lerp, 0, 0.333f);
@@ -675,18 +666,60 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r1_pps_u", &ps_r1_pps_u, -1.f, +1.f);
 	CMD4(CCC_Float, "r1_pps_v", &ps_r1_pps_v, -1.f, +1.f);
 	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
-
-	// R1-specific
 	CMD4(CCC_Integer, "r1_glows_per_frame", &ps_r1_GlowsPerFrame, 2, 32);
 
-	// R2
+	//R2/R2a/R2.5-specific commands
+	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_postprocess_flags, R2FLAG_SOFT_WATER);
+	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
+	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
+
+	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
+	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
+
+	CMD3(CCC_Token, "r2_ao_type", &ps_r2_ao, ao_token);
+	CMD3(CCC_Token, "r2_ao_quality", &ps_r2_ao_quality, ao_quality_token);
+
+	CMD3(CCC_Mask, "r2_sepia", &ps_r2_postprocess_flags, R2FLAG_SEPIA);
+	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
+	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_postprocess_flags, R2FLAG_CHROMATIC_ABBERATION);
+	CMD3(CCC_Mask, "r2_bloom", &ps_r2_postprocess_flags, R2FLAG_BLOOM);
+	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_overlay_flags, R2FLAG_PHOTO_GRID);
+	CMD3(CCC_Mask, "r2_cinema_borders", &ps_r2_overlay_flags, R2FLAG_CINEMA_BORDERS);
+	CMD3(CCC_Mask, "r2_watermark", &ps_r2_overlay_flags, R2FLAG_WATERMARK);
+
+	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);
+	CMD4(CCC_Dof,		"r2_dof",			&ps_r2_dof,		tw_min,		tw_max);
+	CMD4(CCC_DofNear,	"r2_dof_near",		&ps_r2_dof.x,	tw_min.x,	tw_max.x);
+	CMD4(CCC_DofFocus,	"r2_dof_focus",		&ps_r2_dof.y,	tw_min.y,	tw_max.y);
+	CMD4(CCC_DofFar,	"r2_dof_far",		&ps_r2_dof.z,	tw_min.z,	tw_max.z);
+	CMD4(CCC_Float,		"r2_dof_kernel",	&ps_r2_dof_kernel_size,		.0f, 10.f);
+	CMD4(CCC_Float,		"r2_dof_sky",		&ps_r2_dof_sky, -10000.f, 10000.f);
+	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_postprocess_flags, R2FLAG_DOF);
+	CMD3(CCC_Token,		"r2_dof_quality",	&ps_r2_dof_quality, dof_quality_token);
+
+	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_postprocess_flags, R2FLAG_MBLUR);
+
+	CMD3(CCC_Token, "r2_sun_shafts", &ps_r2_sun_shafts, qsun_shafts_token);
+	CMD3(CCC_Token, "r2_sun_quality", &ps_r2_sun_quality, sun_quality_token);
+	CMD3(CCC_Token, "r2_shadow_filtering", &ps_r2_shadow_filtering, shadow_filter_token);
+
+	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
+	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_r2_tdetail_bump_mode, tdetail_bump_mode_token);
+	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_r2_terrain_bump_mode, terrain_bump_mode_token);
+
+	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_frame_layers, debug_frame_layers_token);
+	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
+
+#if RENDER==R_R2
+	CMD1(CCC_BuildSSA, "build_ssa");
+#endif
+
 	CMD4(CCC_Float, "r2_ssa_lod_a", &ps_r2_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r2_ssa_lod_b", &ps_r2_ssaLOD_B, 32, 64);
 	CMD2(CCC_tf_MipBias, "r2_tf_mipbias", &ps_r2_tf_Mipbias);
 
-	// R2-specific
 	CMD2(CCC_R2GM, "r2em", &ps_r2_gmaterial);
-	CMD3(CCC_Mask, "r2_tonemap", &ps_r2_ls_flags, R2FLAG_TONEMAP);
+	CMD3(CCC_Mask, "r2_tonemap", &ps_r2_postprocess_flags, R2FLAG_TONEMAP);
 	CMD4(CCC_Float, "r2_tonemap_middlegray", &ps_r2_tonemap_middlegray, 0.0f, 2.0f);
 	CMD4(CCC_Float, "r2_tonemap_adaptation", &ps_r2_tonemap_adaptation, 0.01f, 10.0f);
 	CMD4(CCC_Float, "r2_tonemap_lowlum", &ps_r2_tonemap_low_lum, 0.0001f, 1.0f);
@@ -696,7 +729,7 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_ls_bloom_kernel_b", &ps_r2_ls_bloom_kernel_b, 0.01f, 1.f);
 	CMD4(CCC_Float, "r2_ls_bloom_threshold", &ps_r2_ls_bloom_threshold, 0.f, 1.f);
 	CMD4(CCC_Float, "r2_ls_bloom_speed", &ps_r2_ls_bloom_speed, 0.f, 100.f);
-	CMD3(CCC_Mask, "r2_ls_bloom_fast", &ps_r2_ls_flags, R2FLAG_FASTBLOOM);
+	CMD3(CCC_Mask, "r2_ls_bloom_fast", &ps_r2_postprocess_flags, R2FLAG_FASTBLOOM);
 	CMD4(CCC_Float, "r2_ls_dsm_kernel", &ps_r2_ls_dsm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_psm_kernel", &ps_r2_ls_psm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_ssm_kernel", &ps_r2_ls_ssm_kernel, .1f, 3.f);
@@ -704,25 +737,20 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r2_zfill", &ps_r2_ls_flags, R2FLAG_ZFILL);
 	CMD4(CCC_Float, "r2_zfill_depth", &ps_r2_zfill, .001f, .5f);
-	CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_ls_flags, R2FLAG_R1LIGHTS);
+	CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_lighting_flags, R2FLAG_R1LIGHTS);
 
-	//- Mad Max
 	CMD4(CCC_Float, "r2_gloss_factor", &ps_r2_gloss_factor, 1.f, 3.f);
-	//- Mad Max
 
-//#ifdef DEBUG
 	CMD3(CCC_Mask, "r2_use_nvdbt", &ps_r2_ls_flags, R2FLAG_USE_NVDBT);
 	CMD3(CCC_Mask, "r2_mt", &ps_r2_ls_flags, R2FLAG_EXP_MT_CALC);
-//#endif // DEBUG
 
-	CMD3(CCC_Mask, "r2_sun", &ps_r2_ls_flags, R2FLAG_SUN);
-	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_ls_flags, R2FLAG_SUN_DETAILS);
-	CMD3(CCC_Mask, "r2_sun_focus", &ps_r2_ls_flags, R2FLAG_SUN_FOCUS);
-	//	CMD3(CCC_Mask,		"r2_sun_static",		&ps_r2_ls_flags,			R2FLAG_SUN_STATIC);
-	//	CMD3(CCC_Mask,		"r2_exp_splitscene",	&ps_r2_ls_flags,			R2FLAG_EXP_SPLIT_SCENE);
-	//	CMD3(CCC_Mask,		"r2_exp_donttest_uns",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_UNSHADOWED);
+	CMD3(CCC_Mask, "r2_sun", &ps_r2_lighting_flags, R2FLAG_SUN);
+	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_lighting_flags, R2FLAG_SUN_DETAILS);
+	CMD3(CCC_Mask, "r2_sun_focus", &ps_r2_lighting_flags, R2FLAG_SUN_FOCUS);
+	CMD3(CCC_Mask, "r2_exp_splitscene",	&ps_r2_ls_flags, R2FLAG_EXP_SPLIT_SCENE);
+	CMD3(CCC_Mask, "r2_exp_donttest_uns", &ps_r2_lighting_flags, R2FLAG_EXP_DONT_TEST_UNSHADOWED);
 
-	CMD3(CCC_Mask, "r2_sun_tsm", &ps_r2_ls_flags, R2FLAG_SUN_TSM);
+	CMD3(CCC_Mask, "r2_sun_tsm", &ps_r2_lighting_flags, R2FLAG_SUN_TSM);
 	CMD4(CCC_Float, "r2_sun_tsm_proj", &ps_r2_sun_tsm_projection, .001f, 0.8f);
 	CMD4(CCC_Float, "r2_sun_tsm_bias", &ps_r2_sun_tsm_bias, -0.5, +0.5);
 	CMD4(CCC_Float, "r2_sun_near", &ps_r2_sun_near, 1.f, 50.f);
@@ -736,11 +764,10 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_sun_lumscale_hemi", &ps_r2_sun_lumscale_hemi, 0.0, +3.0);
 	CMD4(CCC_Float, "r2_sun_lumscale_amb", &ps_r2_sun_lumscale_amb, 0.0, +3.0);
 
-	CMD3(CCC_Mask, "r2_aa", &ps_r2_ls_flags, R2FLAG_AA);
 	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
 	CMD4(CCC_Float, "r2_mblur", &ps_r2_mblur, 0.0f, 1.0f);
 
-	CMD3(CCC_Mask, "r2_gi", &ps_r2_ls_flags, R2FLAG_GI);
+	CMD3(CCC_Mask, "r2_gi", &ps_r2_lighting_flags, R2FLAG_GI);
 	CMD4(CCC_Float, "r2_gi_clip", &ps_r2_GI_clip, EPS, 0.1f);
 	CMD4(CCC_Integer, "r2_gi_depth", &ps_r2_GI_depth, 1, 5);
 	CMD4(CCC_Integer, "r2_gi_photons", &ps_r2_GI_photons, 8, 256);
@@ -750,14 +777,12 @@ void		xrRender_initconsole()
 
 	CMD4(CCC_Integer, "r2_wait_sleep", &ps_r2_wait_sleep, 0, 1);
 
-#ifdef DEBUG
 	CMD4(CCC_Integer, "r2_dhemi_count", &ps_r2_dhemi_count, 4, 25);
 	CMD4(CCC_Float, "r2_dhemi_scale", &ps_r2_dhemi_scale, .5f, 3.f);
 	CMD4(CCC_Float, "r2_dhemi_smooth", &ps_r2_lt_smooth, 0.f, 10.f);
-#endif // DEBUG
 
-	CMD3(CCC_Mask, "r2_shadow_cascede_zcul", &ps_r2_ls_flags_ext, R2FLAGEXT_SUN_ZCULLING);
-	CMD3(CCC_Mask, "r2_shadow_cascede_old", &ps_r2_ls_flags_ext, R2FLAGEXT_SUN_OLD);
+	CMD3(CCC_Mask, "r2_shadow_cascede_zcul", &ps_r2_lighting_flags, R2FLAGEXT_SUN_ZCULLING);
+	CMD3(CCC_Mask, "r2_shadow_cascede_old", &ps_r2_lighting_flags, R2FLAGEXT_SUN_OLD);
 
 	CMD4(CCC_Float, "r2_ls_depth_scale", &ps_r2_ls_depth_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
@@ -772,7 +797,7 @@ void		xrRender_initconsole()
 	tw_min.set(0, 0, 0);	tw_max.set(1, 1, 1);
 	CMD4(CCC_Vector3, "r2_aa_weight", &ps_r2_aa_weight, tw_min, tw_max);
 }
-
+///////////////////////////////////////////////////////////////////////////////////
 void	xrRender_apply_tf()
 {
 	Console->Execute("r__tf_aniso");
@@ -782,5 +807,6 @@ void	xrRender_apply_tf()
 	Console->Execute("r2_tf_mipbias");
 #endif
 }
-
-#endif
+///////////////////////////////////////////////////////////////////////////////////
+#endif //#ifndef _EDITOR
+///////////////////////////////////////////////////////////////////////////////////

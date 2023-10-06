@@ -29,6 +29,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("sky_s0",			r2_T_sky0			);
 		C.r_Sampler_clf		("sky_s1",			r2_T_sky1			);
 		C.r_Sampler_rtf		("s_vollight",		r2_RT_generic2		);
+		C.r_Sampler_rtf		("s_image",			r2_RT_generic0		);
 
 		C.r_Sampler_tex		("s_blue_noise",			"noise\\blue_noise_texture");
 		C.r_Sampler_tex		("s_perlin_noise",			"noise\\perlin_noise_texture");

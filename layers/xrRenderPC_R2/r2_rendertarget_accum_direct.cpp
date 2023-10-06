@@ -218,7 +218,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		u_DBT_disable	();
 
 		//	Igor: draw volumetric here
-		if (RImplementation.o.advancedpp && (ps_r_sun_shafts > 0))
+		if (RImplementation.o.advancedpp && (ps_r2_sun_shafts > 0))
 			accum_direct_volumetric(sub_phase, Offset, m_shadow);
 	}
 }
@@ -376,7 +376,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 
 
 			Fmatrix inv_XDcombine;
-			if ( /*ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING) &&*/ sub_phase == SE_SUN_FAR)
+			if ( /*ps_r2_lighting_flags_ext.is(R2FLAGEXT_SUN_ZCULLING) &&*/ sub_phase == SE_SUN_FAR)
 				inv_XDcombine.invert(xform_prev);
 			else
 				inv_XDcombine.invert(xform);
@@ -444,7 +444,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 		if ((SE_SUN_NEAR == sub_phase || SE_SUN_MIDDLE == sub_phase))
 			HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_GREATEREQUAL);
 		else
-			if (!ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING))
+			if (!ps_r2_lighting_flags.is(R2FLAGEXT_SUN_ZCULLING))
 				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 			else
 				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
@@ -476,7 +476,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 		u_DBT_disable();
 
 		//	Igor: draw volumetric here
-		if (RImplementation.o.advancedpp && (ps_r_sun_shafts > 0) && sub_phase == SE_SUN_FAR)
+		if (RImplementation.o.advancedpp && (ps_r2_sun_shafts > 0) && sub_phase == SE_SUN_FAR)
 			accum_direct_volumetric(sub_phase, Offset, m_shadow);
 	}
 }
@@ -729,7 +729,7 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 {
 	if ((sub_phase != SE_SUN_NEAR) && (sub_phase != SE_SUN_MIDDLE) && (sub_phase != SE_SUN_FAR)) return;
 
-	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts))
+	if (!(RImplementation.o.advancedpp && ps_r2_sun_shafts))
 		return;
 
 	{
@@ -764,7 +764,7 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 
 		STextureList* _T = &*s_accum_direct_volumetric_cascade->E[0]->passes[0]->T;
 
-		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r2_lighting_flags.is(R2FLAGEXT_SUN_OLD))
 			_T = &*s_accum_direct_volumetric->E[0]->passes[0]->T;
 
 		STextureList::iterator	_it = _T->begin();
@@ -799,7 +799,7 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 
 
 
-		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r2_lighting_flags.is(R2FLAGEXT_SUN_OLD))
 			RCache.set_Element(s_accum_direct_volumetric->E[0]);
 		else
 		{
@@ -828,7 +828,7 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 		}
 		else {
 			extern float	ps_r2_sun_far;
-			if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+			if (ps_r2_lighting_flags.is(R2FLAGEXT_SUN_OLD))
 				zMin = ps_r2_sun_near;
 			else
 				zMin = 0; /////*****************************************************************************************
@@ -871,7 +871,7 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 		// setup stencil: we have to draw to both lit and unlit pixels
 		//RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
 
-		if (ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r2_lighting_flags.is(R2FLAGEXT_SUN_OLD))
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		else
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 8, 0, 16);

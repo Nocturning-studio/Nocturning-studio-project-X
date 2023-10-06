@@ -47,12 +47,12 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		strcpy			(fnameA, "ed\\ed_dummy_bump");
 		strconcat		(sizeof(fnameB),fnameB,fnameA,"#");
 
-	extern u32 ps_bump_mode;
-	if (((ps_bump_mode == 1) || (r2_sun_static)) && hq)
+	extern u32 ps_r2_bump_mode;
+	if (((ps_r2_bump_mode == 1) || (r2_sun_static)) && hq)
 		strcat(ps, "_normal");
-	else if (((ps_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp)) && hq)
+	else if (((ps_r2_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp)) && hq)
 		strcat(ps, "_parallax");
-	if (((ps_bump_mode == 3) && (r2_advanced_pp)) && hq)
+	if (((ps_r2_bump_mode == 3) && (r2_advanced_pp)) && hq)
 		strcat(ps, "_steep_parallax");
 
 	if (C.bDetail && C.bDetail_Diffuse)
@@ -65,10 +65,10 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	// Uber-construct
 	C.r_Pass		(vs,ps,	FALSE);
 
-	extern u32 ps_debug_textures;
-	if (ps_debug_textures == 1)
+	extern u32 ps_r2_debug_textures;
+	if (ps_r2_debug_textures == 1)
 	C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-	else if (ps_debug_textures == 2)
+	else if (ps_r2_debug_textures == 2)
 	C.r_Sampler_tex("s_base", "ed\\debug_white");
 	else
 	C.r_Sampler		("s_base",		C.L_textures[0],	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);

@@ -159,7 +159,7 @@ void	CRender::render_lights(light_Package& LP)
 				render_indirect(L_spot_s[it]);
 			}
 
-			//if (RImplementation.o.advancedpp /* && ps_r2_ls_flags.is(R2FLAG_VOLUMETRIC_LIGHTS)*/)
+			//if (RImplementation.o.advancedpp /* && ps_r2_lighting_flags.is(R2FLAG_VOLUMETRIC_LIGHTS)*/)
 			//	for (u32 it = 0; it < L_spot_s.size(); it++)
 			//		Target->accum_volumetric(L_spot_s[it]);
 
@@ -197,7 +197,7 @@ void	CRender::render_lights(light_Package& LP)
 
 void	CRender::render_indirect(light* L)
 {
-	if (!ps_r2_ls_flags.test(R2FLAG_GI))	return;
+	if (!ps_r2_lighting_flags.test(R2FLAG_GI))	return;
 
 	light									LIGEN;
 	LIGEN.set_type(IRender_Light::REFLECTED);

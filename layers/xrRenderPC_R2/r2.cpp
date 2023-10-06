@@ -80,7 +80,7 @@ void CRender::create()
 	// hardware
 	///////////////////////////////////////////////////
 	//Smap res choosing
-		switch (ps_sun_quality)
+		switch (ps_r2_sun_quality)
 		{
 		case 1:
 			o.smapsize = 1024;
@@ -332,7 +332,7 @@ BOOL CRender::is_sun()
 {
 	if (o.sunstatic)		return FALSE;
 	Fcolor					sun_color = ((light*)Lights.sun_adapted._get())->color;
-	return					(ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
+	return					(ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
 }
 
 // Implementation
@@ -775,7 +775,7 @@ HRESULT	CRender::shader_compile(
 //Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_MBLUR)) {
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR)) {
 		sprintf(c_mblur, "%d", 1);
 		defines[def_it].Name = "USE_MBLUR";
 		defines[def_it].Definition = c_mblur;
@@ -783,10 +783,10 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_mblur);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_r2_pp_flags.test(R2FLAG_MBLUR));
+	sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_MBLUR));
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_DOF)) {
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF)) {
 		sprintf(c_dof, "%d", 1);
 		defines[def_it].Name = "USE_DOF";
 		defines[def_it].Definition = c_dof;
@@ -794,54 +794,54 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_dof);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_r2_pp_flags.test(R2FLAG_DOF));
+	sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_DOF));
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_dof_quality)
+	if (RImplementation.o.advancedpp && ps_r2_dof_quality)
 	{
-		sprintf(c_dof_quality, "%d", ps_dof_quality);
+		sprintf(c_dof_quality, "%d", ps_r2_dof_quality);
 		defines[def_it].Name = "DOF_QUALITY";
 		defines[def_it].Definition = c_dof_quality;
 		def_it++;
 		strcat(sh_name, c_dof_quality);
 		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_dof_quality;
+	sh_name[len] = '0' + (char)ps_r2_dof_quality;
 	++len;
 
 	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
 
 	/********************************************TYPES*********************************************/
 
-	if (RImplementation.o.advancedpp && ps_ao)
+	if (RImplementation.o.advancedpp && ps_r2_ao)
 	{
-		sprintf(c_ao, "%d", ps_ao);
+		sprintf(c_ao, "%d", ps_r2_ao);
 		defines[def_it].Name = "AO_TYPE";
 		defines[def_it].Definition = c_ao;
 		def_it++;
 		strcat(sh_name, c_ao);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_ao);
+	sh_name[len] = '0' + char(ps_r2_ao);
 	++len;
 
 	/********************************************QUALITY********************************************/
 
-	if (RImplementation.o.advancedpp && ps_ao_quality)
+	if (RImplementation.o.advancedpp && ps_r2_ao_quality)
 	{
-		sprintf(c_ao_quality, "%d", ps_ao_quality);
+		sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
 		defines[def_it].Name = "AO_QUALITY";
 		defines[def_it].Definition = c_ao_quality;
 		def_it++;
 		strcat(sh_name, c_ao_quality);
 		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_ao_quality;
+	sh_name[len] = '0' + (char)ps_r2_ao_quality;
 	++len;
 
 	/********************************************USING*********************************************/
 
-	if (RImplementation.o.advancedpp && (ps_ao >= 0))
+	if (RImplementation.o.advancedpp && (ps_r2_ao >= 0))
 	{
 		sprintf(c_ao_use, "%d", 1);
 		defines[def_it].Name = "USE_AO";
@@ -850,7 +850,7 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_ao_use);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(RImplementation.o.advancedpp && (ps_ao >= 0));
+	sh_name[len] = '0' + char(RImplementation.o.advancedpp && (ps_r2_ao >= 0));
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -858,29 +858,29 @@ HRESULT	CRender::shader_compile(
 
 	/********************************************TYPES*********************************************/
 
-	if (RImplementation.o.advancedpp && ps_aa)
+	if (RImplementation.o.advancedpp && ps_r2_aa)
 	{
-		sprintf(c_aa, "%d", ps_aa);
+		sprintf(c_aa, "%d", ps_r2_aa);
 		defines[def_it].Name = "AA_TYPE";
 		defines[def_it].Definition = c_aa;
 		def_it++;
 		strcat(sh_name, c_aa);
 		len += 3;
 	}
-	sh_name[len] = '0' + (char)ps_aa;
+	sh_name[len] = '0' + (char)ps_r2_aa;
 	++len;
 
 	/********************************************QUALITY********************************************/
-	if (RImplementation.o.advancedpp && ps_aa_quality)
+	if (RImplementation.o.advancedpp && ps_r2_aa_quality)
 	{
-		sprintf(c_aa_quality, "%d", ps_aa_quality);
+		sprintf(c_aa_quality, "%d", ps_r2_aa_quality);
 		defines[def_it].Name = "AA_QUALITY";
 		defines[def_it].Definition = c_aa_quality;
 		def_it++;
 		strcat(sh_name, c_aa_quality);
 		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_aa_quality;
+	sh_name[len] = '0' + (char)ps_r2_aa_quality;
 	++len;
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -930,8 +930,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(vignette);
 	++len;
 
-	int sepia = ps_r2_pp_flags.test(R2FLAG_SEPIA);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_SEPIA))
+	int sepia = ps_r2_postprocess_flags.test(R2FLAG_SEPIA);
+	if (ps_r2_postprocess_flags.test(R2FLAG_SEPIA))
 	{
 		sprintf(c_sepia, "%d", c_sepia);
 		defines[def_it].Name = "USE_SEPIA";
@@ -943,8 +943,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(c_sepia);
 	++len;
 
-	int chroma_abb = ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION);
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_CHROMATIC_ABBERATION))
+	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
@@ -956,8 +956,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(chroma_abb);
 	++len;
 
-	int soft_water = ps_r2_ls_flags.test(R2FLAG_SOFT_WATER);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER))
+	int soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER);
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER))
 	{
 		sprintf(c_soft_water, "%d", soft_water);
 		defines[def_it].Name = "USE_SOFT_WATER";
@@ -969,8 +969,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(soft_water);
 	++len;
 
-	int soft_particles = ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES);
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES))
+	int soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES))
 	{
 		sprintf(c_soft_particles, "%d", soft_particles);
 		defines[def_it].Name = "USE_SOFT_PARTICLES";
@@ -982,8 +982,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(soft_particles);
 	++len;
 
-	int bloom = ps_r2_pp_flags.test(R2FLAG_BLOOM);
-	if (ps_r2_pp_flags.test(R2FLAG_BLOOM))
+	int bloom = ps_r2_postprocess_flags.test(R2FLAG_BLOOM);
+	if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
 	{
 		sprintf(c_bloom, "%d", bloom);
 		defines[def_it].Name = "USE_BLOOM";
@@ -998,40 +998,40 @@ HRESULT	CRender::shader_compile(
 	//////////////////////////////////////////////////////////////////////////
 	// Filter types
 	//////////////////////////////////////////////////////////////////////////
-	if (ps_shadow_filtering)
+	if (ps_r2_shadow_filtering)
 	{
-		sprintf(c_ps_shadow_filtering, "%d", ps_shadow_filtering);
+		sprintf(c_ps_shadow_filtering, "%d", ps_r2_shadow_filtering);
 		defines[def_it].Name = "SHADOW_FILTER";
 		defines[def_it].Definition = c_ps_shadow_filtering;
 		def_it++;
 		strcat(sh_name, c_ps_shadow_filtering);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_shadow_filtering);
+	sh_name[len] = '0' + char(ps_r2_shadow_filtering);
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_fog_quality)
+	if (RImplementation.o.advancedpp && ps_r2_fog_quality)
 	{
-		sprintf(c_fog_quality, "%d", ps_fog_quality);
+		sprintf(c_fog_quality, "%d", ps_r2_fog_quality);
 		defines[def_it].Name = "FOG_QUALITY";
 		defines[def_it].Definition = c_fog_quality;
 		def_it++;
 		strcat(sh_name, c_fog_quality);
 		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_fog_quality;
+	sh_name[len] = '0' + (char)ps_r2_fog_quality;
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////
 	// SUN SHAFTS
 	//////////////////////////////////////////////////////////////////////////
-	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
+	if (RImplementation.o.advancedpp && ps_r2_sun_shafts)
 	{
-		sprintf(c_sun_shafts, "%d", ps_r_sun_shafts);
+		sprintf(c_sun_shafts, "%d", ps_r2_sun_shafts);
 		defines[def_it].Name = "SUN_SHAFTS_QUALITY";
 		defines[def_it].Definition = c_sun_shafts;
 		def_it++;
-		sh_name[len] = '0' + char(ps_r_sun_shafts); ++len;
+		sh_name[len] = '0' + char(ps_r2_sun_shafts); ++len;
 	}
 	else
 	{
@@ -1088,16 +1088,16 @@ HRESULT	CRender::shader_compile(
 	/////////////////////////////////////////////////////////////////////////////////////
 	//  Frame layers debug
 
-	if (ps_debug_frame_layers)
+	if (ps_r2_debug_frame_layers)
 	{
-		sprintf(c_debug_frame_layers, "%d", ps_debug_frame_layers);
+		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_frame_layers);
 		defines[def_it].Name = "DEBUG_VIEW_MODE";
 		defines[def_it].Definition = c_debug_frame_layers;
 		def_it++;
 		strcat(sh_name, c_debug_frame_layers);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_debug_frame_layers);
+	sh_name[len] = '0' + char(ps_r2_debug_frame_layers);
 	++len;
 
 	/////////////////////////////////////////////////////////////////////////////////////

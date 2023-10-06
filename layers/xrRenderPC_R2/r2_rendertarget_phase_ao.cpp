@@ -9,7 +9,7 @@ void CRenderTarget::phase_create_ao()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_ao == 1)
+	if (ps_r2_ao == 1)
 	{
 		w *= 0.75f;
 		h *= 0.75f;
@@ -40,7 +40,7 @@ void CRenderTarget::phase_create_ao()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	//Set pass
-	switch (ps_ao)
+	switch (ps_r2_ao)
 	{
 	case 1: //SSAO
 		RCache.set_Element(s_ao->E[0]);
@@ -72,7 +72,7 @@ void CRenderTarget::phase_diagonal_filter()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_ao == 1)
+	if (ps_r2_ao == 1)
 	{
 		w *= 0.75f;
 		h *= 0.75f;
@@ -124,7 +124,7 @@ void CRenderTarget::phase_strided_filter()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_ao == 1)
+	if (ps_r2_ao == 1)
 	{
 		w *= 0.75f;
 		h *= 0.75f;

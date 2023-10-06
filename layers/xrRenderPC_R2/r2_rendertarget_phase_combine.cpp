@@ -211,7 +211,7 @@ void	CRenderTarget::phase_combine()
 	g_pGamePersistent->Environment().RenderFlares();	// lens-flares
 
 	// AA
-	if (ps_aa >= 1)
+	if (ps_r2_aa >= 1)
 	{
 		u_setrt(rt_Color, NULL, NULL, NULL);
 
@@ -241,7 +241,7 @@ void	CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		//Set pass
-		switch (ps_aa)
+		switch (ps_r2_aa)
 		{
 		case 1: //DLAA
 			RCache.set_Element(s_combine->E[3]);
@@ -267,7 +267,7 @@ void	CRenderTarget::phase_combine()
 	}
 
 	// AA
-	if (ps_aa == 4)
+	if (ps_r2_aa == 4)
 	{
 		u_setrt(rt_Color, NULL, NULL, NULL);
 
@@ -356,7 +356,7 @@ void	CRenderTarget::phase_combine()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_pp_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
 		phase_depth_of_field();
 
 	draw_overlays();
