@@ -537,7 +537,7 @@ void	CRender::Render		()
 	PortalTraverser.fade_render					();				// faded-portals
 	r_dsgraph_render_sorted						();				// strict-sorted geoms
 	if(L_Glows)L_Glows->Render					();				// glows
-	g_pGamePersistent->Environment().RenderFlares	();				// lens-flares
+	if(ps_render_flags.test(RFLAG_LENS_FLARES))g_pGamePersistent->Environment().RenderFlares	();				// lens-flares
 	g_pGamePersistent->Environment().RenderLast	();				// rain/thunder-bolts
 
 	// Postprocess, if necessary

@@ -208,6 +208,7 @@ void	CRenderTarget::phase_combine()
 	}
 	RCache.set_Stencil(FALSE);
 
+	if (ps_render_flags.test(RFLAG_LENS_FLARES))
 	g_pGamePersistent->Environment().RenderFlares();	// lens-flares
 
 	// AA

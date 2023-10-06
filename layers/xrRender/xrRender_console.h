@@ -33,6 +33,13 @@ extern ECORE_API	int			ps_r__tf_Anisotropic;
 //Postprocess effects
 extern ECORE_API u32			ps_vignette_mode;
 
+//Render common flags
+extern ECORE_API Flags32		ps_render_flags;
+enum
+{
+	RFLAG_LENS_FLARES = (1 << 0),
+};
+
 /*-------------------------------------------------------------------------------*/
 // R1-specific values
 /*-------------------------------------------------------------------------------*/

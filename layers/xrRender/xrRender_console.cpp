@@ -202,6 +202,12 @@ float		ps_r__ssaHZBvsTEX = 96.f;
 
 int			ps_r__tf_Anisotropic = 4;
 
+//Render common flags
+Flags32		ps_render_flags =
+{
+	RFLAG_LENS_FLARES
+};
+
 /*-------------------------------------------------------------------------------*/
 // R1-specific values
 /*-------------------------------------------------------------------------------*/
@@ -655,6 +661,8 @@ void		xrRender_initconsole()
 	CMD4(CCC_Vector3, "r__d_tree_wave", &ps_r__Tree_Wave, tw_min, tw_max);
 
 	CMD2(CCC_tf_Aniso, "r__tf_aniso", &ps_r__tf_Anisotropic); //	{1..16}
+
+	CMD3(CCC_Mask, "r__lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
 
 	//R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
