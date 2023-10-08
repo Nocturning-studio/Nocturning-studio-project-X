@@ -342,10 +342,10 @@ CRenderTarget::CRenderTarget		()
 		}
 
 		//Create rendertarget
-		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);
-		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);
-		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R32F);
-		rt_ao.create(r2_RT_ao, Weight, Height, D3DFMT_R32F);
+		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
+		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
+		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
+		rt_ao.create(r2_RT_ao, Weight, Height, D3DFMT_R16F);
 
 		//Create shader resource
 		s_ao.create(b_ao, "r2\\ao");
