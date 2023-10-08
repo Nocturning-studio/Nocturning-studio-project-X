@@ -885,7 +885,8 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		{
 			Console->Execute("main_menu off");
 			Console->Hide();
-			Device.Reset(false);
+			//FIX BY IXRAY (THANKS BY DEATHMAN)
+			//Device.Reset(false);
 			//-----------------------------------------------------------
 			g_pGamePersistent->PreStart(op_server);
 			//-----------------------------------------------------------
