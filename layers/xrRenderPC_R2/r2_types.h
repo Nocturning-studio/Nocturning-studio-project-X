@@ -31,8 +31,8 @@
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
 #define		r2_RT_luminance_t8	"$user$lum_t8"			// --- temp
 
-#define		r2_RT_luminance_src	"$user$tonemap_src"		// --- prev-frame-result
-#define		r2_RT_luminance_cur	"$user$tonemap"			// --- result
+#define		r2_RT_luminance_src	"$user$autoexposure_src"		// --- prev-frame-result
+#define		r2_RT_luminance_cur	"$user$autoexposure"			// --- result
 #define		r2_RT_luminance_pool "$user$luminance"		// --- pool
 
 #define		r2_RT_smap_surf		"$user$smap_surf"		// --- directional

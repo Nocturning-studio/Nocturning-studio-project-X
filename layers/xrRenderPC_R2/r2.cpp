@@ -649,6 +649,7 @@ HRESULT	CRender::shader_compile(
 	char c_chroma_abb[32];
 	char c_sepia[32];
 	char c_bloom[32];
+	char c_hdr[32];
 	char c_photo_grid[32];
 
 	char c_soft_water[32];
@@ -993,6 +994,19 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(bloom);
+	++len;
+
+	int HdrEnabled = ps_r2_postprocess_flags.test(R2FLAG_HDR);
+	if (HdrEnabled)
+	{
+		sprintf(c_hdr, "%d", HdrEnabled);
+		defines[def_it].Name = "USE_HDR";
+		defines[def_it].Definition = c_hdr;
+		def_it++;
+		strcat(sh_name, c_hdr);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(HdrEnabled);
 	++len;
 
 	//////////////////////////////////////////////////////////////////////////

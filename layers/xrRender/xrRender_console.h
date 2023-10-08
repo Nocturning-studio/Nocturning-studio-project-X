@@ -75,10 +75,10 @@ extern ECORE_API float			ps_r2_tf_Mipbias;
 	
 extern ECORE_API float			ps_r2_gmaterial;
 
-extern ECORE_API float			ps_r2_tonemap_middlegray;	
-extern ECORE_API float			ps_r2_tonemap_adaptation;	
-extern ECORE_API float			ps_r2_tonemap_low_lum;		
-extern ECORE_API float			ps_r2_tonemap_amount;
+extern ECORE_API float			ps_r2_autoexposure_middlegray;
+extern ECORE_API float			ps_r2_autoexposure_adaptation;
+extern ECORE_API float			ps_r2_autoexposure_low_lum;
+extern ECORE_API float			ps_r2_autoexposure_amount;
 
 extern ECORE_API float			ps_r2_ls_bloom_kernel_scale;	// gauss
 extern ECORE_API float			ps_r2_ls_bloom_kernel_g;		// gauss
@@ -169,7 +169,7 @@ enum
 extern ECORE_API Flags32		ps_r2_postprocess_flags;
 enum
 {
-	R2FLAG_TONEMAP = (1 << 0),
+	R2FLAG_AUTOEXPOSURE = (1 << 0),
 	R2FLAG_FASTBLOOM = (1 << 1),
 	R2FLAG_SOFT_WATER = (1 << 2),
 	R2FLAG_SOFT_PARTICLES = (1 << 3),
@@ -177,7 +177,8 @@ enum
 	R2FLAG_BLOOM = (1 << 5),
 	R2FLAG_DOF = (1 << 6),
 	R2FLAG_MBLUR = (1 << 7),
-	R2FLAG_SEPIA = (1 << 8)
+	R2FLAG_SEPIA = (1 << 8),
+	R2FLAG_HDR = (1 << 9)
 };
 
 extern ECORE_API Flags32		ps_r2_overlay_flags;

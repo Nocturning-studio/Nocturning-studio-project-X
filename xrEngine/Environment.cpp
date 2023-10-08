@@ -488,28 +488,17 @@ void CEnvironment::OnFrame()
 #endif
 
 		//if (pInput->iGetAsyncKeyState(DIK_O))		SetWeatherFX("surge_day"); 
-	float					current_weight;
+	float current_weight;
 	lerp(current_weight);
 
-	//	Igor. Dynamic sun position. 
-	//if (!::Render->is_sun_static())
+	if (::Render->get_generation() == IRender_interface::GENERATION_R2) 
+	{
 		calculate_dynamic_sun_dir();
 
-	if (::Render->get_generation() == IRender_interface::GENERATION_R2) {
-		//. very very ugly hack
-//		if (HW.Caps.raster_major >= 3 && HW.Caps.geometry.bVTF) {
-//			// tonemapping in VS
-//			CurrentEnv->sky_r_textures.push_back(mk_pair(u32(D3DVERTEXTEXTURESAMPLER0), tonemap));		//. hack
-//			CurrentEnv->sky_r_textures_env.push_back(mk_pair(u32(D3DVERTEXTEXTURESAMPLER0), tonemap));	//. hack
-//			CurrentEnv->clouds_r_textures.push_back(mk_pair(u32(D3DVERTEXTEXTURESAMPLER0), tonemap));	//. hack
-//		}
-//		else {
-			// tonemapping in PS
-			CurrentEnv->sky_r_textures.push_back(mk_pair(2, tonemap));									//. hack
-			CurrentEnv->sky_r_textures_env.push_back(mk_pair(2, tonemap));								//. hack
-			CurrentEnv->clouds_r_textures.push_back(mk_pair(2, tonemap));								//. hack
-//		}
-
+		// tonemapping in PS
+		CurrentEnv->sky_r_textures.push_back(mk_pair(2, autoexposure));
+		CurrentEnv->sky_r_textures_env.push_back(mk_pair(2, autoexposure));
+		CurrentEnv->clouds_r_textures.push_back(mk_pair(2, autoexposure));
 	}
 
 	//. Setup skybox textures, somewhat ugly

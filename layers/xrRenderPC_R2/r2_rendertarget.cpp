@@ -351,7 +351,7 @@ CRenderTarget::CRenderTarget		()
 		s_ao.create(b_ao, "r2\\ao");
 	}
 
-	// TONEMAP
+	// autoexposure
 	{
 		rt_LUM_64.create			(r2_RT_luminance_t64,	64, 64,	D3DFMT_A16B16G16R16F	);
 		rt_LUM_8.create				(r2_RT_luminance_t8,	8,	8,	D3DFMT_A16B16G16R16F	);

@@ -25,7 +25,7 @@ void	CBlender_luminance::Compile(CBlender_Compile& C)
 	case 2:				// 8x8		=> 1x1, blending with old result
 		C.r_Pass		("null", "bloom_luminance_3",false,FALSE,FALSE, FALSE);
 		C.r_Sampler_clf	("s_image",		r2_RT_luminance_t8	);
-		C.r_Sampler_clf	("s_tonemap",	r2_RT_luminance_src	);
+		C.r_Sampler_clf	("s_autoexposure",	r2_RT_luminance_src	);
 		C.r_End			();
 		break;
 	}

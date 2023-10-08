@@ -54,11 +54,11 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		fog_density += M.fog_density * _power;
 		use_flags.set(eFogDensity, TRUE);
 	}
-//	if (M.use_flags.test(eFogSkyInfluence))
-//	{
-//		fog_sky_influence += M.fog_sky_influence * _power;
-//		use_flags.set(eFogSkyInfluence, TRUE);
-//	}
+	if (M.use_flags.test(eFogSkyInfluence))
+	{
+		fog_sky_influence += M.fog_sky_influence * _power;
+		use_flags.set(eFogSkyInfluence, TRUE);
+	}
 	if (M.use_flags.test(eVerticalFogIntensity))
 	{
 		vertical_fog_intensity += M.vertical_fog_intensity * _power;
@@ -474,11 +474,11 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	fog_far = 0.99f * fog_distance;
 
 	fog_sky_influence = (fi * A.fog_sky_influence + f * B.fog_sky_influence);
-//	if (Mdf.use_flags.test(eFogSkyInfluence))
-//	{
-//		fog_sky_influence += Mdf.fog_sky_influence;
-//		fog_sky_influence *= modif_power;
-//	}
+	if (Mdf.use_flags.test(eFogSkyInfluence))
+	{
+		fog_sky_influence += Mdf.fog_sky_influence;
+		fog_sky_influence *= modif_power;
+	}
 
 	vertical_fog_intensity = (fi * A.vertical_fog_intensity + f * B.vertical_fog_intensity);
 	if (Mdf.use_flags.test(eVerticalFogIntensity))
@@ -761,7 +761,7 @@ void CEnvironment::load()
 	if (!CurrentEnv)
 		create_mixer();
 
-	tonemap = Device.Resources->_CreateTexture("$user$tonemap");	//. hack
+	autoexposure = Device.Resources->_CreateTexture("$user$autoexposure");	//. hack
 	if (!eff_Rain)			eff_Rain = xr_new<CEffect_Rain>();
 	if (!eff_LensFlare)		eff_LensFlare = xr_new<CLensFlare>();
 	if (!eff_Thunderbolt)	eff_Thunderbolt = xr_new<CEffect_Thunderbolt>();
@@ -802,5 +802,5 @@ void CEnvironment::unload()
 	CurrentWeatherName = 0;
 	CurrentEnv->clear();
 	Invalidate();
-	tonemap = 0;
+	autoexposure = 0;
 }

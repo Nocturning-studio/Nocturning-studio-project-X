@@ -33,7 +33,7 @@ public:
 		C.r_Pass("sky2", "sky2", FALSE, TRUE, FALSE);
 		C.r_Sampler_clf("s_sky0", "$null");
 		C.r_Sampler_clf("s_sky1", "$null");
-		C.r_Sampler_rtf("s_tonemap", "$user$tonemap");	//. hack
+		C.r_Sampler_rtf("s_autoexposure", "$user$autoexposure");	//. hack
 		C.r_End();
 	}
 };
@@ -50,6 +50,7 @@ public:
 
 	Fvector3			fog_color;
 	float				fog_density;
+	float				fog_sky_influence;
 	float				vertical_fog_intensity;
 	float				vertical_fog_height;
 
@@ -299,7 +300,7 @@ public:
 	CEffect_Thunderbolt* eff_Thunderbolt;
 
 	float					fTimeFactor;
-	ref_texture				tonemap;
+	ref_texture				autoexposure;
 	ref_texture				tsky0, tsky1;
 
 	void					SelectEnvs(float gt);

@@ -18,7 +18,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf		("s_normal",		r2_RT_N				);
 		C.r_Sampler_rtf		("s_diffuse",		r2_RT_albedo		);
 		C.r_Sampler_rtf		("s_accumulator",	r2_RT_accum			);
-		C.r_Sampler_rtf		("s_tonemap",		r2_RT_luminance_cur	);
+		C.r_Sampler_rtf		("s_autoexposure",		r2_RT_luminance_cur	);
 		C.r_Sampler_clw		("s_material",		r2_material			);
 		C.r_Sampler_clf		("s_ao",			r2_RT_ao			);
 		C.r_Sampler_clf		("s_ao_base",		r2_RT_ao_base		);
