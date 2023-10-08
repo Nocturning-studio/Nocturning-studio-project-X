@@ -272,6 +272,7 @@ void					CRender::destroy()
 	xr_delete(Target);
 	PSLibrary.OnDestroy();
 	Device.seqFrame.Remove(this);
+	r_dsgraph_destroy(); //FIX BY IXRAY (THANKS BY DEATHMAN)
 }
 
 void CRender::reset_begin()
