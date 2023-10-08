@@ -41,8 +41,8 @@ BOOL CRenderTarget::Create	()
 	// Select mode to operate in
 	float	amount		= ps_r__Supersample?float(ps_r__Supersample):1	;
 	float	scale		= _sqrt	(amount);
-	rtWidth				= clampr(iFloor(scale*Device.dwWidth  + .5f), 128, 2048);
-	rtHeight			= clampr(iFloor(scale*Device.dwHeight + .5f), 128, 2048);
+	rtWidth				= clampr(iFloor(scale*Device.dwWidth  + .5f), 128, 16384);
+	rtHeight			= clampr(iFloor(scale*Device.dwHeight + .5f), 128, 16384);
 	while (rtWidth%2)	rtWidth	--;
 	while (rtHeight%2)	rtHeight--;
 	Msg					("* SSample: %dx%d",rtWidth,rtHeight);
