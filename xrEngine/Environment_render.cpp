@@ -135,7 +135,7 @@ void CEnvironment::RenderSky()
 	mSky.translate_over(Device.vCameraPosition);
 
 	u32		i_offset, v_offset;
-	u32		C = color_rgba(255, 255, 255, 255);//color_rgba(iFloor(CurrentEnv->sky_color.x * 255.f), iFloor(CurrentEnv->sky_color.y * 255.f), iFloor(CurrentEnv->sky_color.z * 255.f), iFloor(CurrentEnv->weight * 255.f));
+	u32		C = color_rgba(iFloor(CurrentEnv->sky_color.x * 255.f), iFloor(CurrentEnv->sky_color.y * 255.f), iFloor(CurrentEnv->sky_color.z * 255.f), iFloor(CurrentEnv->weight * 255.f));
 
 	// Fill index buffer
 	u16* pib = RCache.Index.Lock(20 * 3, i_offset);
