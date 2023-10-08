@@ -128,11 +128,10 @@ class cl_fog_plane : public R_constant_setup {
 			plane.mul(denom);
 
 			// Near/Far
-			float FogNear = g_pGamePersistent->Environment().CurrentEnv->fog_near;
-			float FogFar = g_pGamePersistent->Environment().CurrentEnv->fog_far;
 			float FarPlane = g_pGamePersistent->Environment().CurrentEnv->far_plane;
-
-			FogFar = std::min(FogFar, FarPlane);
+			float FogFar = FarPlane;
+			float FogIntensity = g_pGamePersistent->Environment().CurrentEnv->fog_density;
+			float FogNear = FogFar * (1.0f - FogIntensity);
 
 			float Fog = 1 / (FogFar - FogNear);
 			Fvector4 FogPlane;
@@ -154,12 +153,13 @@ class cl_fog_params : public R_constant_setup {
 		if (marker != Device.dwFrame)
 		{
 			// Near/Far
-			float	n = g_pGamePersistent->Environment().CurrentEnv->fog_near;
-			float	f = g_pGamePersistent->Environment().CurrentEnv->fog_far;
-			float	fp = g_pGamePersistent->Environment().CurrentEnv->far_plane;
-			f = std::min(f, fp);
-			float	r = 1 / (f - n);
-			result.set(-n * r, n, f, r);
+			float FarPlane = g_pGamePersistent->Environment().CurrentEnv->far_plane;
+			float FogFar = FarPlane;
+			float FogIntensity = g_pGamePersistent->Environment().CurrentEnv->fog_density;
+			float FogNear = FogFar * (1.0f - FogIntensity);
+
+			float Fog = 1 / (FogFar - FogNear);
+			result.set(-FogNear * Fog, FogNear, FogFar, Fog);
 		}
 		RCache.set_c(C, result);
 	}

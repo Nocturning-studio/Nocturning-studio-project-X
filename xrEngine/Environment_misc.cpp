@@ -230,7 +230,6 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 	fog_sky_influence = 0.0f;
 	vertical_fog_intensity = 0.0001f;
 	vertical_fog_height = 0.8f;
-	fog_distance = 400.0f;
 
 	rain_density = 0.0f;
 	rain_color.set(0, 0, 0);
@@ -291,7 +290,6 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	far_plane = config.r_float(m_identifier.c_str(), "far_plane");
 	fog_color = config.r_fvector3(m_identifier.c_str(), "fog_color");
 	fog_density = config.r_float(m_identifier.c_str(), "fog_density");
-	fog_distance = config.r_float(m_identifier.c_str(), "fog_distance");
 
 	if (config.line_exist(m_identifier.c_str(), "fog_sky_influence"))
 		fog_sky_influence = config.r_float(m_identifier.c_str(), "fog_sky_influence");
@@ -468,10 +466,6 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 		fog_density += Mdf.fog_density;
 		fog_density *= modif_power;
 	}
-
-	fog_distance = (fi * A.fog_distance + f * B.fog_distance);
-	fog_near = (1.0f - fog_density) * 0.85f * fog_distance;
-	fog_far = 0.99f * fog_distance;
 
 	fog_sky_influence = (fi * A.fog_sky_influence + f * B.fog_sky_influence);
 	if (Mdf.use_flags.test(eFogSkyInfluence))

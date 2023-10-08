@@ -151,7 +151,6 @@ public:
 
 	Fvector3			fog_color;
 	float				fog_density;
-	float				fog_distance;
 	float				fog_sky_influence;
 	float				vertical_fog_intensity;
 	float				vertical_fog_height;
@@ -213,8 +212,6 @@ public:
 	STextureList		clouds_r_textures;
 	float				weight;
 
-	float				fog_near;
-	float				fog_far;
 public:
 	CEnvDescriptorMixer(shared_str const& identifier);
 	void				lerp(CEnvironment* parent, CEnvDescriptor& A, CEnvDescriptor& B, float f, CEnvModifier& M, float m_power);

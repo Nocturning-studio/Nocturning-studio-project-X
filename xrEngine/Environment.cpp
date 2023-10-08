@@ -518,10 +518,12 @@ void CEnvironment::OnFrame()
 	eff_Rain->OnFrame();
 
 	// ******************** Environment params (setting)
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, color_rgba_f(CurrentEnv->fog_color.x, CurrentEnv->fog_color.y, CurrentEnv->fog_color.z, 0)));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGSTART, *(u32*)(&CurrentEnv->fog_near)));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGEND, *(u32*)(&CurrentEnv->fog_far)));
+	u32 FogFar = CurrentEnv->far_plane;
+	u32 FogNear = FogFar * (1.0f - CurrentEnv->fog_density);
 
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, color_rgba_f(CurrentEnv->fog_color.x, CurrentEnv->fog_color.y, CurrentEnv->fog_color.z, 0)));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGSTART, FogNear));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGEND, FogFar));
 }
 
 void CEnvironment::calculate_dynamic_sun_dir()

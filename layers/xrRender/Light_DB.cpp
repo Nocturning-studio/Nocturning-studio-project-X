@@ -154,7 +154,6 @@ void			CLight_DB::Update			()
 			Log("E.sun_color",E->sun_color);
 			Log("E.rain_color",E->rain_color);
 			Log("E.rain_density",E->rain_density);
-			Log("E.fog_distance",E->fog_distance);
 			Log("E.fog_density",E->fog_density);
 			Log("E.fog_color",E->fog_color);
 			Log("E.far_plane",E->far_plane);
