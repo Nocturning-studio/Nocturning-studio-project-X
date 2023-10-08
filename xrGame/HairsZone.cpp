@@ -82,7 +82,8 @@ void CHairsZone::Affect(SZoneObjectInfo* O)
 
 	Fvector position_in_bone_space;
 
-	P.y=0.f;
+	//FIX BY IXRAY (THANKS BY DEATHMAN)
+	P.y = pGameObject->Position().y;
 	float power = Power(pGameObject->Position().distance_to(P));
 	float impulse = m_fHitImpulseScale*power*pGameObject->GetMass();
 
