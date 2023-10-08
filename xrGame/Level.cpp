@@ -1054,7 +1054,7 @@ GlobalFeelTouch::~GlobalFeelTouch()
 {
 }
 
-struct delete_predicate_by_time
+struct delete_predicate_by_time : public std::binary_function<Feel::Touch::DenyTouch, DWORD, bool>
 {
 	bool operator () (Feel::Touch::DenyTouch const & left, DWORD const expire_time) const
 	{
@@ -1063,7 +1063,7 @@ struct delete_predicate_by_time
 		return false;
 	};
 };
-struct objects_ptrs_equal
+struct objects_ptrs_equal : public std::binary_function<Feel::Touch::DenyTouch, CObject const *, bool>
 {
 	bool operator() (Feel::Touch::DenyTouch const & left, CObject const * const right) const
 	{

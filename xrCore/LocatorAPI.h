@@ -30,7 +30,7 @@ public:
         u32						modif;			// for editor
 	};
 private:
-	struct	file_pred
+	struct	file_pred: public 	std::binary_function<file&, file&, bool> 
 	{	
 		IC bool operator()	(const file& x, const file& y) const
 		{	return xr_strcmp(x.name,y.name)<0;	}

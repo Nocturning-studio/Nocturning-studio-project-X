@@ -8,7 +8,7 @@ class ENGINE_API 				IGame_ObjectPool
 {
 	/*
 	private:
-		struct str_pred
+		struct str_pred : public std::binary_function<shared_str&, shared_str&, bool>
 		{
 			IC bool operator()(const shared_str& x, const shared_str& y) const
 			{	return xr_strcmp(x,y)<0;	}
