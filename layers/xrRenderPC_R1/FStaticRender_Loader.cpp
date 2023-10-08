@@ -119,10 +119,14 @@ void CRender::level_Unload		()
 	uLastLTRACK					= 0;
 
 	// 2.
-	for (I=0; I<Sectors.size(); I++)	xr_delete(Sectors[I]);
+	for (size_t i = 0; i < Sectors.size(); i++) {
+		xr_delete(Sectors[i]);
+	}
 	Sectors.clear_and_free		();
 	// 3.
-	for (I=0; I<Portals.size(); I++)	xr_delete(Portals[I]);
+	for (size_t i = 0; i < Portals.size(); i++) {
+		xr_delete(Portals[i]);
+	}
 	Portals.clear_and_free		();
 
 	//*** Lights
@@ -132,16 +136,19 @@ void CRender::level_Unload		()
 
 	//*** Visuals
 	g_pGamePersistent->LoadTitle("st_unloading_spatial_db");
-	for (I=0; I<Visuals.size(); I++)	{
-		Visuals[I]->Release();
-		xr_delete(Visuals[I]);
+	for (size_t i = 0; i < Visuals.size(); i++)
+	{
+		Visuals[i]->Release();
+		xr_delete(Visuals[i]);
 	}
 	Visuals.clear_and_free		();
 
 	//*** SWI
 	g_pGamePersistent->LoadTitle("st_unloading_geometry");
-	for (I=0; I<SWIs.size();I++)xr_free	(SWIs[I].sw);
-	SWIs.clear					();
+	for (size_t i = 0; i < SWIs.size(); i++) {
+		xr_free(SWIs[i].sw);
+	}
+	SWIs.clear();
 
 	//*** VB/IB
 	g_pGamePersistent->LoadTitle("st_unloading_geometry");
