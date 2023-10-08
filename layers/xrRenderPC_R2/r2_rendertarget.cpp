@@ -353,8 +353,8 @@ CRenderTarget::CRenderTarget		()
 
 	// autoexposure
 	{
-		rt_LUM_64.create			(r2_RT_luminance_t64,	64, 64,	D3DFMT_A16B16G16R16F	);
-		rt_LUM_8.create				(r2_RT_luminance_t8,	8,	8,	D3DFMT_A16B16G16R16F	);
+		rt_LUM_64.create			(r2_RT_luminance_t64,	64, 64, D3DFMT_A8R8G8B8);
+		rt_LUM_8.create				(r2_RT_luminance_t8,	8,	8, D3DFMT_A8R8G8B8);
 		s_luminance.create			(b_luminance,				"r2\\luminance");
 		f_luminance_adapt			= 0.5f;
 
@@ -365,7 +365,7 @@ CRenderTarget::CRenderTarget		()
 		for (u32 it=0; it<HW.Caps.iGPUNum*2; it++)	{
 			string256					name;
 			sprintf						(name,"%s_%d",	r2_RT_luminance_pool,it	);
-			rt_LUM_pool[it].create		(name,	1,	1,	D3DFMT_R32F				);
+			rt_LUM_pool[it].create		(name,	1,	1,	D3DFMT_R16F				);
 			u_setrt						(rt_LUM_pool[it],	0,	0,	0			);
 			CHK_DX						(HW.pDevice->Clear( 0L, NULL, D3DCLEAR_TARGET,	0x7f7f7f7f,	1.0f, 0L));
 		}
