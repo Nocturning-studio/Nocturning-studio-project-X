@@ -124,10 +124,10 @@ void CLevel::net_Stop		()
 
 void CLevel::ClientSend()
 {
-	if (GameID() == GAME_SINGLE || OnClient())
-	{
-		if ( !net_HasBandwidth() ) return;
-	};
+	//FIX BY IXRAY (THANKS BY DEATHMAN)
+	if (OnClient())
+		if (!net_HasBandwidth())
+			return;
 
 #ifdef BATTLEYE
 	battleye_system.UpdateClient();
