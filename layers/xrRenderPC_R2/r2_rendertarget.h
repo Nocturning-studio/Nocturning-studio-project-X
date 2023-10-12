@@ -237,6 +237,7 @@ public:
 	void						phase_antialiasing		();
 	void						depth_of_field_pass_first();
 	void						depth_of_field_pass_second();
+	void						depth_of_field_pass_third();
 	void						phase_depth_of_field	();
 	void						phase_pp				();
 
