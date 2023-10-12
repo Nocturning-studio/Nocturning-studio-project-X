@@ -223,6 +223,21 @@ static class cl_vertical_fog_intensity final : public R_constant_setup
 	}
 } binder_vertical_fog_intensity;
 
+static class cl_vertical_fog_density final : public R_constant_setup
+{
+	u32	marker;
+	Fvector4 VerticalFogDensity;
+	void setup(R_constant* C) override
+	{
+		if (marker != Device.dwFrame)
+		{
+			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
+			VerticalFogDensity.set(desc->vertical_fog_density, 0, 0, 0);
+		}
+		RCache.set_c(C, VerticalFogDensity);
+	}
+} binder_vertical_fog_density;
+
 static class cl_vertical_fog_height final : public R_constant_setup
 {
 	u32	marker;
@@ -487,6 +502,7 @@ void	CBlender_Compile::SetMapping()
 	r_Constant("fog_density", &binder_fog_density);
 	r_Constant("fog_sky_influence", &binder_fog_sky_influence);
 	r_Constant("vertical_fog_intensity", &binder_vertical_fog_intensity);
+	r_Constant("vertical_fog_density", &binder_vertical_fog_density);
 	r_Constant("vertical_fog_height", &binder_vertical_fog_height);
 #endif
 

@@ -52,6 +52,7 @@ public:
 	float				fog_density;
 	float				fog_sky_influence;
 	float				vertical_fog_intensity;
+	float				vertical_fog_density;
 	float				vertical_fog_height;
 
 	Fvector3			ambient;
@@ -153,6 +154,7 @@ public:
 	float				fog_density;
 	float				fog_sky_influence;
 	float				vertical_fog_intensity;
+	float				vertical_fog_density;
 	float				vertical_fog_height;
 
 	float				rain_density;

@@ -64,6 +64,11 @@ float	CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		vertical_fog_intensity += M.vertical_fog_intensity * _power;
 		use_flags.set(eVerticalFogIntensity, TRUE);
 	}
+	if (M.use_flags.test(eVerticalFogDensity))
+	{
+		vertical_fog_density += M.vertical_fog_density * _power;
+		use_flags.set(eVerticalFogDensity, TRUE);
+	}
 	if (M.use_flags.test(eVerticalFogHeight))
 	{
 		vertical_fog_height += M.vertical_fog_height * _power;
@@ -229,6 +234,7 @@ CEnvDescriptor::CEnvDescriptor(shared_str const& identifier) :
 	fog_density = 0.0f;
 	fog_sky_influence = 0.0f;
 	vertical_fog_intensity = 0.0001f;
+	vertical_fog_density = 0.0001f;
 	vertical_fog_height = 0.8f;
 
 	rain_density = 0.0f;
@@ -294,12 +300,17 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	if (config.line_exist(m_identifier.c_str(), "fog_sky_influence"))
 		fog_sky_influence = config.r_float(m_identifier.c_str(), "fog_sky_influence");
 	else
-		vertical_fog_intensity = 0.0000f;
+		fog_sky_influence = 0.0000f;
 
 	if (config.line_exist(m_identifier.c_str(), "vertical_fog_intensity"))
 		vertical_fog_intensity = config.r_float(m_identifier.c_str(), "vertical_fog_intensity");
 	else
 		vertical_fog_intensity = 0.0001f;
+
+	if (config.line_exist(m_identifier.c_str(), "vertical_fog_density"))
+		vertical_fog_density = config.r_float(m_identifier.c_str(), "vertical_fog_density");
+	else
+		vertical_fog_density = 0.0001f;
 
 	if (config.line_exist(m_identifier.c_str(), "vertical_fog_height"))
 		vertical_fog_height = config.r_float(m_identifier.c_str(), "vertical_fog_height");
@@ -475,18 +486,25 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	}
 
 	vertical_fog_intensity = (fi * A.vertical_fog_intensity + f * B.vertical_fog_intensity);
-	if (Mdf.use_flags.test(eVerticalFogIntensity))
-	{
-		vertical_fog_intensity += Mdf.vertical_fog_intensity;
-		vertical_fog_intensity *= modif_power;
-	}
+//	if (Mdf.use_flags.test(eVerticalFogIntensity))
+//	{
+//		vertical_fog_intensity += Mdf.vertical_fog_intensity;
+//		vertical_fog_intensity *= modif_power;
+//	}
+
+	vertical_fog_density = (fi * A.vertical_fog_density + f * B.vertical_fog_density);
+//	if (Mdf.use_flags.test(eVerticalFogDensity))
+//	{
+//		vertical_fog_density += Mdf.vertical_fog_density;
+//		vertical_fog_density *= modif_power;
+//	}
 
 	vertical_fog_height = (fi * A.vertical_fog_height + f * B.vertical_fog_height);
-	if (Mdf.use_flags.test(eVerticalFogHeight))
-	{
-		vertical_fog_height += Mdf.vertical_fog_height;
-		vertical_fog_height *= modif_power;
-	}
+//	if (Mdf.use_flags.test(eVerticalFogHeight))
+//	{
+//		vertical_fog_height += Mdf.vertical_fog_height;
+//		vertical_fog_height *= modif_power;
+//	}
 
 	rain_density = fi * A.rain_density + f * B.rain_density;
 	rain_color.lerp(A.rain_color, B.rain_color, f);

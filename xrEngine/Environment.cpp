@@ -450,6 +450,7 @@ void CEnvironment::lerp(float& current_weight)
 	EM.fog_color.set(0, 0, 0);
 	EM.fog_density = 0;
 	EM.vertical_fog_intensity = 0;
+	EM.vertical_fog_density = 0;
 	EM.vertical_fog_height = 0;
 	EM.ambient.set(0, 0, 0);
 	EM.sky_color.set(0, 0, 0);
