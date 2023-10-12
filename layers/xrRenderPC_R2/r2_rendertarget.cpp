@@ -327,7 +327,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	//AO
-	if (ps_r2_ao >= 1 && RImplementation.o.advancedpp)
+	if (RImplementation.o.advancedpp)
 	{
 		u32 Weight = Device.dwWidth, 
 			Height = Device.dwHeight;
