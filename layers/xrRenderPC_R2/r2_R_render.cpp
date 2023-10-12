@@ -357,6 +357,7 @@ void CRender::Render		()
 		}
 */
 		// level
+		PortalTraverser.fade_render				();	// faded-portals, should be calculated before GBuffer 
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
 		r_dsgraph_render_lods					(true,true);
@@ -430,7 +431,6 @@ void CRender::render_forward				()
 		phase									= PHASE_NORMAL;
 		render_main								(Device.mFullTransform,false);//
 		r_dsgraph_render_graph					(1)	;					// normal level, secondary priority
-		PortalTraverser.fade_render				()	;					// faded-portals
 		r_dsgraph_render_sorted					()	;					// strict-sorted geoms
 		g_pGamePersistent->Environment().RenderLast()	;					// rain/thunder-bolts
 	}
