@@ -80,24 +80,24 @@ void CRender::create()
 	// hardware
 	///////////////////////////////////////////////////
 	//Smap res choosing
-		switch (ps_r2_sun_quality)
-		{
-		case 1:
-			o.smapsize = 1024;
-			break;
-		case 2:
-			o.smapsize = 1536;
-			break;
-		case 3:
-			o.smapsize = 2048;
-			break;
-		case 4:
-			o.smapsize = 2560;
-			break;
-		case 5:
-			o.smapsize = 3072;
-			break;
-		}
+	switch (ps_r2_sun_quality)
+	{
+	case 1:
+		o.smapsize = 1024;
+		break;
+	case 2:
+		o.smapsize = 1536;
+		break;
+	case 3:
+		o.smapsize = 2048;
+		break;
+	case 4:
+		o.smapsize = 2560;
+		break;
+	case 5:
+		o.smapsize = 3072;
+		break;
+	}
 	///////////////////////////////////////////////////
 
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
@@ -631,6 +631,8 @@ HRESULT	CRender::shader_compile(
 	char c_smapsize[32];
 	char c_gloss[32];
 
+	char c_hard_optimization[32];
+
 	char c_sun_shafts[32];
 
 	char c_ao[32];
@@ -910,6 +912,19 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.advancedpp);
 	++len;
 
+	int HardOptimization = ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION);
+	if (HardOptimization == 1)
+	{
+		sprintf(c_hard_optimization, "%d", HardOptimization);
+		defines[def_it].Name = "USE_R2_HARD_OPTIMIZATION";
+		defines[def_it].Definition = c_hard_optimization;
+		def_it++;
+		strcat(sh_name, c_hard_optimization);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(HardOptimization);
+	++len;
+
 	if (o.forcegloss) {
 		sprintf(c_gloss, "%f", o.forcegloss_v);
 		defines[def_it].Name = "FORCE_GLOSS";
@@ -935,7 +950,7 @@ HRESULT	CRender::shader_compile(
 	int sepia = ps_r2_postprocess_flags.test(R2FLAG_SEPIA);
 	if (ps_r2_postprocess_flags.test(R2FLAG_SEPIA))
 	{
-		sprintf(c_sepia, "%d", c_sepia);
+		sprintf(c_sepia, "%d", sepia);
 		defines[def_it].Name = "USE_SEPIA";
 		defines[def_it].Definition = c_sepia;
 		def_it++;

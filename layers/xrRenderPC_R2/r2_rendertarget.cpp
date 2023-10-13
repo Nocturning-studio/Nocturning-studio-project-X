@@ -216,37 +216,47 @@ CRenderTarget::CRenderTarget		()
 
 	//	NORMAL
 	{
-		u32		w=Device.dwWidth, h=Device.dwHeight;
-
+		u32		w = Device.dwWidth, h = Device.dwHeight;
 		rt_Position.create(r2_RT_P, w, h, D3DFMT_A16B16G16R16F);
 		rt_Normal.create(r2_RT_N, w, h, D3DFMT_A16B16G16R16F);
 
 		// select albedo & accum
-		if (RImplementation.o.mrtmixdepth)	
+		if (RImplementation.o.mrtmixdepth)
 		{
 			// NV50
-			rt_Color.create			(r2_RT_albedo,	w,h,D3DFMT_A8R8G8B8);
-			rt_Accumulator.create	(r2_RT_accum,	w,h,D3DFMT_A16B16G16R16F);
+			rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8);
+			rt_Accumulator.create(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F);
 		}
-		else		
+		else
 		{
 			// can't - mix-depth
 			if (RImplementation.o.fp16_blend) {
 				// NV40
-				rt_Color.create				(r2_RT_albedo,		w,h,D3DFMT_A16B16G16R16F);	// expand to full
-				rt_Accumulator.create		(r2_RT_accum,		w,h,D3DFMT_A16B16G16R16F);
-			} else {
+				rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F);	// expand to full
+				rt_Accumulator.create(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F);
+			}
+			else {
 				// R4xx, no-fp-blend,-> albedo_wo
-				VERIFY						(RImplementation.o.albedo_wo);
-				rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F);	// normal
+				VERIFY(RImplementation.o.albedo_wo);
+				rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8);	// normal
 				rt_Accumulator.create(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F);
 				rt_Accumulator_temp.create(r2_RT_accum_temp, w, h, D3DFMT_A16B16G16R16F);
 			}
 		}
 			// generic(LDR) RTs
+		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
+		{
+			rt_Generic_0.create(r2_RT_generic0, w, h, D3DFMT_A8R8G8B8);
+			rt_Generic_1.create(r2_RT_generic1, w, h, D3DFMT_A8R8G8B8);
+			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A8R8G8B8);
+		}
+		else
+		{
 			rt_Generic_0.create(r2_RT_generic0, w, h, D3DFMT_A16B16G16R16F);
 			rt_Generic_1.create(r2_RT_generic1, w, h, D3DFMT_A16B16G16R16F);
 			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A16B16G16R16F);
+		}
+
 	}
 
 	// OCCLUSION
@@ -276,7 +286,7 @@ CRenderTarget::CRenderTarget		()
 	else
 	{
 		u32	size					=RImplementation.o.smapsize	;
-		rt_smap_surf.create			(r2_RT_smap_surf,			size,size,D3DFMT_R32F);
+		rt_smap_surf.create			(r2_RT_smap_surf,			size,size,D3DFMT_R16F);
 		rt_smap_depth				= NULL;
 		R_CHK						(HW.pDevice->CreateDepthStencilSurface	(size,size,D3DFMT_D24X8,D3DMULTISAMPLE_NONE,0,TRUE,&rt_smap_ZB,NULL));
 		s_accum_mask.create				(b_accum_mask,				"r2\\accum_mask");
@@ -312,7 +322,12 @@ CRenderTarget::CRenderTarget		()
 
 	// BLOOM
 	{
-		D3DFORMAT	fmt				= D3DFMT_A16B16G16R16F;			//;		// D3DFMT_X8R8G8B8
+		D3DFORMAT fmt;
+		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
+			fmt = D3DFMT_X8R8G8B8;
+		else
+			fmt = D3DFMT_A16B16G16R16F;
+
 		u32	w=BLOOM_size_X, h=BLOOM_size_Y;
 		u32 fvf_build				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
 		u32 fvf_filter				= (u32)D3DFVF_XYZRHW|D3DFVF_TEX8|D3DFVF_TEXCOORDSIZE4(0)|D3DFVF_TEXCOORDSIZE4(1)|D3DFVF_TEXCOORDSIZE4(2)|D3DFVF_TEXCOORDSIZE4(3)|D3DFVF_TEXCOORDSIZE4(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6)|D3DFVF_TEXCOORDSIZE4(7);
@@ -337,15 +352,15 @@ CRenderTarget::CRenderTarget		()
 
 		if (ps_r2_ao == 1)
 		{
-			BaseAOTexWeight *= 0.75f;
-			BaseAOTexHeight *= 0.75f;
+			BaseAOTexWeight *= 0.85f;
+			BaseAOTexHeight *= 0.85f;
 		}
 
 		//Create rendertarget
-		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
-		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
-		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_R16F);
-		rt_ao.create(r2_RT_ao, Weight, Height, D3DFMT_R16F);
+		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao.create(r2_RT_ao, Weight, Height, D3DFMT_X8R8G8B8);
 
 		//Create shader resource
 		s_ao.create(b_ao, "r2\\ao");

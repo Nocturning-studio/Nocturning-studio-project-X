@@ -121,7 +121,7 @@ void CRenderTarget::phase_bloom	()
 	// Capture luminance values
 	phase_luminance					( );
 
-	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM))
+	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM) && ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 	{
 		// FAST FILTER
 		float	_w					= BLOOM_size_X;

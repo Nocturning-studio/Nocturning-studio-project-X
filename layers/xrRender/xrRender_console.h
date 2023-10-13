@@ -160,10 +160,9 @@ enum
 	R2FLAG_SUN_DETAILS = (1 << 3),
 	R2FLAG_SUN_IGNORE_PORTALS = (1 << 4),
 	R2FLAGEXT_SUN_ZCULLING = (1 << 5),
-	R2FLAGEXT_SUN_OLD = (1 << 6),
-	R2FLAG_GI = (1 << 7),
-	R2FLAG_R1LIGHTS = (1 << 8),
-	R2FLAG_EXP_DONT_TEST_UNSHADOWED = (1 << 9),
+	R2FLAG_GI = (1 << 6),
+	R2FLAG_R1LIGHTS = (1 << 7),
+	R2FLAG_EXP_DONT_TEST_UNSHADOWED = (1 << 8)
 };
 
 extern ECORE_API Flags32		ps_r2_postprocess_flags;
@@ -192,12 +191,13 @@ enum
 extern ECORE_API Flags32		ps_r2_ls_flags;
 enum
 {
-	R2FLAG_GLOBALMATERIAL					= (1<<8),
-	R2FLAG_ZFILL							= (1<<9),
-	R2FLAG_EXP_SPLIT_SCENE					= (1<<12),
-	R2FLAG_USE_NVDBT						= (1<<14),
-	R2FLAG_USE_NVSTENCIL					= (1<<15),
-	R2FLAG_EXP_MT_CALC						= (1<<16),
+	R2FLAG_GLOBALMATERIAL = (1<<0),
+	R2FLAG_ZFILL = (1<<1),
+	R2FLAG_EXP_SPLIT_SCENE = (1<<2),
+	R2FLAG_USE_NVDBT = (1<<3),
+	R2FLAG_USE_NVSTENCIL = (1<<4),
+	R2FLAG_EXP_MT_CALC = (1<<5),
+	R2FLAG_HARD_OPTIMIZATION = (1<<6)
 };
 
 /*-------------------------------------------------------------------------------*/

@@ -753,7 +753,6 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_sun_lumscale_amb", &ps_r2_sun_lumscale_amb, 0.0, +3.0);
 
 	CMD3(CCC_Mask, "r2_shadow_cascede_zcul", &ps_r2_lighting_flags, R2FLAGEXT_SUN_ZCULLING);
-	CMD3(CCC_Mask, "r2_shadow_cascede_old", &ps_r2_lighting_flags, R2FLAGEXT_SUN_OLD);
 
 	CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_lighting_flags, R2FLAG_R1LIGHTS);
 
@@ -776,6 +775,8 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_frame_layers, debug_frame_layers_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
+
+	CMD3(CCC_Mask, "r2_hard_optimization", &ps_r2_ls_flags, R2FLAG_HARD_OPTIMIZATION);
 
 #if RENDER==R_R2
 	CMD1(CCC_BuildSSA, "build_ssa");

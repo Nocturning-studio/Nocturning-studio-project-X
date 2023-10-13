@@ -11,8 +11,8 @@ void CRenderTarget::phase_create_ao()
 
 	if (ps_r2_ao == 1)
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.85f;
+		h *= 0.85f;
 	}
 
 	float d_Z = EPS_S;
@@ -74,8 +74,8 @@ void CRenderTarget::phase_diagonal_filter()
 
 	if (ps_r2_ao == 1)
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.85f;
+		h *= 0.85f;
 	}
 
 	float d_Z = EPS_S;
@@ -126,8 +126,8 @@ void CRenderTarget::phase_strided_filter()
 
 	if (ps_r2_ao == 1)
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.85f;
+		h *= 0.85f;
 	}
 
 	float d_Z = EPS_S;
@@ -216,7 +216,9 @@ void CRenderTarget::phase_finalize()
 void CRenderTarget::phase_blur()
 {
 	phase_diagonal_filter();
+
 	phase_strided_filter();
+
 	phase_finalize();
 }
 

@@ -149,9 +149,9 @@ void CRenderTarget::phase_depth_of_field()
 {
 	depth_of_field_pass_first();
 
-	if(ps_r2_dof_quality >= 2)
+	if(ps_r2_dof_quality >= 2 && !ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 	depth_of_field_pass_second();
 
-	if (ps_r2_dof_quality >= 3)
+	if (ps_r2_dof_quality >= 3 && !ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 	depth_of_field_pass_third();
 }

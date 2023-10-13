@@ -357,13 +357,14 @@ void	CRenderTarget::phase_combine()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
-		phase_depth_of_field();
-
-	draw_overlays();
-
 	//	PP-if required
-	if (PP_Complex) {
+	if (PP_Complex) 
+	{
+		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
+			phase_depth_of_field();
+
+		draw_overlays();
+
 		phase_pp();
 	}
 
