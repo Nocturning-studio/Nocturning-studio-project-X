@@ -330,7 +330,7 @@ CRenderTarget::CRenderTarget		()
 		u32 BaseAOTexWeight = Weight,
 			  BaseAOTexHeight = Height;
 
-		if (ps_r2_ao == 1)
+		if (ps_r2_ao_quality <= 2)
 		{
 			BaseAOTexWeight *= 0.85f;
 			BaseAOTexHeight *= 0.85f;

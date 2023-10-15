@@ -9,7 +9,7 @@ void CRenderTarget::phase_create_ao()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_r2_ao == 1)
+	if (ps_r2_ao_quality <= 2)
 	{
 		w *= 0.85f;
 		h *= 0.85f;
@@ -72,7 +72,7 @@ void CRenderTarget::phase_diagonal_filter()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_r2_ao == 1)
+	if (ps_r2_ao_quality <= 2)
 	{
 		w *= 0.85f;
 		h *= 0.85f;
@@ -124,7 +124,7 @@ void CRenderTarget::phase_strided_filter()
 	float w = float(Device.dwWidth);
 	float h = float(Device.dwHeight);
 
-	if (ps_r2_ao == 1)
+	if (ps_r2_ao_quality <= 2)
 	{
 		w *= 0.85f;
 		h *= 0.85f;
