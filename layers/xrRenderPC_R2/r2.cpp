@@ -655,6 +655,7 @@ HRESULT	CRender::shader_compile(
 	char c_fog_quality[32];
 
 	char c_mblur[32];
+	char c_mblur_quality[32];
 	char c_dof[32];
 	char c_dof_quality[32];
 
@@ -766,6 +767,18 @@ HRESULT	CRender::shader_compile(
 		len += 4;
 	}
 	sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_MBLUR));
+	++len;
+
+	if (RImplementation.o.advancedpp && ps_r2_mblur_quality)
+	{
+		sprintf(c_mblur_quality, "%d", ps_r2_mblur_quality);
+		defines[def_it].Name = "MBLUR_QUALITY";
+		defines[def_it].Definition = c_mblur_quality;
+		def_it++;
+		strcat(sh_name, c_mblur_quality);
+		len += 4;
+	}
+	sh_name[len] = '0' + (char)ps_r2_mblur_quality;
 	++len;
 
 	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF)) {

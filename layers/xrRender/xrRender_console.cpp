@@ -7,7 +7,7 @@
 /*-------------------------------------------------------------------------------*/
 // Render common tokens
 /*-------------------------------------------------------------------------------*/
-u32			ps_Preset = 3;
+u32	ps_Preset = 3;
 xr_token							qpreset_token[] = {
 	{ "Minimum",					0											},
 	{ "Low",						1											},
@@ -19,7 +19,7 @@ xr_token							qpreset_token[] = {
 	{ 0,							0											}
 };
 
-u32			ps_EffPreset = 2;
+u32	ps_EffPreset = 2;
 xr_token							qeffpreset_token[] = {
 	{ "st_opt_eff_disabled",		0											},
 	{ "st_opt_eff_default",			1											},
@@ -27,7 +27,7 @@ xr_token							qeffpreset_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_vignette_mode = 2;
+u32	ps_vignette_mode = 2;
 xr_token vignette_mode_token[] = {
 	{ "st_opt_disabled",			0											},
 	{ "st_opt_static",				1											},
@@ -38,7 +38,7 @@ xr_token vignette_mode_token[] = {
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32		ps_r2_aa = 1;
+u32	ps_r2_aa = 1;
 xr_token							aa_token[] = {
 	{ "st_opt_disabled",			0											},
 	{ "st_opt_dlaa",				1											},
@@ -48,7 +48,7 @@ xr_token							aa_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_r2_aa_quality = 2;
+u32	ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -57,7 +57,7 @@ xr_token aa_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_r2_ao = 2;
+u32	ps_r2_ao = 2;
 xr_token ao_token[] = {
 	{ "st_opt_off",					0											},
 	{ "st_opt_ssao",				1											},
@@ -66,7 +66,7 @@ xr_token ao_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_r2_ao_quality = 2;
+u32	ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -75,7 +75,7 @@ xr_token ao_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_r2_sun_quality = 1;
+u32	ps_r2_sun_quality = 1;
 xr_token sun_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -85,7 +85,7 @@ xr_token sun_quality_token[] = {
 	{ 0,							0											} 
 };
 
-u32		ps_r2_shadow_filtering = 1;
+u32	ps_r2_shadow_filtering = 1;
 xr_token shadow_filter_token[] = {
 	{ "st_opt_disable",				0											},
 	{ "st_opt_min",					1											},
@@ -94,7 +94,7 @@ xr_token shadow_filter_token[] = {
 	{ 0,							0											} 
 };
 
-u32			ps_r2_sun_shafts = 2;
+u32	ps_r2_sun_shafts = 2;
 xr_token							qsun_shafts_token[] = {
 	{ "st_opt_off",					0												},
 	{ "st_opt_low",					1												},
@@ -103,7 +103,7 @@ xr_token							qsun_shafts_token[] = {
 	{ 0,							0												}
 };
 
-u32		ps_r2_bump_mode = 2;
+u32	ps_r2_bump_mode = 2;
 xr_token bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
@@ -111,7 +111,7 @@ xr_token bump_mode_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_tdetail_bump_mode = 2;
+u32	ps_r2_tdetail_bump_mode = 2;
 xr_token tdetail_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
@@ -119,7 +119,7 @@ xr_token tdetail_bump_mode_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_terrain_bump_mode = 2;
+u32	ps_r2_terrain_bump_mode = 2;
 xr_token terrain_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
@@ -127,7 +127,7 @@ xr_token terrain_bump_mode_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_dof_quality = 2;
+u32	ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -136,7 +136,16 @@ xr_token dof_quality_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_fog_quality = 2;
+u32	ps_r2_mblur_quality = 2;
+xr_token mblur_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_ultra",				4											},
+	{ 0,							0											}
+};
+
+u32	ps_r2_fog_quality = 2;
 xr_token fog_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
@@ -145,7 +154,7 @@ xr_token fog_quality_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_debug_frame_layers = 0;
+u32	ps_r2_debug_frame_layers = 0;
 xr_token debug_frame_layers_token[] = {
 	{ "full_frame",					0											},
 	{ "gbuffer_color",				1											},
@@ -164,7 +173,7 @@ xr_token debug_frame_layers_token[] = {
 	{ 0,							0											}
 };
 
-u32		ps_r2_debug_textures = 0;
+u32	ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {
 	{ "disabled",					0											},
 	{ "uv_checker",					1											},
@@ -685,9 +694,11 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
 	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
-	tw_min.set(0, 0, 0);	tw_max.set(1, 1, 1);
+	tw_min.set(0, 0, 0);	
+	tw_max.set(1, 1, 1);
 	CMD4(CCC_Vector3, "r2_aa_break", &ps_r2_aa_barier, tw_min, tw_max);
-	tw_min.set(0, 0, 0);	tw_max.set(1, 1, 1);
+	tw_min.set(0, 0, 0);	
+	tw_max.set(1, 1, 1);
 	CMD4(CCC_Vector3, "r2_aa_weight", &ps_r2_aa_weight, tw_min, tw_max);
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_r2_ao, ao_token);
@@ -714,9 +725,11 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_bloom_fast", &ps_r2_postprocess_flags, R2FLAG_FASTBLOOM);
 
 	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_postprocess_flags, R2FLAG_MBLUR);
-	CMD4(CCC_Float, "r2_mblur", &ps_r2_mblur, 0.0f, 1.0f);
+	CMD4(CCC_Float, "r2_mblur_power", &ps_r2_mblur, 0.0f, 1.0f);
+	CMD3(CCC_Token, "r2_mblur_quality", &ps_r2_mblur_quality, mblur_quality_token);
 
-	tw_min.set(-10000, -10000, 0);	tw_max.set(10000, 10000, 10000);
+	tw_min.set(-10000, -10000, 0);	
+	tw_max.set(10000, 10000, 10000);
 	CMD4(CCC_Dof,		"r2_dof",			&ps_r2_dof,		tw_min,		tw_max);
 	CMD4(CCC_DofNear,	"r2_dof_near",		&ps_r2_dof.x,	tw_min.x,	tw_max.x);
 	CMD4(CCC_DofFocus,	"r2_dof_focus",		&ps_r2_dof.y,	tw_min.y,	tw_max.y);
