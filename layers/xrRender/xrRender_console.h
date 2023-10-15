@@ -178,7 +178,8 @@ enum
 	R2FLAG_DOF = (1 << 6),
 	R2FLAG_MBLUR = (1 << 7),
 	R2FLAG_SEPIA = (1 << 8),
-	R2FLAG_HDR = (1 << 9)
+	R2FLAG_HDR = (1 << 9),
+	R2FLAG_SHARPEN = (1 << 10)
 };
 
 extern ECORE_API Flags32		ps_r2_overlay_flags;

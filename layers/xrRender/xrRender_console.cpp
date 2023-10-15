@@ -739,6 +739,8 @@ void		xrRender_initconsole()
 	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_postprocess_flags, R2FLAG_DOF);
 	CMD3(CCC_Token,		"r2_dof_quality",	&ps_r2_dof_quality, dof_quality_token);
 
+	CMD3(CCC_Mask, "r2_sharpen", &ps_r2_postprocess_flags, R2FLAG_SHARPEN);
+
 	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_overlay_flags, R2FLAG_PHOTO_GRID);
 	CMD3(CCC_Mask, "r2_cinema_borders", &ps_r2_overlay_flags, R2FLAG_CINEMA_BORDERS);
 	CMD3(CCC_Mask, "r2_watermark", &ps_r2_overlay_flags, R2FLAG_WATERMARK);

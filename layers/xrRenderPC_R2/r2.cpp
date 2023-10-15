@@ -659,6 +659,8 @@ HRESULT	CRender::shader_compile(
 	char c_dof[32];
 	char c_dof_quality[32];
 
+	char c_sharpen[32];
+
 	char sh_name[MAX_PATH] = "";
 
 	for (u32 i = 0; i < m_ShaderOptions.size(); ++i)
@@ -949,6 +951,19 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(sepia);
+	++len;
+
+	int bUseSharpen = (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SHARPEN));
+	if (bUseSharpen)
+	{
+		sprintf(c_sharpen, "%d", bUseSharpen);
+		defines[def_it].Name = "USE_SHARPEN";
+		defines[def_it].Definition = c_sharpen;
+		def_it++;
+		strcat(sh_name, c_sharpen);
+		len += 4;
+	}
+	sh_name[len] = '0' + char(bUseSharpen);
 	++len;
 
 	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);
