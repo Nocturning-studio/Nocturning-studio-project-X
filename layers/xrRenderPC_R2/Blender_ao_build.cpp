@@ -23,7 +23,6 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 		C.r_Pass("null", "ao_phase_ssao", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
 		jitter(C);
 		C.r_End();
 		break;
@@ -31,7 +30,6 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 		C.r_Pass("null", "ao_phase_hdao", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
 		jitter(C);
 		C.r_End();
 		break;
@@ -39,7 +37,6 @@ void CBlender_ao_build::Compile(CBlender_Compile& C)
 		C.r_Pass("null", "ao_phase_hbao", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_tex("s_blue_noise", "noise\\blue_noise_texture");
 		jitter(C);
 		C.r_End();
 		break;
