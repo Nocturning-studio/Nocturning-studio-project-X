@@ -90,10 +90,10 @@ void	CBlender_Detail_Still::Compile	(CBlender_Compile& C)
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer wave
-		generate_shader_name(C, false, "detail_wave", "detail", false);
+		generate_shader_name(C, false, "detail_object_animated", "detail_object", false);
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer still
-		generate_shader_name(C, false, "detail_static", "detail", false);
+		generate_shader_name(C, false, "detail_object", "detail_object", false);
 		break;
 	}
 }

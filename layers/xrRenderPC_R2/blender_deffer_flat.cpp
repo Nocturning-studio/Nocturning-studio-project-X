@@ -24,14 +24,14 @@ void	CBlender_deffer_flat::Compile(CBlender_Compile& C)
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer
-		generate_shader_name		(C,true,"base","base",false);
+		generate_shader_name		(C,true,"static_mesh","static_mesh",false);
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer
-		generate_shader_name		(C,false,"base","base",false);
+		generate_shader_name		(C,false,"static_mesh","static_mesh",false);
 		break;
 	case SE_R2_SHADOW:			// smap-direct
-		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base","dumb",	FALSE,TRUE,TRUE,FALSE);
-		else							C.r_Pass	("shadow_direct_base","shadow_direct_base",FALSE);
+		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_static_mesh","dumb",	FALSE,TRUE,TRUE,FALSE);
+		else							C.r_Pass	("shadow_direct_static_mesh","shadow_direct_static_mesh",FALSE);
 		C.r_Sampler		("s_base",C.L_textures[0]);
 		C.r_End			();
 		break;

@@ -71,22 +71,22 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 		switch (C.iElement)
 		{
 		case SE_R2_NORMAL_HQ: 			// deffer
-			generate_shader_name(C, true, "model", "base", bAref);
+			generate_shader_name(C, true, "dynamic_mesh", "static_mesh", bAref);
 			break;
 		case SE_R2_NORMAL_LQ: 			// deffer
-			generate_shader_name(C, false, "model", "base", bAref);
+			generate_shader_name(C, false, "dynamic_mesh", "static_mesh", bAref);
 			break;
 		case SE_R2_SHADOW:				// smap
 			if (bAref) {
-				if (RImplementation.o.HW_smap)	C.r_Pass("shadow_direct_model_aref", "shadow_direct_base_aref", FALSE, TRUE, TRUE, FALSE, D3DBLEND_ZERO, D3DBLEND_ONE, TRUE, 220);
-				else							C.r_Pass("shadow_direct_model_aref", "shadow_direct_base_aref", FALSE);
+				if (RImplementation.o.HW_smap)	C.r_Pass("shadow_direct_dynamic_mesh_alphatest", "shadow_direct_static_mesh_alphatest", FALSE, TRUE, TRUE, FALSE, D3DBLEND_ZERO, D3DBLEND_ONE, TRUE, 220);
+				else							C.r_Pass("shadow_direct_dynamic_mesh_alphatest", "shadow_direct_static_mesh_alphatest", FALSE);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_End();
 				break;
 			}
 			else {
-				if (RImplementation.o.HW_smap)	C.r_Pass("shadow_direct_model", "dumb", FALSE, TRUE, TRUE, FALSE);
-				else							C.r_Pass("shadow_direct_model", "shadow_direct_base", FALSE);
+				if (RImplementation.o.HW_smap)	C.r_Pass("shadow_direct_dynamic_mesh", "dumb", FALSE, TRUE, TRUE, FALSE);
+				else							C.r_Pass("shadow_direct_dynamic_mesh", "shadow_direct_static_mesh", FALSE);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_End();
 				break;

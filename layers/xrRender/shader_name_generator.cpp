@@ -133,21 +133,21 @@ void generate_shader_name(CBlender_Compile& C,
 		strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), "vfx\\vfx_no_ao");
 
 	// Starting generate shader name
-	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, "deffer_", PixelShaderName);
-	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "deffer_", VertexShaderName);
+	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, "gbuffer_stage_", PixelShaderName);
+	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
 
 	// Create lightmapped shader if need
 	if (bUseLightMap)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_lmh");
+		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_lightmapped");
 
 	// Create shader with alpha testing if need
 	if (bUseAlpha)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_aref");
+		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_alphatest");
 
 	// Create shader with normal mapping or displacement if need
 	if (bIsHightQualityGeometry)
 	{
-		if ((ps_r2_bump_mode == 1 || r2_sun_static))
+		if (ps_r2_bump_mode == 1 || r2_sun_static || !bUseBump)
 			strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_normal");
 		else if ((ps_r2_bump_mode == 2 || (!r2_sun_static && !r2_advanced_pp)) || (r2_advanced_pp && !C.bSteepParallax))
 			strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_parallax");
@@ -157,7 +157,7 @@ void generate_shader_name(CBlender_Compile& C,
 
 	// Create shader with deatil texture if need
 	if (bUseDetail)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_d");
+		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
 
 	//RImplementation.addShaderOption("TEST_DEFINE", "1");
 
@@ -179,7 +179,7 @@ void generate_shader_name(CBlender_Compile& C,
 	C.r_Sampler("s_detailBumpX", DetailBumpCorrectionTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 	if (bUseLightMap)
-		C.r_Sampler("s_hemi", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		C.r_Sampler("s_hemi", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE, D3DTEXF_LINEAR);
 
 	jitter(C);
 

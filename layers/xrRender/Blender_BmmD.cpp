@@ -164,11 +164,11 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	case SE_R2_NORMAL_HQ: 		// deffer
 		extern u32 ps_r2_terrain_bump_mode;
 		if ((ps_r2_terrain_bump_mode == 1) || (r2_sun_static))
-			C.r_Pass("deffer_terrain", "deffer_terrain", TRUE);
+			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain", TRUE);
 		else if ((ps_r2_terrain_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
-			C.r_Pass("deffer_terrain", "deffer_terrain_parallax", TRUE);
+			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax", TRUE);
 		if ((ps_r2_terrain_bump_mode == 3) && (r2_advanced_pp))
-			C.r_Pass("deffer_terrain", "deffer_terrain_steep_parallax", TRUE);
+			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_parallax", TRUE);
 
 		C.r_Sampler		("s_mask",	mask);
 		C.r_Sampler		("s_lmap",	C.L_textures[1]);
@@ -215,7 +215,7 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_End			();
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer
-		C.r_Pass("deffer_terrain_lq", "deffer_terrain_lq", TRUE);
+		C.r_Pass("gbuffer_stage_terrain_lq", "gbuffer_stage_terrain_lq", TRUE);
 		if (ps_r2_debug_textures == 1)
 			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
 		else if (ps_r2_debug_textures == 2)
@@ -228,8 +228,8 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_End			();
 		break;
 	case SE_R2_SHADOW:			// smap
-		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base","dumb",				FALSE,TRUE,TRUE,FALSE);
-		else							C.r_Pass	("shadow_direct_base","shadow_direct_base",	FALSE);
+		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_static_mesh","dumb",				FALSE,TRUE,TRUE,FALSE);
+		else							C.r_Pass	("shadow_direct_static_mesh","shadow_direct_static_mesh",	FALSE);
 		C.r_Sampler		("s_base",	C.L_textures[0]);
 		C.r_End			();
 		break;

@@ -80,7 +80,7 @@ void	CBlender_Particle::Compile	(CBlender_Compile& C)
 	case SE_R2_NORMAL_LQ: 	// deffer
 		switch (oBlend.IDselected)
 		{
-		case 0:	C.r_Pass	("deffer_particle",	"deffer_particle",	FALSE,	TRUE,TRUE,	FALSE,	D3DBLEND_ONE,		D3DBLEND_ZERO,			FALSE,200);	break;	// SET
+		case 0:	C.r_Pass	("gbuffer_stage_particle",	"gbuffer_stage_particle",	FALSE,	TRUE,TRUE,	FALSE,	D3DBLEND_ONE,		D3DBLEND_ZERO,			FALSE,200);	break;	// SET
 		case 1: C.r_Pass	("particle",		"particle",			FALSE,	TRUE,FALSE,	TRUE,	D3DBLEND_SRCALPHA,	D3DBLEND_INVSRCALPHA,	TRUE,0);	break;	// BLEND
 		case 2:	C.r_Pass	("particle",		"particle",			FALSE,	TRUE,FALSE,	TRUE,	D3DBLEND_ONE,		D3DBLEND_ONE,			TRUE,0);	break;	// ADD
 		case 3:	C.r_Pass	("particle",		"particle",			FALSE,	TRUE,FALSE,	TRUE,	D3DBLEND_DESTCOLOR,	D3DBLEND_ZERO,			TRUE,0);	break;	// MUL

@@ -34,19 +34,22 @@ void	CBlender_deffer_aref::Compile(CBlender_Compile& C)
 
 	// oBlend.value	= FALSE	;
 
-	if (oBlend.value)	{
+	if (oBlend.value)	
+	{
 		switch(C.iElement) 
 		{
 		case SE_R2_NORMAL_HQ:
 		case SE_R2_NORMAL_LQ:
-			if (lmapped)	{
+			if (lmapped)	
+			{
 				C.r_Pass			("lmapE","lmapE",TRUE,TRUE,FALSE,TRUE,D3DBLEND_SRCALPHA,	D3DBLEND_INVSRCALPHA,	TRUE, oAREF.value);
 				C.r_Sampler			("s_base",	C.L_textures[0]	);
 				C.r_Sampler			("s_lmap",	C.L_textures[1]	);
 				C.r_Sampler_clf		("s_hemi",	*C.L_textures[2]);
 				C.r_Sampler			("s_env",	r2_T_envs0,		false,D3DTADDRESS_CLAMP);
 				C.r_End				();
-			} else {
+			} else 
+			{
 				C.r_Pass			("vert", "vert", TRUE,TRUE,FALSE,TRUE,D3DBLEND_SRCALPHA,	D3DBLEND_INVSRCALPHA,	TRUE, oAREF.value);
 				C.r_Sampler			("s_base",	C.L_textures[0]	);
 				C.r_End				();
@@ -55,7 +58,9 @@ void	CBlender_deffer_aref::Compile(CBlender_Compile& C)
 		default:
 			break;
 		}
-	} else {
+	} 
+	else 
+	{
 		C.SetParams				(1,false);	//.
 
 		// codepath is the same, only the shaders differ
@@ -63,14 +68,14 @@ void	CBlender_deffer_aref::Compile(CBlender_Compile& C)
 		switch(C.iElement) 
 		{
 		case SE_R2_NORMAL_HQ: 	// deffer
-			generate_shader_name		(C,true,"base","base",true);
+			generate_shader_name		(C,true,"static_mesh","static_mesh",true);
 			break;
 		case SE_R2_NORMAL_LQ: 	// deffer
-			generate_shader_name		(C,false,"base","base",true);
+			generate_shader_name		(C,false,"static_mesh","static_mesh",true);
 			break;
 		case SE_R2_SHADOW:		// smap
-			if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base_aref","shadow_direct_base_aref",FALSE,TRUE,TRUE,FALSE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,220);
-			else							C.r_Pass	("shadow_direct_base_aref","shadow_direct_base_aref",FALSE);
+			if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_static_mesh_alphatest","shadow_direct_static_mesh_alphatest",FALSE,TRUE,TRUE,FALSE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,220);
+			else							C.r_Pass	("shadow_direct_static_mesh_alphatest","shadow_direct_static_mesh_alphatest",FALSE);
 			C.r_Sampler		("s_base",C.L_textures[0]);
 			C.r_End			();
 			break;
