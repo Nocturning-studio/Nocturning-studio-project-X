@@ -132,7 +132,7 @@ void	CBlender_Model_EbB::Compile(CBlender_Compile& C)
 	}
 }
 #else
-#include "uber_deffer.h"
+#include "shader_name_generator.h"
 void	CBlender_Model_EbB::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
@@ -157,10 +157,10 @@ void	CBlender_Model_EbB::Compile(CBlender_Compile& C)
 		switch(C.iElement) 
 		{
 		case SE_R2_NORMAL_HQ: 	// deffer
-			uber_deffer		(C,true,	"model","base",false);
+			generate_shader_name		(C,true,	"model","base",false);
 			break;
 		case SE_R2_NORMAL_LQ: 	// deffer
-			uber_deffer		(C,false,	"model","base",false);
+			generate_shader_name		(C,false,	"model","base",false);
 			break;
 		case SE_R2_SHADOW:		// smap
 			if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_model","dumb",					FALSE,TRUE,TRUE,FALSE);

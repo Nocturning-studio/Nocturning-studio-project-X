@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "..\xrRender\uber_deffer.h"
+#include "..\xrRender\shader_name_generator.h"
 
 #include "..\xrRender\blender_BmmD.h"
 #include "blender_deffer_flat.h"

@@ -89,13 +89,13 @@ void CRender::create()
 		o.smapsize = 1536;
 		break;
 	case 3:
-		o.smapsize = 2048;
+		o.smapsize = 1536;
 		break;
 	case 4:
-		o.smapsize = 2560;
+		o.smapsize = 2048;
 		break;
 	case 5:
-		o.smapsize = 3072;
+		o.smapsize = 2560;
 		break;
 	}
 	///////////////////////////////////////////////////
@@ -634,12 +634,10 @@ HRESULT	CRender::shader_compile(
 
 	char c_ao[32];
 	char c_ao_quality[32];
-	char c_ao_blur[32];
 	char c_ao_use[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
-	char c_aa_edge_detect[32];
 
 	char c_debug_frame_layers[32];
 
@@ -650,32 +648,15 @@ HRESULT	CRender::shader_compile(
 	char c_sepia[32];
 	char c_bloom[32];
 	char c_hdr[32];
-	char c_photo_grid[32];
 
 	char c_soft_water[32];
 	char c_soft_particles[32];
 
 	char c_fog_quality[32];
 
-	char c_normal_mapping[32];
-	char c_parallax_mapping[32];
-	char c_steep_parallax_mapping[32];
-	char c_parallax_occlusion_mapping[32];
-
-	char c_tdetail_normal_mapping[32];
-	char c_tdetail_parallax_mapping[32];
-	char c_tdetail_steep_parallax_mapping[32];
-	char c_tdetail_parallax_occlusion_mapping[32];
-
-	char c_terrain_normal_mapping[32];
-	char c_terrain_parallax_mapping[32];
-	char c_terrain_steep_parallax_mapping[32];
-
 	char c_mblur[32];
 	char c_dof[32];
 	char c_dof_quality[32];
-
-	char c_gbuffer_opt[32];
 
 	char sh_name[MAX_PATH] = "";
 
@@ -954,7 +935,7 @@ HRESULT	CRender::shader_compile(
 		strcat(sh_name, c_sepia);
 		len += 1;
 	}
-	sh_name[len] = '0' + char(c_sepia);
+	sh_name[len] = '0' + char(sepia);
 	++len;
 
 	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);

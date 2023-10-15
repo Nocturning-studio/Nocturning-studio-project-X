@@ -237,12 +237,12 @@ void CRender::Render		()
 		Device.Statistic->RenderCALC.End				( )			;
 
 		// flush
-		Target->phase_scene_prepare					();
+		Target->clear_gbuffer					();
 		RCache.set_ColorWriteEnable					(FALSE);
 		r_dsgraph_render_graph						(0);
 		RCache.set_ColorWriteEnable					( );
 	} else {
-		Target->phase_scene_prepare					();
+		Target->clear_gbuffer					();
 	}
 
 	//*******
@@ -284,17 +284,18 @@ void CRender::Render		()
 	if (!split_the_scene_to_minimize_wait)
 	{
 		// level, DO NOT SPLIT
-		Target->phase_scene_begin				();
+		Target->create_gbuffer				();
 		r_dsgraph_render_hud					();
 		r_dsgraph_render_graph					(0);
 		r_dsgraph_render_lods					(true,true);
 		if(Details)	Details->Render				();
-		Target->phase_scene_end					();
-	} else {
+		Target->disable_anisotropy_filtering();
+	} else 
+	{
 		// level, SPLIT
-		Target->phase_scene_begin				();
+		Target->create_gbuffer				();
 		r_dsgraph_render_graph					(0);
-		Target->disable_aniso					();
+		Target->disable_anisotropy_filtering	();
 	}
 
 	//******* Occlusion testing of volume-limited light-sources
@@ -358,11 +359,11 @@ void CRender::Render		()
 */
 		// level
 		PortalTraverser.fade_render				();	// faded-portals, should be calculated before GBuffer 
-		Target->phase_scene_begin				();
+		Target->create_gbuffer				();
 		r_dsgraph_render_hud					();
 		r_dsgraph_render_lods					(true,true);
 		if(Details)	Details->Render				();
-		Target->phase_scene_end					();
+		Target->disable_anisotropy_filtering();
 	}
 
 	// Wall marks

@@ -173,7 +173,7 @@ Anyway, I hope that explanation makes some sense. It's really hard to describe t
 			/-------------------------------\				/-------------------------------\
 			| RT_0		=	depth			|				| RT_P	= pos.1/len(pos), 4xFP16|				/---------------------------\
 deffer -----| RT_1		=	norm.mid		|--decompress---| RT_N	= norm.mid,	4xFP16		|--accumulate---| RT_ACCUM = total_light	|--combine
-			| RT_COLOR	=	rgb.gloss		|				\-------------------------------/				\---------------------------/
+			| rt_GBuffer_Albedo	=	rgb.gloss		|				\-------------------------------/				\---------------------------/
 			| RT_ACCUM	=	hemi+emissive	|				
 -----------------------------------------------------------------------------------------------
 light	- logic:

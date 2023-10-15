@@ -89,7 +89,7 @@ void	CBlender_Particle::Compile	(CBlender_Compile& C)
 		};
 		C.r_Sampler			("s_base",	C.L_textures[0],false,oClamp.value?D3DTADDRESS_CLAMP:D3DTADDRESS_WRAP);
 		//	Igor: soft particles
-		C.r_Sampler("s_position", "$user$position");
+		C.r_Sampler("s_gbuffer_position", "$user$gbuffer_position");
 		C.r_End				();
 		break;
 	case SE_R2_SHADOW:		// smap
@@ -105,7 +105,7 @@ void	CBlender_Particle::Compile	(CBlender_Compile& C)
 		};
 		C.r_Sampler			("s_base",	C.L_textures[0],false,oClamp.value?D3DTADDRESS_CLAMP:D3DTADDRESS_WRAP);
 		//	Igor: soft particles
-		C.r_Sampler("s_position", "$user$position");
+		C.r_Sampler("s_gbuffer_position", "$user$gbuffer_position");
 		C.r_End				();
 		break;
 	case 4: 	// deffer-EMAP

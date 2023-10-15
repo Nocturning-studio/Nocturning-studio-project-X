@@ -17,6 +17,7 @@ class CTextureDescrMngr
 	{
 		shared_str			m_bump_name;
 		float				m_material;
+		bool				m_steep_parallax;
 	};
 	struct texture_desc {
 		texture_assoc* m_assoc;
@@ -41,6 +42,7 @@ public:
 	float		GetMaterial(const shared_str& tex_name) const;
 	void		GetTextureUsage(const shared_str& tex_name, BOOL& bDiffuse, BOOL& bBump) const;
 	BOOL		GetDetailTexture(const shared_str& tex_name, LPCSTR& res, R_constant_setup*& CS) const;
+	void		GetParallax(const shared_str& tex_name, BOOL& bSteepParallax) const;
 #ifdef _EDITOR
 	u32			GetTextureType(const shared_str& tex_name) const;
 #endif

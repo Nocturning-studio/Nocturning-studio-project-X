@@ -3,7 +3,7 @@
 
 void CRenderTarget::depth_of_field_pass_first()
 {
-	u_setrt(rt_Color, NULL, NULL, NULL);
+	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -51,7 +51,7 @@ void CRenderTarget::depth_of_field_pass_first()
 
 void CRenderTarget::depth_of_field_pass_second()
 {
-	u_setrt(rt_Color, NULL, NULL, NULL);
+	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -99,7 +99,7 @@ void CRenderTarget::depth_of_field_pass_second()
 
 void CRenderTarget::depth_of_field_pass_third()
 {
-	u_setrt(rt_Color, NULL, NULL, NULL);
+	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

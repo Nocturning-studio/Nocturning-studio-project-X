@@ -39,11 +39,10 @@ public:
 	xr_vector<Fplane>							dbg_planes;
 #endif
 
-	// MRT-path
-	ref_rt						rt_Depth;			// Z-buffer like - initial depth
-	ref_rt						rt_Position;		// 64bit,	fat	(x,y,z,?)				(eye-space)
-	ref_rt						rt_Normal;			// 64bit,	fat	(x,y,z,hemi)			(eye-space)
-	ref_rt						rt_Color;			// 64/32bit,fat	(r,g,b,specular-gloss)	(or decompressed MET-8-8-8-8)
+	//GBuffer
+	ref_rt						rt_GBuffer_Position;
+	ref_rt						rt_GBuffer_Normal;
+	ref_rt						rt_GBuffer_Albedo;
 
 	// 
 	ref_rt						rt_Accumulator;		// 64bit		(r,g,b,specular)
@@ -185,9 +184,10 @@ public:
 	BOOL						u_DBT_enable			(float zMin, float zMax);
 	void						u_DBT_disable			();
 
-	void						phase_scene_prepare		();
-	void						phase_scene_begin		();
-	void						phase_scene_end			();
+	void						enable_anisotropy_filtering();
+	void						disable_anisotropy_filtering();
+	void						clear_gbuffer			();
+	void						create_gbuffer			();
 	void						phase_occq				();
 	void						phase_wallmarks			();
 	void						phase_smap_direct		(light* L,	u32 sub_phase);
@@ -203,8 +203,6 @@ public:
 	
 	BOOL						enable_scissor			(light* L);		// true if intersects near plane
 	void						enable_dbt_bounds		(light* L);
-
-	void						disable_aniso			();
 
 	void						draw_volume				(light* L);
 	void						accum_direct			(u32	sub_phase);

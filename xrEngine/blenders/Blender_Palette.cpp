@@ -123,6 +123,7 @@ IBlender* IBlender::Create(CLASS_ID cls)
 	}
 	return 0;
 }
+
 void		IBlender::Destroy(IBlender*& B)
 {
 	xr_delete(B);

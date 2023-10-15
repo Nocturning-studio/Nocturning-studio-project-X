@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "..\xrRender\uber_deffer.h"
+#include "..\xrRender\shader_name_generator.h"
 #include "Blender_deffer_model.h"
 
 CBlender_deffer_model::CBlender_deffer_model() {
@@ -71,10 +71,10 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 		switch (C.iElement)
 		{
 		case SE_R2_NORMAL_HQ: 			// deffer
-			uber_deffer(C, true, "model", "base", bAref);
+			generate_shader_name(C, true, "model", "base", bAref);
 			break;
 		case SE_R2_NORMAL_LQ: 			// deffer
-			uber_deffer(C, false, "model", "base", bAref);
+			generate_shader_name(C, false, "model", "base", bAref);
 			break;
 		case SE_R2_SHADOW:				// smap
 			if (bAref) {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "..\xrRender\uber_deffer.h"
+#include "..\xrRender\shader_name_generator.h"
 #include "Blender_deffer_flat.h"
 
 CBlender_deffer_flat::CBlender_deffer_flat	()	{	description.CLS		= B_DEFAULT;	}
@@ -24,10 +24,10 @@ void	CBlender_deffer_flat::Compile(CBlender_Compile& C)
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer
-		uber_deffer		(C,true,"base","base",false);
+		generate_shader_name		(C,true,"base","base",false);
 		break;
 	case SE_R2_NORMAL_LQ: 		// deffer
-		uber_deffer		(C,false,"base","base",false);
+		generate_shader_name		(C,false,"base","base",false);
 		break;
 	case SE_R2_SHADOW:			// smap-direct
 		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base","dumb",	FALSE,TRUE,TRUE,FALSE);

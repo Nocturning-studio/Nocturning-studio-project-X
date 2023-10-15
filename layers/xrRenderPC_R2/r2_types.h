@@ -1,10 +1,8 @@
 #pragma once
 
-// r3xx code-path (MRT)
-#define		r2_RT_depth			"$user$depth"			// MRT
-#define		r2_RT_P				"$user$position"		// MRT
-#define		r2_RT_N				"$user$normal"			// MRT
-#define		r2_RT_albedo		"$user$albedo"			// MRT
+#define	r2_RT_GBuffer_Position "$user$gbuffer_position"
+#define	r2_RT_GBuffer_Normal "$user$gbuffer_normal"
+#define	r2_RT_GBuffer_Albedo "$user$gbuffer_albedo"
 
 // other
 #define		r2_RT_accum			"$user$accum"			// ---	16 bit fp or 16 bit fx

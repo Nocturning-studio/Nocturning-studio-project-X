@@ -150,7 +150,7 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 //////////////////////////////////////////////////////////////////////////
 // R2
 //////////////////////////////////////////////////////////////////////////
-#include "uber_deffer.h"
+#include "shader_name_generator.h"
 void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
@@ -162,7 +162,6 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 	switch(C.iElement) 
 	{
 	case SE_R2_NORMAL_HQ: 		// deffer
-		//uber_deffer_implicit		(C, true, "impl", "impl", false, oT2_Name[0]?oT2_Name:0, true);
 		extern u32 ps_r2_terrain_bump_mode;
 		if ((ps_r2_terrain_bump_mode == 1) || (r2_sun_static))
 			C.r_Pass("deffer_terrain", "deffer_terrain", TRUE);

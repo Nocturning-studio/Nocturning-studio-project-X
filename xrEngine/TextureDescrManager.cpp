@@ -29,73 +29,85 @@ void fix_texture_thm_name(LPSTR fn)
 }
 void CTextureDescrMngr::LoadLTX()
 {
-	string_path				fname;
-	FS.update_path(fname, "$game_textures$", "textures.ltx");
+	string_path				fname;		
+	FS.update_path			(fname,"$game_textures$","textures.ltx");
 
 	if (FS.exist(fname))
 	{
 		CInifile			ini(fname);
 		if (ini.section_exist("association"))
 		{
-			CInifile::Sect& data = ini.r_section("association");
-			CInifile::SectCIt I = data.Data.begin();
-			CInifile::SectCIt E = data.Data.end();
-			for (; I != E; ++I)
+			CInifile::Sect& data	= ini.r_section("association");
+			CInifile::SectCIt I		= data.Data.begin();
+			CInifile::SectCIt E		= data.Data.end();
+			for ( ; I!=E; ++I)	
 			{
-				const CInifile::Item& item = *I;
+				const CInifile::Item& item	= *I;
 
-				texture_desc& desc = m_texture_details[item.first];
-				desc.m_assoc = xr_new<texture_assoc>();
+				texture_desc& desc		= m_texture_details[item.first];
+				desc.m_assoc			= xr_new<texture_assoc>();
 
 				string_path				T;
 				float					s;
 
-				int res = sscanf(*item.second, "%[^,],%f", T, &s);
-				R_ASSERT(res == 2);
+				int res = sscanf					(*item.second,"%[^,],%f",T,&s);
+				R_ASSERT(res==2);
 				desc.m_assoc->detail_name = T;
-				desc.m_assoc->cs = xr_new<cl_dt_scaler>(s);
-				desc.m_assoc->usage = 0;
-				if (strstr(item.second.c_str(), "usage[diffuse_or_bump]"))
-					desc.m_assoc->usage = (1 << 0) | (1 << 1);
+				desc.m_assoc->cs		= xr_new<cl_dt_scaler>(s);
+				desc.m_assoc->usage		= 0;
+				if(strstr(item.second.c_str(),"usage[diffuse_or_bump]"))
+					desc.m_assoc->usage	= (1<<0)|(1<<1);
 				else
-					if (strstr(item.second.c_str(), "usage[bump]"))
-						desc.m_assoc->usage = (1 << 1);
-					else
-						if (strstr(item.second.c_str(), "usage[diffuse]"))
-							desc.m_assoc->usage = (1 << 0);
+				if(strstr(item.second.c_str(),"usage[bump]"))
+					desc.m_assoc->usage	= (1<<1);
+				else
+				if(strstr(item.second.c_str(),"usage[diffuse]"))
+					desc.m_assoc->usage	= (1<<0);
 			}
 		}//"association"
 
 		if (ini.section_exist("specification"))
 		{
-			CInifile::Sect& sect = ini.r_section("specification");
-			for (CInifile::SectCIt I2 = sect.Data.begin(); I2 != sect.Data.end(); ++I2)
+			CInifile::Sect& 	sect = ini.r_section("specification");
+			for (CInifile::SectCIt I2=sect.Data.begin(); I2!=sect.Data.end(); ++I2)	
 			{
-				const CInifile::Item& item = *I2;
+				const CInifile::Item& item	= *I2;
 
-				texture_desc& desc = m_texture_details[item.first];
-				desc.m_spec = xr_new<texture_spec>();
+				texture_desc& desc		= m_texture_details[item.first];
+				desc.m_spec				= xr_new<texture_spec>();
 
-				string_path				bmode;
-				int res = sscanf(item.second.c_str(), "bump_mode[%[^]]], material[%f]", bmode, &desc.m_spec->m_material);
-				R_ASSERT(res == 2);
-				if ((bmode[0] == 'u') && (bmode[1] == 's') && (bmode[2] == 'e') && (bmode[3] == ':'))
+				string_path				bmode, bSteepParallax;
+				int res = sscanf		(item.second.c_str(),"bump_mode[%[^]]], material[%f], steep_parallax[%[^]]",bmode,&desc.m_spec->m_material,bSteepParallax);
+				R_ASSERT(res>=2);
+				if ((bmode[0]=='u')&&(bmode[1]=='s')&&(bmode[2]=='e')&&(bmode[3]==':'))
 				{
 					// bump-map specified
-					desc.m_spec->m_bump_name = bmode + 4;
+					desc.m_spec->m_bump_name	=	bmode+4;
+				}
+				if (res == 3)
+				{
+					if ((bSteepParallax[0]=='u')&&(bSteepParallax[1]=='s')&&(bSteepParallax[2]=='e'))
+					{
+						// parallax
+						desc.m_spec->m_steep_parallax = TRUE;
+					} else {
+						desc.m_spec->m_steep_parallax = FALSE;
+					}
+				} else {
+					desc.m_spec->m_steep_parallax = FALSE;
 				}
 			}
 		}//"specification"
 #ifdef _EDITOR
 		if (ini.section_exist("types"))
 		{
-			CInifile::Sect& data = ini.r_section("types");
-			for (CInifile::SectCIt I = data.Data.begin(); I != data.Data.end(); I++)
+			CInifile::Sect& 	data = ini.r_section("types");
+			for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++)	
 			{
-				CInifile::Item& item = *I;
+				CInifile::Item& item	= *I;
 
-				texture_desc& desc = m_texture_details[item.first];
-				desc.m_type = (u16)atoi(item.second.c_str());
+				texture_desc& desc		= m_texture_details[item.first];
+				desc.m_type				= (u16)atoi(item.second.c_str());
 			}
 		}//"types"
 #endif
@@ -268,6 +280,20 @@ BOOL CTextureDescrMngr::GetDetailTexture(const shared_str& tex_name, LPCSTR& res
 	}
 	return FALSE;
 }
+
+// KD
+void CTextureDescrMngr::GetParallax(const shared_str& tex_name, BOOL& bSteepParallax) const
+{
+	map_TD::const_iterator I = m_texture_details.find(tex_name);
+	if (I != m_texture_details.end())
+	{
+		if (I->second.m_spec)
+		{
+			bSteepParallax = I->second.m_spec->m_steep_parallax;
+		}
+	}
+}
+
 /*
 	// Load detail textures association
 	string256		fname;

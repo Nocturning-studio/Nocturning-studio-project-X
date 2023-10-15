@@ -24,9 +24,6 @@ void	CRenderTarget::phase_combine()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	BOOL	split_the_scene_to_minimize_wait = FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait = TRUE;
-
 	// draw skybox
 	if (1)
 	{
@@ -160,7 +157,7 @@ void	CRenderTarget::phase_combine()
 	if (_menu_pp)			PP_Complex = FALSE;
 
 	// Combine everything + perform AA
-	if (PP_Complex)	u_setrt(rt_Color, 0, 0, HW.pBaseZB);			// LDR RT
+	if (PP_Complex)	u_setrt(rt_GBuffer_Albedo, 0, 0, HW.pBaseZB);			// LDR RT
 	else					u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 	// u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 
@@ -214,7 +211,7 @@ void	CRenderTarget::phase_combine()
 	// AA
 	if (ps_r2_aa >= 1)
 	{
-		u_setrt(rt_Color, NULL, NULL, NULL);
+		u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_Stencil(FALSE);
@@ -270,7 +267,7 @@ void	CRenderTarget::phase_combine()
 	// AA
 	if (ps_r2_aa == 4)
 	{
-		u_setrt(rt_Color, NULL, NULL, NULL);
+		u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_Stencil(FALSE);
@@ -310,7 +307,7 @@ void	CRenderTarget::phase_combine()
 	// combine_4
 	if (1)
 	{
-		u_setrt(rt_Color, NULL, NULL, NULL);
+		u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_Stencil(FALSE);
@@ -501,7 +498,7 @@ void CRenderTarget::phase_wallmarks()
 	// Targets
 	RCache.set_RT(NULL, 2);
 	RCache.set_RT(NULL, 1);
-	u_setrt(rt_Color, NULL, NULL, HW.pBaseZB);
+	u_setrt(rt_GBuffer_Albedo, NULL, NULL, HW.pBaseZB);
 	// Stencil	- draw only where stencil >= 0x1
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);
 	RCache.set_CullMode(CULL_CCW);

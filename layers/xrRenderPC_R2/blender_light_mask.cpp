@@ -14,17 +14,17 @@ void	CBlender_accum_direct_mask::Compile(CBlender_Compile& C)
 	{
 	case SE_MASK_SPOT:		// spot or omni-part
 		C.r_Pass			("accum_mask",		"dumb",				false,	TRUE,FALSE);
-		C.r_Sampler_rtf		("s_position",		r2_RT_P);
+		C.r_Sampler_rtf		("s_gbuffer_position",		r2_RT_GBuffer_Position);
 		C.r_End				();
 		break;
 	case SE_MASK_POINT:		// point
 		C.r_Pass			("accum_mask",		"dumb",				false,	TRUE,FALSE);
-		C.r_Sampler_rtf		("s_position",		r2_RT_P);
+		C.r_Sampler_rtf		("s_gbuffer_position",		r2_RT_GBuffer_Position);
 		C.r_End				();
 		break;
 	case SE_MASK_DIRECT:	// stencil mask for directional light
 		C.r_Pass			("null",			"accum_sun_mask",	false,	FALSE,FALSE,TRUE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,1);
-		C.r_Sampler_rtf		("s_normal",		r2_RT_N);
+		C.r_Sampler_rtf		("s_gbuffer_normal",		r2_RT_GBuffer_Normal);
 		C.r_End				();
 		break;
 	case SE_MASK_ACCUM_VOL:	// copy accumulator (temp -> real), volumetric (usually after blend)
