@@ -237,7 +237,7 @@ void CRender::create()
 	o.forceskinw = (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 
 	// constants
-	::Device.Resources->RegisterConstantSetup("parallax", &binder_parallax);
+	::Device.Resources->RegisterConstantSetup("parallax_heigt", &binder_parallax);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
 
 	c_lmaterial = "L_material";
@@ -661,6 +661,8 @@ HRESULT	CRender::shader_compile(
 
 	char c_sharpen[32];
 
+	char c_bump_quality[32];
+
 	char sh_name[MAX_PATH] = "";
 
 	for (u32 i = 0; i < m_ShaderOptions.size(); ++i)
@@ -1071,6 +1073,18 @@ HRESULT	CRender::shader_compile(
 		sh_name[len] = '0'; ++len;
 	}
 	//////////////////////////////////////////////////////////////////////////
+
+	if (ps_r2_bump_quality)
+	{
+		sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
+		defines[def_it].Name = "BUMP_QUALITY";
+		defines[def_it].Definition = c_bump_quality;
+		def_it++;
+		strcat(sh_name, c_bump_quality);
+		len += 4;
+	}
+	sh_name[len] = '0' + (char)ps_r2_bump_quality;
+	++len;
 
 	if (o.forceskinw) {
 		defines[def_it].Name = "SKIN_COLOR";

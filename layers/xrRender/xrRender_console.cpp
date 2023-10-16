@@ -111,19 +111,21 @@ xr_token bump_mode_token[] = {
 	{ 0,							0											}
 };
 
-u32	ps_r2_tdetail_bump_mode = 2;
-xr_token tdetail_bump_mode_token[] = {
+u32	ps_r2_terrain_bump_mode = 2;
+xr_token terrain_bump_mode_token[] = {
 	{ "st_opt_normal_mapping",		1											},
 	{ "st_opt_parallax_mapping",	2											},
 	{ "st_opt_steep_parallax_mapping",3											},
 	{ 0,							0											}
 };
 
-u32	ps_r2_terrain_bump_mode = 2;
-xr_token terrain_bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
+u32	ps_r2_bump_quality = 1;
+xr_token bump_quality_token[] = {
+	{ "st_opt_low",					1											},
+	{ "st_opt_medium",				2											},
+	{ "st_opt_high",				3											},
+	{ "st_opt_extreme",				4											},
+	{ "st_opt_ultra",				5											},
 	{ 0,							0											}
 };
 
@@ -784,8 +786,8 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_gi_refl", &ps_r2_GI_refl, EPS_L, 0.99f);
 
 	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
-	CMD3(CCC_Token, "r2_tdetail_bump_mode", &ps_r2_tdetail_bump_mode, tdetail_bump_mode_token);
 	CMD3(CCC_Token, "r2_terrain_bump_mode", &ps_r2_terrain_bump_mode, terrain_bump_mode_token);
+	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_frame_layers, debug_frame_layers_token);
