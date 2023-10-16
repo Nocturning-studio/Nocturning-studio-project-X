@@ -928,20 +928,17 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int vignette = ps_vignette_mode;
-	if (RImplementation.o.advancedpp)
-	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "VIGNETTE_MODE";
 		defines[def_it].Definition = c_vignette;
 		def_it++;
 		strcat(sh_name, c_vignette);
 		len += 1;
-	}
 	sh_name[len] = '0' + char(vignette);
 	++len;
 
 	int sepia = ps_r2_postprocess_flags.test(R2FLAG_SEPIA);
-	if (ps_r2_postprocess_flags.test(R2FLAG_SEPIA))
+	if (sepia)
 	{
 		sprintf(c_sepia, "%d", sepia);
 		defines[def_it].Name = "USE_SEPIA";
@@ -967,7 +964,7 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION))
+	if (chroma_abb)
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
 		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
@@ -1006,7 +1003,7 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int bloom = ps_r2_postprocess_flags.test(R2FLAG_BLOOM);
-	if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
+	if (bloom)
 	{
 		sprintf(c_bloom, "%d", bloom);
 		defines[def_it].Name = "USE_BLOOM";
@@ -1147,8 +1144,8 @@ HRESULT	CRender::shader_compile(
 
 	HRESULT _result = E_FAIL;
 
-	string_path	folder_name, folder;
-	strcpy(folder, "objects\\r2\\");
+	string_path	folder_name, folder = {0};
+	strconcat(sizeof(folder), folder, folder, "objects\\", getShaderPath(), "\\");
 	strcat(folder, name);
 	strcat(folder, ".");
 
@@ -1165,8 +1162,8 @@ HRESULT	CRender::shader_compile(
 	string_path temp_file_name, file_name;
 	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name)) {
 		//		Msg				( "no library shader found" );
-		string_path file;
-		strcpy(file, "shaders_cache\\r2\\");
+		string_path file = {0};
+		strconcat(sizeof(file), file, file, "shaders_cache\\", getShaderPath(), "\\");
 		strcat(file, name);
 		strcat(file, ".");
 		strcat(file, extension);

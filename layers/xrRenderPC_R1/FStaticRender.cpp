@@ -752,8 +752,8 @@ HRESULT CRender::shader_compile(
 
 	HRESULT		_result = E_FAIL;
 
-	string_path	folder_name, folder;
-	strcpy(folder, "objects\\r1\\");
+	string_path	folder_name, folder = { 0 };
+	strconcat(sizeof(folder), folder, folder, "objects\\", getShaderPath(), "\\");
 	strcat(folder, name);
 	strcat(folder, ".");
 
@@ -769,8 +769,8 @@ HRESULT CRender::shader_compile(
 
 	string_path temp_file_name, file_name;
 	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name)) {
-		string_path file;
-		strcpy(file, "shaders_cache\\r1\\");
+		string_path file = { 0 };
+		strconcat(sizeof(file), file, file, "shaders_cache\\", getShaderPath(), "\\");
 		strcat(file, name);
 		strcat(file, ".");
 		strcat(file, extension);
