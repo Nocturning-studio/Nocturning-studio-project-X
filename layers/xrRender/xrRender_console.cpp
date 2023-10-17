@@ -124,8 +124,7 @@ xr_token bump_quality_token[] = {
 	{ "st_opt_low",					1											},
 	{ "st_opt_medium",				2											},
 	{ "st_opt_high",				3											},
-	{ "st_opt_extreme",				4											},
-	{ "st_opt_ultra",				5											},
+	{ "st_opt_ultra",				4											},
 	{ 0,							0											}
 };
 
