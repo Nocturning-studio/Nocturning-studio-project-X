@@ -130,7 +130,7 @@ void generate_shader_name(CBlender_Compile& C,
 	strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), AlbedoTexture);
 	strconcat(sizeof(BakedAOTexture), BakedAOTexture, BakedAOTexture, "_ao");
 	if (!FS.exist(Dummy, "$game_textures$", BakedAOTexture, ".dds"))
-		strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), "vfx\\vfx_no_ao");
+		strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), "ed\\debug_white");
 
 	// Starting generate shader name
 	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, "gbuffer_stage_", PixelShaderName);
