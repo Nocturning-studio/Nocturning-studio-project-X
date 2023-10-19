@@ -672,7 +672,9 @@ HRESULT	CRender::shader_compile(
 
 	size_t len = 0;
 
-	// options
+//////////////////////////////////////////////////////////////////////////////////////////////
+// R2a/R2/R2.5 defines
+//////////////////////////////////////////////////////////////////////////////////////////////
 	{
 		sprintf(c_smapsize, "%d", u32(o.smapsize));
 		defines[def_it].Name = "SMAP_size";
@@ -684,7 +686,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.smapsize);
 	++len;
 
-	if (o.fp16_filter) {
+	if (o.fp16_filter) 
+	{
 		defines[def_it].Name = "FP16_FILTER";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -692,7 +695,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.fp16_filter);
 	++len;
 
-	if (o.fp16_blend) {
+	if (o.fp16_blend) 
+	{
 		defines[def_it].Name = "FP16_BLEND";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -700,7 +704,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.fp16_blend);
 	++len;
 
-	if (o.HW_smap) {
+	if (o.HW_smap) 
+	{
 		defines[def_it].Name = "USE_HWSMAP";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -708,7 +713,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap);
 	++len;
 
-	if (o.HW_smap_PCF) {
+	if (o.HW_smap_PCF) 
+	{
 		defines[def_it].Name = "USE_HWSMAP_PCF";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -716,7 +722,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap_PCF);
 	++len;
 
-	if (o.HW_smap_FETCH4) {
+	if (o.HW_smap_FETCH4) 
+	{
 		defines[def_it].Name = "USE_FETCH4";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -724,7 +731,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap_FETCH4);
 	++len;
 
-	if (o.sjitter) {
+	if (o.sjitter) 
+	{
 		defines[def_it].Name = "USE_SJITTER";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -732,7 +740,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sjitter);
 	++len;
 
-	if (HW.Caps.raster_major >= 3) {
+	if (HW.Caps.raster_major >= 3) 
+	{
 		defines[def_it].Name = "USE_BRANCHING";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -740,7 +749,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HW.Caps.raster_major >= 3);
 	++len;
 
-	if (HW.Caps.geometry.bVTF) {
+	if (HW.Caps.geometry.bVTF) 
+	{
 		defines[def_it].Name = "USE_VTF";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -748,7 +758,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HW.Caps.geometry.bVTF);
 	++len;
 
-	if (o.Tshadows) {
+	if (o.Tshadows) 
+	{
 		defines[def_it].Name = "USE_TSHADOWS";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -756,134 +767,20 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.Tshadows);
 	++len;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Дорогие ревьюеры - главный вопрос этого ревью: "Наху... Извините. Зачем это нужно?"
-//Ответ - ни флаги, ни "рулетки" с разными дефайнами с кешем шейдеров НЕ РА БО ТА ЮТ. Почему? Я не знаю, я пытался это исправить, но мои навыки не позволили найти суть проблемы.
-//Единственный вариант который хоть как-то работал без очищения кеша - этот, мало того что он работает, так он делает это без перезапуска и может полностью заменить одиночные дефайны.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR)) {
-		sprintf(c_mblur, "%d", 1);
-		defines[def_it].Name = "USE_MBLUR";
-		defines[def_it].Definition = c_mblur;
-		def_it++;
-		strcat(sh_name, c_mblur);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_MBLUR));
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_r2_mblur_quality)
+	if (ps_r2_debug_frame_layers)
 	{
-		sprintf(c_mblur_quality, "%d", ps_r2_mblur_quality);
-		defines[def_it].Name = "MBLUR_QUALITY";
-		defines[def_it].Definition = c_mblur_quality;
+		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_frame_layers);
+		defines[def_it].Name = "DEBUG_VIEW_MODE";
+		defines[def_it].Definition = c_debug_frame_layers;
 		def_it++;
-		strcat(sh_name, c_mblur_quality);
+		strcat(sh_name, c_debug_frame_layers);
 		len += 4;
 	}
-	sh_name[len] = '0' + (char)ps_r2_mblur_quality;
+	sh_name[len] = '0' + char(ps_r2_debug_frame_layers);
 	++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF)) {
-		sprintf(c_dof, "%d", 1);
-		defines[def_it].Name = "USE_DOF";
-		defines[def_it].Definition = c_dof;
-		def_it++;
-		strcat(sh_name, c_dof);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_DOF));
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_r2_dof_quality)
+	if (o.sunfilter) 
 	{
-		sprintf(c_dof_quality, "%d", ps_r2_dof_quality);
-		defines[def_it].Name = "DOF_QUALITY";
-		defines[def_it].Definition = c_dof_quality;
-		def_it++;
-		strcat(sh_name, c_dof_quality);
-		len += 4;
-	}
-	sh_name[len] = '0' + (char)ps_r2_dof_quality;
-	++len;
-
-	////////////////////////////////////////AMBIENT OCCLUSION///////////////////////////////////////
-
-	/********************************************TYPES*********************************************/
-
-	if (RImplementation.o.advancedpp && ps_r2_ao)
-	{
-		sprintf(c_ao, "%d", ps_r2_ao);
-		defines[def_it].Name = "AO_TYPE";
-		defines[def_it].Definition = c_ao;
-		def_it++;
-		strcat(sh_name, c_ao);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_ao);
-	++len;
-
-	/********************************************QUALITY********************************************/
-
-	if (RImplementation.o.advancedpp && ps_r2_ao_quality)
-	{
-		sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
-		defines[def_it].Name = "AO_QUALITY";
-		defines[def_it].Definition = c_ao_quality;
-		def_it++;
-		strcat(sh_name, c_ao_quality);
-		len += 4;
-	}
-	sh_name[len] = '0' + (char)ps_r2_ao_quality;
-	++len;
-
-	/********************************************USING*********************************************/
-
-	if (RImplementation.o.advancedpp && (ps_r2_ao >= 0))
-	{
-		sprintf(c_ao_use, "%d", 1);
-		defines[def_it].Name = "USE_AO";
-		defines[def_it].Definition = c_ao_use;
-		def_it++;
-		strcat(sh_name, c_ao_use);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(RImplementation.o.advancedpp && (ps_r2_ao >= 0));
-	++len;
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
-	////////////////////////////////////////////ANTIALISING//////////////////////////////////////////
-
-	/********************************************TYPES*********************************************/
-
-	if (RImplementation.o.advancedpp && ps_r2_aa)
-	{
-		sprintf(c_aa, "%d", ps_r2_aa);
-		defines[def_it].Name = "AA_TYPE";
-		defines[def_it].Definition = c_aa;
-		def_it++;
-		strcat(sh_name, c_aa);
-		len += 3;
-	}
-	sh_name[len] = '0' + (char)ps_r2_aa;
-	++len;
-
-	/********************************************QUALITY********************************************/
-	if (RImplementation.o.advancedpp && ps_r2_aa_quality)
-	{
-		sprintf(c_aa_quality, "%d", ps_r2_aa_quality);
-		defines[def_it].Name = "AA_QUALITY";
-		defines[def_it].Definition = c_aa_quality;
-		def_it++;
-		strcat(sh_name, c_aa_quality);
-		len += 4;
-	}
-	sh_name[len] = '0' + (char)ps_r2_aa_quality;
-	++len;
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
-	if (o.sunfilter) {
 		defines[def_it].Name = "USE_SUNFILTER";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -891,7 +788,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sunfilter);
 	++len;
 
-	if (o.sunstatic) {
+	if (o.sunstatic) 
+	{
 		defines[def_it].Name = "USE_R2_STATIC_SUN";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -899,7 +797,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sunstatic);
 	++len;
 
-	if (o.advancedpp) {
+	if (o.advancedpp) 
+	{
 		defines[def_it].Name = "USE_R2_ADVANCED_POSTPROCESS";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -908,7 +807,7 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int HardOptimization = ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION);
-	if (HardOptimization == 1)
+	if (HardOptimization)
 	{
 		sprintf(c_hard_optimization, "%d", HardOptimization);
 		defines[def_it].Name = "USE_R2_HARD_OPTIMIZATION";
@@ -920,7 +819,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HardOptimization);
 	++len;
 
-	if (o.forcegloss) {
+	if (o.forcegloss) 
+	{
 		sprintf(c_gloss, "%f", o.forcegloss_v);
 		defines[def_it].Name = "FORCE_GLOSS";
 		defines[def_it].Definition = c_gloss;
@@ -930,14 +830,17 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int vignette = ps_vignette_mode;
+	if(vignette)
+	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "VIGNETTE_MODE";
 		defines[def_it].Definition = c_vignette;
 		def_it++;
 		strcat(sh_name, c_vignette);
 		len += 1;
-	sh_name[len] = '0' + char(vignette);
-	++len;
+		sh_name[len] = '0' + char(vignette);
+		++len;
+	}
 
 	int sepia = ps_r2_postprocess_flags.test(R2FLAG_SEPIA);
 	if (sepia)
@@ -952,19 +855,6 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(sepia);
 	++len;
 
-	int bUseSharpen = (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SHARPEN));
-	if (bUseSharpen)
-	{
-		sprintf(c_sharpen, "%d", bUseSharpen);
-		defines[def_it].Name = "USE_SHARPEN";
-		defines[def_it].Definition = c_sharpen;
-		def_it++;
-		strcat(sh_name, c_sharpen);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(bUseSharpen);
-	++len;
-
 	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);
 	if (chroma_abb)
 	{
@@ -976,32 +866,6 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(chroma_abb);
-	++len;
-
-	int soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER);
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER))
-	{
-		sprintf(c_soft_water, "%d", soft_water);
-		defines[def_it].Name = "USE_SOFT_WATER";
-		defines[def_it].Definition = c_soft_water;
-		def_it++;
-		strcat(sh_name, c_soft_water);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(soft_water);
-	++len;
-
-	int soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
-	if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES))
-	{
-		sprintf(c_soft_particles, "%d", soft_particles);
-		defines[def_it].Name = "USE_SOFT_PARTICLES";
-		defines[def_it].Definition = c_soft_particles;
-		def_it++;
-		strcat(sh_name, c_soft_particles);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(soft_particles);
 	++len;
 
 	int bloom = ps_r2_postprocess_flags.test(R2FLAG_BLOOM);
@@ -1028,62 +892,6 @@ HRESULT	CRender::shader_compile(
 		len += 1;
 	}
 	sh_name[len] = '0' + char(HdrEnabled);
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////
-	// Filter types
-	//////////////////////////////////////////////////////////////////////////
-	if (ps_r2_shadow_filtering)
-	{
-		sprintf(c_ps_shadow_filtering, "%d", ps_r2_shadow_filtering);
-		defines[def_it].Name = "SHADOW_FILTER";
-		defines[def_it].Definition = c_ps_shadow_filtering;
-		def_it++;
-		strcat(sh_name, c_ps_shadow_filtering);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_shadow_filtering);
-	++len;
-
-	if (RImplementation.o.advancedpp && ps_r2_fog_quality)
-	{
-		sprintf(c_fog_quality, "%d", ps_r2_fog_quality);
-		defines[def_it].Name = "FOG_QUALITY";
-		defines[def_it].Definition = c_fog_quality;
-		def_it++;
-		strcat(sh_name, c_fog_quality);
-		len += 4;
-	}
-	sh_name[len] = '0' + (char)ps_r2_fog_quality;
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////
-	// SUN SHAFTS
-	//////////////////////////////////////////////////////////////////////////
-	if (RImplementation.o.advancedpp && ps_r2_sun_shafts)
-	{
-		sprintf(c_sun_shafts, "%d", ps_r2_sun_shafts);
-		defines[def_it].Name = "SUN_SHAFTS_QUALITY";
-		defines[def_it].Definition = c_sun_shafts;
-		def_it++;
-		sh_name[len] = '0' + char(ps_r2_sun_shafts); ++len;
-	}
-	else
-	{
-		sh_name[len] = '0'; ++len;
-	}
-	//////////////////////////////////////////////////////////////////////////
-
-	if (ps_r2_bump_quality)
-	{
-		sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
-		defines[def_it].Name = "BUMP_QUALITY";
-		defines[def_it].Definition = c_bump_quality;
-		def_it++;
-		strcat(sh_name, c_bump_quality);
-		len += 4;
-	}
-	sh_name[len] = '0' + (char)ps_r2_bump_quality;
 	++len;
 
 	if (o.forceskinw) {
@@ -1132,22 +940,197 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(2 == m_skinning);
 	++len;
 
-	/////////////////////////////////////////////////////////////////////////////////////
-	//  Frame layers debug
+//////////////////////////////////////////////////////////////////////////////////////////////
+// R2.5 only defines
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ps_r2_debug_frame_layers)
+	if (RImplementation.o.advancedpp)
 	{
-		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_frame_layers);
-		defines[def_it].Name = "DEBUG_VIEW_MODE";
-		defines[def_it].Definition = c_debug_frame_layers;
-		def_it++;
-		strcat(sh_name, c_debug_frame_layers);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_debug_frame_layers);
-	++len;
+		if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+		{
+			sprintf(c_mblur, "%d", 1);
+			defines[def_it].Name = "USE_MBLUR";
+			defines[def_it].Definition = c_mblur;
+			def_it++;
+			strcat(sh_name, c_mblur);
+			len += 4;
+		}
+		sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_MBLUR));
+		++len;
 
-	/////////////////////////////////////////////////////////////////////////////////////
+		if (ps_r2_mblur_quality)
+		{
+			sprintf(c_mblur_quality, "%d", ps_r2_mblur_quality);
+			defines[def_it].Name = "MBLUR_QUALITY";
+			defines[def_it].Definition = c_mblur_quality;
+			def_it++;
+			strcat(sh_name, c_mblur_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_mblur_quality;
+		++len;
+
+		if (ps_r2_postprocess_flags.test(R2FLAG_DOF)) 
+		{
+			sprintf(c_dof, "%d", 1);
+			defines[def_it].Name = "USE_DOF";
+			defines[def_it].Definition = c_dof;
+			def_it++;
+			strcat(sh_name, c_dof);
+			len += 4;
+		}
+		sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_DOF));
+		++len;
+
+		if (ps_r2_dof_quality)
+		{
+			sprintf(c_dof_quality, "%d", ps_r2_dof_quality);
+			defines[def_it].Name = "DOF_QUALITY";
+			defines[def_it].Definition = c_dof_quality;
+			def_it++;
+			strcat(sh_name, c_dof_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_dof_quality;
+		++len;
+
+		if (ps_r2_ao)
+		{
+			sprintf(c_ao, "%d", ps_r2_ao);
+			defines[def_it].Name = "AO_TYPE";
+			defines[def_it].Definition = c_ao;
+			def_it++;
+			strcat(sh_name, c_ao);
+			len += 4;
+		}
+		sh_name[len] = '0' + char(ps_r2_ao);
+		++len;
+
+		if (ps_r2_ao_quality)
+		{
+			sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
+			defines[def_it].Name = "AO_QUALITY";
+			defines[def_it].Definition = c_ao_quality;
+			def_it++;
+			strcat(sh_name, c_ao_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_ao_quality;
+		++len;
+
+		if (ps_r2_aa)
+		{
+			sprintf(c_aa, "%d", ps_r2_aa);
+			defines[def_it].Name = "AA_TYPE";
+			defines[def_it].Definition = c_aa;
+			def_it++;
+			strcat(sh_name, c_aa);
+			len += 3;
+		}
+		sh_name[len] = '0' + (char)ps_r2_aa;
+		++len;
+
+		if (ps_r2_aa_quality)
+		{
+			sprintf(c_aa_quality, "%d", ps_r2_aa_quality);
+			defines[def_it].Name = "AA_QUALITY";
+			defines[def_it].Definition = c_aa_quality;
+			def_it++;
+			strcat(sh_name, c_aa_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_aa_quality;
+		++len;
+
+		int bUseSharpen = (ps_r2_postprocess_flags.test(R2FLAG_SHARPEN));
+		if (bUseSharpen)
+		{
+			sprintf(c_sharpen, "%d", bUseSharpen);
+			defines[def_it].Name = "USE_SHARPEN";
+			defines[def_it].Definition = c_sharpen;
+			def_it++;
+			strcat(sh_name, c_sharpen);
+			len += 4;
+		}
+		sh_name[len] = '0' + char(bUseSharpen);
+		++len;
+
+		int soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER);
+		if (ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER))
+		{
+			sprintf(c_soft_water, "%d", soft_water);
+			defines[def_it].Name = "USE_SOFT_WATER";
+			defines[def_it].Definition = c_soft_water;
+			def_it++;
+			strcat(sh_name, c_soft_water);
+			len += 1;
+		}
+		sh_name[len] = '0' + char(soft_water);
+		++len;
+
+		int soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
+		if (ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES))
+		{
+			sprintf(c_soft_particles, "%d", soft_particles);
+			defines[def_it].Name = "USE_SOFT_PARTICLES";
+			defines[def_it].Definition = c_soft_particles;
+			def_it++;
+			strcat(sh_name, c_soft_particles);
+			len += 1;
+		}
+		sh_name[len] = '0' + char(soft_particles);
+		++len;
+
+		if (ps_r2_shadow_filtering)
+		{
+			sprintf(c_ps_shadow_filtering, "%d", ps_r2_shadow_filtering);
+			defines[def_it].Name = "SHADOW_FILTER";
+			defines[def_it].Definition = c_ps_shadow_filtering;
+			def_it++;
+			strcat(sh_name, c_ps_shadow_filtering);
+			len += 4;
+		}
+		sh_name[len] = '0' + char(ps_r2_shadow_filtering);
+		++len;
+
+		if (ps_r2_fog_quality)
+		{
+			sprintf(c_fog_quality, "%d", ps_r2_fog_quality);
+			defines[def_it].Name = "FOG_QUALITY";
+			defines[def_it].Definition = c_fog_quality;
+			def_it++;
+			strcat(sh_name, c_fog_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_fog_quality;
+		++len;
+
+		if (ps_r2_sun_shafts)
+		{
+			sprintf(c_sun_shafts, "%d", ps_r2_sun_shafts);
+			defines[def_it].Name = "SUN_SHAFTS_QUALITY";
+			defines[def_it].Definition = c_sun_shafts;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r2_sun_shafts); ++len;
+		}
+		else
+		{
+			sh_name[len] = '0'; ++len;
+		}
+		//////////////////////////////////////////////////////////////////////////
+
+		if (ps_r2_bump_quality)
+		{
+			sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
+			defines[def_it].Name = "BUMP_QUALITY";
+			defines[def_it].Definition = c_bump_quality;
+			def_it++;
+			strcat(sh_name, c_bump_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_bump_quality;
+		++len;
+	}
 
 	// finish
 	defines[def_it].Name = 0;
