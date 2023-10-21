@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../xrEngine/xr_ioconsole.h"
 
 //-----------------------------------------------------------------------------
 // Name: WndProc()
@@ -51,6 +52,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_CLOSE:
+		Console->Execute("quit");
 		return 0;
 	case WM_KEYDOWN:
 		break;
