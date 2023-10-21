@@ -151,6 +151,9 @@ void xrCore::_destroy		()
 
 #ifndef XRCORE_STATIC
 
+int oldin;
+int oldout;
+
 //. why ??? 
 #ifdef _EDITOR
 	BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
@@ -169,6 +172,22 @@ void xrCore::_destroy		()
 			_control87		( _MCW_EM,  MCW_EM );
 		}
 //.		LogFile.reserve		(256);
+		if (strstr(GetCommandLine(), "-external_console_log"))
+		{
+			if (AllocConsole())
+			{
+				(void)freopen("CONIN$", "r", stdin);
+				(void)freopen("CONOUT$", "w", stderr);
+				(void)freopen("CONOUT$", "w", stdout);
+
+				oldin = GetConsoleCP();
+				oldout = GetConsoleOutputCP();
+				SetConsoleCP(1251);
+				SetConsoleOutputCP(1251);
+			}
+
+			_set_error_mode(_OUT_TO_STDERR);
+		}
 		break;
 	case DLL_THREAD_ATTACH:
 		CoInitializeEx	(NULL, COINIT_MULTITHREADED);
