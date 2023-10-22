@@ -119,12 +119,12 @@ void CScriptNetPacket::script_register(lua_State *L)
 			.def("r_angle8",		&NET_Packet::r_angle8		)
 			.def("r_dir",			&NET_Packet::r_dir			)
 			.def("r_sdir",			&NET_Packet::r_sdir			)
-			.def("r_stringZ_netPacket",		&r_stringZ_netPacket)
+			.def("r_stringZ",		&r_stringZ_netPacket)
 			.def("r_matrix",		&NET_Packet::r_matrix		)
 			.def("r_clientID",		&r_clientID					)
 			.def("r_elapsed",		&NET_Packet::r_elapsed		)
 			.def("r_advance",		&NET_Packet::r_advance		)
-			.def("r_eof_netPacket",			&r_eof_netPacket						)
+			.def("r_eof",			&r_eof_netPacket						)
 
 	];
 }
