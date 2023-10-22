@@ -17,7 +17,7 @@ void CAI_Crow::SAnim::Load	(CKinematicsAnimated* visual, LPCSTR prefix)
 {
 	const MotionID		&M = visual->ID_Cycle_Safe(prefix);
 	if (M)				m_Animations.push_back(M);
-	for (int i=0; (i<MAX_ANIM_COUNT)&&(m_Animations.size()<MAX_ANIM_COUNT); ++i){
+	for (int i=0; (i<MAX_ANIM_COUNT_CROW)&&(m_Animations.size()<MAX_ANIM_COUNT_CROW); ++i){
 		string128		sh_anim;
 		sprintf_s			(sh_anim,"%s_%d",prefix,i);
 		const MotionID	&M = visual->ID_Cycle_Safe(sh_anim);

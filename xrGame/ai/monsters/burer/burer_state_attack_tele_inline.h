@@ -292,11 +292,11 @@ bool CStateBurerAttackTeleAbstract::CheckTeleStart()
 //////////////////////////////////////////////////////////////////////////
 // Выбор подходящих объектов для телекинеза
 //////////////////////////////////////////////////////////////////////////
-class best_object_predicate {
+class best_object_predicate_burer_tele {
 	Fvector enemy_pos;
 	Fvector monster_pos;
 public:
-	best_object_predicate(const Fvector &m_pos, const Fvector &pos) {
+	best_object_predicate_burer_tele(const Fvector &m_pos, const Fvector &pos) {
 		monster_pos = m_pos;
 		enemy_pos	= pos;
 	}
@@ -312,11 +312,11 @@ public:
 	};
 };
 
-class best_object_predicate2 {
+class best_object_predicate2_burer_tele {
 	Fvector enemy_pos;
 	Fvector monster_pos;
 public:
-	best_object_predicate2(const Fvector &m_pos, const Fvector &pos) {
+	best_object_predicate2_burer_tele(const Fvector &m_pos, const Fvector &pos) {
 		monster_pos = m_pos;
 		enemy_pos	= pos;
 	}
@@ -334,7 +334,7 @@ public:
 TEMPLATE_SPECIALIZATION
 void CStateBurerAttackTeleAbstract::SelectObjects()
 {
-	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2(object->Position(), object->EnemyMan.get_enemy()->Position()));
+	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2_burer_tele(object->Position(), object->EnemyMan.get_enemy()->Position()));
 
 	// выбрать объект
 	for (u32 i=0; i<tele_objects.size(); i++) {

@@ -12,7 +12,7 @@
 
 extern	class CPHWorld	*ph_world;
 ObjectContactCallbackFun* saved_callback		=	0	;
-static float max_depth							=	0.f	;
+static float max_depth_dynamic_activate							=	0.f	;
 
 struct STestCallbackPars
 {
@@ -65,7 +65,7 @@ void TTestDepthCallback (bool& do_colide,bool bo1,dContact& c,SGameMtl* material
 	{
 		float& depth=c.geom.depth;
 		float test_depth=depth-Pars::decrement_depth;
-		save_max(max_depth,test_depth);
+		save_max(max_depth_dynamic_activate,test_depth);
 		c.surface.mu*=Pars::calback_friction_factor;
 		if(test_depth>Pars::depth_to_use_force)
 		{
@@ -320,7 +320,7 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 	saved_callback=ObjectContactCallback();
 	SetOjectContactCallback(TestDepthCallback);
 	SetFootCallBack(TestFootDepthCallback);
-	max_depth=0.f;
+	max_depth_dynamic_activate=0.f;
 
 
 
@@ -366,9 +366,9 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 		Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
 		EnableCharacter();
 		m_character->ApplyForce(0,ph_world->Gravity()*m_character->Mass(),0);
-		max_depth=0.f;
+		max_depth_dynamic_activate=0.f;
 		ph_world->Step();
-		if(max_depth	<	resolve_depth) 
+		if(max_depth_dynamic_activate	<	resolve_depth) 
 		{
 			break;
 		}	
@@ -384,13 +384,13 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 		InterpolateBox(id,param);
 		ret=false;
 		for(int i=0;num_it>i;++i){
-			max_depth=0.f;
+			max_depth_dynamic_activate=0.f;
 			Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
 			EnableCharacter();
 			m_character->ApplyForce(0,ph_world->Gravity()*m_character->Mass(),0);
 			ph_world->Step();
 			ph_world->CutVelocity(max_vel,max_a_vel);
-			if(max_depth	<	resolve_depth) 
+			if(max_depth_dynamic_activate	<	resolve_depth) 
 			{
 				ret=true;
 				break;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-struct PlayerInfo{
+struct PlayerInfoKillMessage{
     shared_str	m_name;
 	u32			m_color;
 };
@@ -18,8 +18,8 @@ struct IconInfo{
 };
 
 struct KillMessageStruct{
-	PlayerInfo	m_victim;
+	PlayerInfoKillMessage	m_victim;
 	IconInfo	m_initiator;
-	PlayerInfo	m_killer;
+	PlayerInfoKillMessage	m_killer;
 	IconInfo	m_ext_info;
 };

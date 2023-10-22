@@ -240,26 +240,26 @@ bool CMainMenu::IsActive()
 
 
 //IInputReceiver
-static int mouse_button_2_key []	=	{MOUSE_1,MOUSE_2,MOUSE_3};
+static int mm_mouse_button_2_key []	=	{MOUSE_1,MOUSE_2,MOUSE_3};
 void	CMainMenu::IR_OnMousePress				(int btn)	
 {	
 	if(!IsActive()) return;
 
-	IR_OnKeyboardPress(mouse_button_2_key[btn]);
+	IR_OnKeyboardPress(mm_mouse_button_2_key[btn]);
 };
 
 void	CMainMenu::IR_OnMouseRelease(int btn)	
 {
 	if(!IsActive()) return;
 
-	IR_OnKeyboardRelease(mouse_button_2_key[btn]);
+	IR_OnKeyboardRelease(mm_mouse_button_2_key[btn]);
 };
 
 void	CMainMenu::IR_OnMouseHold(int btn)	
 {
 	if(!IsActive()) return;
 
-	IR_OnKeyboardHold(mouse_button_2_key[btn]);
+	IR_OnKeyboardHold(mm_mouse_button_2_key[btn]);
 
 };
 

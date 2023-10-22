@@ -30,11 +30,11 @@ CScriptIniFile *get_spawn_ini(CSE_Abstract *abstract)
 }
 
 template <typename T>
-struct CWrapperBase : public T, public luabind::wrap_base {
+struct CWrapperBaseObjectsScript : public T, public luabind::wrap_base {
 	typedef T inherited;
-	typedef CWrapperBase<T>	self_type;
+	typedef CWrapperBaseObjectsScript<T>	self_type;
 
-		IC			CWrapperBase(LPCSTR section) : T(section)
+		IC			CWrapperBaseObjectsScript(LPCSTR section) : T(section)
 		{
 		}
 
@@ -98,7 +98,7 @@ void CPureServerObject::script_register(lua_State *L)
 
 void CSE_Abstract::script_register(lua_State *L)
 {
-	typedef CWrapperBase<CSE_Abstract> WrapType;
+	typedef CWrapperBaseObjectsScript<CSE_Abstract> WrapType;
 	typedef CSE_Abstract BaseType;
 	module(L)[
 		class_<CSE_Abstract,WrapType,CPureServerObject>	("cse_abstract")

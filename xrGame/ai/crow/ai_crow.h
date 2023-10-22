@@ -25,13 +25,13 @@ class CAI_Crow : public CEntity
 	};
 
 	// constants and types
-	enum			{ MAX_ANIM_COUNT = 8	};
+	enum			{ MAX_ANIM_COUNT_CROW = 8	};
 	enum			{ MAX_SND_COUNT = 8		};
 
 	// animations
 	struct SAnim
 	{
-		typedef			svector<MotionID,MAX_ANIM_COUNT> MotionSVec;
+		typedef			svector<MotionID,MAX_ANIM_COUNT_CROW> MotionSVec;
 		MotionSVec		m_Animations;
 		const MotionID	&GetRandom	(){return m_Animations[Random.randI(0,m_Animations.size())];}
 		void			Load		(CKinematicsAnimated* visual, LPCSTR prefix);

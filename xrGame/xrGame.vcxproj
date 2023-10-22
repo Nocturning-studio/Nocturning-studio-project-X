@@ -10562,6 +10562,10 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release_Advanced|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">1</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">1</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</OrderInUnityFile>
     </ClCompile>
     <ClCompile Include="script_engine_help.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">pch_script.h</PrecompiledHeaderFile>

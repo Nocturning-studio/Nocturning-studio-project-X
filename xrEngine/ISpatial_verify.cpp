@@ -3,13 +3,13 @@
 
 extern Fvector	c_spatial_offset[8];
 
-class	walker
+class	CWalkerVerify
 {
 public:
 	u32			o_count;
 	u32			n_count;
 public:
-	walker()
+	CWalkerVerify()
 	{
 		o_count = 0;
 		n_count = 0;
@@ -33,7 +33,7 @@ public:
 
 BOOL	ISpatial_DB::verify()
 {
-	walker		W;		W.walk(m_root, m_center, m_bounds);
+	CWalkerVerify		W;		W.walk(m_root, m_center, m_bounds);
 	BOOL		bResult = (W.o_count == stat_objects) && (W.n_count == stat_nodes);
 	VERIFY(bResult);
 	return		bResult;

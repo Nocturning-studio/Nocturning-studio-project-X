@@ -4,11 +4,11 @@
 #include "../object_broker.h"
 #include "../callback_info.h"
 
-struct event_comparer{
+struct event_comparer_t{
 	shared_str			name;
 	s16					event;
 
-	event_comparer(shared_str n, s16 e):name(n),event(e){}
+	event_comparer_t(shared_str n, s16 e):name(n),event(e){}
 	bool operator ()(SCallbackInfo* i){
 		return( (i->m_controlName==name) && (i->m_event==event) );
 	}
@@ -40,7 +40,7 @@ void CUIDialogWndEx::Register(CUIWindow* pChild, LPCSTR name)
 
 void CUIDialogWndEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
-	event_comparer ec(pWnd->WindowName(),msg);
+	event_comparer_t ec(pWnd->WindowName(),msg);
 
 	CALLBACK_IT it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
 	if(it==m_callbacks.end())

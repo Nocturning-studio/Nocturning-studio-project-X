@@ -449,13 +449,13 @@ float ComplexJtLimit::theta(int family, float psi) const
     return family == 1 ? theta1(psi) : theta2(psi); 
 }
 
-inline int sign(float x)
-{
-    return x < 0 ? -1 : 1;
-}
-
 float ComplexJtLimit::theta1_d_aux(float v, float delta) const
 {
+    const auto sign = [](float x) -> int
+    {
+        return x < 0 ? -1 : 1;
+    };
+
     float e1, e2, e1d, e2d, e3;
     const float eps = 1e-6f; 
 

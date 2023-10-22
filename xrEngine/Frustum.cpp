@@ -41,22 +41,22 @@ void			CFrustum::_add(Fvector& P1, Fvector& P2, Fvector& P3)
 	p_count++;
 }
 
-#define			mx			0
-#define			my			1
-#define			mz			2
-#define			Mx			3
-#define			My			4
-#define			Mz			5
+#define			FRUSTUM_MX			0
+#define			FRUSTUM_MY			1
+#define			FRUSTUM_MZ			2
+#define			FRUSTUM_MX2			3
+#define			FRUSTUM_MY2			4
+#define			FRUSTUM_MZ2			5
 u32				frustum_aabb_remap[8][6] =
 {
-	{ Mx,My,Mz,mx,my,mz},
-	{ Mx,My,mz,mx,my,Mz},
-	{ Mx,my,Mz,mx,My,mz},
-	{ Mx,my,mz,mx,My,Mz},
-	{ mx,My,Mz,Mx,my,mz},
-	{ mx,My,mz,Mx,my,Mz},
-	{ mx,my,Mz,Mx,My,mz},
-	{ mx,my,mz,Mx,My,Mz}
+	{ FRUSTUM_MX2,FRUSTUM_MY2,FRUSTUM_MZ2,FRUSTUM_MX,FRUSTUM_MY,FRUSTUM_MZ},
+	{ FRUSTUM_MX2,FRUSTUM_MY2,FRUSTUM_MZ,FRUSTUM_MX,FRUSTUM_MY,FRUSTUM_MZ2},
+	{ FRUSTUM_MX2,FRUSTUM_MY,FRUSTUM_MZ2,FRUSTUM_MX,FRUSTUM_MY2,FRUSTUM_MZ},
+	{ FRUSTUM_MX2,FRUSTUM_MY,FRUSTUM_MZ,FRUSTUM_MX,FRUSTUM_MY2,FRUSTUM_MZ2},
+	{ FRUSTUM_MX,FRUSTUM_MY2,FRUSTUM_MZ2,FRUSTUM_MX2,FRUSTUM_MY,FRUSTUM_MZ},
+	{ FRUSTUM_MX,FRUSTUM_MY2,FRUSTUM_MZ,FRUSTUM_MX2,FRUSTUM_MY,FRUSTUM_MZ2},
+	{ FRUSTUM_MX,FRUSTUM_MY,FRUSTUM_MZ2,FRUSTUM_MX2,FRUSTUM_MY2,FRUSTUM_MZ},
+	{ FRUSTUM_MX,FRUSTUM_MY,FRUSTUM_MZ,FRUSTUM_MX2,FRUSTUM_MY2,FRUSTUM_MZ2}
 };
 
 //////////////////////////////////////////////////////////////////////

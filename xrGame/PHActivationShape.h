@@ -1,6 +1,6 @@
 #ifndef PH_ACTIVATION_SHAPE
 #define PH_ACTIVATION_SHAPE
-#endif
+
 #include "MathUtils.h"
 #include "phvalidevalues.h"
 class CPHActivationShape : public CPHObject
@@ -43,3 +43,5 @@ virtual		u16				get_elements_number					()																															{return
 virtual		CPHSynchronize	*get_element_sync					(u16 element)																												{return NULL;}		
 
 };
+
+#endif

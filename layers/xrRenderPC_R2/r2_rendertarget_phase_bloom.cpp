@@ -4,7 +4,7 @@
 #include "..\xrEngine\environment.h"
 
 #pragma pack(push,4)
-struct v_build	{
+struct v_build_bloom	{
 	Fvector4	p;
 	Fvector2	uv0;
 	Fvector2	uv1;
@@ -12,7 +12,7 @@ struct v_build	{
 	Fvector2	uv3;
 };
 
-struct v_filter {
+struct v_filter_bloom {
 	Fvector4	p;
 	Fvector4	uv0;
 	Fvector4	uv1;
@@ -94,7 +94,7 @@ void CRenderTarget::phase_bloom	()
 		Fvector2	b_3				= { 1 + a_3.x,		1 + a_3.y		};
 
 		// Fill vertex buffer
-		v_build* pv					= (v_build*) RCache.Vertex.Lock	(4,g_bloom_build->vb_stride,Offset);
+		v_build_bloom* pv					= (v_build_bloom*) RCache.Vertex.Lock	(4,g_bloom_build->vb_stride,Offset);
 		pv->p.set	(EPS,			float(th+EPS),	EPS,1.f);	
 		pv->uv0.set	(a_0.x,b_0.y);	pv->uv1.set	(a_1.x,b_1.y);	pv->uv2.set	(a_2.x,b_2.y);	pv->uv3.set	(a_3.x,b_3.y);
 		pv++;
@@ -131,7 +131,7 @@ void CRenderTarget::phase_bloom	()
 		Fvector2	p0;	p0.set		(.5f/_w, .5f/_h);
 		Fvector2	p1;	p1.set		((_w+.5f)/_w, (_h+.5f)/_h );
 
-		v_build* pv					= (v_build*) RCache.Vertex.Lock	(4,g_bloom_build->vb_stride,Offset);
+		v_build_bloom* pv					= (v_build_bloom*) RCache.Vertex.Lock	(4,g_bloom_build->vb_stride,Offset);
 		pv->p.set(EPS,			float(_h+EPS),	EPS,1.f); pv->uv0.set(p0.x-ddw,p1.y-ddh);pv->uv1.set(p0.x+ddw,p1.y+ddh);pv->uv2.set(p0.x+ddw,p1.y-ddh);pv->uv3.set(p0.x-ddw,p1.y+ddh);pv++;
 		pv->p.set(EPS,			EPS,			EPS,1.f); pv->uv0.set(p0.x-ddw,p0.y-ddh);pv->uv1.set(p0.x+ddw,p0.y+ddh);pv->uv2.set(p0.x+ddw,p0.y-ddh);pv->uv3.set(p0.x-ddw,p0.y+ddh);pv++;
 		pv->p.set(float(_w+EPS),float(_h+EPS),	EPS,1.f); pv->uv0.set(p1.x-ddw,p1.y-ddh);pv->uv1.set(p1.x+ddw,p1.y+ddh);pv->uv2.set(p1.x+ddw,p1.y-ddh);pv->uv3.set(p1.x-ddw,p1.y+ddh);pv++;
@@ -167,7 +167,7 @@ void CRenderTarget::phase_bloom	()
 			Fvector4	a_7				= { a_6.x - two.x,			half.y,	half.y,		a_6.w + two.x			};	// -7,+7i
 
 			// Fill vertex buffer
-			v_filter* pv				= (v_filter*) RCache.Vertex.Lock	(4,g_bloom_filter->vb_stride,Offset);
+			v_filter_bloom* pv				= (v_filter_bloom*) RCache.Vertex.Lock	(4,g_bloom_filter->vb_stride,Offset);
 
 			// 0 - LB
 			pv->p.set	(EPS,			float(_h+EPS),	EPS,1.f);	
@@ -247,7 +247,7 @@ void CRenderTarget::phase_bloom	()
 			Fvector4	a_7				= { half.x,			a_6.y - two.y,	two.y + a_6.z,				half.x	};	// -7,+7i
 
 			// Fill vertex buffer
-			v_filter* pv				= (v_filter*) RCache.Vertex.Lock	(4,g_bloom_filter->vb_stride,Offset);
+			v_filter_bloom* pv				= (v_filter_bloom*) RCache.Vertex.Lock	(4,g_bloom_filter->vb_stride,Offset);
 
 			// 0 - LB
 			pv->p.set	(EPS,			float(_h+EPS),	EPS,1.f);	

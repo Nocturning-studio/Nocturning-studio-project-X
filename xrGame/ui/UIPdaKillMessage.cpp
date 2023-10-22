@@ -5,6 +5,7 @@
 // Mail:		narrator@gsc-game.kiev.ua
 // 
 // Copyright 2005 GSC GameWorld
+#pragma once
 
 #include "StdAfx.h"
 #include "UIPdaKillMessage.h"
@@ -50,7 +51,7 @@ void CUIPdaKillMessage::Init(KillMessageStruct& msg){
 
 }
 
-float CUIPdaKillMessage::InitText(CUIStatic& refStatic, float x, PlayerInfo& info){
+float CUIPdaKillMessage::InitText(CUIStatic& refStatic, float x, PlayerInfoKillMessage& info){
 
 	if ( 0 == xr_strlen(info.m_name))
 		return 0;

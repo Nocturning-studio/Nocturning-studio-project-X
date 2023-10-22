@@ -3,10 +3,11 @@
 // created:		15.06.2005
 // author:		Serge Vynnychenko
 //
+#pragma once
 
 #include "UICustomSpin.h"
 
-class CUISpinText : public CUICustomSpin{
+class CUISpinText : public CUICustomSpin {
 public:
 	CUISpinText();
 	// CUIOptionsItem

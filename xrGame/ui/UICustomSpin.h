@@ -14,7 +14,6 @@ class CUI3tButton;
 class CUIFrameLineWnd;
 class CUILines;
 
-
 class CUICustomSpin : public CUIWindow, public CUIOptionsItem 
 {
 public:

@@ -173,7 +173,7 @@ ICF BOOL isect_sse(const aabb_t& box, const ray_t& ray, float& dist) {
 extern Fvector	c_spatial_offset[8];
 
 template <bool b_use_sse, bool b_first, bool b_nearest>
-class	_MM_ALIGN16			walker
+class	_MM_ALIGN16			CWalkerQRay
 {
 public:
 	ray_t			ray;
@@ -182,7 +182,7 @@ public:
 	float			range2;
 	ISpatial_DB* space;
 public:
-	walker(ISpatial_DB* _space, u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
+	CWalkerQRay(ISpatial_DB* _space, u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
 	{
 		mask = _mask;
 		ray.pos.set(_start);
@@ -279,23 +279,23 @@ void	ISpatial_DB::q_ray(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const Fv
 	if (CPU::ID.feature & _CPU_FEATURE_SSE) {
 		if (_o & O_ONLYFIRST)
 		{
-			if (_o & O_ONLYNEAREST) { walker<true, true, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
-			else { walker<true, true, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			if (_o & O_ONLYNEAREST) { CWalkerQRay<true, true, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			else { CWalkerQRay<true, true, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
 		}
 		else {
-			if (_o & O_ONLYNEAREST) { walker<true, false, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
-			else { walker<true, false, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			if (_o & O_ONLYNEAREST) { CWalkerQRay<true, false, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			else { CWalkerQRay<true, false, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
 		}
 	}
 	else {
 		if (_o & O_ONLYFIRST)
 		{
-			if (_o & O_ONLYNEAREST) { walker<false, true, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
-			else { walker<false, true, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			if (_o & O_ONLYNEAREST) { CWalkerQRay<false, true, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			else { CWalkerQRay<false, true, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
 		}
 		else {
-			if (_o & O_ONLYNEAREST) { walker<false, false, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
-			else { walker<false, false, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			if (_o & O_ONLYNEAREST) { CWalkerQRay<false, false, true>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
+			else { CWalkerQRay<false, false, false>	W(this, _mask_and, _start, _dir, _range);	W.walk(m_root, m_center, m_bounds); }
 		}
 	}
 	cs.Leave();

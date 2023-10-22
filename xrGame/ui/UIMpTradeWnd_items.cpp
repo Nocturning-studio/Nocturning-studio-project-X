@@ -9,15 +9,10 @@
 #include "UIMpItemsStoreWnd.h"
 
 
-extern "C"
-DLL_Pure*	__cdecl xrFactory_Create		(CLASS_ID clsid);
-
-extern "C"
-void	__cdecl xrFactory_Destroy		(DLL_Pure* O);
+extern "C" DLL_API DLL_Pure * __cdecl xrFactory_Create(CLASS_ID clsid);
+extern "C" DLL_API void	__cdecl xrFactory_Destroy(DLL_Pure * O);
 
 CUICellItem*	create_cell_item(CInventoryItem* itm);
-
-
 
 SBuyItemInfo::SBuyItemInfo()
 {

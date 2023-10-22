@@ -57,6 +57,6 @@ void CScriptRenderDevice::script_register(lua_State *L)
 			.def_readonly("frame",					&CRenderDevice::dwFrame)
 			.def("is_paused",						&is_device_paused)
 			.def("pause",							&set_device_paused),
-			def("app_ready",						&is_app_ready)
+		def("app_ready",						&is_app_ready)
 	];
 }

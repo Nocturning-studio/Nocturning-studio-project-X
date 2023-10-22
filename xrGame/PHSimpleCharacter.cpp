@@ -24,7 +24,7 @@
 
 
 
-IC		bool	PhOutOfBoundaries			(const Fvector& v)
+IC		bool	PhOutOfBoundariesCharacter			(const Fvector& v)
 {
 	return v.y < phBoundaries.y1;
 }
@@ -532,7 +532,7 @@ void CPHSimpleCharacter::PhDataUpdate(dReal /**step/**/){
 	m_last_move.sub(cast_fv(dBodyGetPosition(m_body)),m_last_move);
 	m_last_move.mul(1.f/fixed_step);
 	VERIFY2(dBodyStateValide(m_body),"WRONG BODYSTATE IN PhDataUpdate");
-	if(PhOutOfBoundaries(cast_fv(dBodyGetPosition(m_body))))Disable();
+	if(PhOutOfBoundariesCharacter(cast_fv(dBodyGetPosition(m_body))))Disable();
 	VERIFY_BOUNDARIES(cast_fv(dBodyGetPosition(m_body)),phBoundaries,PhysicsRefObject());
 	m_body_interpolation.UpdatePositions();
 }

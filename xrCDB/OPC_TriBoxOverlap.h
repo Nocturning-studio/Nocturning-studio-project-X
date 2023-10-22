@@ -8,19 +8,7 @@
 	if(x2>max) max=x2;
 
 //! TO BE DOCUMENTED
-inline_ BOOL planeBoxOverlap(const Point& normal, const float d, const Point& maxbox)
-{
-	Point vmin, vmax;
-	for(udword q=0;q<=2;q++)
-	{
-		if(((const float*)normal)[q]>0.0f)	{ ((float*)vmin)[q]=-((const float*)maxbox)[q]; ((float*)vmax)[q]=((const float*)maxbox)[q]; }
-		else								{ ((float*)vmin)[q]=((const float*)maxbox)[q]; ((float*)vmax)[q]=-((const float*)maxbox)[q]; }
-	}
-	if((normal|vmin)+d>0.0f) return FALSE;
-	if((normal|vmax)+d>=0.0f) return TRUE;
-
-	return FALSE;
-}
+inline_ bool planeBoxOverlap(const Point & normal, const float d, const Point & maxbox);
 
 //! TO BE DOCUMENTED
 #define AXISTEST_X01(a, b, fa, fb)							\

@@ -689,10 +689,10 @@ void CUICellContainer::Draw()
 
 	const Fvector2 pts[6] =		{{0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},
 								 {0.0f,0.0f},{1.0f,1.0f},{0.0f,1.0f}};
-#define ty 1.0f
-#define tx 0.5f
-	const Fvector2 uvs[6] =		{{0.0f,0.0f},{tx,0.0f},{tx,ty},
-								 {0.0f,0.0f},{tx,ty},{0.0f,ty}};
+#define DRAGNDROP_TY 1.0f
+#define DRAGNDROP_TX 0.5f
+	const Fvector2 uvs[6] =		{{0.0f,0.0f},{DRAGNDROP_TX,0.0f},{DRAGNDROP_TX,DRAGNDROP_TY},
+								 {0.0f,0.0f},{DRAGNDROP_TX,DRAGNDROP_TY},{0.0f,DRAGNDROP_TY}};
 
 	// calculate cell size in screen pixels
 	Fvector2 f_len;

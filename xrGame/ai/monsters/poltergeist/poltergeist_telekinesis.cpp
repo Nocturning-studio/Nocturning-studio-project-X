@@ -98,11 +98,11 @@ void CPolterTele::update_schedule()
 //////////////////////////////////////////////////////////////////////////
 // Выбор подходящих объектов для телекинеза
 //////////////////////////////////////////////////////////////////////////
-class best_object_predicate {
+class best_object_predicate_telekinesis {
 	Fvector enemy_pos;
 	Fvector monster_pos;
 public:
-	best_object_predicate(const Fvector &m_pos, const Fvector &pos) {
+	best_object_predicate_telekinesis(const Fvector &m_pos, const Fvector &pos) {
 		monster_pos = m_pos;
 		enemy_pos	= pos;
 	}
@@ -118,13 +118,13 @@ public:
 	};
 };
 
-class best_object_predicate2 {
+class best_object_predicate2_telekinesis {
 	Fvector enemy_pos;
 	Fvector monster_pos;
 public:
 	typedef CObject*	CObject_ptr;
 
-	best_object_predicate2(const Fvector &m_pos, const Fvector &pos) {
+	best_object_predicate2_telekinesis(const Fvector &m_pos, const Fvector &pos) {
 		monster_pos = m_pos;
 		enemy_pos	= pos;
 	}
@@ -213,7 +213,7 @@ bool CPolterTele::tele_raise_objects()
 	tele_find_objects	(tele_objects, pos);	
 
 	// сортировать и оставить только необходимое количество объектов
-	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2(m_object->Position(), Actor()->Position()));
+	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2_telekinesis(m_object->Position(), Actor()->Position()));
 	
 	// оставить уникальные объекты
 	tele_objects.erase	(

@@ -123,6 +123,6 @@ public:
 #endif
 };
 
-#define		MAX_ANIM_COUNT							8
-typedef		svector<MotionID,MAX_ANIM_COUNT>		MotionSVec;
-MotionID	random_anim								(MotionSVec& v); 
+#define		MAX_ANIM_COUNT_WEAPON_HUD							8
+typedef		svector<MotionID,MAX_ANIM_COUNT_WEAPON_HUD>		MotionSVec;
+MotionID	random_anim										(MotionSVec& v); 

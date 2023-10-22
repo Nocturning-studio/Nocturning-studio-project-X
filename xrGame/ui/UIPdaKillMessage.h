@@ -5,6 +5,7 @@
 // Mail:		narrator@gsc-game.kiev.ua
 // 
 // Copyright 2005 GSC GameWorld
+#pragma once
 
 #include "KillMessageStruct.h"
 #include "UIPdaMsgListItem.h"
@@ -21,7 +22,7 @@ public:
 	virtual void SetColor(u32 color);
 
 protected:
-			float InitText(CUIStatic& refStatic, float x, PlayerInfo& info);
+			float InitText(CUIStatic& refStatic, float x, PlayerInfoKillMessage& info);
 			float InitIcon(CUIStatic& refStatic, float x, IconInfo& info);
 
     CUIStatic	m_victim_name;

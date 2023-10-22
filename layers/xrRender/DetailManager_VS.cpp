@@ -15,7 +15,7 @@ const int			quant	= 16384;
 const int			c_hdr	= 10;
 const int			c_size	= 4;
 
-static D3DVERTEXELEMENT9 dwDecl[] =
+static D3DVERTEXELEMENT9 dwDecl_Details[] =
 {
 	{ 0, 0,  D3DDECLTYPE_FLOAT3,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,	0 },	// pos
 	{ 0, 12, D3DDECLTYPE_SHORT4,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TEXCOORD,	0 },	// uv
@@ -122,7 +122,7 @@ void CDetailManager::hw_Load	()
 	hwc_s_array			= T1.get("array");
 
 	// Declare geometry
-	hw_Geom.create		(dwDecl, hw_VB, hw_IB);
+	hw_Geom.create		(dwDecl_Details, hw_VB, hw_IB);
 }
 
 void CDetailManager::hw_Unload()

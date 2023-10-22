@@ -37,7 +37,7 @@
 	#include "PhysicsShellAnimator.h"
 #endif
 
-IC		bool	PhOutOfBoundaries			(const Fvector& v)
+IC		bool	PhOutOfBoundariesShell			(const Fvector& v)
 {
 	return v.y < phBoundaries.y1;
 }
@@ -231,7 +231,7 @@ void CPHShell::PhDataUpdate(dReal step){
 	}
 	else		ReanableObject();
 
-	if(PhOutOfBoundaries(cast_fv(dBodyGetPosition((*elements.begin())->get_body()))))
+	if(PhOutOfBoundariesShell(cast_fv(dBodyGetPosition((*elements.begin())->get_body()))))
 								Disable();
 }
 

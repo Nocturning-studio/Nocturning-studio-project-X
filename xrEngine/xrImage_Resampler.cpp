@@ -155,8 +155,8 @@ float	Lanczos3_filter(float t)
 
 //
 #define	Mitchell_support	(2.0)
-#define	B	(1.0f / 3.0f)
-#define	C	(1.0f / 3.0f)
+#define	RESAMPLER_B	(1.0f / 3.0f)
+#define	RESAMPLER_C	(1.0f / 3.0f)
 
 float	Mitchell_filter(float t)
 {
@@ -165,16 +165,16 @@ float	Mitchell_filter(float t)
 	tt = t * t;
 	if (t < 0) t = -t;
 	if (t < 1.0f) {
-		t = (((12.0f - 9.0f * B - 6.0f * C) * (t * tt))
-			+ ((-18.0f + 12.0f * B + 6.0f * C) * tt)
-			+ (6.0f - 2.0f * B));
+		t = (((12.0f - 9.0f * RESAMPLER_B - 6.0f * RESAMPLER_C) * (t * tt))
+			+ ((-18.0f + 12.0f * RESAMPLER_B + 6.0f * RESAMPLER_C) * tt)
+			+ (6.0f - 2.0f * RESAMPLER_B));
 		return(t / 6.0f);
 	}
 	else if (t < 2.0f) {
-		t = (((-1.0f * B - 6.0f * C) * (t * tt))
-			+ ((6.0f * B + 30.0f * C) * tt)
-			+ ((-12.0f * B - 48.0f * C) * t)
-			+ (8.0f * B + 24.f * C));
+		t = (((-1.0f * RESAMPLER_B - 6.0f * RESAMPLER_C) * (t * tt))
+			+ ((6.0f * RESAMPLER_B + 30.0f * RESAMPLER_C) * tt)
+			+ ((-12.0f * RESAMPLER_B - 48.0f * RESAMPLER_C) * t)
+			+ (8.0f * RESAMPLER_B + 24.f * RESAMPLER_C));
 		return(t / 6.0f);
 	}
 	return(0.0);
@@ -465,7 +465,7 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 		for (i = 0; i < dst.ysize; ++i) xr_free(contrib[i].p);
 		xr_free(contrib);
 	}
-	catch (...) { Msg("imf_Process::B"); };
+	catch (...) { Msg("imf_Process::RESAMPLER_B"); };
 
 	free_image(tmp);
 }

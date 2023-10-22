@@ -6,9 +6,9 @@
 using namespace luabind;
 
 template <typename T>
-struct CWrapperBase : public T, public luabind::wrap_base {
+struct CWrapperBaseSVDeathmatch : public T, public luabind::wrap_base {
 	typedef T inherited;
-	typedef CWrapperBase<T>	self_type;
+	typedef CWrapperBaseSVDeathmatch<T>	self_type;
 	DEFINE_LUA_WRAPPER_CONST_METHOD_0(type_name, LPCSTR)
 //	DEFINE_LUA_WRAPPER_METHOD_1(Money_SetStart, void, u32)
 };
@@ -16,7 +16,7 @@ struct CWrapperBase : public T, public luabind::wrap_base {
 #pragma optimize("s",on)
 void game_sv_Deathmatch::script_register(lua_State *L)
 {
-	typedef CWrapperBase<game_sv_Deathmatch> WrapType;
+	typedef CWrapperBaseSVDeathmatch<game_sv_Deathmatch> WrapType;
 	module(L)
 		[
 			luabind::class_< game_sv_Deathmatch, WrapType, game_sv_GameState >("game_sv_Deathmatch")
@@ -25,7 +25,7 @@ void game_sv_Deathmatch::script_register(lua_State *L)
 			
 			
 			.def("type_name",		&WrapType::type_name, &WrapType::type_name_static)
-//			.def("Money_SetStart",		&CWrapperBase<game_sv_Deathmatch>::Money_SetStart, &CWrapperBase<game_sv_Deathmatch>::Money_SetStart_static)
+//			.def("Money_SetStart",		&CWrapperBaseSVDeathmatch<game_sv_Deathmatch>::Money_SetStart, &CWrapperBaseSVDeathmatch<game_sv_Deathmatch>::Money_SetStart_static)
 		];
 
 }

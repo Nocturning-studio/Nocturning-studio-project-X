@@ -3,6 +3,7 @@
 // created:		15.06.2005
 // author:		Serge Vynnychenko
 //
+#pragma once
 
 #include "UICustomSpin.h"
 
