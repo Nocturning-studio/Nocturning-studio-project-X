@@ -83,15 +83,16 @@ void CUICursor::UpdateCursorPosition()
 {
 
 	POINT		p;
-	BOOL r		= GetCursorPos(&p);
-	R_ASSERT	(r);
+	R_ASSERT	(GetCursorPos(&p));
+	R_ASSERT	(ScreenToClient(Device.m_hWnd, &p));
 
-	vPrevPos = vPos;
+	vPrevPos		= vPos;
 
 	vPos.x			= (float)p.x * (UI_BASE_WIDTH/(float)Device.dwWidth);
 	vPos.y			= (float)p.y * (UI_BASE_HEIGHT/(float)Device.dwHeight);
-	clamp			(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp			(vPos.y, 0.f, UI_BASE_HEIGHT);
+
+	clamp			(vPos.x, 0.0f, UI_BASE_WIDTH);
+	clamp			(vPos.y, 0.0f, UI_BASE_HEIGHT);
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)
