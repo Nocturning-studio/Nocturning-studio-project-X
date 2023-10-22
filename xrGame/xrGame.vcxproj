@@ -747,6 +747,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OrderInUnityFile>1</OrderInUnityFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -810,6 +811,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OrderInUnityFile>100</OrderInUnityFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -873,6 +875,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OrderInUnityFile>1</OrderInUnityFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -936,6 +939,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OrderInUnityFile>100</OrderInUnityFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -10566,6 +10570,8 @@
       <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">1</OrderInUnityFile>
       <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</OrderInUnityFile>
       <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release Master Gold|Win32'">1</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release Master Gold|x64'">1</OrderInUnityFile>
     </ClCompile>
     <ClCompile Include="script_engine_help.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">pch_script.h</PrecompiledHeaderFile>
