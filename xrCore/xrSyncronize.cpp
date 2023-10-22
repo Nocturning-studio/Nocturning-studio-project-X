@@ -78,4 +78,5 @@ BOOL	xrCriticalSection::TryEnter	()
 {
 	if(pmutex)
 		return TryEnterCriticalSection	( pmutex );
+	return FALSE;
 }
