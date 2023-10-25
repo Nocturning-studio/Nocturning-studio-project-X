@@ -1,17 +1,17 @@
 #pragma once
 
-#include "script_export_space.h"
 #include "weaponmagazinedwgrenade.h"
+#include "script_export_space.h"
 
-class CWeaponGroza : public CWeaponMagazinedWGrenade
+class CWeaponGroza :
+	public CWeaponMagazinedWGrenade
 {
-    typedef CWeaponMagazinedWGrenade inherited;
+	typedef CWeaponMagazinedWGrenade inherited;
+public:
+	CWeaponGroza(void);
+	virtual ~CWeaponGroza(void);
 
-  public:
-    CWeaponGroza(void);
-    virtual ~CWeaponGroza(void);
-
-    DECLARE_SCRIPT_REGISTER_FUNCTION
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponGroza)
 #undef script_type_list

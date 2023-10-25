@@ -31,6 +31,7 @@
    http://www.oberhumer.com/opensource/lzo/
  */
 
+
 #ifndef __LZO1F_H
 #define __LZO1F_H
 
@@ -39,51 +40,63 @@
 #endif
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    /***********************************************************************
-    //
-    ************************************************************************/
 
-    /* Memory required for the wrkmem parameter.
-     * When the required size is 0, you can also pass a NULL pointer.
-     */
+/***********************************************************************
+//
+************************************************************************/
 
-#define LZO1F_MEM_COMPRESS ((lzo_uint32)(16384L * lzo_sizeof_dict_t))
-#define LZO1F_MEM_DECOMPRESS (0)
+/* Memory required for the wrkmem parameter.
+ * When the required size is 0, you can also pass a NULL pointer.
+ */
 
-    /* decompression */
-    LZO_EXTERN(int)
-    lzo1f_decompress(const lzo_byte *src, lzo_uint src_len, lzo_byte *dst, lzo_uintp dst_len,
-                     lzo_voidp wrkmem /* NOT USED */);
+#define LZO1F_MEM_COMPRESS      ((lzo_uint32) (16384L * lzo_sizeof_dict_t))
+#define LZO1F_MEM_DECOMPRESS    (0)
 
-    /* safe decompression with overrun testing */
-    LZO_EXTERN(int)
-    lzo1f_decompress_safe(const lzo_byte *src, lzo_uint src_len, lzo_byte *dst, lzo_uintp dst_len,
-                          lzo_voidp wrkmem /* NOT USED */);
 
-    /***********************************************************************
-    //
-    ************************************************************************/
+/* decompression */
+LZO_EXTERN(int)
+lzo1f_decompress        ( const lzo_byte *src, lzo_uint  src_len,
+                                lzo_byte *dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem /* NOT USED */ );
 
-    LZO_EXTERN(int)
-    lzo1f_1_compress(const lzo_byte *src, lzo_uint src_len, lzo_byte *dst, lzo_uintp dst_len, lzo_voidp wrkmem);
+/* safe decompression with overrun testing */
+LZO_EXTERN(int)
+lzo1f_decompress_safe   ( const lzo_byte *src, lzo_uint  src_len,
+                                lzo_byte *dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem /* NOT USED */ );
 
-    /***********************************************************************
-    // better compression ratio at the cost of more memory and time
-    ************************************************************************/
 
-#define LZO1F_999_MEM_COMPRESS ((lzo_uint32)(5 * 16384L * sizeof(short)))
+/***********************************************************************
+//
+************************************************************************/
+
+LZO_EXTERN(int)
+lzo1f_1_compress        ( const lzo_byte *src, lzo_uint  src_len,
+                                lzo_byte *dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem );
+
+
+/***********************************************************************
+// better compression ratio at the cost of more memory and time
+************************************************************************/
+
+#define LZO1F_999_MEM_COMPRESS  ((lzo_uint32) (5 * 16384L * sizeof(short)))
 
 #if !defined(LZO_999_UNSUPPORTED)
-    LZO_EXTERN(int)
-    lzo1f_999_compress(const lzo_byte *src, lzo_uint src_len, lzo_byte *dst, lzo_uintp dst_len, lzo_voidp wrkmem);
+LZO_EXTERN(int)
+lzo1f_999_compress      ( const lzo_byte *src, lzo_uint  src_len,
+                                lzo_byte *dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem );
 #endif
+
+
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
 #endif /* already included */
+

@@ -6,78 +6,63 @@
 #include "../xrEngine/feel_touch.h"
 #include "../xrEngine/iinputreceiver.h"
 
-#include "actor_flags.h"
 #include "entity.h"
+#include "actor_flags.h"
 
 // refs
 class CActor;
 
-class CSpectator : public CGameObject, public IInputReceiver
+class CSpectator: 
+	public CGameObject,
+	public IInputReceiver
 {
-  private:
-    typedef CGameObject inherited;
+private:
+	typedef CGameObject		inherited;
+protected:
+public:
+	enum EActorCameras {
+		eacFreeFly		= 0,
+		eacFirstEye		,
+		eacLookAt		,
+		eacFreeLook		,
+		eacMaxCam
+	};
+private:
+	// Cameras
+	CCameraBase*			cameras[eacMaxCam];
+	EActorCameras			cam_active;
 
-  protected:
-  public:
-    enum EActorCameras
-    {
-        eacFreeFly = 0,
-        eacFirstEye,
-        eacLookAt,
-        eacFreeLook,
-        eacMaxCam
-    };
+	int						look_idx;
 
-  private:
-    // Cameras
-    CCameraBase *cameras[eacMaxCam];
-    EActorCameras cam_active;
+	//------------------------------
+	void					cam_Set					(EActorCameras style);
+	void					cam_Update				(CActor* A=0);
 
-    int look_idx;
+	CActor*					m_pActorToLookAt;
+	bool					SelectNextPlayerToLook	();
 
-    //------------------------------
-    void cam_Set(EActorCameras style);
-    void cam_Update(CActor *A = 0);
+	void					FirstEye_ToPlayer		(CObject* pObject);
+public:
+							CSpectator				( );
+	virtual					~CSpectator				( );
 
-    CActor *m_pActorToLookAt;
-    bool SelectNextPlayerToLook();
+	virtual void			IR_OnMouseMove			(int x, int y);
+	virtual void			IR_OnKeyboardPress		(int dik);
+	virtual void			IR_OnKeyboardRelease	(int dik);
+	virtual void			IR_OnKeyboardHold		(int dik);
+	virtual void			shedule_Update			( u32 T ); 
+	virtual void			UpdateCL				( );
+	virtual BOOL			net_Spawn				( CSE_Abstract*	DC );
+	virtual void			net_Destroy			();
 
-    void FirstEye_ToPlayer(CObject *pObject);
+	virtual void			Center					(Fvector& C)	const	{ C.set(Position());	}
+	virtual float			Radius					()				const	{ return EPS;}
+//	virtual const Fbox&		BoundingBox				()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->vis.box;									}
+	virtual CGameObject*	cast_game_object		()						{return this;}
+	virtual IInputReceiver*	cast_input_receiver		()						{return this;}
 
-  public:
-    CSpectator();
-    virtual ~CSpectator();
-
-    virtual void IR_OnMouseMove(int x, int y);
-    virtual void IR_OnKeyboardPress(int dik);
-    virtual void IR_OnKeyboardRelease(int dik);
-    virtual void IR_OnKeyboardHold(int dik);
-    virtual void shedule_Update(u32 T);
-    virtual void UpdateCL();
-    virtual BOOL net_Spawn(CSE_Abstract *DC);
-    virtual void net_Destroy();
-
-    virtual void Center(Fvector &C) const
-    {
-        C.set(Position());
-    }
-    virtual float Radius() const
-    {
-        return EPS;
-    }
-    //	virtual const Fbox&		BoundingBox				()				const	{ VERIFY2(renderable.visual,*cName());
-    //return renderable.visual->vis.box;									}
-    virtual CGameObject *cast_game_object()
-    {
-        return this;
-    }
-    virtual IInputReceiver *cast_input_receiver()
-    {
-        return this;
-    }
-
-    virtual void net_Relcase(CObject *O);
-    void GetSpectatorString(string1024 &pStr);
+	virtual void			net_Relcase				(CObject *O);
+			void			GetSpectatorString		(string1024& pStr);
 };
 
 #endif // __SPECTATOR_H__

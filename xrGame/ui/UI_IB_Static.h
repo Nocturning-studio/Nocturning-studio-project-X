@@ -12,8 +12,7 @@
 #include "UIInteractiveBackground.h"
 #include "UIStatic.h"
 
-class CUI_IB_Static : public CUIInteractiveBackground<CUIStatic>
-{
-  public:
-    virtual void SetTextureOffset(float x, float y);
+class CUI_IB_Static : public CUIInteractiveBackground<CUIStatic> {
+public:
+	virtual void SetTextureOffset(float x, float y);
 };

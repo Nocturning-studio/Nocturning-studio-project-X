@@ -6,15 +6,18 @@
 //	Description : Cover point class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "cover_point.h"
 #include "pch_script.h"
+#include "cover_point.h"
 
 using namespace luabind;
 
-#pragma optimize("s", on)
+#pragma optimize("s",on)
 void CCoverPoint::script_register(lua_State *L)
 {
-    module(L)[class_<CCoverPoint>("cover_point")
-                  .def("position", &CCoverPoint::position)
-                  .def("level_vertex_id", &CCoverPoint::level_vertex_id)];
+	module(L)
+	[
+		class_<CCoverPoint>("cover_point")
+			.def("position",			&CCoverPoint::position)
+			.def("level_vertex_id",		&CCoverPoint::level_vertex_id)
+	];
 }

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "script_export_space.h"
 #include "weaponpistol.h"
+#include "script_export_space.h"
 
-class CWeaponWalther : public CWeaponPistol
+class CWeaponWalther :
+	public CWeaponPistol
 {
-    typedef CWeaponPistol inherited;
+	typedef CWeaponPistol inherited;
+public:
+	CWeaponWalther(void);
+	virtual ~CWeaponWalther(void);
 
-  public:
-    CWeaponWalther(void);
-    virtual ~CWeaponWalther(void);
-
-    DECLARE_SCRIPT_REGISTER_FUNCTION
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponWalther)
 #undef script_type_list

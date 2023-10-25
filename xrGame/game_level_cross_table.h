@@ -9,95 +9,91 @@
 #pragma once
 
 #ifdef AI_COMPILER
-#include "xrLevel.h"
+#	include "xrLevel.h"
 #else // AI_COMPILER
-#include "../xrEngine/xrLevel.h"
+#	include "../xrEngine/xrLevel.h"
 #endif // AI_COMPILER
 
 #include "alife_space.h"
 #include "game_graph_space.h"
 
-#define CROSS_TABLE_NAME "level.gct"
+#define CROSS_TABLE_NAME					"level.gct"
 
-#define CROSS_TABLE_CHUNK_VERSION 0
-#define CROSS_TABLE_CHUNK_DATA 1
+#define CROSS_TABLE_CHUNK_VERSION			0
+#define CROSS_TABLE_CHUNK_DATA				1
 
-class CGameLevelCrossTable
-{
-#ifdef AI_COMPILER
-    friend class CLevelGameGraph;
-    friend class CCrossTableBuilder;
-    friend class CRenumbererConverter;
-    friend class CGameGraphBuilder;
+class CGameLevelCrossTable {
+#ifdef AI_COMPILER		
+	friend class CLevelGameGraph;
+	friend class CCrossTableBuilder;
+	friend class CRenumbererConverter;
+	friend class CGameGraphBuilder;
 #endif // AI_COMPILER
 
-  public:
-#pragma pack(push, 2)
-    class CHeader
-    {
-        u32 dwVersion;
-        u32 dwNodeCount;
-        u32 dwGraphPointCount;
-        xrGUID m_level_guid;
-        xrGUID m_game_guid;
+public:
+	#pragma pack(push,2)
+	class CHeader {
+		u32					dwVersion;
+		u32					dwNodeCount;
+		u32					dwGraphPointCount;
+		xrGUID				m_level_guid;
+		xrGUID				m_game_guid;
 
-      public:
-        IC u32 version() const;
-        IC u32 level_vertex_count() const;
-        IC u32 game_vertex_count() const;
-        IC const xrGUID &level_guid() const;
-        IC const xrGUID &game_guid() const;
+	public:
+		IC	u32				version					() const;
+		IC	u32				level_vertex_count		() const;
+		IC	u32				game_vertex_count		() const;
+		IC	const xrGUID	&level_guid				() const;
+		IC	const xrGUID	&game_guid				() const;
 
-#ifdef AI_COMPILER
-        friend class CLevelGameGraph;
-        friend class CCrossTableBuilder;
-        friend class CRenumbererConverter;
-        friend class CGameGraphBuilder;
+#ifdef AI_COMPILER		
+		friend class CLevelGameGraph;
+		friend class CCrossTableBuilder;
+		friend class CRenumbererConverter;
+		friend class CGameGraphBuilder;
 #endif // AI_COMPILER
-    };
-
-    class CCell
-    {
-        GameGraph::_GRAPH_ID tGraphIndex;
-        float fDistance;
-
-      public:
-        IC GameGraph::_GRAPH_ID game_vertex_id() const;
-        IC float distance() const;
-#ifdef AI_COMPILER
-        friend class CLevelGameGraph;
-        friend class CCrossTableBuilder;
-        friend class CRenumbererConverter;
-        friend class CGameGraphBuilder;
+	};
+	
+	class  CCell {
+		GameGraph::_GRAPH_ID	tGraphIndex;
+		float				fDistance;
+	public:
+		IC	GameGraph::_GRAPH_ID game_vertex_id			() const;
+		IC	float			distance				() const;
+#ifdef AI_COMPILER		
+		friend class CLevelGameGraph;
+		friend class CCrossTableBuilder;
+		friend class CRenumbererConverter;
+		friend class CGameGraphBuilder;
 #endif // AI_COMPILER
-    };
-#pragma pack(pop)
+	};
+	#pragma pack(pop)
 
-  private:
-    CHeader m_tCrossTableHeader;
-    CCell *m_tpaCrossTable;
+private:
+	CHeader					m_tCrossTableHeader;
+	CCell					*m_tpaCrossTable;
 
 #ifndef PRIQUEL
-  private:
-    IReader *m_tpCrossTableVFS;
-    IReader *m_chunk;
+private:
+	IReader					*m_tpCrossTableVFS;
+	IReader					*m_chunk;
 #endif // PRIQUEL
 
-  public:
+public:
 #ifdef PRIQUEL
-    IC CGameLevelCrossTable(const void *buffer, const u32 &buffer_size);
+	IC						CGameLevelCrossTable	(const void *buffer, const u32 &buffer_size);
 #else
-#ifdef AI_COMPILER
-    IC CGameLevelCrossTable(LPCSTR fName);
-#else  // AI_COMPILER
-    IC CGameLevelCrossTable();
-#endif // AI_COMPILER
+#	ifdef AI_COMPILER
+		IC					CGameLevelCrossTable	(LPCSTR fName);
+#	else // AI_COMPILER
+		IC					CGameLevelCrossTable	();
+#	endif // AI_COMPILER
 #endif // PRIQUEL
 
-  public:
-    IC virtual ~CGameLevelCrossTable();
-    IC const CCell &vertex(u32 level_vertex_id) const;
-    IC const CHeader &header() const;
+public:
+	IC virtual				~CGameLevelCrossTable	();
+	IC		const CCell		&vertex					(u32 level_vertex_id) const;
+	IC		const CHeader	&header					() const;
 };
 
 #include "game_level_cross_table_inline.h"

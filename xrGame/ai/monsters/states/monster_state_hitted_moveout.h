@@ -2,31 +2,29 @@
 
 #include "../../../detail_path_manager.h"
 
-template <typename _Object> class CStateMonsterHittedMoveOut : public CState<_Object>
-{
-    typedef CState<_Object> inherited;
-    typedef CState<_Object> *state_ptr;
+template<typename _Object>
+class CStateMonsterHittedMoveOut : public CState<_Object> {
+	typedef	CState<_Object>		inherited;
+	typedef	CState<_Object>*	state_ptr;
 
-    struct
-    {
-        Fvector position;
-        u32 node;
-    } target;
+	struct {
+		Fvector position;
+		u32		node;
+	} target;
 
-  public:
-    CStateMonsterHittedMoveOut(_Object *obj) : inherited(obj)
-    {
-    }
-    virtual ~CStateMonsterHittedMoveOut()
-    {
-    }
+public:
 
-    virtual void initialize();
-    virtual void execute();
-    virtual bool check_completion();
+					CStateMonsterHittedMoveOut	(_Object *obj) : inherited(obj) {}
+	virtual			~CStateMonsterHittedMoveOut	() {}
 
-  private:
-    void select_target();
+	virtual	void	initialize					();
+	virtual void	execute						();
+	virtual bool 	check_completion			();
+
+private:
+			void	select_target				();
+
 };
 
 #include "monster_state_hitted_moveout_inline.h"
+

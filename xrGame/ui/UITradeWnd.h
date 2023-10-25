@@ -1,6 +1,6 @@
 #pragma once
-#include "../inventory_space.h"
 #include "UIWindow.h"
+#include "../inventory_space.h"
 
 class CInventoryOwner;
 class CEatableItem;
@@ -10,90 +10,86 @@ struct CUITradeInternal;
 class CUIDragDropListEx;
 class CUICellItem;
 
-class CUITradeWnd : public CUIWindow
+class CUITradeWnd: public CUIWindow
 {
-  private:
-    typedef CUIWindow inherited;
+private:
+	typedef CUIWindow inherited;
+public:
+						CUITradeWnd					();
+	virtual				~CUITradeWnd				();
 
-  public:
-    CUITradeWnd();
-    virtual ~CUITradeWnd();
+	virtual void		Init						();
 
-    virtual void Init();
+	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData);
 
-    virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData);
+	void				InitTrade					(CInventoryOwner* pOur, CInventoryOwner* pOthers);
+	
+	virtual void 		Draw						();
+	virtual void 		Update						();
+	virtual void 		Show						();
+	virtual void 		Hide						();
 
-    void InitTrade(CInventoryOwner *pOur, CInventoryOwner *pOthers);
+	void 				DisableAll					();
+	void 				EnableAll					();
 
-    virtual void Draw();
-    virtual void Update();
-    virtual void Show();
-    virtual void Hide();
+	void 				SwitchToTalk				();
+	void 				StartTrade					();
+	void 				StopTrade					();
+protected:
 
-    void DisableAll();
-    void EnableAll();
+	CUITradeInternal*	m_uidata;
 
-    void SwitchToTalk();
-    void StartTrade();
-    void StopTrade();
+	bool				bStarted;
+	bool 				ToOurTrade					();
+	bool 				ToOthersTrade				();
+	bool 				ToOurBag					();
+	bool 				ToOthersBag					();
+	void 				SendEvent_ItemDrop			(PIItem pItem);
+	
+	u32					CalcItemsPrice				(CUIDragDropListEx* pList, CTrade* pTrade, bool bBuying);
+	float				CalcItemsWeight				(CUIDragDropListEx* pList);
 
-  protected:
-    CUITradeInternal *m_uidata;
+	void				TransferItems				(CUIDragDropListEx* pSellList, CUIDragDropListEx* pBuyList, CTrade* pTrade, bool bBuying);
 
-    bool bStarted;
-    bool ToOurTrade();
-    bool ToOthersTrade();
-    bool ToOurBag();
-    bool ToOthersBag();
-    void SendEvent_ItemDrop(PIItem pItem);
+	void				PerformTrade				();
+	void				UpdatePrices				();
+	void				ColorizeItem				(CUICellItem* itm, bool b);
 
-    u32 CalcItemsPrice(CUIDragDropListEx *pList, CTrade *pTrade, bool bBuying);
-    float CalcItemsWeight(CUIDragDropListEx *pList);
+	enum EListType{eNone,e1st,e2nd,eBoth};
+	void				UpdateLists					(EListType);
 
-    void TransferItems(CUIDragDropListEx *pSellList, CUIDragDropListEx *pBuyList, CTrade *pTrade, bool bBuying);
+	void				FillList					(TIItemContainer& cont, CUIDragDropListEx& list, bool do_colorize);
 
-    void PerformTrade();
-    void UpdatePrices();
-    void ColorizeItem(CUICellItem *itm, bool b);
+	bool				m_bDealControlsVisible;
 
-    enum EListType
-    {
-        eNone,
-        e1st,
-        e2nd,
-        eBoth
-    };
-    void UpdateLists(EListType);
+	bool				CanMoveToOther				(PIItem pItem);
 
-    void FillList(TIItemContainer &cont, CUIDragDropListEx &list, bool do_colorize);
+	//указатели игрока и того с кем торгуем
+	CInventory*			m_pInv;
+	CInventory*			m_pOthersInv;
+	CInventoryOwner*	m_pInvOwner;
+	CInventoryOwner*	m_pOthersInvOwner;
+	CTrade*				m_pTrade;
+	CTrade*				m_pOthersTrade;
 
-    bool m_bDealControlsVisible;
+	u32					m_iOurTradePrice;
+	u32					m_iOthersTradePrice;
 
-    bool CanMoveToOther(PIItem pItem);
 
-    // указатели игрока и того с кем торгуем
-    CInventory *m_pInv;
-    CInventory *m_pOthersInv;
-    CInventoryOwner *m_pInvOwner;
-    CInventoryOwner *m_pOthersInvOwner;
-    CTrade *m_pTrade;
-    CTrade *m_pOthersTrade;
+	CUICellItem*		m_pCurrentCellItem;
+	TIItemContainer		ruck_list;
 
-    u32 m_iOurTradePrice;
-    u32 m_iOthersTradePrice;
 
-    CUICellItem *m_pCurrentCellItem;
-    TIItemContainer ruck_list;
+	void				SetCurrentItem				(CUICellItem* itm);
+	CUICellItem*		CurrentItem					();
+	PIItem				CurrentIItem				();
 
-    void SetCurrentItem(CUICellItem *itm);
-    CUICellItem *CurrentItem();
-    PIItem CurrentIItem();
+	bool		xr_stdcall		OnItemDrop			(CUICellItem* itm);
+	bool		xr_stdcall		OnItemStartDrag		(CUICellItem* itm);
+	bool		xr_stdcall		OnItemDbClick		(CUICellItem* itm);
+	bool		xr_stdcall		OnItemSelected		(CUICellItem* itm);
+	bool		xr_stdcall		OnItemRButtonClick	(CUICellItem* itm);
 
-    bool xr_stdcall OnItemDrop(CUICellItem *itm);
-    bool xr_stdcall OnItemStartDrag(CUICellItem *itm);
-    bool xr_stdcall OnItemDbClick(CUICellItem *itm);
-    bool xr_stdcall OnItemSelected(CUICellItem *itm);
-    bool xr_stdcall OnItemRButtonClick(CUICellItem *itm);
+	void				BindDragDropListEnents		(CUIDragDropListEx* lst);
 
-    void BindDragDropListEnents(CUIDragDropListEx *lst);
 };

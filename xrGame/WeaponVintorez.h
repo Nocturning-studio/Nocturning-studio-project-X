@@ -1,17 +1,17 @@
 #pragma once
 
-#include "script_export_space.h"
 #include "weaponmagazined.h"
+#include "script_export_space.h"
 
-class CWeaponVintorez : public CWeaponMagazined
+class CWeaponVintorez :
+	public CWeaponMagazined
 {
-    typedef CWeaponMagazined inherited;
+	typedef CWeaponMagazined inherited;
+public:
+	CWeaponVintorez(void);
+	virtual ~CWeaponVintorez(void);
 
-  public:
-    CWeaponVintorez(void);
-    virtual ~CWeaponVintorez(void);
-
-    DECLARE_SCRIPT_REGISTER_FUNCTION
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponVintorez)
 #undef script_type_list

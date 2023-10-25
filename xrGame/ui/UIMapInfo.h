@@ -1,22 +1,21 @@
 #pragma once
 
-#include "../script_export_space.h"
 #include "UIWindow.h"
+#include "../script_export_space.h"
 
 class CUIScrollView;
 
-class CUIMapInfo : public CUIWindow
-{
-  public:
-    CUIMapInfo();
-    ~CUIMapInfo();
+class CUIMapInfo : public CUIWindow {
+public:
+	CUIMapInfo();
+	~CUIMapInfo();
     virtual void Init(float x, float y, float width, float height);
-    void InitMap(const char *map_name);
-    const char *GetLargeDesc();
-    DECLARE_SCRIPT_REGISTER_FUNCTION
-  protected:
-    CUIScrollView *m_view;
-    shared_str m_large_desc;
+			void InitMap(const char* map_name);
+	const char*	 GetLargeDesc();
+	DECLARE_SCRIPT_REGISTER_FUNCTION
+protected:
+	CUIScrollView*	m_view;
+	shared_str		m_large_desc;
 };
 
 add_to_type_list(CUIMapInfo)

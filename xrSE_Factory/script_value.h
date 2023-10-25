@@ -12,16 +12,15 @@
 
 class CSE_Abstract;
 
-class CScriptValue
-{
-  protected:
-    luabind::object m_object;
-    shared_str m_name;
+class CScriptValue {
+protected:
+	luabind::object			m_object;
+	shared_str					m_name;
 
-  public:
-    IC CScriptValue(luabind::object object, LPCSTR name);
-    virtual void assign() = 0;
-    IC shared_str name();
+public:
+	IC						CScriptValue	(luabind::object object, LPCSTR name);
+	virtual	void			assign			() = 0;
+	IC		shared_str			name			();
 };
 
 #include "script_value_inline.h"

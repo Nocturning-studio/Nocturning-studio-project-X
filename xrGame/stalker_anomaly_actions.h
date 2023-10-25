@@ -14,34 +14,33 @@
 // CStalkerActionGetOutOfAnomaly
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionGetOutOfAnomaly : public CStalkerActionBase
-{
-  private:
-    xr_vector<ALife::_OBJECT_ID> m_temp0;
-    xr_vector<ALife::_OBJECT_ID> m_temp1;
+class CStalkerActionGetOutOfAnomaly : public CStalkerActionBase {
+private:
+	xr_vector<ALife::_OBJECT_ID>	m_temp0;
+	xr_vector<ALife::_OBJECT_ID>	m_temp1;
 
-  protected:
-    typedef CStalkerActionBase inherited;
+protected:
+	typedef CStalkerActionBase inherited;
 
-  public:
-    CStalkerActionGetOutOfAnomaly(CAI_Stalker *object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+public:
+						CStalkerActionGetOutOfAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
+	virtual void		initialize						();
+	virtual void		execute							();
+	virtual void		finalize						();
 };
 
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionDetectAnomaly
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionDetectAnomaly : public CStalkerActionBase
-{
-  protected:
-    typedef CStalkerActionBase inherited;
+class CStalkerActionDetectAnomaly : public CStalkerActionBase {
+protected:
+	typedef CStalkerActionBase inherited;
 
-  public:
-    CStalkerActionDetectAnomaly(CAI_Stalker *object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+public:
+						CStalkerActionDetectAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
+	virtual void		initialize					();
+	virtual void		execute						();
+	virtual void		finalize					();
 };
+

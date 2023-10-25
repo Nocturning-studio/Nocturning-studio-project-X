@@ -1,9 +1,9 @@
-#include "mmintrin.h"
 #include "stdafx.h"
+#include "mmintrin.h"
 
-void __stdcall xrSlerp_x86(_quaternion<float> *D, _quaternion<float> *Q1, _quaternion<float> *Q2, float t)
+void	__stdcall	xrSlerp_x86		(_quaternion<float>* D, _quaternion<float>* Q1, _quaternion<float>* Q2, float t)
 {
-    D->slerp(*Q1, *Q2, t);
+	D->slerp(*Q1,*Q2,t);
 }
 
 // xyzw
@@ -108,14 +108,14 @@ void	__stdcall	xrSlerp_3Dnow	(_quaternion* result, _quaternion* q1, _quaternion*
     r0			= _m_punpckldq (scale0, scale0);
     __m64 *pres = (__m64 *)result;
     pres[0]		= _m_pfadd (
-                        _m_pfmul (r0,
+						_m_pfmul (r0,
                         _m_from_floats (&q1->w)),
                         qwx);
     pres[1]		= _m_pfadd (
-                        _m_pfmul (r0,
+						_m_pfmul (r0,
                         _m_from_floats (&q1->y)),
                         qyz);
 
-    _mm_empty	();
+	_mm_empty	();
 }
 */

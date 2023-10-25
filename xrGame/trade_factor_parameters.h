@@ -11,20 +11,19 @@
 #include "associative_vector.h"
 #include "trade_factors.h"
 
-class CTradeFactorParameters
-{
-  public:
-    typedef associative_vector<shared_str, CTradeFactors> FACTORS;
+class CTradeFactorParameters {
+public:
+	typedef associative_vector<shared_str,CTradeFactors>	FACTORS;
 
-  private:
-    FACTORS m_factors;
+private:
+	FACTORS					m_factors;
 
-  public:
-    IC CTradeFactorParameters();
-    IC void clear();
-    IC void enable(const shared_str &section, const CTradeFactors &factors);
-    IC bool enabled(const shared_str &section) const;
-    IC const CTradeFactors &factors(const shared_str &section) const;
+public:
+	IC						CTradeFactorParameters	();
+	IC	void				clear					();
+	IC	void				enable					(const shared_str &section, const CTradeFactors &factors);
+	IC	bool				enabled					(const shared_str &section) const;
+	IC	const CTradeFactors	&factors				(const shared_str &section) const;
 };
 
 #include "trade_factor_parameters_inline.h"

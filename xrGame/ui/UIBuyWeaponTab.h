@@ -8,22 +8,21 @@
 
 #pragma once
 
-#include "UIStatic.h"
 #include "UITabControl.h"
+#include "UIStatic.h"
 
 class CUIXml;
 
-class CUIBuyWeaponTab : public CUITabControl
+class CUIBuyWeaponTab : public CUITabControl 
 {
-  public:
-    CUIBuyWeaponTab();
-    virtual ~CUIBuyWeaponTab();
+public:
+				CUIBuyWeaponTab				();
+	virtual		~CUIBuyWeaponTab			();
 
-    virtual void Init(CUIXml *xml, char *path);
-    virtual void OnTabChange(int iCur, int iPrev);
-    void SetActiveState(bool bState = true);
-
-  private:
-    bool m_bActiveState;
-    int m_iStubIndex;
+	virtual void Init						(CUIXml* xml, char* path);
+	virtual void OnTabChange				(int iCur, int iPrev);
+			void SetActiveState				(bool bState = true);
+private:
+	bool		m_bActiveState;
+	int			m_iStubIndex;
 };

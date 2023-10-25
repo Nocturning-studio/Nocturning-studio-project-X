@@ -1,195 +1,221 @@
 #include "stdafx.h"
 
-#include "../ExtendedGeom.h"
-#include "../gameobject.h"
 #include "dTriCollideK.h"
-#include "dcTriListCollider.cpp" // Allow inlining
-#include "dcTriListCollider.h"
 #include "dxTriList.h"
+#include "dcTriListCollider.h"
+#include "../ExtendedGeom.h"
+#include "dcTriListCollider.cpp"	// Allow inlining
+#include "../gameobject.h"
+
+
 
 int dTriListClass = -1;
 
-dcTriListCollider *GetData(dxGeom *TriList)
-{
+dcTriListCollider* GetData(dxGeom* TriList){
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(TriList);
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(TriList);
 
-    return Data->Collider;
+	return Data->Collider;
+
 }
 
-inline bool ValidateCollision(dxGeom *o1, dxGeom *o2)
-{
-    return dGeomGetUserData(o1)->b_static_colide;
-    /*
-    dxBody* b1 = dGeomGetBody(o1);
-
-    dxBody* b2 = dGeomGetBody(o2);
 
 
+inline bool ValidateCollision(dxGeom* o1, dxGeom* o2){
+	return dGeomGetUserData(o1)->b_static_colide;
+	/*
+	dxBody* b1 = dGeomGetBody(o1);
 
-    if (b1){
+	dxBody* b2 = dGeomGetBody(o2);
 
-        if (!dBodyIsEnabled(b1)){
 
-            b1 = 0;
 
-        }
+	if (b1){
 
-    }
+		if (!dBodyIsEnabled(b1)){
 
-    if (b2){
+			b1 = 0;
 
-        if (!dBodyIsEnabled(b2)){
+		}
 
-            b2 = 0;
+	}
 
-        }
+	if (b2){
 
-    }
+		if (!dBodyIsEnabled(b2)){
 
-    return b1 || b2;
-    */
-    // return true;
+			b2 = 0;
+
+		}
+
+	}
+
+	return b1 || b2;
+	*/
+	//return true;
 }
 
-int dCollideSTL(dxGeom *TriList, dxGeom *Sphere, int Flags, dContactGeom *Contact, int Stride) throw()
+
+
+int dCollideSTL(dxGeom* TriList, dxGeom* Sphere, int Flags, dContactGeom* Contact, int Stride) throw()
 {
 
-    if (ValidateCollision(Sphere, TriList))
-    {
+	if (ValidateCollision(Sphere, TriList)){
 
-        return GetData(TriList)->CollideSphere(Sphere, Flags, Contact, Stride);
-    }
+		return GetData(TriList)->CollideSphere(Sphere, Flags, Contact, Stride);
 
-    else
-        return 0;
+	}
+
+	else return 0;
+
 }
 
-int dCollideBTL(dxGeom *TriList, dxGeom *Box, int Flags, dContactGeom *Contact, int Stride) throw()
+
+
+int dCollideBTL(dxGeom* TriList, dxGeom* Box, int Flags, dContactGeom* Contact, int Stride)throw()
 {
 
-    if (ValidateCollision(Box, TriList))
-    {
+	if (ValidateCollision(Box, TriList)){
 
-        return GetData(TriList)->CollideBox(Box, Flags, Contact, Stride);
-    }
+		return GetData(TriList)->CollideBox(Box, Flags, Contact, Stride);
 
-    else
-        return 0;
+	}
+
+	else return 0;
+
 }
 
-int dCollideCTL(dxGeom *TriList, dxGeom *Cyl, int Flags, dContactGeom *Contact, int Stride) throw()
+int dCollideCTL(dxGeom* TriList, dxGeom* Cyl, int Flags, dContactGeom* Contact, int Stride)throw()
 {
 
-    if (ValidateCollision(Cyl, TriList))
-    {
+	if (ValidateCollision(Cyl, TriList)){
 
-        return GetData(TriList)->CollideCylinder(Cyl, Flags, Contact, Stride);
-    }
+		return GetData(TriList)->CollideCylinder(Cyl, Flags, Contact, Stride);
 
-    else
-        return 0;
+	}
+
+	else return 0;
+
 }
 
-dColliderFn *dTriListColliderFn(int num)
+
+
+dColliderFn* dTriListColliderFn(int num)
 {
-    //	Log("in dTriListColliderFn ");
-    //	Msg("num=%d",num);
-    if (num == dBoxClass)
-    {
-        return (dColliderFn *)&dCollideBTL;
-    }
-    if (num == dSphereClass)
-    {
-        return (dColliderFn *)&dCollideSTL;
-    }
+	//	Log("in dTriListColliderFn ");
+	//	Msg("num=%d",num);
+	if (num ==dBoxClass){ 
+		return 	(dColliderFn*)&dCollideBTL;
+	}
+	if (num ==dSphereClass) {
+		return (dColliderFn*)&dCollideSTL;
+	}
 
-    if (num == dCylinderClassUser)
-        return (dColliderFn *)&dCollideCTL;
+	if (num == dCylinderClassUser) return (dColliderFn*)&dCollideCTL;
 
-    return 0;
+	return 0;
+
 }
 
-int dAABBTestTL(dxGeom *TriList, dxGeom *Object, dReal AABB[6]) throw()
-{
-
-    return 1;
-}
-
-void dDestroyTriList(dGeomID g)
+int dAABBTestTL(dxGeom* TriList, dxGeom* Object, dReal AABB[6]) throw()
 {
 
-    xr_delete(((dxTriList *)dGeomGetClassData(g))->Collider);
+	return 1;
 }
+
+void dDestroyTriList(dGeomID g){
+
+	xr_delete(((dxTriList*)dGeomGetClassData(g))->Collider);
+}
+
+
 
 /* External functions */
 
-void dGeomTriListSetCallback(dGeomID g, dTriCallback *Callback)
-{
+void dGeomTriListSetCallback(dGeomID g, dTriCallback* Callback){
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(g);
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(g);
 
-    Data->Callback = Callback;
+	Data->Callback = Callback;
+
 }
 
-dTriCallback *dGeomTriListGetCallback(dGeomID g)
-{
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(g);
 
-    return Data->Callback;
+dTriCallback* dGeomTriListGetCallback(dGeomID g){
+
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(g);
+
+	return Data->Callback;
+
 }
 
-void dGeomTriListSetArrayCallback(dGeomID g, dTriArrayCallback *ArrayCallback)
-{
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(g);
 
-    Data->ArrayCallback = ArrayCallback;
+void dGeomTriListSetArrayCallback(dGeomID g, dTriArrayCallback* ArrayCallback){
+
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(g);
+
+	Data->ArrayCallback = ArrayCallback;
+
 }
 
-dTriArrayCallback *dGeomTriListGetArrayCallback(dGeomID g)
-{
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(g);
 
-    return Data->ArrayCallback;
+dTriArrayCallback* dGeomTriListGetArrayCallback(dGeomID g){
+
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(g);
+
+	return Data->ArrayCallback;
+
 }
 
-dxGeom *dCreateTriList(dSpaceID space, dTriCallback *Callback, dTriArrayCallback *ArrayCallback)
-{
 
-    if (dTriListClass == -1)
-    {
 
-        dGeomClass c;
+dxGeom* dCreateTriList(dSpaceID space, dTriCallback* Callback, dTriArrayCallback* ArrayCallback){
 
-        c.bytes = sizeof(dxTriList);
+	if (dTriListClass == -1){
 
-        c.collider = &dTriListColliderFn;
+		dGeomClass c;
 
-        c.aabb = &dInfiniteAABB;
+		c.bytes = sizeof(dxTriList);
 
-        c.aabb_test = &dAABBTestTL;
+		c.collider = &dTriListColliderFn;
 
-        //	c.aabb_test=NULL;
-        c.dtor = &dDestroyTriList;
+		c.aabb = &dInfiniteAABB;
 
-        dTriListClass = dCreateGeomClass(&c);
-    }
+		c.aabb_test = &dAABBTestTL;
 
-    dxGeom *g = dCreateGeom(dTriListClass);
+		//	c.aabb_test=NULL;
+		c.dtor = &dDestroyTriList;
 
-    if (space)
-        dSpaceAdd(space, g);
 
-    dxTriList *Data = (dxTriList *)dGeomGetClassData(g);
 
-    Data->Callback = Callback;
+		dTriListClass = dCreateGeomClass(&c);
 
-    Data->ArrayCallback = ArrayCallback;
+	}
 
-    Data->Collider = xr_new<dcTriListCollider>(g);
 
-    return g;
+
+	dxGeom* g = dCreateGeom(dTriListClass);
+
+	if (space) dSpaceAdd(space, g);
+
+
+
+	dxTriList* Data = (dxTriList*)dGeomGetClassData(g);
+
+	Data->Callback = Callback;
+
+	Data->ArrayCallback = ArrayCallback;
+
+	Data->Collider = xr_new<dcTriListCollider>(g);
+
+
+
+	return g;
+
 }
+
+
+

@@ -5,9 +5,10 @@
 
 #pragma once
 
+
 #include <iostream>
 #include <tchar.h>
 
-#pragma warning(disable : 4996)
+#pragma warning(disable:4996)
 
 // TODO: reference additional headers your program requires here

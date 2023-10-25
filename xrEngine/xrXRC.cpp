@@ -2,8 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "xrXRC.h"
 #include "stdafx.h"
+#include "xrXRC.h"
 
 ENGINE_API xrXRC XRC;
 

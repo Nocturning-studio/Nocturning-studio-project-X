@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../encyclopedia_article_defs.h"
 #include "UIDialogWnd.h"
 #include "UIPdaAux.h"
+#include "../encyclopedia_article_defs.h"
 
 class CInventoryOwner;
 class CUIFrameLineWnd;
@@ -17,68 +17,60 @@ class CUIStalkersRankingWnd;
 class CUIEventsWnd;
 class CUIPdaContactsWnd;
 
-class CUIPdaWnd : public CUIDialogWnd
+ 
+
+class CUIPdaWnd: public CUIDialogWnd
 {
-  private:
-    typedef CUIDialogWnd inherited;
+private:
+	typedef CUIDialogWnd	inherited;
+protected:
+	//элементы декоративного интерфейса
+	CUIFrameLineWnd*		UIMainButtonsBackground;
+	CUIFrameLineWnd*		UITimerBackground;
 
-  protected:
-    // элементы декоративного интерфейса
-    CUIFrameLineWnd *UIMainButtonsBackground;
-    CUIFrameLineWnd *UITimerBackground;
+	// кнопки PDA
+	CUITabControl*			UITabControl;
 
-    // кнопки PDA
-    CUITabControl *UITabControl;
+	// Установить игровое время
+	void					UpdateDateTime					();
+	void					DrawUpdatedSections				();
+protected:
+	// Бэкграунд
+	CUIStatic*				UIMainPdaFrame;
+	CUIStatic*				m_updatedSectionImage;
+	CUIStatic*				m_oldSectionImage;
 
-    // Установить игровое время
-    void UpdateDateTime();
-    void DrawUpdatedSections();
+	// Текущий активный диалог
+	CUIWindow*				m_pActiveDialog;
+	EPdaTabs				m_pActiveSection;
+	xr_vector<Fvector2>		m_sign_places_main;
 
-  protected:
-    // Бэкграунд
-    CUIStatic *UIMainPdaFrame;
-    CUIStatic *m_updatedSectionImage;
-    CUIStatic *m_oldSectionImage;
+public:
+	// Поддиалоги PDA
+	CUIMapWnd*				UIMapWnd;
+	CUIPdaContactsWnd*		UIPdaContactsWnd;
+	CUIEncyclopediaWnd*		UIEncyclopediaWnd;
+	CUIDiaryWnd*			UIDiaryWnd;
+	CUIActorInfoWnd*		UIActorInfo;
+	CUIStalkersRankingWnd*	UIStalkersRanking;
+	CUIEventsWnd*			UIEventsWnd;
+	virtual void			Reset				();
+public:
+							CUIPdaWnd			();
+	virtual					~CUIPdaWnd			();
 
-    // Текущий активный диалог
-    CUIWindow *m_pActiveDialog;
-    EPdaTabs m_pActiveSection;
-    xr_vector<Fvector2> m_sign_places_main;
+	virtual void 			Init				();
 
-  public:
-    // Поддиалоги PDA
-    CUIMapWnd *UIMapWnd;
-    CUIPdaContactsWnd *UIPdaContactsWnd;
-    CUIEncyclopediaWnd *UIEncyclopediaWnd;
-    CUIDiaryWnd *UIDiaryWnd;
-    CUIActorInfoWnd *UIActorInfo;
-    CUIStalkersRankingWnd *UIStalkersRanking;
-    CUIEventsWnd *UIEventsWnd;
-    virtual void Reset();
+	virtual void 			SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
-  public:
-    CUIPdaWnd();
-    virtual ~CUIPdaWnd();
+	virtual void 			Draw				();
+	virtual void 			Update				();
+	virtual void 			Show				();
+	virtual void 			Hide				();
+	virtual bool			OnMouse				(float x, float y, EUIMessages mouse_action) {CUIDialogWnd::OnMouse(x,y,mouse_action);return true;} //always true because StopAnyMove() == false
+	
+	void					SetActiveSubdialog	(EPdaTabs section);
+	virtual bool			StopAnyMove			(){return false;}
 
-    virtual void Init();
-
-    virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData = NULL);
-
-    virtual void Draw();
-    virtual void Update();
-    virtual void Show();
-    virtual void Hide();
-    virtual bool OnMouse(float x, float y, EUIMessages mouse_action)
-    {
-        CUIDialogWnd::OnMouse(x, y, mouse_action);
-        return true;
-    } // always true because StopAnyMove() == false
-
-    void SetActiveSubdialog(EPdaTabs section);
-    virtual bool StopAnyMove()
-    {
-        return false;
-    }
-
-    void PdaContentsChanged(pda_section::part type);
+			void			PdaContentsChanged	(pda_section::part type);
 };

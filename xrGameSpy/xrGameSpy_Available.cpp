@@ -4,19 +4,19 @@
 
 #include "xrGameSpy_Available.h"
 
-// XRGAMESPY_API void	xrGS_GSIStartAvailableCheck(const gsi_char * gamename)
-XRGAMESPY_API void xrGS_GSIStartAvailableCheck()
+//XRGAMESPY_API void	xrGS_GSIStartAvailableCheck(const gsi_char * gamename)
+XRGAMESPY_API void	xrGS_GSIStartAvailableCheck()
 {
-    //	GSIStartAvailableCheck(gamename);
-    GSIStartAvailableCheck(GAMESPY_GAMENAME);
+//	GSIStartAvailableCheck(gamename);
+	GSIStartAvailableCheck(GAMESPY_GAMENAME);
 };
 
 XRGAMESPY_API GSIACResult xrGS_GSIAvailableCheckThink()
 {
-    return GSIAvailableCheckThink();
+	return GSIAvailableCheckThink();
 }
 
 XRGAMESPY_API void xrGS_msleep(gsi_time msec)
 {
-    msleep(msec);
+	msleep(msec);
 }

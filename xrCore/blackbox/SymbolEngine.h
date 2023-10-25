@@ -33,8 +33,8 @@ USE_BUGSLAYERUTIL - If defined, the class will have another
 
 // Include these in case the user forgets to link against them.
 #ifndef _EDITOR
-#pragma comment(lib, "dbghelp.lib")
-#pragma comment(lib, "version.lib")
+#	pragma comment (lib,"dbghelp.lib")
+#	pragma comment (lib,"version.lib")
 #endif // _EDITOR
 
 // The great Bugslayer idea of creating wrapper classes on structures
@@ -47,45 +47,46 @@ USE_BUGSLAYERUTIL - If defined, the class will have another
 // The IMAGEHLP_MODULE wrapper class
 struct CImageHlp_Module : public IMAGEHLP_MODULE
 {
-    CImageHlp_Module()
+    CImageHlp_Module ( )
     {
-        FillMemory(this, sizeof(IMAGEHLP_MODULE), NULL);
-        SizeOfStruct = sizeof(IMAGEHLP_MODULE);
+        FillMemory ( this , sizeof ( IMAGEHLP_MODULE ), NULL ) ;
+        SizeOfStruct = sizeof ( IMAGEHLP_MODULE ) ;
     }
-};
+} ;
 
 // The IMAGEHLP_LINE wrapper class
 struct CImageHlp_Line : public IMAGEHLP_LINE
 {
-    CImageHlp_Line()
+    CImageHlp_Line ( )
     {
-        FillMemory(this, sizeof(IMAGEHLP_LINE), NULL);
-        SizeOfStruct = sizeof(IMAGEHLP_LINE);
+        FillMemory ( this , sizeof ( IMAGEHLP_LINE ) , NULL ) ;
+        SizeOfStruct = sizeof ( IMAGEHLP_LINE ) ;
     }
-};
+} ;
 
 // The symbol engine class
 class CSymbolEngine
 {
-    /*----------------------------------------------------------------------
-                      Public Construction and Destruction
-    ----------------------------------------------------------------------*/
-  public:
+/*----------------------------------------------------------------------
+                  Public Construction and Destruction
+----------------------------------------------------------------------*/
+public      :
     // To use this class, call the SymInitialize member function to
     // initialize the symbol engine and then use the other member
     // functions in place of their corresponding DBGHELP.DLL functions.
-    CSymbolEngine(void)
+    CSymbolEngine ( void )
     {
     }
 
-    virtual ~CSymbolEngine(void)
+    virtual ~CSymbolEngine ( void )
     {
     }
 
-    /*----------------------------------------------------------------------
-                      Public Helper Information Functions
-    ----------------------------------------------------------------------*/
-  public:
+/*----------------------------------------------------------------------
+                  Public Helper Information Functions
+----------------------------------------------------------------------*/
+public      :
+
     // Returns the file version of DBGHELP.DLL being used.
     //  To convert the return values into a readable format:
     //  wsprintf ( szVer                  ,
@@ -95,250 +96,349 @@ class CSymbolEngine
     //             HIWORD ( dwLS )        ,
     //             LOWORD ( dwLS )         ) ;
     //  szVer will contain a string like: 5.00.1878.1
-    BOOL GetImageHlpVersion(DWORD &dwMS, DWORD &dwLS)
+    BOOL GetImageHlpVersion ( DWORD & dwMS , DWORD & dwLS )
     {
-        return (GetInMemoryFileVersion(_T ( "DBGHELP.DLL" ), dwMS, dwLS));
+        return( GetInMemoryFileVersion ( _T ( "DBGHELP.DLL" ) ,
+                                         dwMS                 ,
+                                         dwLS                  ) ) ;
     }
 
-    BOOL GetDbgHelpVersion(DWORD &dwMS, DWORD &dwLS)
+    BOOL GetDbgHelpVersion ( DWORD & dwMS , DWORD & dwLS )
     {
-        return (GetInMemoryFileVersion(_T ( "DBGHELP.DLL" ), dwMS, dwLS));
+        return( GetInMemoryFileVersion ( _T ( "DBGHELP.DLL" ) ,
+                                         dwMS                 ,
+                                         dwLS                  ) ) ;
     }
 
     // Returns the file version of the PDB reading DLLs
-    BOOL GetPDBReaderVersion(DWORD &dwMS, DWORD &dwLS)
+    BOOL GetPDBReaderVersion ( DWORD & dwMS , DWORD & dwLS )
     {
         // First try MSDBI.DLL.
-        if (TRUE == GetInMemoryFileVersion(_T ( "MSDBI.DLL" ), dwMS, dwLS))
+        if ( TRUE == GetInMemoryFileVersion ( _T ( "MSDBI.DLL" ) ,
+                                              dwMS               ,
+                                              dwLS                ) )
         {
-            return (TRUE);
+            return ( TRUE ) ;
         }
-        else if (TRUE == GetInMemoryFileVersion(_T ( "MSPDB60.DLL" ), dwMS, dwLS))
+        else if ( TRUE == GetInMemoryFileVersion ( _T ( "MSPDB60.DLL" ),
+                                                   dwMS                ,
+                                                   dwLS               ))
         {
-            return (TRUE);
+            return ( TRUE ) ;
         }
         // Just fall down to MSPDB50.DLL.
-        return (GetInMemoryFileVersion(_T ( "MSPDB50.DLL" ), dwMS, dwLS));
+        return ( GetInMemoryFileVersion ( _T ( "MSPDB50.DLL" ) ,
+                                          dwMS                 ,
+                                          dwLS                  ) ) ;
     }
 
     // The worker function used by the previous two functions
-    BOOL GetInMemoryFileVersion(LPCTSTR szFile, DWORD &dwMS, DWORD &dwLS)
+    BOOL GetInMemoryFileVersion ( LPCTSTR szFile ,
+                                  DWORD & dwMS   ,
+                                  DWORD & dwLS    )
     {
-        HMODULE hInstIH = GetModuleHandle(szFile);
+        HMODULE hInstIH = GetModuleHandle ( szFile ) ;
 
         // Get the full filename of the loaded version.
-        TCHAR szImageHlp[MAX_PATH];
-        GetModuleFileName(hInstIH, szImageHlp, MAX_PATH);
+        TCHAR szImageHlp[ MAX_PATH ] ;
+        GetModuleFileName ( hInstIH , szImageHlp , MAX_PATH ) ;
 
-        dwMS = 0;
-        dwLS = 0;
+        dwMS = 0 ;
+        dwLS = 0 ;
 
         // Get the version information size.
-        DWORD dwVerInfoHandle;
-        DWORD dwVerSize;
+        DWORD dwVerInfoHandle ;
+        DWORD dwVerSize       ;
 
-        dwVerSize = GetFileVersionInfoSize(szImageHlp, &dwVerInfoHandle);
-        if (0 == dwVerSize)
+        dwVerSize = GetFileVersionInfoSize ( szImageHlp       ,
+                                             &dwVerInfoHandle  ) ;
+        if ( 0 == dwVerSize )
         {
-            return (FALSE);
+            return ( FALSE ) ;
         }
 
         // Got the version size, now get the version information.
-        LPVOID lpData = (LPVOID) new TCHAR[dwVerSize];
-        if (FALSE == GetFileVersionInfo(szImageHlp, dwVerInfoHandle, dwVerSize, lpData))
+        LPVOID lpData = (LPVOID)new TCHAR [ dwVerSize ] ;
+        if ( FALSE == GetFileVersionInfo ( szImageHlp       ,
+                                           dwVerInfoHandle  ,
+                                           dwVerSize        ,
+                                           lpData            ) )
         {
-            delete[] lpData;
-            return (FALSE);
+            delete [] lpData ;
+            return ( FALSE ) ;
         }
 
-        VS_FIXEDFILEINFO *lpVerInfo;
-        UINT uiLen;
-        BOOL bRet = VerQueryValue(lpData, _T ( "\\" ), (LPVOID *)&lpVerInfo, &uiLen);
-        if (TRUE == bRet)
+        VS_FIXEDFILEINFO * lpVerInfo ;
+        UINT uiLen ;
+        BOOL bRet = VerQueryValue ( lpData              ,
+                                    _T ( "\\" )         ,
+                                    (LPVOID*)&lpVerInfo ,
+                                    &uiLen               ) ;
+        if ( TRUE == bRet )
         {
-            dwMS = lpVerInfo->dwFileVersionMS;
-            dwLS = lpVerInfo->dwFileVersionLS;
+            dwMS = lpVerInfo->dwFileVersionMS ;
+            dwLS = lpVerInfo->dwFileVersionLS ;
         }
 
-        delete[] lpData;
+        delete [] lpData ;
 
-        return (bRet);
+        return ( bRet ) ;
     }
 
-    /*----------------------------------------------------------------------
-                       Public Initialization and Cleanup
-    ----------------------------------------------------------------------*/
-  public:
-    BOOL SymInitialize(IN HANDLE hProcess, IN LPSTR UserSearchPath, IN BOOL fInvadeProcess)
+/*----------------------------------------------------------------------
+                   Public Initialization and Cleanup
+----------------------------------------------------------------------*/
+public      :
+
+    BOOL SymInitialize ( IN HANDLE   hProcess       ,
+                         IN LPSTR    UserSearchPath ,
+                         IN BOOL     fInvadeProcess  )
     {
-        m_hProcess = hProcess;
-        return (::SymInitialize(hProcess, UserSearchPath, fInvadeProcess));
+        m_hProcess = hProcess ;
+        return ( ::SymInitialize ( hProcess       ,
+                                   UserSearchPath ,
+                                   fInvadeProcess  ) ) ;
     }
 
 #ifdef USE_BUGSLAYERUTIL
-    BOOL BSUSymInitialize(DWORD dwPID, HANDLE hProcess, PSTR UserSearchPath, BOOL fInvadeProcess)
+    BOOL BSUSymInitialize ( DWORD  dwPID          ,
+                            HANDLE hProcess       ,
+                            PSTR   UserSearchPath ,
+                            BOOL   fInvadeProcess  )
     {
-        m_hProcess = hProcess;
-        return (::BSUSymInitialize(dwPID, hProcess, UserSearchPath, fInvadeProcess));
+        m_hProcess = hProcess ;
+        return ( ::BSUSymInitialize ( dwPID          ,
+                                      hProcess       ,
+                                      UserSearchPath ,
+                                      fInvadeProcess  ) ) ;
     }
-#endif // USE_BUGSLAYERUTIL
-    BOOL SymCleanup(void)
+#endif  // USE_BUGSLAYERUTIL
+    BOOL SymCleanup ( void )
     {
-        return (::SymCleanup(m_hProcess));
-    }
-
-    /*----------------------------------------------------------------------
-                           Public Module Manipulation
-    ----------------------------------------------------------------------*/
-  public:
-    BOOL SymEnumerateModules(IN PSYM_ENUMMODULES_CALLBACK EnumModulesCallback, IN PVOID UserContext)
-    {
-        return (::SymEnumerateModules(m_hProcess, EnumModulesCallback, UserContext));
+        return ( ::SymCleanup ( m_hProcess ) ) ;
     }
 
-    BOOL SymLoadModule(IN HANDLE hFile, IN PSTR ImageName, IN PSTR ModuleName, IN DWORD BaseOfDll, IN DWORD SizeOfDll)
+/*----------------------------------------------------------------------
+                       Public Module Manipulation
+----------------------------------------------------------------------*/
+public      :
+
+    BOOL SymEnumerateModules ( IN PSYM_ENUMMODULES_CALLBACK
+                                                    EnumModulesCallback,
+                               IN PVOID             UserContext )
     {
-        return (::SymLoadModule(m_hProcess, hFile, ImageName, ModuleName, BaseOfDll, SizeOfDll));
+        return ( ::SymEnumerateModules ( m_hProcess           ,
+                                         EnumModulesCallback  ,
+                                         UserContext           ) ) ;
     }
 
-    BOOL EnumerateLoadedModules(IN PENUMLOADED_MODULES_CALLBACK EnumLoadedModulesCallback, IN PVOID UserContext)
+    BOOL SymLoadModule ( IN  HANDLE hFile       ,
+                         IN  PSTR   ImageName   ,
+                         IN  PSTR   ModuleName  ,
+                         IN  DWORD  BaseOfDll   ,
+                         IN  DWORD  SizeOfDll    )
     {
-        return (::EnumerateLoadedModules(m_hProcess, EnumLoadedModulesCallback, UserContext));
+        return ( ::SymLoadModule ( m_hProcess   ,
+                                   hFile        ,
+                                   ImageName    ,
+                                   ModuleName   ,
+                                   BaseOfDll    ,
+                                   SizeOfDll     ) ) ;
     }
 
-    BOOL SymUnloadModule(IN DWORD BaseOfDll)
+    BOOL EnumerateLoadedModules ( IN PENUMLOADED_MODULES_CALLBACK
+                                              EnumLoadedModulesCallback,
+                                  IN PVOID         UserContext       )
     {
-        return (::SymUnloadModule(m_hProcess, BaseOfDll));
+        return ( ::EnumerateLoadedModules ( m_hProcess                ,
+                                            EnumLoadedModulesCallback ,
+                                            UserContext              ));
     }
 
-    BOOL SymGetModuleInfo(IN DWORD dwAddr, OUT PIMAGEHLP_MODULE ModuleInfo)
+    BOOL SymUnloadModule ( IN  DWORD BaseOfDll )
     {
-        return (::SymGetModuleInfo(m_hProcess, dwAddr, ModuleInfo));
+        return ( ::SymUnloadModule ( m_hProcess , BaseOfDll ) ) ;
     }
 
-    DWORD SymGetModuleBase(IN DWORD dwAddr)
+    BOOL SymGetModuleInfo ( IN  DWORD            dwAddr     ,
+                            OUT PIMAGEHLP_MODULE ModuleInfo  )
     {
-        return (::SymGetModuleBase(m_hProcess, dwAddr));
+        return ( ::SymGetModuleInfo ( m_hProcess    ,
+                                      dwAddr        ,
+                                      ModuleInfo     ) ) ;
     }
 
-    /*----------------------------------------------------------------------
-                           Public Symbol Manipulation
-    ----------------------------------------------------------------------*/
-  public:
-    BOOL SymEnumerateSymbols(IN DWORD BaseOfDll, IN PSYM_ENUMSYMBOLS_CALLBACK EnumSymbolsCallback, IN PVOID UserContext)
+    DWORD SymGetModuleBase ( IN DWORD dwAddr )
     {
-        return (::SymEnumerateSymbols(m_hProcess, BaseOfDll, EnumSymbolsCallback, UserContext));
+        return ( ::SymGetModuleBase ( m_hProcess , dwAddr ) ) ;
     }
 
-    BOOL SymGetSymFromAddr(IN DWORD dwAddr, OUT PDWORD pdwDisplacement, OUT PIMAGEHLP_SYMBOL Symbol)
+/*----------------------------------------------------------------------
+                       Public Symbol Manipulation
+----------------------------------------------------------------------*/
+public      :
+
+    BOOL SymEnumerateSymbols (IN DWORD                        BaseOfDll,
+                              IN PSYM_ENUMSYMBOLS_CALLBACK
+                                                    EnumSymbolsCallback,
+                              IN PVOID                     UserContext )
     {
-        return (::SymGetSymFromAddr(m_hProcess, dwAddr, pdwDisplacement, Symbol));
+        return ( ::SymEnumerateSymbols ( m_hProcess          ,
+                                         BaseOfDll           ,
+                                         EnumSymbolsCallback ,
+                                         UserContext          ) ) ;
     }
 
-    BOOL SymGetSymFromName(IN LPSTR Name, OUT PIMAGEHLP_SYMBOL Symbol)
+    BOOL SymGetSymFromAddr ( IN  DWORD               dwAddr          ,
+                             OUT PDWORD              pdwDisplacement ,
+                             OUT PIMAGEHLP_SYMBOL    Symbol           )
     {
-        return (::SymGetSymFromName(m_hProcess, Name, Symbol));
+        return ( ::SymGetSymFromAddr ( m_hProcess       ,
+                                       dwAddr           ,
+                                       pdwDisplacement  ,
+                                       Symbol            ) ) ;
     }
 
-    BOOL SymGetSymNext(IN OUT PIMAGEHLP_SYMBOL Symbol)
+    BOOL SymGetSymFromName ( IN  LPSTR            Name   ,
+                             OUT PIMAGEHLP_SYMBOL Symbol  )
     {
-        return (::SymGetSymNext(m_hProcess, Symbol));
+        return ( ::SymGetSymFromName ( m_hProcess ,
+                                       Name       ,
+                                       Symbol      ) ) ;
     }
 
-    BOOL SymGetSymPrev(IN OUT PIMAGEHLP_SYMBOL Symbol)
+    BOOL SymGetSymNext ( IN OUT PIMAGEHLP_SYMBOL Symbol )
     {
-        return (::SymGetSymPrev(m_hProcess, Symbol));
+        return ( ::SymGetSymNext ( m_hProcess , Symbol ) ) ;
     }
 
-    /*----------------------------------------------------------------------
-                        Public Source Line Manipulation
-    ----------------------------------------------------------------------*/
-  public:
-    BOOL SymGetLineFromAddr(IN DWORD dwAddr, OUT PDWORD pdwDisplacement, OUT PIMAGEHLP_LINE Line)
+    BOOL SymGetSymPrev ( IN OUT PIMAGEHLP_SYMBOL Symbol )
+    {
+        return ( ::SymGetSymPrev ( m_hProcess , Symbol ) ) ;
+    }
+
+/*----------------------------------------------------------------------
+                    Public Source Line Manipulation
+----------------------------------------------------------------------*/
+public      :
+
+    BOOL SymGetLineFromAddr ( IN  DWORD          dwAddr          ,
+                              OUT PDWORD         pdwDisplacement ,
+                              OUT PIMAGEHLP_LINE Line             )
     {
 
 #ifdef DO_NOT_WORK_AROUND_SRCLINE_BUG
         // Just pass along the values returned by the main function.
-        return (::SymGetLineFromAddr(m_hProcess, dwAddr, pdwDisplacement, Line));
+        return ( ::SymGetLineFromAddr ( m_hProcess      ,
+                                        dwAddr          ,
+                                        pdwDisplacement ,
+                                        Line             ) ) ;
 
 #else
         // The problem is that the symbol engine finds only those source
         // line addresses (after the first lookup) that fall exactly on
         // a zero displacement. I’ll walk backward 100 bytes to
         // find the line and return the proper displacement.
-        DWORD dwTempDis = 0;
-        while (FALSE == ::SymGetLineFromAddr(m_hProcess, dwAddr - dwTempDis, pdwDisplacement, Line))
+        DWORD dwTempDis = 0 ;
+        while ( FALSE == ::SymGetLineFromAddr ( m_hProcess          ,
+                                                dwAddr - dwTempDis  ,
+                                                pdwDisplacement     ,
+                                                Line                 ) )
         {
-            dwTempDis += 1;
-            if (100 == dwTempDis)
+            dwTempDis += 1 ;
+            if ( 100 == dwTempDis )
             {
-                return (FALSE);
+                return ( FALSE ) ;
             }
         }
         // I found it and the source line information is correct, so
         // change the displacement if I had to search backward to find
         // the source line.
-        if (0 != dwTempDis)
+        if ( 0 != dwTempDis )
         {
-            *pdwDisplacement = dwTempDis;
+            *pdwDisplacement = dwTempDis ;
         }
-        return (TRUE);
+        return ( TRUE ) ;
 #endif // DO_NOT_WORK_AROUND_SRCLINE_BUG
     }
 
-    BOOL SymGetLineFromName(IN LPSTR ModuleName, IN LPSTR FileName, IN DWORD dwLineNumber, OUT PLONG plDisplacement,
-                            IN OUT PIMAGEHLP_LINE Line)
+    BOOL SymGetLineFromName ( IN     LPSTR          ModuleName      ,
+                              IN     LPSTR          FileName        ,
+                              IN     DWORD          dwLineNumber    ,
+                              OUT    PLONG          plDisplacement  ,
+                              IN OUT PIMAGEHLP_LINE Line             )
     {
-        return (::SymGetLineFromName(m_hProcess, ModuleName, FileName, dwLineNumber, plDisplacement, Line));
+        return ( ::SymGetLineFromName ( m_hProcess       ,
+                                        ModuleName       ,
+                                        FileName         ,
+                                        dwLineNumber     ,
+                                        plDisplacement   ,
+                                        Line              ) ) ;
     }
 
-    BOOL SymGetLineNext(IN OUT PIMAGEHLP_LINE Line)
+    BOOL SymGetLineNext ( IN OUT PIMAGEHLP_LINE Line )
     {
-        return (::SymGetLineNext(m_hProcess, Line));
+        return ( ::SymGetLineNext ( m_hProcess , Line ) ) ;
     }
 
-    BOOL SymGetLinePrev(IN OUT PIMAGEHLP_LINE Line)
+    BOOL SymGetLinePrev ( IN OUT PIMAGEHLP_LINE Line )
     {
-        return (::SymGetLinePrev(m_hProcess, Line));
+        return ( ::SymGetLinePrev ( m_hProcess , Line ) ) ;
     }
 
-    BOOL SymMatchFileName(IN LPSTR FileName, IN LPSTR Match, OUT LPSTR *FileNameStop, OUT LPSTR *MatchStop)
+    BOOL SymMatchFileName ( IN  LPSTR   FileName        ,
+                            IN  LPSTR   Match           ,
+                            OUT LPSTR * FileNameStop    ,
+                            OUT LPSTR * MatchStop        )
     {
-        return (::SymMatchFileName(FileName, Match, FileNameStop, MatchStop));
+        return ( ::SymMatchFileName ( FileName       ,
+                                      Match          ,
+                                      FileNameStop   ,
+                                      MatchStop       ) ) ;
     }
 
-    /*----------------------------------------------------------------------
-                              Public Miscellaneous Members
-    ----------------------------------------------------------------------*/
-  public:
-    LPVOID SymFunctionTableAccess(DWORD AddrBase)
+/*----------------------------------------------------------------------
+                          Public Miscellaneous Members
+----------------------------------------------------------------------*/
+public      :
+
+    LPVOID SymFunctionTableAccess ( DWORD AddrBase )
     {
-        return (::SymFunctionTableAccess(m_hProcess, AddrBase));
+        return ( ::SymFunctionTableAccess ( m_hProcess , AddrBase ) ) ;
     }
 
-    BOOL SymGetSearchPath(OUT LPSTR SearchPath, IN DWORD SearchPathLength)
+    BOOL SymGetSearchPath ( OUT LPSTR SearchPath        ,
+                            IN  DWORD SearchPathLength   )
     {
-        return (::SymGetSearchPath(m_hProcess, SearchPath, SearchPathLength));
+        return ( ::SymGetSearchPath ( m_hProcess       ,
+                                      SearchPath       ,
+                                      SearchPathLength  ) ) ;
     }
 
-    BOOL SymSetSearchPath(IN LPSTR SearchPath)
+    BOOL SymSetSearchPath ( IN LPSTR SearchPath )
     {
-        return (::SymSetSearchPath(m_hProcess, SearchPath));
+        return ( ::SymSetSearchPath ( m_hProcess , SearchPath ) ) ;
     }
 
-    BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN PVOID UserContext)
+    BOOL SymRegisterCallback ( IN PSYMBOL_REGISTERED_CALLBACK
+                                                       CallbackFunction,
+                               IN PVOID                UserContext    )
     {
-        return (::SymRegisterCallback(m_hProcess, CallbackFunction, UserContext));
+        return ( ::SymRegisterCallback ( m_hProcess         ,
+                                         CallbackFunction   ,
+                                         UserContext         ) ) ;
     }
 
-    /*----------------------------------------------------------------------
-                             Protected Data Members
-    ----------------------------------------------------------------------*/
-  protected:
+
+/*----------------------------------------------------------------------
+                         Protected Data Members
+----------------------------------------------------------------------*/
+protected   :
     // The unique value that will be used for this instance of the
     // symbol engine. This value doesn’t have to be an actual
     // process value, just a unique value.
-    HANDLE m_hProcess;
-};
+    HANDLE      m_hProcess      ;
 
-#endif // _SYMBOLENGINE_H
+} ;
+
+#endif      // _SYMBOLENGINE_H

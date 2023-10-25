@@ -1,239 +1,218 @@
 #pragma once
 
-#include "ai_monster_defs.h"
 #include "control_combase.h"
+#include "ai_monster_defs.h"
 
-struct SEventVelocityBounce : public ControlCom::IEventData
-{
-    float m_ratio;
+struct SEventVelocityBounce : public ControlCom::IEventData {
+	float	m_ratio;
 
-    IC SEventVelocityBounce(float ratio) : m_ratio(ratio)
-    {
-    }
+	IC		SEventVelocityBounce(float ratio) : m_ratio(ratio) {}
 };
+
 
 //////////////////////////////////////////////////////////////////////////
-class CControlAnimationBase : public CControl_ComBase
-{
-    typedef CControl_ComBase inherited;
+class CControlAnimationBase : public CControl_ComBase {
+		typedef CControl_ComBase inherited;
+protected:
 
-  protected:
-    REPLACED_ANIM m_tReplacedAnims; // анимации подмены
+		REPLACED_ANIM			m_tReplacedAnims;	// анимации подмены
 
-    // сохранённые анимации
-    EMotionAnim prev_motion;
+		// сохранённые анимации 
+		EMotionAnim				prev_motion; 
 
-    // исправления сосояния 'бега на месте'
-    TTime time_start_stand;
+		// исправления сосояния 'бега на месте'
+		TTime					time_start_stand;
 
-    // работа с анимациями атаки
-    TTime aa_time_last_attack; // время последнего нанесения хита
+		// работа с анимациями атаки
+		TTime					aa_time_last_attack;	// время последнего нанесения хита
 
-    // -------------------------------------------------------------------------
-    u32 spec_params; // дополнительные параметры
+		// -------------------------------------------------------------------------
+		u32						spec_params;			// дополнительные параметры
 
-    TTime fx_time_last_play;
+		TTime					fx_time_last_play;
 
-    // -------------------------------------------------------------------------------------
-    // Acceleration
+		// -------------------------------------------------------------------------------------
+		// Acceleration
 
-    struct
-    {
-        bool active;
-        bool enable_braking; // не использовать при торможении
+		struct {
+			bool					active;				
+			bool					enable_braking;	// не использовать при торможении
 
-        EAccelType type;
+			EAccelType				type;	
 
-        float calm;
-        float aggressive;
+			float					calm;
+			float					aggressive;
 
-        VELOCITY_CHAIN_VEC chain;
-    } m_accel;
+			VELOCITY_CHAIN_VEC		chain;
+		} m_accel;
 
-    // ---------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------
 
-    EMotionAnim spec_anim;
+		EMotionAnim				spec_anim; 
 
-    MOTION_ITEM_MAP m_tMotions;            // карта соответсвий EAction к SMotionItem
-    TRANSITION_ANIM_VECTOR m_tTransitions; // вектор переходов из одной анимации в другую
+		MOTION_ITEM_MAP			m_tMotions;			// карта соответсвий EAction к SMotionItem
+		TRANSITION_ANIM_VECTOR	m_tTransitions;		// вектор переходов из одной анимации в другую
 
-    t_fx_index default_fx_indexes;
-    FX_MAP_STRING fx_map_string;
-    FX_MAP_U16 fx_map_u16;
-    bool map_converted;
+		t_fx_index				default_fx_indexes;
+		FX_MAP_STRING			fx_map_string;
+		FX_MAP_U16				fx_map_u16;
+		bool					map_converted;
 
-    AA_VECTOR m_attack_anims;
+		AA_VECTOR				m_attack_anims;
 
-    bool m_state_attack;
 
-  protected:
-    ANIM_TO_MOTION_MAP m_anim_motion_map;
+		bool					m_state_attack;
 
-    ANIM_ITEM_VECTOR m_anim_storage;
-    void init_anim_storage();
-    void free_anim_storage();
+protected:
 
-  public:
-    EAction m_tAction;
+	ANIM_TO_MOTION_MAP			m_anim_motion_map;
+	
+	ANIM_ITEM_VECTOR			m_anim_storage;			
+	void						init_anim_storage	();
+	void						free_anim_storage	();
 
-    float m_prev_character_velocity;
+public:
 
-  public:
-    CControlAnimationBase();
-    virtual ~CControlAnimationBase();
+	EAction					m_tAction;
 
-    // Control_ComBase interface
-    virtual void reinit();
-    virtual void on_event(ControlCom::EEventType, ControlCom::IEventData *);
-    virtual void on_start_control(ControlCom::EControlType type);
-    virtual void on_stop_control(ControlCom::EControlType type);
-    virtual void update_frame();
+	float					m_prev_character_velocity;
 
-    void ScheduledInit();
+public:
+				CControlAnimationBase	();
+	virtual		~CControlAnimationBase	();
 
-    // создание карты анимаций (выполнять на Monster::Load)
-    void AddAnim(EMotionAnim ma, LPCSTR tn, int s_id, SVelocityParam *vel, EPState p_s);
-    void AddAnim(EMotionAnim ma, LPCSTR tn, int s_id, SVelocityParam *vel, EPState p_s, LPCSTR fx_front, LPCSTR fx_back,
-                 LPCSTR fx_left, LPCSTR fx_right);
+	// Control_ComBase interface
+	virtual void		reinit			();
+	virtual void		on_event		(ControlCom::EEventType, ControlCom::IEventData*);	
+	virtual void		on_start_control(ControlCom::EControlType type);
+	virtual void		on_stop_control	(ControlCom::EControlType type);
+	virtual void		update_frame	();
 
-    // -------------------------------------
+			void		ScheduledInit	();
 
-    // добавить анимацию перехода (A - Animation, S - Position)
-    void AddTransition(EMotionAnim from, EMotionAnim to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
-    void AddTransition(EMotionAnim from, EPState to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
-    void AddTransition(EPState from, EMotionAnim to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
-    void AddTransition(EPState from, EPState to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
+	// создание карты анимаций (выполнять на Monster::Load)
+	void		AddAnim					(EMotionAnim ma, LPCSTR tn, int s_id, SVelocityParam *vel, EPState p_s);
+	void		AddAnim					(EMotionAnim ma, LPCSTR tn, int s_id, SVelocityParam *vel, EPState p_s, LPCSTR fx_front, LPCSTR fx_back, LPCSTR fx_left, LPCSTR fx_right);
 
-    // -------------------------------------
+	// -------------------------------------
 
-    void LinkAction(EAction act, EMotionAnim pmt_motion, EMotionAnim pmt_left, EMotionAnim pmt_right, float pmt_angle);
-    void LinkAction(EAction act, EMotionAnim pmt_motion);
+	// добавить анимацию перехода (A - Animation, S - Position)
+	void		AddTransition			(EMotionAnim from,	EMotionAnim to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
+	void		AddTransition			(EMotionAnim from,	EPState to,		EMotionAnim trans, bool chain, bool skip_aggressive = false);
+	void		AddTransition			(EPState from,		EMotionAnim to, EMotionAnim trans, bool chain, bool skip_aggressive = false);
+	void		AddTransition			(EPState from,		EPState to,		EMotionAnim trans, bool chain, bool skip_aggressive = false);
 
-    // -------------------------------------
+	// -------------------------------------
 
-    void AddReplacedAnim(bool *b_flag, EMotionAnim pmt_cur_anim, EMotionAnim pmt_new_anim);
+	void		LinkAction				(EAction act, EMotionAnim pmt_motion, EMotionAnim pmt_left, EMotionAnim pmt_right, float pmt_angle);
+	void		LinkAction				(EAction act, EMotionAnim pmt_motion);
 
-    // -------------------------------------
-    bool CheckTransition(EMotionAnim from, EMotionAnim to);
+	// -------------------------------------
 
-    void SetSpecParams(u32 param)
-    {
-        spec_params |= param;
-    }
-    void SetCurAnim(EMotionAnim a)
-    {
-        cur_anim_info().motion = a;
-    }
-    EMotionAnim GetCurAnim()
-    {
-        return cur_anim_info().motion;
-    }
+	void		AddReplacedAnim			(bool *b_flag, EMotionAnim pmt_cur_anim, EMotionAnim pmt_new_anim);
 
-    // работа с анимациями атак
-    void AA_reload(LPCSTR section);
-    SAAParam &AA_GetParams(LPCSTR anim_name);
-    SAAParam &AA_GetParams(MotionID motion, float time_perc);
+	// -------------------------------------
+	bool		CheckTransition			(EMotionAnim from, EMotionAnim to);
 
-    // FX's
-    void FX_Play(EHitSide side, float amount);
+	void		SetSpecParams			(u32 param) {spec_params |= param;}
+	void		SetCurAnim				(EMotionAnim a) {cur_anim_info().motion = a;}
+	EMotionAnim	GetCurAnim				() {return  cur_anim_info().motion;} 
 
-    MotionID get_motion_id(EMotionAnim a, u32 index = u32(-1));
+	// работа с анимациями атак
+	void		AA_reload				(LPCSTR section);
+	SAAParam	&AA_GetParams			(LPCSTR anim_name);
+	SAAParam	&AA_GetParams			(MotionID motion, float time_perc);
 
-  protected:
-    void UpdateAnimCount();
+	// FX's
+	void		FX_Play					(EHitSide side, float amount);
 
-    // работа с анимациями атак
-    void AA_Clear();
-    void AA_SwitchAnimation(EMotionAnim a, u32 i3);
+	MotionID	get_motion_id			(EMotionAnim a, u32 index = u32(-1));
 
-    // дополнительные функции
-    EPState GetState(EMotionAnim a);
-    void CheckReplacedAnim();
+protected:	
 
-    CMotionDef *get_motion_def(SAnimItem *it, u32 index);
+	void		UpdateAnimCount			();
 
-  public:
-    float GetAnimSpeed(EMotionAnim anim);
-    bool IsStandCurAnim();
-    bool IsTurningCurAnim();
-    void ValidateAnimation();
+	// работа с анимациями атак
+	void		AA_Clear				(); 
+	void		AA_SwitchAnimation		(EMotionAnim a, u32 i3);
 
-    //////////////////////////////////////////////////////////////////////////
-  protected:
-    void update();
+	// дополнительные функции
+	EPState		GetState				(EMotionAnim a);
+	void		CheckReplacedAnim		();
 
-  protected:
-    void SelectAnimation();
-    void SelectVelocities();
+	CMotionDef	*get_motion_def			(SAnimItem *it, u32 index);
 
-    EAction GetActionFromPath();
-    EAction VelocityIndex2Action(u32 velocity_index);
+public:
+	float		GetAnimSpeed			(EMotionAnim anim);
+	bool		IsStandCurAnim			();
+	bool		IsTurningCurAnim		();
+	void		ValidateAnimation		();
+	
+	//////////////////////////////////////////////////////////////////////////
+protected:
+	void		update					();
 
-    void stop_now();
+protected:
+	void		SelectAnimation			();
+	void		SelectVelocities		();
 
-    //////////////////////////////////////////////////////////////////////////
-    // DEBUG
+	EAction		GetActionFromPath		();
+	EAction		VelocityIndex2Action	(u32 velocity_index);
 
-  protected:
-    LPCSTR GetAnimationName(EMotionAnim anim);
-    LPCSTR GetActionName(EAction action);
 
-    // end DEBUG
-    //////////////////////////////////////////////////////////////////////////
+	void		stop_now				();
 
-  public:
-    //-------------------------------------------------------------------------------
-    // Acceleration
+	//////////////////////////////////////////////////////////////////////////
+	// DEBUG
 
-    void accel_init();
-    void accel_load(LPCSTR section);
+protected:
+	LPCSTR		GetAnimationName		(EMotionAnim anim);
+	LPCSTR		GetActionName			(EAction action);
 
-    void accel_activate(EAccelType type);
-    IC void accel_deactivate()
-    {
-        m_accel.active = false;
-        m_accel.enable_braking = false;
-    }
-    IC void accel_set_braking(bool val = true)
-    {
-        m_accel.enable_braking = val;
-    }
+	// end DEBUG
+	//////////////////////////////////////////////////////////////////////////
 
-    float accel_get(EAccelValue val = eAV_Accel);
+public:
+	//-------------------------------------------------------------------------------
+	// Acceleration
 
-    IC bool accel_active(EAccelValue val = eAV_Accel)
-    {
-        return (val == eAV_Accel) ? m_accel.active : m_accel.enable_braking;
-    }
+	void	accel_init				();
+	void	accel_load				(LPCSTR section);
 
-    void accel_chain_add(EMotionAnim anim1, EMotionAnim anim2);
-    bool accel_chain_get(float cur_speed, EMotionAnim target_anim, EMotionAnim &new_anim, float &a_speed);
-    bool accel_chain_test();
+	void	accel_activate			(EAccelType type);
+	IC	void	accel_deactivate		() {m_accel.active = false;	m_accel.enable_braking = false;}
+	IC	void	accel_set_braking		(bool val = true) {m_accel.enable_braking = val;}
 
-    bool accel_check_braking(float before_interval, float nominal_speed);
-    bool braking_mode;
+	float	accel_get				(EAccelValue val = eAV_Accel);
 
-    // --------------------------------------------------------------------------------
+	IC	bool	accel_active			(EAccelValue val = eAV_Accel) {return (val == eAV_Accel) ? m_accel.active : m_accel.enable_braking;}
 
-    void CheckVelocityBounce();
+	void	accel_chain_add			(EMotionAnim anim1, EMotionAnim anim2);
+	bool	accel_chain_get			(float cur_speed, EMotionAnim target_anim, EMotionAnim &new_anim, float &a_speed);
+	bool	accel_chain_test		();
 
-    // Other
-    void SetTurnAnimation();
+	bool	accel_check_braking		(float before_interval, float nominal_speed);
+	bool	braking_mode;
 
-    // MotionDef to animation name translation
-    void AddAnimTranslation(const MotionID &motion, LPCSTR str);
-    shared_str GetAnimTranslation(const MotionID &motion);
+	// --------------------------------------------------------------------------------	
 
-  public:
-    // информация о текущей анимации
-    SCurrentAnimationInfo m_cur_anim;
-    SCurrentAnimationInfo &cur_anim_info()
-    {
-        return m_cur_anim;
-    }
+	void	CheckVelocityBounce		();
 
-    void select_animation(bool anim_end = false);
-    void set_animation_speed();
+	// Other
+	void	SetTurnAnimation		();
 
-    void check_hit(MotionID motion, float time_perc);
+	// MotionDef to animation name translation
+	void		AddAnimTranslation		(const MotionID &motion, LPCSTR str);
+	shared_str	GetAnimTranslation		(const MotionID &motion);
+public:
+
+	// информация о текущей анимации
+	SCurrentAnimationInfo	m_cur_anim;
+	SCurrentAnimationInfo	&cur_anim_info() {return m_cur_anim;}
+
+	void					select_animation	(bool anim_end = false);
+	void					set_animation_speed	();
+
+	void					check_hit			(MotionID motion, float time_perc);
 };
+

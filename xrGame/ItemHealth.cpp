@@ -1,5 +1,5 @@
-#include "itemhealth.h"
 #include "stdafx.h"
+#include "itemhealth.h"
 
 CItemHealth::CItemHealth(void)
 {

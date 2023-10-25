@@ -3,12 +3,12 @@
 
 class CAI_Boar;
 
-class CStateManagerBoar : public CMonsterStateManager<CAI_Boar>
-{
-    typedef CMonsterStateManager<CAI_Boar> inherited;
+class CStateManagerBoar : public CMonsterStateManager<CAI_Boar> {
+	typedef CMonsterStateManager<CAI_Boar> inherited;
 
-  public:
-    CStateManagerBoar(CAI_Boar *monster);
+public:
 
-    virtual void execute();
+					CStateManagerBoar	(CAI_Boar *monster); 
+
+	virtual void	execute				();
 };

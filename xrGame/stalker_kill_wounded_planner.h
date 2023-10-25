@@ -12,21 +12,20 @@
 
 class CAI_Stalker;
 
-class CStalkerKillWoundedPlanner : public CActionPlannerActionScript<CAI_Stalker>
-{
-  private:
-    typedef CActionPlannerActionScript<CAI_Stalker> inherited;
+class CStalkerKillWoundedPlanner : public CActionPlannerActionScript<CAI_Stalker> {
+private:
+	typedef CActionPlannerActionScript<CAI_Stalker>	inherited;
 
-  private:
-    void add_evaluators();
-    void add_actions();
+private:
+			void	add_evaluators				();
+			void	add_actions					();
 
-  public:
-    CStalkerKillWoundedPlanner(CAI_Stalker *object = 0, LPCSTR action_name = "");
-    virtual ~CStalkerKillWoundedPlanner();
-    virtual void setup(CAI_Stalker *object, CPropertyStorage *storage);
-    virtual void update();
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+public:
+					CStalkerKillWoundedPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
+	virtual			~CStalkerKillWoundedPlanner	();
+	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
+	virtual void	update						();
+	virtual void	initialize					();
+	virtual void	execute						();
+	virtual void	finalize					();
 };

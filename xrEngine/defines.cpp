@@ -6,13 +6,13 @@ ECORE_API BOOL bDebug = FALSE;
 
 // Video
 //. u32			psCurrentMode		= 1024;
-u32 psCurrentVidMode[2] = {1024, 768};
-u32 psCurrentBPP = 32;
+u32			psCurrentVidMode[2] = { 1024,768 };
+u32			psCurrentBPP = 32;
 // release version always has "mt_*" enabled
-Flags32 psDeviceFlags = {rsFullscreen | rsDetails | mtPhysics | mtSound | mtNetwork | rsDrawStatic | rsDrawDynamic};
+Flags32		psDeviceFlags = { rsFullscreen | rsDetails | mtPhysics | mtSound | mtNetwork | rsDrawStatic | rsDrawDynamic };
 
 // textures
-int psTextureLOD = 0;
+int			psTextureLOD = 0;
 
-// Weapon
-u32 psWpnZoomButtonMode = 2;
+//Weapon
+u32	psWpnZoomButtonMode = 2;

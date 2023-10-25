@@ -6,17 +6,20 @@
 //	Description : Particle parameters class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "particle_params.h"
 #include "pch_script.h"
+#include "particle_params.h"
 
 using namespace luabind;
 
-#pragma optimize("s", on)
+#pragma optimize("s",on)
 void CParticleParams::script_register(lua_State *L)
 {
-    module(L)[class_<CParticleParams>("particle_params")
-                  .def(constructor<>())
-                  .def(constructor<const Fvector &>())
-                  .def(constructor<const Fvector &, const Fvector &>())
-                  .def(constructor<const Fvector &, const Fvector &, const Fvector &>())];
+	module(L)
+	[
+		class_<CParticleParams>("particle_params")
+			.def(								constructor<>())
+			.def(								constructor<const Fvector &>())
+			.def(								constructor<const Fvector &,const Fvector &>())
+			.def(								constructor<const Fvector &,const Fvector &,const Fvector &>())
+	];
 }

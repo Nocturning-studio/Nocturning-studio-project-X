@@ -3,16 +3,15 @@
 
 class CCat;
 
-class CStateManagerCat : public CMonsterStateManager<CCat>
-{
+class CStateManagerCat : public CMonsterStateManager<CCat> {
 
-    typedef CMonsterStateManager<CCat> inherited;
+	typedef CMonsterStateManager<CCat> inherited;
 
-    u32 m_rot_jump_last_time;
+	u32					m_rot_jump_last_time;
 
-  public:
-    CStateManagerCat(CCat *obj);
-    virtual ~CStateManagerCat();
+public:
+						CStateManagerCat	(CCat *obj);	
+	virtual				~CStateManagerCat	();
 
-    virtual void execute();
+	virtual	void		execute				();
 };

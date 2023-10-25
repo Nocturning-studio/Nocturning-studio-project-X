@@ -8,14 +8,13 @@
 
 #include "stdafx.h"
 
-#pragma comment(lib, "xrCore.lib")
-#pragma comment(lib, "xrLUA.lib")
+#pragma comment(lib,"xrCore.lib")
+#pragma comment(lib,"xrLUA.lib")
 
 // I need this because we have to exclude option /EHsc (exception handling) from the project
-namespace boost
-{
-void throw_exception(const std::exception &A)
-{
-    Debug.fatal(DEBUG_INFO, "Boost exception raised %s", A.what());
-}
-}; // namespace boost
+namespace boost {
+	void throw_exception(const std::exception &A)
+	{
+		Debug.fatal(DEBUG_INFO,"Boost exception raised %s",A.what());
+	}
+};

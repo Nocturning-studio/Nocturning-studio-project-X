@@ -8,12 +8,12 @@
 
 #include "pch_script.h"
 
-#if 0 // def DEBUG
+#if 0//def DEBUG
 
 #ifndef BOOST_NO_STRINGSTREAM
-#include <sstream>
+#	include <sstream>
 #else
-#include <strstream>
+#	include <strstream>
 #endif
 
 xr_string to_string					(luabind::object const& o)
@@ -291,9 +291,9 @@ void print_help							(lua_State *L)
 	Msg					("End of list of the namespaces exported to LUA\n");
 }
 #else
-void print_help(lua_State *L)
+void print_help							(lua_State *L)
 {
-    Msg("! Release build doesn't support lua-help :(");
+	Msg					("! Release build doesn't support lua-help :(");
 }
 #endif
 

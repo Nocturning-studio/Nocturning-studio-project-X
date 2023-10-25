@@ -8,13 +8,13 @@
 
 #pragma once
 
-IC bool CObjectHandler::hammer_is_clutched() const
+IC	bool CObjectHandler::hammer_is_clutched			() const
 {
-    return (m_hammer_is_clutched);
+	return				(m_hammer_is_clutched);
 }
 
-IC CObjectHandlerPlanner &CObjectHandler::planner() const
+IC	CObjectHandlerPlanner &CObjectHandler::planner	() const
 {
-    VERIFY(m_planner);
-    return (*m_planner);
+	VERIFY				(m_planner);
+	return				(*m_planner);
 }

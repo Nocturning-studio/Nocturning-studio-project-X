@@ -8,6 +8,7 @@
 
 #pragma once
 
-IC CALifeSurgeManager::CALifeSurgeManager(xrServer *server, LPCSTR section) : inherited(server, section)
+IC	CALifeSurgeManager::CALifeSurgeManager				(xrServer *server, LPCSTR section) :
+	inherited		(server,section)
 {
 }

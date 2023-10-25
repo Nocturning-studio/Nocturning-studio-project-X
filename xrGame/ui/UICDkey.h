@@ -2,28 +2,26 @@
 #pragma once
 #include "UIEditBox.h"
 
-class CUICDkey : public CUIEditBox
-{
-  public:
-    CUICDkey();
-    virtual void SetText(LPCSTR str)
-    {
-    }
-    virtual const char *GetText();
-    // CUIOptionsItem
-    virtual void SetCurrentValue();
-    virtual void SaveValue();
-    virtual bool IsChanged();
+class CUICDkey : public CUIEditBox {
+public:
+						CUICDkey		();
+	virtual	void		SetText			(LPCSTR str) {}
+	virtual	const char* GetText			();
+	// CUIOptionsItem
+	virtual void	SetCurrentValue();
+	virtual void	SaveValue();
+	virtual bool	IsChanged();
+	
+			void	CreateCDKeyEntry();			
 
-    void CreateCDKeyEntry();
+	virtual void	Draw();
+	virtual void	AddChar(char c);
+	virtual void	OnFocusLost		();
 
-    virtual void Draw();
-    virtual void AddChar(char c);
-    virtual void OnFocusLost();
+private:
+			LPCSTR	AddHyphens(LPCSTR str);
+			LPCSTR	DelHyphens(LPCSTR str);
 
-  private:
-    LPCSTR AddHyphens(LPCSTR str);
-    LPCSTR DelHyphens(LPCSTR str);
 };
 
-extern void GetCDKey(char *CDKeyStr);
+extern	void	GetCDKey(char* CDKeyStr);

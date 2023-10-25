@@ -1,7 +1,7 @@
 #pragma once
 
-interface IPhysicShellCreator
-{
-  public:
-    virtual void CreatePhysicsShell() = 0;
+interface IPhysicShellCreator {
+public:
+	virtual void CreatePhysicsShell() = 0;
 };
+
