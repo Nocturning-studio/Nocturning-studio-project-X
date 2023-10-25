@@ -6,26 +6,31 @@
 #pragma once
 #include "inventory_item_object.h"
 
-class CGrenadeLauncher : public CInventoryItemObject {
-private:
-	typedef CInventoryItemObject inherited;
-public:
-	CGrenadeLauncher (void);
-	virtual ~CGrenadeLauncher(void);
+class CGrenadeLauncher : public CInventoryItemObject
+{
+  private:
+    typedef CInventoryItemObject inherited;
 
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void Load				(LPCSTR section);
-	virtual void net_Destroy		();
+  public:
+    CGrenadeLauncher(void);
+    virtual ~CGrenadeLauncher(void);
 
-	virtual void OnH_A_Chield		();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
+    virtual BOOL net_Spawn(CSE_Abstract *DC);
+    virtual void Load(LPCSTR section);
+    virtual void net_Destroy();
 
-	virtual void UpdateCL			();
-	virtual void renderable_Render	();
+    virtual void OnH_A_Chield();
+    virtual void OnH_B_Independent(bool just_before_destroy);
 
-	float	GetGrenadeVel() {return m_fGrenadeVel;}
+    virtual void UpdateCL();
+    virtual void renderable_Render();
 
-protected:
-	//стартовая скорость вылета подствольной гранаты
-	float m_fGrenadeVel;
+    float GetGrenadeVel()
+    {
+        return m_fGrenadeVel;
+    }
+
+  protected:
+    // стартовая скорость вылета подствольной гранаты
+    float m_fGrenadeVel;
 };

@@ -12,33 +12,49 @@ class CGameObject;
 
 class CPhrase
 {
-private:
-	friend CPhraseDialog;
-public:
-	CPhrase(void);
-	virtual ~CPhrase(void);
+  private:
+    friend CPhraseDialog;
 
-	void				SetText			(LPCSTR text)		{m_text = text;}
-	LPCSTR				GetText			()	const;
+  public:
+    CPhrase(void);
+    virtual ~CPhrase(void);
 
-	void				SetID		(const shared_str& id)			{m_ID = id;}
-	const shared_str&	GetID		()	const						{return m_ID;}
+    void SetText(LPCSTR text)
+    {
+        m_text = text;
+    }
+    LPCSTR GetText() const;
 
-	int					GoodwillLevel	()	const			{return m_iGoodwillLevel;}
+    void SetID(const shared_str &id)
+    {
+        m_ID = id;
+    }
+    const shared_str &GetID() const
+    {
+        return m_ID;
+    }
 
-	bool				IsDummy			()	const;
-	CPhraseScript*		GetPhraseScript	()					{return &m_PhraseScript;};
+    int GoodwillLevel() const
+    {
+        return m_iGoodwillLevel;
+    }
 
-protected:
-	//уникальный индекс в списке фраз диалога
-	shared_str		m_ID;
-	//текстовое представление фразы
-	xr_string		m_text;
-	
-	//минимальный уровень благосклоггости, необходимый для того
-	//чтоб фразу можно было сказать
-	int				m_iGoodwillLevel;
-	
-	//для вызова скриптовых функций
-	CPhraseScript	m_PhraseScript;
+    bool IsDummy() const;
+    CPhraseScript *GetPhraseScript()
+    {
+        return &m_PhraseScript;
+    };
+
+  protected:
+    // уникальный индекс в списке фраз диалога
+    shared_str m_ID;
+    // текстовое представление фразы
+    xr_string m_text;
+
+    // минимальный уровень благосклоггости, необходимый для того
+    // чтоб фразу можно было сказать
+    int m_iGoodwillLevel;
+
+    // для вызова скриптовых функций
+    CPhraseScript m_PhraseScript;
 };

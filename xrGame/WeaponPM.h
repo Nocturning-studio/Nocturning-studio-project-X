@@ -6,16 +6,17 @@
 #include "WeaponPistol.h"
 #include "script_export_space.h"
 
-class CWeaponPM: public CWeaponPistol
+class CWeaponPM : public CWeaponPistol
 {
-private:
-	typedef CWeaponPistol inherited;
-protected:
-public:
-					CWeaponPM			();
-	virtual			~CWeaponPM		();
+  private:
+    typedef CWeaponPistol inherited;
 
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+  protected:
+  public:
+    CWeaponPM();
+    virtual ~CWeaponPM();
+
+    DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponPM)
 #undef script_type_list

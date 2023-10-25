@@ -8,14 +8,14 @@
 
 #pragma once
 
-IC	CALifeMonsterBrain::object_type &CALifeMonsterBrain::object				() const
+IC CALifeMonsterBrain::object_type &CALifeMonsterBrain::object() const
 {
-	VERIFY		(m_object);
-	return		(*m_object);
+    VERIFY(m_object);
+    return (*m_object);
 }
 
-IC	CALifeMonsterBrain::movement_manager_type &CALifeMonsterBrain::movement	() const
+IC CALifeMonsterBrain::movement_manager_type &CALifeMonsterBrain::movement() const
 {
-	VERIFY		(m_movement_manager);
-	return		(*m_movement_manager);
+    VERIFY(m_movement_manager);
+    return (*m_movement_manager);
 }

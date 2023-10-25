@@ -8,13 +8,17 @@
 
 #pragma once
 
-#include "space_restrictor.h"
 #include "script_export_space.h"
+#include "space_restrictor.h"
 
-class CSmartZone : public CSpaceRestrictor {
-public:
-	virtual	bool	register_schedule	() const {return true;}
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+class CSmartZone : public CSpaceRestrictor
+{
+  public:
+    virtual bool register_schedule() const
+    {
+        return true;
+    }
+    DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CSmartZone)
 #undef script_type_list

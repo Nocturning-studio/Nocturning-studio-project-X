@@ -8,31 +8,36 @@
 
 #pragma once
 
-#include "GameObject.h"
 #include "../xrEngine/feel_touch.h"
+#include "GameObject.h"
 
-class CTeamBaseZone : public CGameObject, public Feel::Touch {
-protected:
-	u8		m_Team;
-public:
-	typedef	CGameObject	inherited;
+class CTeamBaseZone : public CGameObject, public Feel::Touch
+{
+  protected:
+    u8 m_Team;
 
-	CTeamBaseZone		();
-	virtual			~CTeamBaseZone		();
-	virtual void	reinit				();
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
+  public:
+    typedef CGameObject inherited;
 
-	virtual void	Center				(Fvector &C)	const;
-	virtual float	Radius				() const;
+    CTeamBaseZone();
+    virtual ~CTeamBaseZone();
+    virtual void reinit();
+    virtual BOOL net_Spawn(CSE_Abstract *DC);
+    virtual void net_Destroy();
 
-	virtual void	shedule_Update		(u32 dt);
-	virtual void	feel_touch_new		(CObject* O);
-	virtual void	feel_touch_delete	(CObject* O);
-	virtual BOOL	feel_touch_contact	(CObject* O);
+    virtual void Center(Fvector &C) const;
+    virtual float Radius() const;
 
-	virtual u8		GetZoneTeam			()	{ return m_Team; };
+    virtual void shedule_Update(u32 dt);
+    virtual void feel_touch_new(CObject *O);
+    virtual void feel_touch_delete(CObject *O);
+    virtual BOOL feel_touch_contact(CObject *O);
+
+    virtual u8 GetZoneTeam()
+    {
+        return m_Team;
+    };
 #ifdef DEBUG
-	virtual	void	OnRender			();
+    virtual void OnRender();
 #endif
 };

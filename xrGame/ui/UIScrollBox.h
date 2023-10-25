@@ -1,18 +1,19 @@
 #pragma once
 #include "uibutton.h"
 
-class CUIScrollBox :public CUIStatic
+class CUIScrollBox : public CUIStatic
 {
-	typedef	CUIStatic			inherited;
-public:
-								CUIScrollBox			();
+    typedef CUIStatic inherited;
 
-			void 				SetHorizontal			();
-			void 				SetVertical				();
+  public:
+    CUIScrollBox();
 
-	virtual bool				OnMouse					(float x, float y, EUIMessages mouse_action);
-	virtual void				Draw					();
-						
-protected:
-	bool						m_bIsHorizontal;
+    void SetHorizontal();
+    void SetVertical();
+
+    virtual bool OnMouse(float x, float y, EUIMessages mouse_action);
+    virtual void Draw();
+
+  protected:
+    bool m_bIsHorizontal;
 };

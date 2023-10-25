@@ -1,14 +1,10 @@
-#include "pch_script.h"
 #include "WeaponKnife.h"
+#include "pch_script.h"
 
 using namespace luabind;
 
-#pragma optimize("s",on)
-void CWeaponKnife::script_register	(lua_State *L)
+#pragma optimize("s", on)
+void CWeaponKnife::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<CWeaponKnife,CGameObject>("CWeaponKnife")
-			.def(constructor<>())
-	];
+    module(L)[class_<CWeaponKnife, CGameObject>("CWeaponKnife").def(constructor<>())];
 }

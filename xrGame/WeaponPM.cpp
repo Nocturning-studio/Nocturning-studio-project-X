@@ -1,13 +1,13 @@
-#include "pch_script.h"
 #include "WeaponPM.h"
+#include "pch_script.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 CWeaponPM::CWeaponPM() : CWeaponPistol("PM")
 {
-	m_weight = .5f;
-	m_slot = 1;
+    m_weight = .5f;
+    m_slot = 1;
 }
 
 CWeaponPM::~CWeaponPM()
@@ -16,12 +16,8 @@ CWeaponPM::~CWeaponPM()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
-void CWeaponPM::script_register	(lua_State *L)
+#pragma optimize("s", on)
+void CWeaponPM::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<CWeaponPM,CGameObject>("CWeaponPM")
-			.def(constructor<>())
-	];
+    module(L)[class_<CWeaponPM, CGameObject>("CWeaponPM").def(constructor<>())];
 }

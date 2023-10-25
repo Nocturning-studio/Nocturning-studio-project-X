@@ -1,33 +1,34 @@
 #pragma once
 
-#include "weaponShotgun.h"
 #include "script_export_space.h"
+#include "weaponShotgun.h"
 
-class CWeaponBM16 :public CWeaponShotgun
+class CWeaponBM16 : public CWeaponShotgun
 {
-	typedef CWeaponShotgun inherited;
-protected:
-	MotionSVec		mhud_reload1;
-	MotionSVec		mhud_shot1;
-	MotionSVec		mhud_idle1;
-	MotionSVec		mhud_idle2;
-	MotionSVec		mhud_idle_zoomed_empty;
-	MotionSVec		mhud_zoomed_idle1;
-	MotionSVec		mhud_zoomed_idle2;
+    typedef CWeaponShotgun inherited;
 
-	HUD_SOUND		m_sndReload1;
+  protected:
+    MotionSVec mhud_reload1;
+    MotionSVec mhud_shot1;
+    MotionSVec mhud_idle1;
+    MotionSVec mhud_idle2;
+    MotionSVec mhud_idle_zoomed_empty;
+    MotionSVec mhud_zoomed_idle1;
+    MotionSVec mhud_zoomed_idle2;
 
-public:
-	virtual			~CWeaponBM16					();
-	virtual void	Load							(LPCSTR section);
+    HUD_SOUND m_sndReload1;
 
-protected:
-	virtual void	PlayAnimShoot					();
-	virtual void	PlayAnimReload					();
-	virtual void	PlayReloadSound					();
-	virtual void	PlayAnimIdle					();
+  public:
+    virtual ~CWeaponBM16();
+    virtual void Load(LPCSTR section);
 
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+  protected:
+    virtual void PlayAnimShoot();
+    virtual void PlayAnimReload();
+    virtual void PlayReloadSound();
+    virtual void PlayAnimIdle();
+
+    DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponBM16)
 #undef script_type_list

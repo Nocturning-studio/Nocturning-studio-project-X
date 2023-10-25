@@ -31,30 +31,28 @@
 
 #include "lua.h"
 
-
 /* Modes for luaJIT_setmode. */
-#define LUAJIT_MODE_MASK	0x00ff
+#define LUAJIT_MODE_MASK 0x00ff
 
-enum {
-  LUAJIT_MODE_ENGINE,		/* Set mode for whole JIT engine. */
-  LUAJIT_MODE_DEBUG,		/* Set debug mode (idx = level). */
+enum
+{
+    LUAJIT_MODE_ENGINE, /* Set mode for whole JIT engine. */
+    LUAJIT_MODE_DEBUG,  /* Set debug mode (idx = level). */
 
-  LUAJIT_MODE_FUNC,		/* Change mode for a function. */
-  LUAJIT_MODE_ALLFUNC,		/* Recurse into subroutine protos. */
-  LUAJIT_MODE_ALLSUBFUNC,	/* Change only the subroutines. */
-  LUAJIT_MODE_MAX
+    LUAJIT_MODE_FUNC,       /* Change mode for a function. */
+    LUAJIT_MODE_ALLFUNC,    /* Recurse into subroutine protos. */
+    LUAJIT_MODE_ALLSUBFUNC, /* Change only the subroutines. */
+    LUAJIT_MODE_MAX
 };
 
 /* Flags or'ed in to the mode. */
-#define LUAJIT_MODE_OFF		0x0000	/* Disable JIT compilation. */
-#define LUAJIT_MODE_ON		0x0100	/* (Re-)enable JIT compilation. */
-
+#define LUAJIT_MODE_OFF 0x0000 /* Disable JIT compilation. */
+#define LUAJIT_MODE_ON 0x0100  /* (Re-)enable JIT compilation. */
 
 /* Compile a Lua function. Pass arguments as hints. */
 LUA_API int LUA_CC luaJIT_compile(lua_State *L, int nargs);
 
 /* Set the JIT mode for the whole engine or a function (idx = 0: self). */
 LUA_API int LUA_CC luaJIT_setmode(lua_State *L, int idx, int mode);
-
 
 #endif

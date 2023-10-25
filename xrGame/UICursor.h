@@ -1,30 +1,40 @@
 #pragma once
 
-#include "ui_base.h"
 #include "UIStaticItem.h"
+#include "ui_base.h"
 
 class CUIStatic;
 
-class CUICursor:public pureRender
+class CUICursor : public pureRender
 {
-	bool			bVisible;
-	Fvector2		vPos;
-	Fvector2		vPrevPos;
+    bool bVisible;
+    Fvector2 vPos;
+    Fvector2 vPrevPos;
 
-	CUIStatic*		m_static;
-	void			InitInternal	();
-public:
-					CUICursor		();
-	virtual			~CUICursor		();
-	virtual void	OnRender		();
-	
-	Fvector2		GetCursorPositionDelta();
+    CUIStatic *m_static;
+    void InitInternal();
 
-	Fvector2		GetCursorPosition		();
-	void			SetUICursorPosition		(Fvector2 pos);
-	void			UpdateCursorPosition	();
+  public:
+    CUICursor();
+    virtual ~CUICursor();
+    virtual void OnRender();
 
-	bool			IsVisible		() {return bVisible;}
-	void			Show			() {bVisible = true;}
-	void			Hide			() {bVisible = false;}
+    Fvector2 GetCursorPositionDelta();
+
+    Fvector2 GetCursorPosition();
+    void SetUICursorPosition(Fvector2 pos);
+    void UpdateCursorPosition();
+
+    bool IsVisible()
+    {
+        return bVisible;
+    }
+    void Show()
+    {
+        bVisible = true;
+    }
+    void Hide()
+    {
+        bVisible = false;
+    }
 };

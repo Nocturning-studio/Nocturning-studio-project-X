@@ -8,84 +8,88 @@
 
 #include "xr_collide_defs.h"
 
-//refs
+// refs
 class ENGINE_API IRender_DetailModel;
-
 
 //
 class ENGINE_API CEffect_Rain
 {
-private:
-	struct	Item
-	{
-		Fvector			P;
-		Fvector			Phit;
-		Fvector			D;
-		float			fSpeed;
-		u32				dwTime_Life;
-		u32				dwTime_Hit;
-		u32				uv_set;
-		void			invalidate()
-		{
-			dwTime_Life = 0;
-		}
-	};
-	struct	Particle
-	{
-		Particle* next, * prev;
-		Fmatrix			mXForm;
-		Fsphere			bounds;
-		float			time;
-	};
-	enum	States
-	{
-		stIdle = 0,
-		stWorking
-	};
-private:
-	// Visualization	(rain)
-	ref_shader						SH_Rain;
-	ref_geom						hGeom_Rain;
+  private:
+    struct Item
+    {
+        Fvector P;
+        Fvector Phit;
+        Fvector D;
+        float fSpeed;
+        u32 dwTime_Life;
+        u32 dwTime_Hit;
+        u32 uv_set;
+        void invalidate()
+        {
+            dwTime_Life = 0;
+        }
+    };
+    struct Particle
+    {
+        Particle *next, *prev;
+        Fmatrix mXForm;
+        Fsphere bounds;
+        float time;
+    };
+    enum States
+    {
+        stIdle = 0,
+        stWorking
+    };
 
-	// Visualization	(drops)
-	IRender_DetailModel* DM_Drop;
-	ref_geom						hGeom_Drops;
+  private:
+    // Visualization	(rain)
+    ref_shader SH_Rain;
+    ref_geom hGeom_Rain;
 
-	// Data and logic
-	xr_vector<Item>					items;
-	States							state;
+    // Visualization	(drops)
+    IRender_DetailModel *DM_Drop;
+    ref_geom hGeom_Drops;
 
-	// Particles
-	xr_vector<Particle>				particle_pool;
-	Particle* particle_active;
-	Particle* particle_idle;
+    // Data and logic
+    xr_vector<Item> items;
+    States state;
 
-	// Sounds
-	ref_sound						snd_Ambient;
+    // Particles
+    xr_vector<Particle> particle_pool;
+    Particle *particle_active;
+    Particle *particle_idle;
 
-	// Utilities
-	void							p_create();
-	void							p_destroy();
+    // Sounds
+    ref_sound snd_Ambient;
 
-	void							p_remove(Particle* P, Particle*& LST);
-	void							p_insert(Particle* P, Particle*& LST);
-	int								p_size(Particle* LST);
-	Particle* p_allocate();
-	void							p_free(Particle* P);
+    // Utilities
+    void p_create();
+    void p_destroy();
 
-	// Some methods
-	void							Born(Item& dest, float radius);
-	void							Hit(Fvector& pos);
-	BOOL							RayPick(const Fvector& s, const Fvector& d, float& range, collide::rq_target tgt);
-	void							RenewItem(Item& dest, float height, BOOL bHit);
-public:
-	CEffect_Rain();
-	~CEffect_Rain();
+    void p_remove(Particle *P, Particle *&LST);
+    void p_insert(Particle *P, Particle *&LST);
+    int p_size(Particle *LST);
+    Particle *p_allocate();
+    void p_free(Particle *P);
 
-	void							Render();
-	void							OnFrame();
+    // Some methods
+    void Born(Item &dest, float radius);
+    void Hit(Fvector &pos);
+    BOOL RayPick(const Fvector &s, const Fvector &d, float &range, collide::rq_target tgt);
+    void RenewItem(Item &dest, float height, BOOL bHit);
 
-	void							InvalidateState() { state = stIdle; }
+  public:
+    CEffect_Rain();
+    ~CEffect_Rain();
+
+    void Render();
+    void OnFrame();
+
+    void InvalidateState()
+    {
+        state = stIdle;
+    }
 };
 
-#endif //RainH
+#endif // RainH

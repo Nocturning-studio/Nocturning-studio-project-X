@@ -10,36 +10,56 @@
 #include "uiwindow.h"
 class CDialogHolder;
 
-class CUIDialogWnd : public CUIWindow  
+class CUIDialogWnd : public CUIWindow
 {
-private:
-	typedef CUIWindow inherited;
-	CDialogHolder*	m_pHolder;
-protected:
-	bool			IR_process					();
-public:
-	bool										m_bWorkInPause;
-	CUIDialogWnd								();
-	virtual ~ CUIDialogWnd						();
+  private:
+    typedef CUIWindow inherited;
+    CDialogHolder *m_pHolder;
 
-	virtual void Show							();
-	virtual void Hide							();
-	virtual void Update							();
+  protected:
+    bool IR_process();
 
-	virtual bool IR_OnKeyboardPress				(int dik);
-	virtual bool IR_OnKeyboardRelease			(int dik);
-	virtual bool IR_OnMouseMove					(int dx, int dy);
-	virtual bool IR_OnMouseWheel				(int direction);
-	virtual bool IR_OnKeyboardHold				(int dik);
-	virtual bool OnKeyboard						(int dik, EUIMessages keyboard_action);
-	virtual bool OnKeyboardHold					(int dik);
+  public:
+    bool m_bWorkInPause;
+    CUIDialogWnd();
+    virtual ~CUIDialogWnd();
 
-	CDialogHolder* GetHolder					()					{return m_pHolder;};
-			void SetHolder						(CDialogHolder* h)	{m_pHolder = h;};
-	virtual bool StopAnyMove					(){return true;}
-	virtual bool NeedCursor						()const {return true;}
-	virtual bool WorkInPause					()const {return m_bWorkInPause;}
-	virtual bool Dispatch						(int cmd, int param)				{return true;}
+    virtual void Show();
+    virtual void Hide();
+    virtual void Update();
+
+    virtual bool IR_OnKeyboardPress(int dik);
+    virtual bool IR_OnKeyboardRelease(int dik);
+    virtual bool IR_OnMouseMove(int dx, int dy);
+    virtual bool IR_OnMouseWheel(int direction);
+    virtual bool IR_OnKeyboardHold(int dik);
+    virtual bool OnKeyboard(int dik, EUIMessages keyboard_action);
+    virtual bool OnKeyboardHold(int dik);
+
+    CDialogHolder *GetHolder()
+    {
+        return m_pHolder;
+    };
+    void SetHolder(CDialogHolder *h)
+    {
+        m_pHolder = h;
+    };
+    virtual bool StopAnyMove()
+    {
+        return true;
+    }
+    virtual bool NeedCursor() const
+    {
+        return true;
+    }
+    virtual bool WorkInPause() const
+    {
+        return m_bWorkInPause;
+    }
+    virtual bool Dispatch(int cmd, int param)
+    {
+        return true;
+    }
 };
 
 #endif // _UI_DIALOG_WND_H_

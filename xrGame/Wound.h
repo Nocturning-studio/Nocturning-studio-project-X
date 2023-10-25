@@ -11,48 +11,72 @@ class NET_Packet;
 
 class CWound
 {
-public:
-	CWound				(u16 bone_num);
-	virtual ~CWound		(void);
+  public:
+    CWound(u16 bone_num);
+    virtual ~CWound(void);
 
-	//serialization
-	virtual void save	(NET_Packet &output_packet);
-	virtual void load	(IReader &input_packet);
+    // serialization
+    virtual void save(NET_Packet &output_packet);
+    virtual void load(IReader &input_packet);
 
-	float	TotalSize	();
-	float	TypeSize	(ALife::EHitType hit_type);
-	float	BloodSize	();
+    float TotalSize();
+    float TypeSize(ALife::EHitType hit_type);
+    float BloodSize();
 
-	void	AddHit		(float hit_power, ALife::EHitType hit_type);
-	
-	//заживление раны
-	void	Incarnation	(float percent, float min_wound_size);
-	u16		GetBoneNum	() {return m_iBoneNum;}
-	void 	SetBoneNum	(u16 bone_num) {m_iBoneNum = bone_num;}
+    void AddHit(float hit_power, ALife::EHitType hit_type);
 
-	u16		GetParticleBoneNum	() {return m_iParticleBoneNum;}
-	void	SetParticleBoneNum	(u16 bone_num) {m_iParticleBoneNum = bone_num;}
+    // заживление раны
+    void Incarnation(float percent, float min_wound_size);
+    u16 GetBoneNum()
+    {
+        return m_iBoneNum;
+    }
+    void SetBoneNum(u16 bone_num)
+    {
+        m_iBoneNum = bone_num;
+    }
 
-	const shared_str& GetParticleName	()						{return m_sParticleName;}
-	void	SetParticleName	(shared_str particle_name) {m_sParticleName = particle_name;}
+    u16 GetParticleBoneNum()
+    {
+        return m_iParticleBoneNum;
+    }
+    void SetParticleBoneNum(u16 bone_num)
+    {
+        m_iParticleBoneNum = bone_num;
+    }
 
-	void  SetDestroy(bool destroy) {m_bToBeDestroy = destroy;}
-	bool  GetDestroy()			   {return m_bToBeDestroy;}
+    const shared_str &GetParticleName()
+    {
+        return m_sParticleName;
+    }
+    void SetParticleName(shared_str particle_name)
+    {
+        m_sParticleName = particle_name;
+    }
 
-	//время обновления (для капель крови)
-	float m_fDropTime;
+    void SetDestroy(bool destroy)
+    {
+        m_bToBeDestroy = destroy;
+    }
+    bool GetDestroy()
+    {
+        return m_bToBeDestroy;
+    }
 
-protected:
-	//косточка на которой появилась рана
-	u16 m_iBoneNum;
+    // время обновления (для капель крови)
+    float m_fDropTime;
 
-	//косточка, если на ране отыгрывается партикл
-	u16 m_iParticleBoneNum;
-	//имя этого партикла
-	shared_str m_sParticleName;
+  protected:
+    // косточка на которой появилась рана
+    u16 m_iBoneNum;
 
-	//список составляющих раны 
-	HitImmunity::HitTypeSVec m_Wounds;
+    // косточка, если на ране отыгрывается партикл
+    u16 m_iParticleBoneNum;
+    // имя этого партикла
+    shared_str m_sParticleName;
 
-	bool		m_bToBeDestroy;
+    // список составляющих раны
+    HitImmunity::HitTypeSVec m_Wounds;
+
+    bool m_bToBeDestroy;
 };

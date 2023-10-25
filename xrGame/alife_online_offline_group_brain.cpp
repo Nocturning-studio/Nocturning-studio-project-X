@@ -6,6 +6,5 @@
 //	Description : ALife Online Offline Group brain class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 #include "alife_online_offline_group_brain.h"
-
+#include "stdafx.h"

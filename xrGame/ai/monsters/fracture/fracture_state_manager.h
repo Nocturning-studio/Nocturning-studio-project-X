@@ -3,12 +3,13 @@
 
 class CFracture;
 
-class CStateManagerFracture : public CMonsterStateManager<CFracture> {
-	typedef CMonsterStateManager<CFracture> inherited;
+class CStateManagerFracture : public CMonsterStateManager<CFracture>
+{
+    typedef CMonsterStateManager<CFracture> inherited;
 
-public:
-						CStateManagerFracture	(CFracture *obj);
-	virtual				~CStateManagerFracture	();
+  public:
+    CStateManagerFracture(CFracture *obj);
+    virtual ~CStateManagerFracture();
 
-	virtual	void		execute					();
+    virtual void execute();
 };

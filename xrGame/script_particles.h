@@ -8,51 +8,54 @@
 
 #pragma once
 
-#include "script_export_space.h"
 #include "particlesobject.h"
+#include "script_export_space.h"
 
 // refs
 class CObjectAnimator;
 class CScriptParticles;
 
-class CScriptParticlesCustom: public CParticlesObject{
-	CObjectAnimator*			m_animator;
-	virtual						~CScriptParticlesCustom();
-	CScriptParticles*			m_owner;
-public:
-								CScriptParticlesCustom(CScriptParticles* owner, LPCSTR caParticlesName);
-	virtual void				shedule_Update		(u32 dt);
+class CScriptParticlesCustom : public CParticlesObject
+{
+    CObjectAnimator *m_animator;
+    virtual ~CScriptParticlesCustom();
+    CScriptParticles *m_owner;
 
-	void						LoadPath			(LPCSTR caPathName);
-	void						StartPath			(bool looped);
-	void						StopPath			();
-	void						PausePath			(bool val);
-	virtual void				PSI_internal_delete	();
-	virtual void				PSI_destroy			();
+  public:
+    CScriptParticlesCustom(CScriptParticles *owner, LPCSTR caParticlesName);
+    virtual void shedule_Update(u32 dt);
+
+    void LoadPath(LPCSTR caPathName);
+    void StartPath(bool looped);
+    void StopPath();
+    void PausePath(bool val);
+    virtual void PSI_internal_delete();
+    virtual void PSI_destroy();
 };
 
-class CScriptParticles{
-public:
-	CScriptParticlesCustom*		m_particles;
-								CScriptParticles	(LPCSTR caParticlesName);
-	virtual						~CScriptParticles	();
+class CScriptParticles
+{
+  public:
+    CScriptParticlesCustom *m_particles;
+    CScriptParticles(LPCSTR caParticlesName);
+    virtual ~CScriptParticles();
 
-	void						Play				();
-	void						PlayAtPos			(const Fvector &pos);
-	void						Stop				();
-	void						StopDeffered		();
+    void Play();
+    void PlayAtPos(const Fvector &pos);
+    void Stop();
+    void StopDeffered();
 
-	bool						IsPlaying			() const;
-	bool						IsLooped			() const;
+    bool IsPlaying() const;
+    bool IsLooped() const;
 
-	void						MoveTo				(const Fvector &pos, const Fvector& vel);
+    void MoveTo(const Fvector &pos, const Fvector &vel);
 
-	void						LoadPath			(LPCSTR caPathName);
-	void						StartPath			(bool looped);
-	void						StopPath			();
-	void						PausePath			(bool val);
+    void LoadPath(LPCSTR caPathName);
+    void StartPath(bool looped);
+    void StopPath();
+    void PausePath(bool val);
 
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+    DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CScriptParticles)
 #undef script_type_list

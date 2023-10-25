@@ -1,45 +1,51 @@
 #pragma once
-#include "../BaseMonster/base_monster.h"
 #include "../../../script_export_space.h"
+#include "../BaseMonster/base_monster.h"
 
-class CSnork :	public CBaseMonster {
-	typedef		CBaseMonster		inherited;
+class CSnork : public CBaseMonster
+{
+    typedef CBaseMonster inherited;
 
-	SVelocityParam	m_fsVelocityJumpPrepare;
-	SVelocityParam	m_fsVelocityJumpGround;
+    SVelocityParam m_fsVelocityJumpPrepare;
+    SVelocityParam m_fsVelocityJumpGround;
 
-public:
-					CSnork				();
-	virtual			~CSnork				();	
+  public:
+    CSnork();
+    virtual ~CSnork();
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reinit				();				
-	virtual void	UpdateCL			();
-	virtual void	CheckSpecParams		(u32 spec_params);
-	virtual void	jump				(const Fvector &position, float factor);
-	virtual bool	ability_jump_over_physics	() {return true;}
-	virtual bool	ability_distant_feel		() {return true;}
-	virtual void	HitEntityInJump		(const CEntity *pEntity);
-			
-			bool	find_geometry		(Fvector &dir);
-			float	trace				(const Fvector &dir);
+    virtual void Load(LPCSTR section);
+    virtual void reinit();
+    virtual void UpdateCL();
+    virtual void CheckSpecParams(u32 spec_params);
+    virtual void jump(const Fvector &position, float factor);
+    virtual bool ability_jump_over_physics()
+    {
+        return true;
+    }
+    virtual bool ability_distant_feel()
+    {
+        return true;
+    }
+    virtual void HitEntityInJump(const CEntity *pEntity);
 
-			bool	trace_geometry		(const Fvector &d, float &range);
+    bool find_geometry(Fvector &dir);
+    float trace(const Fvector &dir);
 
-	virtual bool	check_start_conditions	(ControlCom::EControlType type);
-	virtual void	on_activate_control		(ControlCom::EControlType);
+    bool trace_geometry(const Fvector &d, float &range);
 
-private:
-#ifdef _DEBUG	
-	virtual void	debug_on_key		(int key);
+    virtual bool check_start_conditions(ControlCom::EControlType type);
+    virtual void on_activate_control(ControlCom::EControlType);
+
+  private:
+#ifdef _DEBUG
+    virtual void debug_on_key(int key);
 #endif
 
-public:
+  public:
+    u32 m_target_node;
+    bool start_threaten;
 
-		u32		m_target_node;
-		bool	start_threaten;
-
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+    DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
 add_to_type_list(CSnork)

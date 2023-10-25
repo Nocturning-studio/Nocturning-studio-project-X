@@ -3,30 +3,32 @@
 // Created:		10.03.2005
 // Author:		Serge Vynnychenko
 // Mail:		narrator@gsc-game.kiev.ua
-// 
+//
 // Copyright 2005 GSC GameWorld
 #pragma once
 
 #include "KillMessageStruct.h"
 #include "UIPdaMsgListItem.h"
 
-class CUIPdaKillMessage : public CUIStatic {
-typedef CUIPdaMsgListItem inherited;
-public:
-	CUIPdaKillMessage();
-	virtual ~CUIPdaKillMessage();
+class CUIPdaKillMessage : public CUIStatic
+{
+    typedef CUIPdaMsgListItem inherited;
 
-			void Init(KillMessageStruct& msg);
-	virtual void SetFont(CGameFont* pFont);
-	virtual void SetTextColor(u32 color);
-	virtual void SetColor(u32 color);
+  public:
+    CUIPdaKillMessage();
+    virtual ~CUIPdaKillMessage();
 
-protected:
-			float InitText(CUIStatic& refStatic, float x, PlayerInfoKillMessage& info);
-			float InitIcon(CUIStatic& refStatic, float x, IconInfo& info);
+    void Init(KillMessageStruct &msg);
+    virtual void SetFont(CGameFont *pFont);
+    virtual void SetTextColor(u32 color);
+    virtual void SetColor(u32 color);
 
-    CUIStatic	m_victim_name;
-	CUIStatic	m_initiator;
-	CUIStatic	m_killer_name;
-	CUIStatic	m_ext_info;
+  protected:
+    float InitText(CUIStatic &refStatic, float x, PlayerInfoKillMessage &info);
+    float InitIcon(CUIStatic &refStatic, float x, IconInfo &info);
+
+    CUIStatic m_victim_name;
+    CUIStatic m_initiator;
+    CUIStatic m_killer_name;
+    CUIStatic m_ext_info;
 };

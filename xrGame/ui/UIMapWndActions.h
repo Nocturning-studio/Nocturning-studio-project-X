@@ -6,15 +6,14 @@ class CUIMapWnd;
 class CUICustomMap;
 class CUILevelMap;
 
+class CMapActionPlanner : public CActionPlanner<CUIMapWnd, true>
+{
+  private:
+    typedef CActionPlanner<CUIMapWnd, true> inherited;
 
-class CMapActionPlanner :public CActionPlanner<CUIMapWnd,true> {
-private:
-	typedef CActionPlanner<CUIMapWnd,true> inherited;
-
-public:
-					CMapActionPlanner	();
-	virtual			~CMapActionPlanner	();
-	virtual	void	setup				(CUIMapWnd *object);
-	virtual	LPCSTR	object_name			() const;
+  public:
+    CMapActionPlanner();
+    virtual ~CMapActionPlanner();
+    virtual void setup(CUIMapWnd *object);
+    virtual LPCSTR object_name() const;
 };
-

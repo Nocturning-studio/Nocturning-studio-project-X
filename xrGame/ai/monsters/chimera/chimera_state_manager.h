@@ -3,13 +3,14 @@
 
 class CChimera;
 
-class CStateManagerChimera : public CMonsterStateManager<CChimera> {
-	
-	typedef CMonsterStateManager<CChimera> inherited;
+class CStateManagerChimera : public CMonsterStateManager<CChimera>
+{
 
-public:
-						CStateManagerChimera	(CChimera *obj);
-	virtual				~CStateManagerChimera	();
+    typedef CMonsterStateManager<CChimera> inherited;
 
-	virtual	void		execute					();
+  public:
+    CStateManagerChimera(CChimera *obj);
+    virtual ~CStateManagerChimera();
+
+    virtual void execute();
 };

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "soundrender_core.h"
 #include "soundrender_source.h"
+#include "soundrender_core.h"
 
 CSoundRender_Source::CSoundRender_Source()
 {
@@ -29,7 +29,8 @@ bool ov_error(int res)
         return false;
         // info
     case OV_HOLE:
-        Msg("Vorbisfile encoutered missing or corrupt data in the bitstream. Recovery is normally automatic and this return code is for informational purposes only.");
+        Msg("Vorbisfile encoutered missing or corrupt data in the bitstream. Recovery is normally automatic and this "
+            "return code is for informational purposes only.");
         return true;
     case OV_EBADLINK:
         Msg("The given link exists in the Vorbis data stream, but is not decipherable due to garbacge or corruption.");
@@ -68,7 +69,7 @@ bool ov_error(int res)
 
 void CSoundRender_Source::i_decompress_fr(OggVorbis_File *ovf, char *_dest, u32 left)
 {
-    int	current_section;
+    int current_section;
     long TotalRet = 0, ret;
 
     // Read loop
@@ -77,12 +78,12 @@ void CSoundRender_Source::i_decompress_fr(OggVorbis_File *ovf, char *_dest, u32 
         ret = ov_read(ovf, /*PCM*/ _dest + TotalRet, left - TotalRet, 0, 2, 1, &current_section);
 
         // if end of file or read limit exceeded
-        if (!ret) 
+        if (!ret)
             break;
-        
+
         // ret < 0 means error in bitstream
 
         if (ret >= 0)
-            TotalRet += ret;        
+            TotalRet += ret;
     }
 }

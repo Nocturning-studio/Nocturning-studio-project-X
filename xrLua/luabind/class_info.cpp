@@ -23,51 +23,46 @@
 #define LUA_LIB
 #include <luabind/lua_include.hpp>
 
-#include <luabind/luabind.hpp>
 #include <luabind/class_info.hpp>
+#include <luabind/luabind.hpp>
 
 namespace luabind
 {
-	class_info get_class_info(const object& o)
-	{
-		lua_State* L = o.lua_state();
-	
-		class_info result(L);
-	
-		o.pushvalue();
-		detail::object_rep* obj = static_cast<detail::object_rep*>(lua_touserdata(L, -1));
-		lua_pop(L, 1);
+class_info get_class_info(const object &o)
+{
+    lua_State *L = o.lua_state();
 
-		result.name = obj->crep()->name();
-		obj->crep()->get_table(L);
-		result.methods.set();
+    class_info result(L);
 
-		result.attributes = newtable(L);
+    o.pushvalue();
+    detail::object_rep *obj = static_cast<detail::object_rep *>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
 
-		typedef detail::class_rep::property_map map_type;
-		
-		std::size_t index = 1;
-		
-		for (map_type::const_iterator i = obj->crep()->properties().begin();
-				i != obj->crep()->properties().end(); ++i)
-		{
-			result.attributes[index] = i->first;
-		}
+    result.name = obj->crep()->name();
+    obj->crep()->get_table(L);
+    result.methods.set();
 
-		return result;
-	}
+    result.attributes = newtable(L);
 
-	void bind_class_info(lua_State* L)
-	{
-		module(L)
-		[
-			class_<class_info>("class_info_data")
-				.def_readonly("name", &class_info::name)
-				.def_readonly("methods", &class_info::methods)
-				.def_readonly("attributes", &class_info::attributes),
-		
-			def("class_info", &get_class_info)
-		];
-	}
+    typedef detail::class_rep::property_map map_type;
+
+    std::size_t index = 1;
+
+    for (map_type::const_iterator i = obj->crep()->properties().begin(); i != obj->crep()->properties().end(); ++i)
+    {
+        result.attributes[index] = i->first;
+    }
+
+    return result;
 }
 
+void bind_class_info(lua_State *L)
+{
+    module(L)[class_<class_info>("class_info_data")
+                  .def_readonly("name", &class_info::name)
+                  .def_readonly("methods", &class_info::methods)
+                  .def_readonly("attributes", &class_info::attributes),
+
+              def("class_info", &get_class_info)];
+}
+} // namespace luabind

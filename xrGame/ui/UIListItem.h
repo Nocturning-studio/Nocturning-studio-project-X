@@ -1,49 +1,78 @@
 #pragma once
 #include "UIbutton.h"
 
-class CUIListItem :	public CUIButton
+class CUIListItem : public CUIButton
 {
-private:
-	typedef CUIButton inherited;
-public:
-	CUIListItem(void);
-	virtual ~CUIListItem(void);
+  private:
+    typedef CUIButton inherited;
 
-	virtual void Init(float x, float y, float width, float height);
-	virtual void Init(const char* str, float x, float y, float width, float height);
-	virtual void InitTexture(LPCSTR tex_name);
-	
-			void* GetData() {return m_pData;}
-			void SetData(void* pData) { m_pData = pData;}
+  public:
+    CUIListItem(void);
+    virtual ~CUIListItem(void);
 
-			int GetIndex() {return m_iIndex;}
-			void SetIndex(int index) {m_iIndex = index; m_iGroupID = index;}
+    virtual void Init(float x, float y, float width, float height);
+    virtual void Init(const char *str, float x, float y, float width, float height);
+    virtual void InitTexture(LPCSTR tex_name);
 
-			int GetValue() {return m_iValue;}
-			void SetValue(int value) {m_iValue = value;}
+    void *GetData()
+    {
+        return m_pData;
+    }
+    void SetData(void *pData)
+    {
+        m_pData = pData;
+    }
 
-			int	GetGroupID() { return m_iGroupID; }
-			void SetGroupID(int ID) { m_iGroupID = ID; }
+    int GetIndex()
+    {
+        return m_iIndex;
+    }
+    void SetIndex(int index)
+    {
+        m_iIndex = index;
+        m_iGroupID = index;
+    }
 
-	virtual void	MarkSelected				(bool b){};
-	// переопределяем критерий подсвечивания текста
-	virtual bool IsHighlightText();
-	virtual void SetHighlightText(bool Highlight)		{ m_bHighlightText = Highlight; }
+    int GetValue()
+    {
+        return m_iValue;
+    }
+    void SetValue(int value)
+    {
+        m_iValue = value;
+    }
 
-protected:
-	//указатель на произвольные данные, которые могут
-	//присоедениены к элементу
-	void* m_pData;
-	
-	//произвольное число, приписанное объекту
-	int m_iValue;
-	
-	//индекс в списке
-	int m_iIndex;
+    int GetGroupID()
+    {
+        return m_iGroupID;
+    }
+    void SetGroupID(int ID)
+    {
+        m_iGroupID = ID;
+    }
 
-	// идентификатор группы
-	int m_iGroupID;
+    virtual void MarkSelected(bool b){};
+    // переопределяем критерий подсвечивания текста
+    virtual bool IsHighlightText();
+    virtual void SetHighlightText(bool Highlight)
+    {
+        m_bHighlightText = Highlight;
+    }
 
-	// подсвечивается кнопка или нет?
-	bool m_bHighlightText;
+  protected:
+    // указатель на произвольные данные, которые могут
+    // присоедениены к элементу
+    void *m_pData;
+
+    // произвольное число, приписанное объекту
+    int m_iValue;
+
+    // индекс в списке
+    int m_iIndex;
+
+    // идентификатор группы
+    int m_iGroupID;
+
+    // подсвечивается кнопка или нет?
+    bool m_bHighlightText;
 };

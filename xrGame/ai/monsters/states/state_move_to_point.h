@@ -2,38 +2,43 @@
 #include "../state.h"
 #include "state_data.h"
 
-template<typename _Object>
-class CStateMonsterMoveToPoint : public CState<_Object> {
-	typedef CState<_Object> inherited;
-	
-	SStateDataMoveToPoint data;
+template <typename _Object> class CStateMonsterMoveToPoint : public CState<_Object>
+{
+    typedef CState<_Object> inherited;
 
-public:
-						CStateMonsterMoveToPoint	(_Object *obj) : inherited(obj, &data) {}
-	virtual				~CStateMonsterMoveToPoint	() {}
+    SStateDataMoveToPoint data;
 
-	virtual void		initialize					();
-	virtual	void		execute						();
+  public:
+    CStateMonsterMoveToPoint(_Object *obj) : inherited(obj, &data)
+    {
+    }
+    virtual ~CStateMonsterMoveToPoint()
+    {
+    }
 
-	virtual bool		check_completion			();
+    virtual void initialize();
+    virtual void execute();
 
+    virtual bool check_completion();
 };
 
+template <typename _Object> class CStateMonsterMoveToPointEx : public CState<_Object>
+{
+    typedef CState<_Object> inherited;
 
-template<typename _Object>
-class CStateMonsterMoveToPointEx : public CState<_Object> {
-	typedef CState<_Object> inherited;
+  protected:
+    SStateDataMoveToPointEx data;
 
-protected:
-	
-	SStateDataMoveToPointEx data;
-
-public:
-						CStateMonsterMoveToPointEx	(_Object *obj) : inherited(obj, &data) {}
-	virtual				~CStateMonsterMoveToPointEx	() {}
-	virtual void		initialize					();
-	virtual	void		execute						();
-	virtual bool		check_completion			();
+  public:
+    CStateMonsterMoveToPointEx(_Object *obj) : inherited(obj, &data)
+    {
+    }
+    virtual ~CStateMonsterMoveToPointEx()
+    {
+    }
+    virtual void initialize();
+    virtual void execute();
+    virtual bool check_completion();
 };
 
 #include "state_move_to_point_inline.h"

@@ -7,19 +7,20 @@
 #pragma once
 #include "artifact.h"
 
-class CGraviArtefact : public CArtefact 
+class CGraviArtefact : public CArtefact
 {
-private:
-	typedef CArtefact inherited;
-public:
-	CGraviArtefact(void);
-	virtual ~CGraviArtefact(void);
+  private:
+    typedef CArtefact inherited;
 
-	virtual void Load				(LPCSTR section);
+  public:
+    CGraviArtefact(void);
+    virtual ~CGraviArtefact(void);
 
-protected:
-	virtual void	UpdateCLChild	();
-	//параметры артефакта
-	float m_fJumpHeight;
-	float m_fEnergy;
+    virtual void Load(LPCSTR section);
+
+  protected:
+    virtual void UpdateCLChild();
+    // параметры артефакта
+    float m_fJumpHeight;
+    float m_fEnergy;
 };

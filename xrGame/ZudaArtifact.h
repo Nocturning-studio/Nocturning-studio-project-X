@@ -6,15 +6,16 @@
 #pragma once
 #include "artifact.h"
 
-class CZudaArtefact : public CArtefact 
+class CZudaArtefact : public CArtefact
 {
-private:
-	typedef CArtefact inherited;
-public:
-	CZudaArtefact(void);
-	virtual ~CZudaArtefact(void);
+  private:
+    typedef CArtefact inherited;
 
-	virtual void Load				(LPCSTR section);
+  public:
+    CZudaArtefact(void);
+    virtual ~CZudaArtefact(void);
 
-protected:
+    virtual void Load(LPCSTR section);
+
+  protected:
 };

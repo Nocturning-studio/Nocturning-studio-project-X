@@ -10,19 +10,21 @@
 class ENGINE_API CSoundStream;
 class ENGINE_API CInifile;
 
-class CMusicStream {
-	xr_vector<CSoundStream*>	streams;
-	int							FindEmptySlot();
-public:
-							CMusicStream	();
-							~CMusicStream	();
+class CMusicStream
+{
+    xr_vector<CSoundStream *> streams;
+    int FindEmptySlot();
 
-	CSoundStream*			CreateSound		(LPCSTR name	);
-	void					DeleteSound		(CSoundStream* pSnd);
+  public:
+    CMusicStream();
+    ~CMusicStream();
 
-	void					OnMove			();
-	void					Reload			();
-	void					Update			();
+    CSoundStream *CreateSound(LPCSTR name);
+    void DeleteSound(CSoundStream *pSnd);
+
+    void OnMove();
+    void Reload();
+    void Update();
 };
 
 #endif // !defined(AFX_MUSICSTREAM_H__7DAD65D5_8E32_4262_89C8_67A135405BAF__INCLUDED_)

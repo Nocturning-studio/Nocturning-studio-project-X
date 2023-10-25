@@ -1,38 +1,37 @@
 #pragma once
 #include "../state.h"
 
-template<typename _Object>
-class CStateBurerAttackGravi : public CState<_Object> {
-	typedef CState<_Object> inherited;	
-	
-	enum {
-		ACTION_GRAVI_STARTED,
-		ACTION_GRAVI_CONTINUE,
-		ACTION_GRAVI_FIRE,
-		ACTION_WAIT_TRIPLE_END,
-		ACTION_COMPLETED,
-	} m_action;
+template <typename _Object> class CStateBurerAttackGravi : public CState<_Object>
+{
+    typedef CState<_Object> inherited;
 
-	u32			time_gravi_started;
+    enum
+    {
+        ACTION_GRAVI_STARTED,
+        ACTION_GRAVI_CONTINUE,
+        ACTION_GRAVI_FIRE,
+        ACTION_WAIT_TRIPLE_END,
+        ACTION_COMPLETED,
+    } m_action;
 
-public:
-							CStateBurerAttackGravi	(_Object *obj);
+    u32 time_gravi_started;
 
-		virtual	void		initialize				();
-		virtual	void		execute					();
-		virtual void		finalize				();
-		virtual void		critical_finalize		();
+  public:
+    CStateBurerAttackGravi(_Object *obj);
 
-		virtual bool		check_start_conditions	();
-		virtual bool		check_completion		();
+    virtual void initialize();
+    virtual void execute();
+    virtual void finalize();
+    virtual void critical_finalize();
 
-private:
-				// выполнять состояние
-				void		ExecuteGraviStart		();
-				void		ExecuteGraviContinue	();
-				void		ExecuteGraviFire		();
+    virtual bool check_start_conditions();
+    virtual bool check_completion();
 
+  private:
+    // выполнять состояние
+    void ExecuteGraviStart();
+    void ExecuteGraviContinue();
+    void ExecuteGraviFire();
 };
 
 #include "burer_state_attack_gravi_inline.h"
-

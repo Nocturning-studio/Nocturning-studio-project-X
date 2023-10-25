@@ -2,38 +2,47 @@
 
 #include "../../actor_input_handler.h"
 
-class CControlledActor : public CActorInputHandler {
-	typedef CActorInputHandler inherited;
-	
-	Fvector m_target_point;
-	
-	bool	m_turned_yaw;
-	bool	m_turned_pitch;
+class CControlledActor : public CActorInputHandler
+{
+    typedef CActorInputHandler inherited;
 
-	bool	m_lock_run;
-	u32		m_lock_run_started;
-	u32		m_lock_run_period;
+    Fvector m_target_point;
 
-	bool	m_need_turn;
+    bool m_turned_yaw;
+    bool m_turned_pitch;
 
-public:
-	virtual void	reinit				();
-	virtual	float	mouse_scale_factor	(){return flt_max;}
-	virtual void	release				();
-	virtual void	install				(CActor *);
-	virtual void	install				();
-	virtual bool	authorized			(int cmd);
+    bool m_lock_run;
+    u32 m_lock_run_started;
+    u32 m_lock_run_period;
 
-			void	look_point			(const Fvector &point);
-			bool	is_turning			();
+    bool m_need_turn;
 
-			void	frame_update		();
-			bool	is_controlling		() {return m_actor != 0;}
+  public:
+    virtual void reinit();
+    virtual float mouse_scale_factor()
+    {
+        return flt_max;
+    }
+    virtual void release();
+    virtual void install(CActor *);
+    virtual void install();
+    virtual bool authorized(int cmd);
 
-			void	dont_need_turn		(){m_need_turn = false;}
+    void look_point(const Fvector &point);
+    bool is_turning();
 
-private:
-			void	reset				();
-			void	update_turn			();
-};	
+    void frame_update();
+    bool is_controlling()
+    {
+        return m_actor != 0;
+    }
 
+    void dont_need_turn()
+    {
+        m_need_turn = false;
+    }
+
+  private:
+    void reset();
+    void update_turn();
+};

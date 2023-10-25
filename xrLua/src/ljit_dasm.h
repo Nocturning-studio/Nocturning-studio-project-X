@@ -9,10 +9,10 @@
 #include "ljit.h"
 
 /* DynASM glue definitions. */
-#define Dst		J
-#define Dst_DECL	jit_State *J
-#define Dst_REF		(J->D)
-#define DASM_FDEF	LUAI_FUNC
+#define Dst J
+#define Dst_DECL jit_State *J
+#define Dst_REF (J->D)
+#define DASM_FDEF LUAI_FUNC
 
 #include "dasm_proto.h"
 

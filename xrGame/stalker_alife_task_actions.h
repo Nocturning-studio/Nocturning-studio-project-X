@@ -16,31 +16,33 @@ class CAI_Trader;
 // CStalkerActionSolveZonePuzzle
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionSolveZonePuzzle : public CStalkerActionBase {
-protected:
-	typedef CStalkerActionBase inherited;
+class CStalkerActionSolveZonePuzzle : public CStalkerActionBase
+{
+  protected:
+    typedef CStalkerActionBase inherited;
 
-protected:
-	u32					m_stop_weapon_handling_time;
+  protected:
+    u32 m_stop_weapon_handling_time;
 
-public:
-						CStalkerActionSolveZonePuzzle	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+  public:
+    CStalkerActionSolveZonePuzzle(CAI_Stalker *object, LPCSTR action_name = "");
+    virtual void initialize();
+    virtual void execute();
+    virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionSmartTerrain
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionSmartTerrain : public CStalkerActionBase {
-protected:
-	typedef CStalkerActionBase inherited;
+class CStalkerActionSmartTerrain : public CStalkerActionBase
+{
+  protected:
+    typedef CStalkerActionBase inherited;
 
-public:
-						CStalkerActionSmartTerrain		(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+  public:
+    CStalkerActionSmartTerrain(CAI_Stalker *object, LPCSTR action_name = "");
+    virtual void initialize();
+    virtual void execute();
+    virtual void finalize();
 };

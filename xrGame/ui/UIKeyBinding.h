@@ -1,26 +1,26 @@
 #pragma once
-#include "UIWindow.h"
+#include "UIEditBox.h"
+#include "UIFrameWindow.h"
 #include "UILabel.h"
 #include "UIListWnd.h"
-#include "UIFrameWindow.h"
-#include "UIEditBox.h"
+#include "UIWindow.h"
 
 class CUIXml;
 class CUIScrollView;
 
-class CUIKeyBinding : public CUIWindow 
+class CUIKeyBinding : public CUIWindow
 {
-public:
-					CUIKeyBinding			();
-	void			InitFromXml				(CUIXml& xml_doc, LPCSTR path);
+  public:
+    CUIKeyBinding();
+    void InitFromXml(CUIXml &xml_doc, LPCSTR path);
 #ifdef DEBUG
-	void			CheckStructure			(CUIXml& xml_doc);
-	bool			IsActionExist			(LPCSTR action, CUIXml& xml_doc);
+    void CheckStructure(CUIXml &xml_doc);
+    bool IsActionExist(LPCSTR action, CUIXml &xml_doc);
 #endif
-protected:
-	void			FillUpList				(CUIXml& xml_doc, LPCSTR path);
+  protected:
+    void FillUpList(CUIXml &xml_doc, LPCSTR path);
 
-	CUILabel		m_header[3];
-	CUIFrameWindow	m_frame;
-	CUIScrollView*	m_scroll_wnd;
+    CUILabel m_header[3];
+    CUIFrameWindow m_frame;
+    CUIScrollView *m_scroll_wnd;
 };

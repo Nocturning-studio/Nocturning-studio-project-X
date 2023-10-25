@@ -6,113 +6,106 @@
 //	Description : Movement manager for level paths
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "movement_manager.h"
-#include "profiler.h"
-#include "level_location_selector.h"
-#include "level_path_manager.h"
-#include "detail_path_manager.h"
 #include "ai_object_location.h"
 #include "custommonster.h"
-#include "level_path_builder.h"
 #include "detail_path_builder.h"
+#include "detail_path_manager.h"
+#include "level_location_selector.h"
+#include "level_path_builder.h"
+#include "level_path_manager.h"
+#include "movement_manager.h"
 #include "mt_config.h"
+#include "profiler.h"
+#include "stdafx.h"
 
 void CMovementManager::process_level_path()
 {
-	START_PROFILE("Build Path/Process Level Path");
+    START_PROFILE("Build Path/Process Level Path");
 
-	if (!level_path().actual() && (m_path_state > ePathStateBuildLevelPath))
-		m_path_state		= ePathStateBuildLevelPath;
+    if (!level_path().actual() && (m_path_state > ePathStateBuildLevelPath))
+        m_path_state = ePathStateBuildLevelPath;
 
-	switch (m_path_state) {
-		case ePathStateBuildLevelPath : {
-			if (can_use_distributed_compuations(mtLevelPath)) {
-				level_path_builder().setup(
-					object().ai_location().level_vertex_id(),
-					level_dest_vertex_id()
-				);
+    switch (m_path_state)
+    {
+    case ePathStateBuildLevelPath: {
+        if (can_use_distributed_compuations(mtLevelPath))
+        {
+            level_path_builder().setup(object().ai_location().level_vertex_id(), level_dest_vertex_id());
 
-				break;
-			}
+            break;
+        }
 
-			level_path().build_path(
-				object().ai_location().level_vertex_id(),
-				level_dest_vertex_id()
-			);
+        level_path().build_path(object().ai_location().level_vertex_id(), level_dest_vertex_id());
 
-			if (level_path().failed())
-				break;
+        if (level_path().failed())
+            break;
 
-			m_path_state		= ePathStateContinueLevelPath;
+        m_path_state = ePathStateContinueLevelPath;
 
-//			if (time_over())
-			if (!m_build_at_once)
-				break;
-		}
-		case ePathStateContinueLevelPath : {
-			level_path().select_intermediate_vertex();
-			
-			m_path_state		= ePathStateBuildDetailPath;
+        //			if (time_over())
+        if (!m_build_at_once)
+            break;
+    }
+    case ePathStateContinueLevelPath: {
+        level_path().select_intermediate_vertex();
 
-//			if (time_over())
-//				break;
-		}
-		case ePathStateBuildDetailPath : {
-			detail().set_state_patrol_path(extrapolate_path());
-			detail().set_start_position(object().Position());
-			detail().set_start_direction(Fvector().setHP(-m_body.current.yaw,0));
+        m_path_state = ePathStateBuildDetailPath;
 
-			if (can_use_distributed_compuations(mtDetailPath)) {
-				detail_path_builder().setup(
-					level_path().path(),
-					level_path().intermediate_index()
-				);
+        //			if (time_over())
+        //				break;
+    }
+    case ePathStateBuildDetailPath: {
+        detail().set_state_patrol_path(extrapolate_path());
+        detail().set_start_position(object().Position());
+        detail().set_start_direction(Fvector().setHP(-m_body.current.yaw, 0));
 
-				break;
-			}
-			
-			detail().build_path(
-				level_path().path(),
-				level_path().intermediate_index()
-			);
+        if (can_use_distributed_compuations(mtDetailPath))
+        {
+            detail_path_builder().setup(level_path().path(), level_path().intermediate_index());
 
-			on_build_path	();
+            break;
+        }
 
-			if (detail().failed()) {
-				m_path_state	= ePathStateBuildLevelPath;
-				break;
-			}
+        detail().build_path(level_path().path(), level_path().intermediate_index());
 
-			m_path_state		= ePathStatePathVerification;
+        on_build_path();
 
-//			if (time_over())
-				break;
-		}
-		case ePathStatePathVerification : {
-			if (!level_path().actual())
-				m_path_state	= ePathStateBuildLevelPath;
-			else
-				if (!detail().actual())
-					m_path_state	= ePathStateBuildLevelPath;
-				else {
-					if (detail().completed(object().Position(),!detail().state_patrol_path())) {
-						m_path_state	= ePathStateContinueLevelPath;
-						if (level_path().completed())
-							m_path_state	= ePathStatePathCompleted;
-					}
-				}
-			break;
-		}
-		case ePathStatePathCompleted : {
-			if (!level_path().actual())
-				m_path_state = ePathStateBuildLevelPath;
-			else
-				if (!detail().actual())
-					m_path_state = ePathStateBuildLevelPath;
-			break;
-		}
-		default : NODEFAULT;
-	}
-	STOP_PROFILE;
+        if (detail().failed())
+        {
+            m_path_state = ePathStateBuildLevelPath;
+            break;
+        }
+
+        m_path_state = ePathStatePathVerification;
+
+        //			if (time_over())
+        break;
+    }
+    case ePathStatePathVerification: {
+        if (!level_path().actual())
+            m_path_state = ePathStateBuildLevelPath;
+        else if (!detail().actual())
+            m_path_state = ePathStateBuildLevelPath;
+        else
+        {
+            if (detail().completed(object().Position(), !detail().state_patrol_path()))
+            {
+                m_path_state = ePathStateContinueLevelPath;
+                if (level_path().completed())
+                    m_path_state = ePathStatePathCompleted;
+            }
+        }
+        break;
+    }
+    case ePathStatePathCompleted: {
+        if (!level_path().actual())
+            m_path_state = ePathStateBuildLevelPath;
+        else if (!detail().actual())
+            m_path_state = ePathStateBuildLevelPath;
+        break;
+    }
+    default:
+        NODEFAULT;
+    }
+    STOP_PROFILE;
 }

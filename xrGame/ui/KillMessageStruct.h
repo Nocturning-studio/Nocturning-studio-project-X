@@ -7,19 +7,22 @@
 
 #pragma once
 
-struct PlayerInfoKillMessage{
-    shared_str	m_name;
-	u32			m_color;
+struct PlayerInfoKillMessage
+{
+    shared_str m_name;
+    u32 m_color;
 };
 
-struct IconInfo{
-	Frect		m_rect;
-	ref_shader	m_shader;
+struct IconInfo
+{
+    Frect m_rect;
+    ref_shader m_shader;
 };
 
-struct KillMessageStruct{
-	PlayerInfoKillMessage	m_victim;
-	IconInfo	m_initiator;
-	PlayerInfoKillMessage	m_killer;
-	IconInfo	m_ext_info;
+struct KillMessageStruct
+{
+    PlayerInfoKillMessage m_victim;
+    IconInfo m_initiator;
+    PlayerInfoKillMessage m_killer;
+    IconInfo m_ext_info;
 };

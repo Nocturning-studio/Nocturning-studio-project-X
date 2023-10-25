@@ -4,7 +4,7 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
-class	ENGINE_API				IInputReceiver;
+class ENGINE_API IInputReceiver;
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //описание класса
@@ -15,84 +15,87 @@ const int default_key = mouse_device_key | keyboard_device_key;
 
 class ENGINE_API CInput
 #ifndef M_BORLAND
-	:
-public pureFrame,
-public pureAppActivate,
-public pureAppDeactivate
+    : public pureFrame,
+      public pureAppActivate,
+      public pureAppDeactivate
 #endif
 {
-public:
-	enum {
-		COUNT_MOUSE_BUTTONS = 3,
-		COUNT_MOUSE_AXIS = 3,
-		COUNT_KB_BUTTONS = 256
-	};
-	struct sxr_mouse
-	{
-		DIDEVCAPS					capabilities;
-		DIDEVICEINSTANCE			deviceInfo;
-		DIDEVICEOBJECTINSTANCE		objectInfo;
-		u32							mouse_dt;
-	};
-	struct sxr_key
-	{
-		DIDEVCAPS					capabilities;
-		DIDEVICEINSTANCE			deviceInfo;
-		DIDEVICEOBJECTINSTANCE		objectInfo;
-	};
-private:
-	LPDIRECTINPUT8				pDI;			// The DInput object
-	LPDIRECTINPUTDEVICE8		pMouse;			// The DIDevice7 interface
-	LPDIRECTINPUTDEVICE8		pKeyboard;		// The DIDevice7 interface
-	//----------------------
-	u32							timeStamp[COUNT_MOUSE_AXIS];
-	u32							timeSave[COUNT_MOUSE_AXIS];
-	int 						offs[COUNT_MOUSE_AXIS];
-	BOOL						mouseState[COUNT_MOUSE_BUTTONS];
+  public:
+    enum
+    {
+        COUNT_MOUSE_BUTTONS = 3,
+        COUNT_MOUSE_AXIS = 3,
+        COUNT_KB_BUTTONS = 256
+    };
+    struct sxr_mouse
+    {
+        DIDEVCAPS capabilities;
+        DIDEVICEINSTANCE deviceInfo;
+        DIDEVICEOBJECTINSTANCE objectInfo;
+        u32 mouse_dt;
+    };
+    struct sxr_key
+    {
+        DIDEVCAPS capabilities;
+        DIDEVICEINSTANCE deviceInfo;
+        DIDEVICEOBJECTINSTANCE objectInfo;
+    };
 
-	//----------------------
-	BOOL						KBState[COUNT_KB_BUTTONS];
+  private:
+    LPDIRECTINPUT8 pDI;             // The DInput object
+    LPDIRECTINPUTDEVICE8 pMouse;    // The DIDevice7 interface
+    LPDIRECTINPUTDEVICE8 pKeyboard; // The DIDevice7 interface
+    //----------------------
+    u32 timeStamp[COUNT_MOUSE_AXIS];
+    u32 timeSave[COUNT_MOUSE_AXIS];
+    int offs[COUNT_MOUSE_AXIS];
+    BOOL mouseState[COUNT_MOUSE_BUTTONS];
 
-	HRESULT						CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
-													const DIDATAFORMAT* pdidDataFormat, u32 dwFlags,
-													u32 buf_size);
+    //----------------------
+    BOOL KBState[COUNT_KB_BUTTONS];
 
-	//	xr_stack<IInputReceiver*>	cbStack;
-		xr_vector<IInputReceiver*>	cbStack;
+    HRESULT CreateInputDevice(LPDIRECTINPUTDEVICE8 *device, GUID guidDevice, const DIDATAFORMAT *pdidDataFormat,
+                              u32 dwFlags, u32 buf_size);
 
-		void						MouseUpdate();
-		void						KeyUpdate();
+    //	xr_stack<IInputReceiver*>	cbStack;
+    xr_vector<IInputReceiver *> cbStack;
 
-	public:
-		sxr_mouse					mouse_property;
-		sxr_key						key_property;
-		u32							dwCurTime;
+    void MouseUpdate();
+    void KeyUpdate();
 
-		void						SetAllAcquire(BOOL bAcquire = TRUE);
-		void						SetMouseAcquire(BOOL bAcquire);
-		void						SetKBDAcquire(BOOL bAcquire);
+  public:
+    sxr_mouse mouse_property;
+    sxr_key key_property;
+    u32 dwCurTime;
 
-		void						iCapture(IInputReceiver* pc);
-		void						iRelease(IInputReceiver* pc);
-		BOOL						iGetAsyncKeyState(int dik);
-		BOOL						iGetAsyncBtnState(int btn);
-		void						iGetLastMouseDelta(Ivector2& p) { p.set(offs[0],offs[1]); }
+    void SetAllAcquire(BOOL bAcquire = TRUE);
+    void SetMouseAcquire(BOOL bAcquire);
+    void SetKBDAcquire(BOOL bAcquire);
 
-		CInput(BOOL bExclusive = true, int deviceForInit = default_key);
-		~CInput();
+    void iCapture(IInputReceiver *pc);
+    void iRelease(IInputReceiver *pc);
+    BOOL iGetAsyncKeyState(int dik);
+    BOOL iGetAsyncBtnState(int btn);
+    void iGetLastMouseDelta(Ivector2 &p)
+    {
+        p.set(offs[0], offs[1]);
+    }
 
-		virtual void				OnFrame(void);
-		virtual void				OnAppActivate(void);
-		virtual void				OnAppDeactivate(void);
+    CInput(BOOL bExclusive = true, int deviceForInit = default_key);
+    ~CInput();
 
-		IInputReceiver* CurrentIR();
+    virtual void OnFrame(void);
+    virtual void OnAppActivate(void);
+    virtual void OnAppDeactivate(void);
 
-	public:
-				void				exclusive_mode(const bool& exclusive);
-				bool				get_exclusive_mode();
-				bool				get_dik_name(int dik, LPSTR dest, int dest_sz);
+    IInputReceiver *CurrentIR();
+
+  public:
+    void exclusive_mode(const bool &exclusive);
+    bool get_exclusive_mode();
+    bool get_dik_name(int dik, LPSTR dest, int dest_sz);
 };
 
-extern ENGINE_API CInput* pInput;
+extern ENGINE_API CInput *pInput;
 
 #endif //__XR_INPUT__

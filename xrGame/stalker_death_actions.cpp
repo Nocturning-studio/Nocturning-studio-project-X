@@ -6,17 +6,17 @@
 //	Description : Stalker death action classes
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 #include "stalker_death_actions.h"
 #include "ai/stalker/ai_stalker.h"
-#include "stalker_decision_space.h"
-#include "script_game_object.h"
-#include "movement_manager_space.h"
-#include "detail_path_manager_space.h"
-#include "stalker_movement_manager.h"
-#include "inventory.h"
-#include "weapon.h"
 #include "clsid_game.h"
+#include "detail_path_manager_space.h"
+#include "inventory.h"
+#include "movement_manager_space.h"
+#include "script_game_object.h"
+#include "stalker_decision_space.h"
+#include "stalker_movement_manager.h"
+#include "stdafx.h"
+#include "weapon.h"
 #include "xr_level_controller.h"
 
 using namespace StalkerDecisionSpace;
@@ -25,86 +25,88 @@ using namespace StalkerDecisionSpace;
 // CStalkerActionDead
 //////////////////////////////////////////////////////////////////////////
 
-CStalkerActionDead::CStalkerActionDead	(CAI_Stalker *object, LPCSTR action_name) :
-	inherited							(object,action_name)
+CStalkerActionDead::CStalkerActionDead(CAI_Stalker *object, LPCSTR action_name) : inherited(object, action_name)
 {
 }
 
-bool CStalkerActionDead::fire			() const
+bool CStalkerActionDead::fire() const
 {
-	if (object().inventory().TotalWeight() <= 0)
-		return							(false);
-	
-	CWeapon								*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
-	if (!weapon)
-		return							(false);
+    if (object().inventory().TotalWeight() <= 0)
+        return (false);
 
-	if (!weapon->GetAmmoElapsed())
-		return							(false);
+    CWeapon *weapon = smart_cast<CWeapon *>(object().inventory().ActiveItem());
+    if (!weapon)
+        return (false);
 
-	if (!object().hammer_is_clutched())
-		return							(false);
+    if (!weapon->GetAmmoElapsed())
+        return (false);
 
-	if (Device.dwTimeGlobal - object().GetLevelDeathTime() > 500)
-		return							(false);
+    if (!object().hammer_is_clutched())
+        return (false);
 
-	return								(true);
+    if (Device.dwTimeGlobal - object().GetLevelDeathTime() > 500)
+        return (false);
+
+    return (true);
 }
 
-void CStalkerActionDead::initialize		()
+void CStalkerActionDead::initialize()
 {
-	inherited::initialize				();
+    inherited::initialize();
 
-	if (!fire())
-		return;
+    if (!fire())
+        return;
 
-	object().inventory().Action			(kWPN_FIRE,CMD_START);
-		
-	typedef xr_vector<CInventorySlot>	SLOTS;
+    object().inventory().Action(kWPN_FIRE, CMD_START);
 
-	SLOTS::iterator						I = object().inventory().m_slots.begin(), B = I;
-	SLOTS::iterator						E = object().inventory().m_slots.end();
-	for ( ; I != E; ++I) {
-		if ((I - B) == (int)object().inventory().GetActiveSlot())
-			continue;
+    typedef xr_vector<CInventorySlot> SLOTS;
 
-		if (!(*I).m_pIItem)
-			continue;
+    SLOTS::iterator I = object().inventory().m_slots.begin(), B = I;
+    SLOTS::iterator E = object().inventory().m_slots.end();
+    for (; I != E; ++I)
+    {
+        if ((I - B) == (int)object().inventory().GetActiveSlot())
+            continue;
 
-		if ((*I).m_pIItem->object().CLS_ID == CLSID_IITEM_BOLT)
-			continue;
+        if (!(*I).m_pIItem)
+            continue;
 
-		object().inventory().Ruck		((*I).m_pIItem);
-	}
+        if ((*I).m_pIItem->object().CLS_ID == CLSID_IITEM_BOLT)
+            continue;
+
+        object().inventory().Ruck((*I).m_pIItem);
+    }
 }
 
-void CStalkerActionDead::execute		()
+void CStalkerActionDead::execute()
 {
-	inherited::execute					();
+    inherited::execute();
 
-	object().movement().enable_movement(false);
+    object().movement().enable_movement(false);
 
-	if (fire())
-		return;
+    if (fire())
+        return;
 
-	typedef xr_vector<CInventorySlot>	SLOTS;
+    typedef xr_vector<CInventorySlot> SLOTS;
 
-	SLOTS::iterator						I = object().inventory().m_slots.begin(), B = I;
-	SLOTS::iterator						E = object().inventory().m_slots.end();
-	for ( ; I != E; ++I) {
-		if (!(*I).m_pIItem)
-			continue;
-		
-		if ((*I).m_pIItem->object().CLS_ID == CLSID_IITEM_BOLT)
-			continue;
+    SLOTS::iterator I = object().inventory().m_slots.begin(), B = I;
+    SLOTS::iterator E = object().inventory().m_slots.end();
+    for (; I != E; ++I)
+    {
+        if (!(*I).m_pIItem)
+            continue;
 
-		if ((I - B) == (int)object().inventory().GetActiveSlot()) {
-			(*I).m_pIItem->SetDropManual	(TRUE);
-			continue;
-		}
+        if ((*I).m_pIItem->object().CLS_ID == CLSID_IITEM_BOLT)
+            continue;
 
-		object().inventory().Ruck		((*I).m_pIItem);
-	}
+        if ((I - B) == (int)object().inventory().GetActiveSlot())
+        {
+            (*I).m_pIItem->SetDropManual(TRUE);
+            continue;
+        }
 
-	set_property						(eWorldPropertyDead,true);
+        object().inventory().Ruck((*I).m_pIItem);
+    }
+
+    set_property(eWorldPropertyDead, true);
 }

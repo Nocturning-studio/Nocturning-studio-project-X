@@ -1,30 +1,30 @@
-#include "stdafx.h"
-#include "snork.h"
 #include "snork_jump.h"
-//#include "../jump_ability.h"
+#include "snork.h"
+#include "stdafx.h"
+// #include "../jump_ability.h"
 #include "../../../../xrEngine/skeletonanimated.h"
 #include "../../../level.h"
 
-//CSnorkJump::CSnorkJump(CSnork *monster)
+// CSnorkJump::CSnorkJump(CSnork *monster)
 //{
 //	m_object				= monster;
-//	
-//	//m_jumper				= xr_new<CJumpingAbility>();				
+//
+//	//m_jumper				= xr_new<CJumpingAbility>();
 //	//m_jumper->init_external	(m_object);
 //	//m_jumper->reinit		(MotionID(),MotionID(),MotionID());
-//}
+// }
 //
-//CSnorkJump::~CSnorkJump()
+// CSnorkJump::~CSnorkJump()
 //{
 //	xr_delete(m_jumper);
-//}
+// }
 //
-//void CSnorkJump::load(LPCSTR section)
+// void CSnorkJump::load(LPCSTR section)
 //{
 //	//m_jumper->load(section);
-//}
+// }
 //
-//void CSnorkJump::update_frame()
+// void CSnorkJump::update_frame()
 //{
 //	//if (!m_jumper->active()) return;
 //
@@ -36,7 +36,7 @@
 //	//	} else if (dist < 2.f) {
 //	//		m_jumper->stop();
 //	//		init_jump_specific();
-//	//		
+//	//
 //	//		Fvector dir;
 //	//		float h,p;
 //	//		float h2,p2;
@@ -45,7 +45,7 @@
 //	//		dir.set		(1,0,0);
 //	//		dir.setHP	(h,p2);
 //	//		dir.normalize();
-//	//		
+//	//
 //	//		Fvector pos;
 //	//		pos.mad		(m_target_object->Position(), dir, 4.f);
 //	//		pos.y+=2.f;
@@ -57,14 +57,14 @@
 //	//}
 //	//
 //	//m_jumper->update_frame();
-//}
+// }
 //
-//void CSnorkJump::try_to_jump(u32 velocity_mask)
+// void CSnorkJump::try_to_jump(u32 velocity_mask)
 //{
 //	//CObject *target = const_cast<CEntityAlive *>(m_object->EnemyMan.get_enemy());
 //	CObject *target = Level().CurrentEntity();
 //	if (!target) return;
-//	 
+//
 //	m_specific_jump		= false;
 //	m_target_object		= target;
 //	m_velocity_mask		= velocity_mask;
@@ -90,9 +90,9 @@
 //	}
 //
 //	//try_jump_specific();
-//}
+// }
 //
-//void CSnorkJump::try_jump_normal()
+// void CSnorkJump::try_jump_normal()
 //{
 //	if (!m_object->EnemyMan.see_enemy_now()) return;
 //
@@ -100,9 +100,9 @@
 //		init_jump_normal	();
 //		m_jumper->jump		(m_target_object, m_velocity_mask);
 //	}
-//}
+// }
 //
-//void CSnorkJump::try_jump_specific()
+// void CSnorkJump::try_jump_specific()
 //{
 //	float			yaw, pitch;
 //	Fvector().sub	(m_target_object->Position(), m_object->Position()).getHP(yaw, pitch);
@@ -112,7 +112,7 @@
 //	//if (angle_difference(m_object->movement().m_body.current.yaw, -yaw) < PI_DIV_2) {
 //	//	return;
 //	//}
-//	
+//
 //	// 2. Trace geometry
 //	m_cur_dist = trace_current(10.f);
 //	if (m_cur_dist > 10.f) return;
@@ -129,9 +129,9 @@
 //	m_jumper->disable_bounce();
 //
 //	m_specific_jump = true;
-//}
+// }
 //
-//void CSnorkJump::init_jump_normal()
+// void CSnorkJump::init_jump_normal()
 //{
 //	MotionID			def1, def2, def3;
 //	CKinematicsAnimated	*pSkel = smart_cast<CKinematicsAnimated*>(m_object->Visual());
@@ -141,9 +141,9 @@
 //	def3				= pSkel->ID_Cycle_Safe("stand_somersault_0");	VERIFY(def3);
 //
 //	m_jumper->reinit	(def1, def2, def3);
-//}
+// }
 //
-//void CSnorkJump::init_jump_specific()
+// void CSnorkJump::init_jump_specific()
 //{
 //	MotionID			def1, def2, def3;
 //	CKinematicsAnimated	*pSkel = smart_cast<CKinematicsAnimated*>(m_object->Visual());
@@ -153,12 +153,12 @@
 //	def3				= pSkel->ID_Cycle_Safe("stand_somersault_0");	VERIFY(def3);
 //
 //	m_jumper->reinit	(def1, def2, def3);
-//}
+// }
 //
-//float CSnorkJump::trace_current(float dist)
+// float CSnorkJump::trace_current(float dist)
 //{
 //	float ret_val = flt_max;
-//	
+//
 //	BOOL				enabled = m_object->getEnabled();
 //	m_object->setEnabled(FALSE);
 //	collide::rq_result	l_rq;
@@ -175,4 +175,4 @@
 //	m_object->setEnabled(enabled);
 //
 //	return ret_val;
-//}
+// }

@@ -11,22 +11,23 @@
 class CStalkerAnimationData;
 class CKinematicsAnimated;
 
-class CStalkerAnimationDataStorage {
-public:
-	typedef std::pair<CKinematicsAnimated*,CStalkerAnimationData*>		OBJECT;
-	typedef xr_vector<OBJECT>											OBJECTS;
+class CStalkerAnimationDataStorage
+{
+  public:
+    typedef std::pair<CKinematicsAnimated *, CStalkerAnimationData *> OBJECT;
+    typedef xr_vector<OBJECT> OBJECTS;
 
-private:
-	OBJECTS								m_objects;
+  private:
+    OBJECTS m_objects;
 
-public:
-	virtual								~CStalkerAnimationDataStorage	();
-			const CStalkerAnimationData	*object							(CKinematicsAnimated *skeleton_animated);
-			void						clear							();
+  public:
+    virtual ~CStalkerAnimationDataStorage();
+    const CStalkerAnimationData *object(CKinematicsAnimated *skeleton_animated);
+    void clear();
 };
 
-IC		CStalkerAnimationDataStorage	&stalker_animation_data_storage	();
+IC CStalkerAnimationDataStorage &stalker_animation_data_storage();
 
-extern CStalkerAnimationDataStorage		*g_stalker_animation_data_storage;
+extern CStalkerAnimationDataStorage *g_stalker_animation_data_storage;
 
 #include "stalker_animation_data_storage_inline.h"

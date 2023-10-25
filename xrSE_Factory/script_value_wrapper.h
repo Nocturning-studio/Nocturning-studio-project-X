@@ -10,79 +10,79 @@
 
 #include "script_value.h"
 
-template <typename _type>
-class CScriptValueWrapperImpl : public CScriptValue {
-private:
-	typedef CScriptValue inherited;
+template <typename _type> class CScriptValueWrapperImpl : public CScriptValue
+{
+  private:
+    typedef CScriptValue inherited;
 
-protected:
-	_type			m_value;
+  protected:
+    _type m_value;
 
-public:
-	IC				CScriptValueWrapperImpl	(luabind::object object, LPCSTR name);
-	virtual	void	assign					();
-	virtual	_type	*value					();
+  public:
+    IC CScriptValueWrapperImpl(luabind::object object, LPCSTR name);
+    virtual void assign();
+    virtual _type *value();
 };
 
-template <typename _type>
-class CScriptValueWrapper : public CScriptValueWrapperImpl<_type> {
-private:
-	typedef CScriptValueWrapperImpl<_type> inherited;
+template <typename _type> class CScriptValueWrapper : public CScriptValueWrapperImpl<_type>
+{
+  private:
+    typedef CScriptValueWrapperImpl<_type> inherited;
 
-public:
-	IC				CScriptValueWrapper		(luabind::object object, LPCSTR name);
+  public:
+    IC CScriptValueWrapper(luabind::object object, LPCSTR name);
 };
 
-template <>
-class CScriptValueWrapperImpl<bool> : public CScriptValue {
-private:
-	typedef CScriptValue inherited;
+template <> class CScriptValueWrapperImpl<bool> : public CScriptValue
+{
+  private:
+    typedef CScriptValue inherited;
 
-protected:
-	BOOL			m_value;
+  protected:
+    BOOL m_value;
 
-public:
-	IC				CScriptValueWrapperImpl	(luabind::object object, LPCSTR name) : inherited(object,name)
-	{
-		m_value		= luabind::object_cast<bool>(object[name]);
-	}
+  public:
+    IC CScriptValueWrapperImpl(luabind::object object, LPCSTR name) : inherited(object, name)
+    {
+        m_value = luabind::object_cast<bool>(object[name]);
+    }
 
-	virtual	void	assign					()
-	{
-		m_object[*m_name]	= !!m_value;
-	}
+    virtual void assign()
+    {
+        m_object[*m_name] = !!m_value;
+    }
 
-	virtual	BOOL	*value					()
-	{
-		return		(&m_value);
-	}
+    virtual BOOL *value()
+    {
+        return (&m_value);
+    }
 };
 
-template <>
-class CScriptValueWrapperImpl<shared_str> : public CScriptValue {
-private:
-	typedef CScriptValue inherited;
+template <> class CScriptValueWrapperImpl<shared_str> : public CScriptValue
+{
+  private:
+    typedef CScriptValue inherited;
 
-protected:
-	shared_str			m_value;
+  protected:
+    shared_str m_value;
 
-public:
-	IC				CScriptValueWrapperImpl	(luabind::object object, LPCSTR name) : inherited(object,name)
-	{
-		m_value		= luabind::object_cast<LPCSTR>(object[name]);
-	}
+  public:
+    IC CScriptValueWrapperImpl(luabind::object object, LPCSTR name) : inherited(object, name)
+    {
+        m_value = luabind::object_cast<LPCSTR>(object[name]);
+    }
 
-	virtual	void	assign					()
-	{
-		if (!*m_value)
-			m_value			= shared_str("");
-		m_object[*m_name]	= *m_value;
-	}
+    virtual void assign()
+    {
+        if (!*m_value)
+            m_value = shared_str("");
+        m_object[*m_name] = *m_value;
+    }
 
-	virtual	shared_str	*value					()
-	{
-		return		(&m_value);
-	}
+    virtual shared_str *value()
+    {
+        return (&m_value);
+    }
 };
 
 #include "script_value_wrapper_inline.h"

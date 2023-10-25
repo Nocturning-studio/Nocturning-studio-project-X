@@ -3,11 +3,11 @@
 
 class CAI_Flesh;
 
-class CStateManagerFlesh : public CMonsterStateManager<CAI_Flesh> {
-	typedef CMonsterStateManager<CAI_Flesh> inherited;
+class CStateManagerFlesh : public CMonsterStateManager<CAI_Flesh>
+{
+    typedef CMonsterStateManager<CAI_Flesh> inherited;
 
-public:
-
-					CStateManagerFlesh	(CAI_Flesh *monster); 
-	virtual void	execute				();
+  public:
+    CStateManagerFlesh(CAI_Flesh *monster);
+    virtual void execute();
 };

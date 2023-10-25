@@ -3,25 +3,21 @@
 
 class CPoltergeist;
 
-class CStateManagerPoltergeist : public CMonsterStateManager<CPoltergeist> {
-	typedef CMonsterStateManager<CPoltergeist> inherited;
+class CStateManagerPoltergeist : public CMonsterStateManager<CPoltergeist>
+{
+    typedef CMonsterStateManager<CPoltergeist> inherited;
 
+  public:
+    CStateManagerPoltergeist(CPoltergeist *obj);
+    virtual ~CStateManagerPoltergeist();
 
-public:
-						CStateManagerPoltergeist		(CPoltergeist *obj);
-	virtual				~CStateManagerPoltergeist	();
+    virtual void reinit();
+    virtual void execute();
 
-	virtual void		reinit						();
-	virtual	void		execute						();
+  private:
+    u32 time_next_flame_attack;
+    u32 time_next_tele_attack;
+    u32 time_next_scare_attack;
 
-private:
-
-			u32			time_next_flame_attack;
-			u32			time_next_tele_attack;
-			u32			time_next_scare_attack;
-
-			void		polter_attack				();
-			
-
-
+    void polter_attack();
 };

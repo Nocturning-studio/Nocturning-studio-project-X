@@ -6,15 +6,16 @@
 #pragma once
 #include "artifact.h"
 
-class CFadedBall : public CArtefact 
+class CFadedBall : public CArtefact
 {
-private:
-	typedef CArtefact inherited;
-public:
-	CFadedBall(void);
-	virtual ~CFadedBall(void);
+  private:
+    typedef CArtefact inherited;
 
-	virtual void Load				(LPCSTR section);
+  public:
+    CFadedBall(void);
+    virtual ~CFadedBall(void);
 
-protected:
+    virtual void Load(LPCSTR section);
+
+  protected:
 };

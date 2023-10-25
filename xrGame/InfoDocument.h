@@ -3,30 +3,31 @@
 // InfoDocument - документ, содержащий сюжетную информацию
 ///////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-#include "inventory_item_object.h"
 #include "InfoPortionDefs.h"
+#include "inventory_item_object.h"
 
-class CInfoDocument: public CInventoryItemObject {
-private:
-    typedef	CInventoryItemObject inherited;
-public:
-	CInfoDocument(void);
-	virtual ~CInfoDocument(void);
+class CInfoDocument : public CInventoryItemObject
+{
+  private:
+    typedef CInventoryItemObject inherited;
 
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void Load				(LPCSTR section);
-	virtual void net_Destroy		();
-	virtual void shedule_Update		(u32 dt);
-	virtual void UpdateCL			();
-	virtual void renderable_Render	();
+  public:
+    CInfoDocument(void);
+    virtual ~CInfoDocument(void);
 
-	virtual void OnH_A_Chield		();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
+    virtual BOOL net_Spawn(CSE_Abstract *DC);
+    virtual void Load(LPCSTR section);
+    virtual void net_Destroy();
+    virtual void shedule_Update(u32 dt);
+    virtual void UpdateCL();
+    virtual void renderable_Render();
 
-protected:
-	//индекс информации, содержащейся в документе
-	shared_str m_Info;
+    virtual void OnH_A_Chield();
+    virtual void OnH_B_Independent(bool just_before_destroy);
+
+  protected:
+    // индекс информации, содержащейся в документе
+    shared_str m_Info;
 };

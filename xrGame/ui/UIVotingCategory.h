@@ -10,36 +10,37 @@ class CUIChangeWeather;
 class CUIXml;
 class CUITextVote;
 
-class CUIVotingCategory : public CUIDialogWnd 
+class CUIVotingCategory : public CUIDialogWnd
 {
-private:
-	typedef CUIDialogWnd inherited;
-public:
-	using CUIDialogWnd::Init;
+  private:
+    typedef CUIDialogWnd inherited;
 
-						CUIVotingCategory	();
-	virtual				~CUIVotingCategory	();
+  public:
+    using CUIDialogWnd::Init;
 
-	virtual bool		OnKeyboard			(int dik, EUIMessages keyboard_action);
-	virtual void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = 0);
+    CUIVotingCategory();
+    virtual ~CUIVotingCategory();
 
-	void				OnBtn				(int i);
-	void				OnBtnCancel			();
+    virtual bool OnKeyboard(int dik, EUIMessages keyboard_action);
+    virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData = 0);
 
-	virtual void		Update				();
+    void OnBtn(int i);
+    void OnBtnCancel();
 
-protected:
-	void				Init				();
+    virtual void Update();
 
-	CUIStatic*			header;
-	CUI3tButton*		btn[7];
-	CUIStatic*			txt[7];
-	CUIStatic*			bkgrnd;
-	CUI3tButton*		btn_cancel;
+  protected:
+    void Init();
 
-	CUIKickPlayer*		kick;
-	CUIChangeMap*		change_map;
-	CUIChangeWeather*	change_weather;
-	CUITextVote*		text_vote;
-	CUIXml*				xml_doc;
+    CUIStatic *header;
+    CUI3tButton *btn[7];
+    CUIStatic *txt[7];
+    CUIStatic *bkgrnd;
+    CUI3tButton *btn_cancel;
+
+    CUIKickPlayer *kick;
+    CUIChangeMap *change_map;
+    CUIChangeWeather *change_weather;
+    CUITextVote *text_vote;
+    CUIXml *xml_doc;
 };

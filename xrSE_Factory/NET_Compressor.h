@@ -8,119 +8,144 @@
 
 #include "xrSyncronize.h"
 
-struct	NET_Compressor_FREQ
+struct NET_Compressor_FREQ
 {
-	u32	table	[257];
+    u32 table[257];
 
-	NET_Compressor_FREQ		()
-	{
-		setZero				();
-	}
-	void	setIdentity		()
-	{
-		for (u32 I=0; I<256; I++) table[I] = 1;
-	}
-	void	setZero			()
-	{
-		for (u32 I=0; I<256; I++) table[I] = 0;
-	}
-	void	setFromWORDS	(u16* data)
-	{
-		for (u32 I=0; I<256; I++) table[I] = u32(data[I]);
-	}
-	void	Cumulate		()
-	{
-		// summarize counters
-		u32 I, total	= 0;
-		for (I=0; I<256; I++)	total += table[I];
+    NET_Compressor_FREQ()
+    {
+        setZero();
+    }
+    void setIdentity()
+    {
+        for (u32 I = 0; I < 256; I++)
+            table[I] = 1;
+    }
+    void setZero()
+    {
+        for (u32 I = 0; I < 256; I++)
+            table[I] = 0;
+    }
+    void setFromWORDS(u16 *data)
+    {
+        for (u32 I = 0; I < 256; I++)
+            table[I] = u32(data[I]);
+    }
+    void Cumulate()
+    {
+        // summarize counters
+        u32 I, total = 0;
+        for (I = 0; I < 256; I++)
+            total += table[I];
 
-		// calculate cumulative freq
+        // calculate cumulative freq
         table[256] = total;
-        for (I=256; I; I--)		table[I-1] = table[I] - table[I-1];
-	}
-	void	Normalize		();
+        for (I = 256; I; I--)
+            table[I - 1] = table[I] - table[I - 1];
+    }
+    void Normalize();
 
-	IC u32&	operator[]	(int id)	{ return table[id]; }
+    IC u32 &operator[](int id)
+    {
+        return table[id];
+    }
 };
 
 // typedefs
-class	NET_Compressor
+class NET_Compressor
 {
-public:
-	typedef u32			code_value;		/* Type of an rangecode value			*/
-	typedef u32			freq;
-private:
-	xrCriticalSection		CS;
+  public:
+    typedef u32 code_value; /* Type of an rangecode value			*/
+    typedef u32 freq;
 
-	// main structure
-	struct rangecoder {
-		u32					low,range,help;
-		BYTE				buffer;
-		u32					bytecount;
-		BYTE*				ptr;
+  private:
+    xrCriticalSection CS;
 
-		IC void				byte_out		(BYTE B)	{ *ptr++ = B;		}
-		IC BYTE				byte_in			()			{ return *ptr++;	}
-	} RNGC;
+    // main structure
+    struct rangecoder
+    {
+        u32 low, range, help;
+        BYTE buffer;
+        u32 bytecount;
+        BYTE *ptr;
 
-	NET_Compressor_FREQ		freqCompress;	// used in compression
-	NET_Compressor_FREQ		freqDecompress;	// used in decompression
-private:
-	/* Start the encoder                                         */
-	/* c is written as first byte in the datastream (header,...) */
-	void				start_encoding		( BYTE* dest, u32 header_size );
+        IC void byte_out(BYTE B)
+        {
+            *ptr++ = B;
+        }
+        IC BYTE byte_in()
+        {
+            return *ptr++;
+        }
+    } RNGC;
 
-	/* Encode a symbol using frequencies                         */
-	/* sy_f is the interval length (frequency of the symbol)     */
-	/* lt_f is the lower end (frequency sum of < symbols)        */
-	/* tot_f is the total interval length (total frequency sum)  */
-	/* or (a lot faster): tot_f = 1<<shift                       */
-	void				encode_freq			( freq sy_f, freq lt_f, freq tot_f );
-	void				encode_shift		( freq sy_f, freq lt_f, freq shift );
-	void				encode_normalize	( );
+    NET_Compressor_FREQ freqCompress;   // used in compression
+    NET_Compressor_FREQ freqDecompress; // used in decompression
+  private:
+    /* Start the encoder                                         */
+    /* c is written as first byte in the datastream (header,...) */
+    void start_encoding(BYTE *dest, u32 header_size);
 
-	/* Encode a byte/short without modelling                     */
-	/* b,s is the data to be encoded                             */
-	void				encode_byte			(freq b)			{ encode_shift( freq(1), freq(b), freq(8) );	}
-	void				encode_short		(freq s)			{ encode_shift( freq(1), freq(s), freq(16) );	}
+    /* Encode a symbol using frequencies                         */
+    /* sy_f is the interval length (frequency of the symbol)     */
+    /* lt_f is the lower end (frequency sum of < symbols)        */
+    /* tot_f is the total interval length (total frequency sum)  */
+    /* or (a lot faster): tot_f = 1<<shift                       */
+    void encode_freq(freq sy_f, freq lt_f, freq tot_f);
+    void encode_shift(freq sy_f, freq lt_f, freq shift);
+    void encode_normalize();
 
-	/* Finish encoding                                           */
-	/* returns number of bytes written                           */
-	u32					done_encoding		( );
+    /* Encode a byte/short without modelling                     */
+    /* b,s is the data to be encoded                             */
+    void encode_byte(freq b)
+    {
+        encode_shift(freq(1), freq(b), freq(8));
+    }
+    void encode_short(freq s)
+    {
+        encode_shift(freq(1), freq(s), freq(16));
+    }
 
-	/* Start the decoder                                         */
-	/* returns the char from start_encoding or EOF               */
-	int					start_decoding		( BYTE* src, u32 header_size );
+    /* Finish encoding                                           */
+    /* returns number of bytes written                           */
+    u32 done_encoding();
 
-	/* Calculate culmulative frequency for next symbol. Does NO update!*/
-	/* tot_f is the total frequency                              */
-	/* or: totf is 1<<shift                                      */
-	/* returns the <= culmulative frequency                      */
-	freq				decode_culfreq		( freq tot_f );
-	freq				decode_culshift		( freq shift );
-	void				decode_normalize	( );
+    /* Start the decoder                                         */
+    /* returns the char from start_encoding or EOF               */
+    int start_decoding(BYTE *src, u32 header_size);
 
-	/* Update decoding state                                     */
-	/* sy_f is the interval length (frequency of the symbol)     */
-	/* lt_f is the lower end (frequency sum of < symbols)        */
-	/* tot_f is the total interval length (total frequency sum)  */
-	void				decode_update		( freq sy_f, freq lt_f, freq tot_f);
-	void				decode_update_shift	( freq f1, freq f2, freq f3)	{ decode_update(f1,f2,freq(1)<<f3); }
+    /* Calculate culmulative frequency for next symbol. Does NO update!*/
+    /* tot_f is the total frequency                              */
+    /* or: totf is 1<<shift                                      */
+    /* returns the <= culmulative frequency                      */
+    freq decode_culfreq(freq tot_f);
+    freq decode_culshift(freq shift);
+    void decode_normalize();
 
-	/* Decode a byte/short without modelling                     */
-	BYTE				decode_byte			( );
-	u16					decode_short		( );
+    /* Update decoding state                                     */
+    /* sy_f is the interval length (frequency of the symbol)     */
+    /* lt_f is the lower end (frequency sum of < symbols)        */
+    /* tot_f is the total interval length (total frequency sum)  */
+    void decode_update(freq sy_f, freq lt_f, freq tot_f);
+    void decode_update_shift(freq f1, freq f2, freq f3)
+    {
+        decode_update(f1, f2, freq(1) << f3);
+    }
 
-	/* Finish decoding                                           */
-	void				done_decoding		( );
+    /* Decode a byte/short without modelling                     */
+    BYTE decode_byte();
+    u16 decode_short();
 
-public:
-	NET_Compressor			();
-	~NET_Compressor			();
+    /* Finish decoding                                           */
+    void done_decoding();
 
-	void					Initialize	(NET_Compressor_FREQ& compress, NET_Compressor_FREQ& decompress);
-	u16					Compress	(BYTE* dest, BYTE* src, u32 count);	// return size of compressed
-	u16					Decompress	(BYTE* dest, BYTE* src, u32 count);	// return decompressed size
+  public:
+    NET_Compressor();
+    ~NET_Compressor();
+
+    void Initialize(NET_Compressor_FREQ &compress, NET_Compressor_FREQ &decompress);
+    u16 Compress(BYTE *dest, BYTE *src, u32 count);   // return size of compressed
+    u16 Decompress(BYTE *dest, BYTE *src, u32 count); // return decompressed size
 };
 
 #endif // !defined(AFX_NET_COMPRESSOR_H__21E1ED1C_BF92_4BF0_94A8_18A27486EBFD__INCLUDED_)

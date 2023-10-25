@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "UIWindow.h"
 #include "../encyclopedia_article_defs.h"
+#include "UIWindow.h"
 
 class CEncyclopediaArticle;
 class CUIFrameWindow;
@@ -21,49 +21,54 @@ class CUIEncyclopediaCore;
 class CUIScrollView;
 class CUITreeViewItem;
 
-class CUIEncyclopediaWnd: public CUIWindow
+class CUIEncyclopediaWnd : public CUIWindow
 {
-private:
-	typedef CUIWindow inherited;
-	enum {eNeedReload=(1<<0),};
-	Flags16				m_flags;
-public:
-						CUIEncyclopediaWnd			();
-	virtual				~CUIEncyclopediaWnd			();
+  private:
+    typedef CUIWindow inherited;
+    enum
+    {
+        eNeedReload = (1 << 0),
+    };
+    Flags16 m_flags;
 
-	virtual void		Init						();
-	virtual void		Show						(bool status);
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = NULL);
-	virtual void		Draw						();
+  public:
+    CUIEncyclopediaWnd();
+    virtual ~CUIEncyclopediaWnd();
 
-	void				AddArticle					(shared_str, bool bReaded);
-	void				DeleteArticles				();
-	bool				HasArticle					(shared_str);
+    virtual void Init();
+    virtual void Show(bool status);
+    virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData = NULL);
+    virtual void Draw();
 
-	void				ReloadArticles				();
-	virtual void		Reset						();
-protected:
-	u32					prevArticlesCount;
-	// Элементы графического оформления
-	CUIFrameWindow*		UIEncyclopediaIdxBkg;
-	CUIFrameWindow*		UIEncyclopediaInfoBkg;
-	CUIFrameLineWnd*	UIEncyclopediaIdxHeader;
-	CUIFrameLineWnd*	UIEncyclopediaInfoHeader;
-	CUIAnimatedStatic*	UIAnimation;
-	CUIStatic*			UIArticleHeader;
+    void AddArticle(shared_str, bool bReaded);
+    void DeleteArticles();
+    bool HasArticle(shared_str);
 
-	// Хранилище статей
-	typedef xr_vector<CEncyclopediaArticle*>			ArticlesDB;
-	typedef ArticlesDB::iterator						ArticlesDB_it;
+    void ReloadArticles();
+    virtual void Reset();
 
-	ArticlesDB				m_ArticlesDB;
-	CGameFont*				m_pTreeRootFont;
-	u32						m_uTreeRootColor;
-	CGameFont*				m_pTreeItemFont;
-	u32						m_uTreeItemColor;
+  protected:
+    u32 prevArticlesCount;
+    // Элементы графического оформления
+    CUIFrameWindow *UIEncyclopediaIdxBkg;
+    CUIFrameWindow *UIEncyclopediaInfoBkg;
+    CUIFrameLineWnd *UIEncyclopediaIdxHeader;
+    CUIFrameLineWnd *UIEncyclopediaInfoHeader;
+    CUIAnimatedStatic *UIAnimation;
+    CUIStatic *UIArticleHeader;
 
-	CUIListWnd*				UIIdxList;
-	CUIScrollView*			UIInfoList;
+    // Хранилище статей
+    typedef xr_vector<CEncyclopediaArticle *> ArticlesDB;
+    typedef ArticlesDB::iterator ArticlesDB_it;
 
-	void				SetCurrentArtice(CUITreeViewItem *pTVItem);
+    ArticlesDB m_ArticlesDB;
+    CGameFont *m_pTreeRootFont;
+    u32 m_uTreeRootColor;
+    CGameFont *m_pTreeItemFont;
+    u32 m_uTreeItemColor;
+
+    CUIListWnd *UIIdxList;
+    CUIScrollView *UIInfoList;
+
+    void SetCurrentArtice(CUITreeViewItem *pTVItem);
 };
