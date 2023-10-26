@@ -36,7 +36,7 @@ void CHW::Reset(HWND hwnd)
 
 #ifndef _EDITOR
 #ifndef DEDICATED_SERVER
-	BOOL	bWindowed = !psDeviceFlags.is(rsFullscreen);
+	BOOL bWindowed = strstr(Core.Params, "-windowed") ? TRUE : !psDeviceFlags.is(rsFullscreen);
 #else
 	BOOL	bWindowed = TRUE;
 #endif
@@ -423,16 +423,15 @@ BOOL	CHW::support(D3DFORMAT fmt, DWORD type, DWORD usage)
 
 void	CHW::updateWindowProps(HWND m_hWnd)
 {
-	//	BOOL	bWindowed				= strstr(Core.Params,"-dedicated") ? TRUE : !psDeviceFlags.is	(rsFullscreen);
 #ifndef DEDICATED_SERVER
-	BOOL	bWindowed = !psDeviceFlags.is(rsFullscreen);
+	BOOL bWindowed = !psDeviceFlags.is(rsFullscreen);
 #else
 	BOOL	bWindowed = TRUE;
 #endif
 
 	u32		dwWindowStyle = 0;
 	// Set window properties depending on what mode were in.
-	if (bWindowed) {
+	if (bWindowed || strstr(Core.Params, "-windowed")) {
 		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_DLGFRAME | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX));
 		// When moving from fullscreen to windowed mode, it is important to
 		// adjust the window size after recreating the device rather than
