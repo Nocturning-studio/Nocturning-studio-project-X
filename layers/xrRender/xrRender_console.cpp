@@ -804,7 +804,7 @@ void		xrRender_initconsole()
 
 	CMD2(CCC_tf_MipBias, "r2_tf_mipbias", &ps_r2_tf_Mipbias);
 
-	CMD2(CCC_R2GM, "r2em", &ps_r2_gmaterial);
+	CMD2(CCC_R2GM, "r2_global_material", &ps_r2_gmaterial);
 
 	CMD4(CCC_Float, "r2_ls_dsm_kernel", &ps_r2_ls_dsm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_psm_kernel", &ps_r2_ls_psm_kernel, .1f, 3.f);
