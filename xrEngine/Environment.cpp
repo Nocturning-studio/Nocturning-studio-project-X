@@ -518,13 +518,12 @@ void CEnvironment::OnFrame()
 	eff_Thunderbolt->OnFrame(t_id, CurrentEnv->bolt_period, CurrentEnv->bolt_duration);
 	eff_Rain->OnFrame();
 
-	// ******************** Environment params (setting)
+	// ******************** Environment params (setting) (R1 specific fog)
 	u32 FogFar = CurrentEnv->far_plane;
-	u32 FogNear = FogFar * (1.0f - CurrentEnv->fog_density);
+	u32 FogNear = FogFar * (1.0f - CurrentEnv->fog_density * 10.0f);
 
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, color_rgba_f(CurrentEnv->fog_color.x, CurrentEnv->fog_color.y, CurrentEnv->fog_color.z, 0)));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGSTART, FogNear));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGEND, FogFar));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGDENSITY, CurrentEnv->fog_density));
 }
 
 void CEnvironment::calculate_dynamic_sun_dir()
