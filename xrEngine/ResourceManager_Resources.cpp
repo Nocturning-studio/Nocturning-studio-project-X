@@ -239,7 +239,7 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
 #endif
-		HRESULT const _hr = ::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, (void*&)_ps);
+		HRESULT const _hr = ::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target, D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, (void*&)_ps);
 
 		if (FAILED(_hr)) {
 			FlushLog();

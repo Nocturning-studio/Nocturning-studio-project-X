@@ -565,10 +565,10 @@ static HRESULT create_shader(
 	if (disasm)
 	{
 		ID3DXBuffer* _disasm = 0;
-		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &_disasm);
-		string_path		dname;
-		strconcat(sizeof(dname), dname, "disassembied_shaders\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
-		IWriter* W = FS.w_open("$debug_data_root$", dname);
+		D3DXDisassembleShader(LPDWORD(buffer), TRUE, 0, &_disasm);
+		string_path	dname;
+		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", file_name, ('v' == pTarget[0]) ? "_vertex_shader.txt" : "_pixel_shader.txt");
+		IWriter* W = FS.w_open("$app_data_root$", dname);
 		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
 		FS.w_close(W);
 		_RELEASE(_disasm);
@@ -634,7 +634,6 @@ HRESULT	CRender::shader_compile(
 
 	char c_ao[32];
 	char c_ao_quality[32];
-	char c_ao_use[32];
 
 	char c_aa[32];
 	char c_aa_quality[32];
@@ -1141,14 +1140,19 @@ HRESULT	CRender::shader_compile(
 
 	HRESULT _result = E_FAIL;
 
-	string_path	folder_name, folder = {0};
-	strconcat(sizeof(folder), folder, folder, "objects\\", getShaderPath(), "\\");
-	strcat(folder, name);
-	strcat(folder, ".");
-
 	char extension[3];
 	strncpy_s(extension, pTarget, 2);
+
+	string_path	folder_name, folder = {0};
+	strcpy(folder, "precompiled_shaders\\");
+	strcat(folder, getShaderPath());
+	strcat(folder, "\\");
+	strcat(folder, name);
+	strcat(folder, ".");
 	strcat(folder, extension);
+	strcat(folder, "_");
+	strcat(folder, sh_name);
+	strcat(folder, ".xrprecompiledshader");
 
 	FS.update_path(folder_name, "$game_shaders$", folder);
 	strcat(folder_name, "\\");
@@ -1160,12 +1164,15 @@ HRESULT	CRender::shader_compile(
 	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name)) {
 		//		Msg				( "no library shader found" );
 		string_path file = {0};
-		strconcat(sizeof(file), file, file, "shaders_cache\\", getShaderPath(), "\\");
+		strcpy(file, "shaders_cache\\");
+		strcat(file, getShaderPath());
+		strcat(file, "\\");
 		strcat(file, name);
 		strcat(file, ".");
 		strcat(file, extension);
-		strcat(file, "\\");
+		strcat(file, "_");
 		strcat(file, sh_name);
+		strcat(file, ".xrprecompiledshader");
 		FS.update_path(file_name, "$app_data_root$", file);
 	}
 	else
@@ -1209,7 +1216,7 @@ HRESULT	CRender::shader_compile(
 		LPD3DXCONSTANTTABLE pConstants = NULL;
 		LPD3DXINCLUDE pInclude = (LPD3DXINCLUDE)&Includer;
 
-		_result = D3DXCompileShader((LPCSTR)pSrcData, SrcDataLen, defines, pInclude, pFunctionName, pTarget, Flags | D3DXSHADER_USE_LEGACY_D3DX9_31_DLL, &pShaderBuf, &pErrorBuf, &pConstants);
+		_result = D3DXCompileShader((LPCSTR)pSrcData, SrcDataLen, defines, pInclude, pFunctionName, pTarget, Flags | D3DXSHADER_USE_LEGACY_D3DX9_31_DLL | D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, &pShaderBuf, &pErrorBuf, &pConstants);
 
 		if (SUCCEEDED(_result)) {
 			IWriter* file = FS.w_open(file_name);
