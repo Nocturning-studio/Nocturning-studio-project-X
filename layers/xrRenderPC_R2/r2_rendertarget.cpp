@@ -494,12 +494,8 @@ CRenderTarget::CRenderTarget		()
 	//Create shader resource for fog
 	s_frame_overlay.create(b_frame_overlay, "r2\\frame overlay");
 
-	//Depth of field
-	if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
-	{
-		//Create shader resource
-		s_dof.create(b_dof, "r2\\dof");
-	}
+	//Create shader resource
+	s_dof.create(b_dof, "r2\\dof");
 
 	// PP
 	s_postprocess.create				("postprocess");
