@@ -60,12 +60,15 @@ class CRender : public R_dsgraph_structure
 		u32 mblur : 1;
 
 		u32 sunfilter : 1;
-		u32 sunstatic : 1;
 		u32 sjitter : 1;
 		u32 noshadows : 1;
 		u32 Tshadows : 1; // transluent shadows
+
 		u32 disasm : 1;
+
+		// Render specification
 		u32 advancedpp : 1; //	advanced post process (DOF, AO, etc.)
+		u32 sunstatic : 1;
 
 		u32 forceskinw : 1;
 	} o;
@@ -206,9 +209,17 @@ class CRender : public R_dsgraph_structure
 
   public:
 	// feature level
-	virtual GenerationLevel get_generation()
+	virtual RenderType get_render_type()
 	{
-		return IRender_interface::GENERATION_R2;
+		return IRender_interface::RENDER_R2;
+	}
+
+	virtual RenderLightingType get_render_lighting_type()
+	{
+		if (o.sunstatic)
+			return IRender_interface::RENDER_LIGHTMAP_LIGHTED;
+		else
+			return IRender_interface::RENDER_DYNAMIC_LIGHTED;
 	}
 
 	// Loading / Unloading

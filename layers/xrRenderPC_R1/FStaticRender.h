@@ -112,9 +112,14 @@ class CRender : public R_dsgraph_structure
 
   public:
 	// feature level
-	virtual GenerationLevel get_generation()
+	virtual RenderType get_render_type()
 	{
-		return IRender_interface::GENERATION_R1;
+		return IRender_interface::RENDER_R1;
+	}
+
+	virtual RenderLightingType get_render_lighting_type()
+	{
+		return IRender_interface::RENDER_LIGHTMAP_LIGHTED;
 	}
 
 	// Loading / Unloading

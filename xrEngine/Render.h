@@ -144,17 +144,21 @@ class ENGINE_API IRender_Target
 class ENGINE_API IRender_interface
 {
   public:
-	enum GenerationLevel
+	enum RenderType
 	{
-		GENERATION_R1 = 81,
-		GENERATION_DX81 = 81,
-		GENERATION_R2 = 90,
-		GENERATION_DX90 = 90,
-		GENERATION_forcedword = u32(-1)
+		RENDER_R1 = 0,
+		RENDER_R2 = 1,
+		RENDER_forcedword = u32(-1)
+	};
+	enum RenderLightingType
+	{
+		RENDER_LIGHTMAP_LIGHTED = 0,
+		RENDER_DYNAMIC_LIGHTED = 1,
+		RENDER_LIGHTING_TYPE_forcedword = u32(-1)
 	};
 	enum ScreenshotMode
 	{
-		SM_NORMAL = 0,		 // jpeg,	name ignored
+		SM_NORMAL = 0,		 // jpeg\png,	name ignored
 		SM_FOR_CUBEMAP = 1,	 // tga,		name used as postfix
 		SM_FOR_GAMESAVE = 2, // dds/dxt1,name used as full-path
 		SM_FOR_LEVELMAP = 3, // tga,		name used as postfix (level_name)
@@ -171,7 +175,9 @@ class ENGINE_API IRender_interface
 
   public:
 	// feature level
-	virtual GenerationLevel get_generation() = 0;
+	virtual RenderType get_render_type() = 0;
+
+	virtual RenderLightingType get_render_lighting_type() = 0;
 
 	// Loading / Unloading
 	virtual void create() = 0;

@@ -479,11 +479,11 @@ void CEnvironment::OnFrame()
 	float current_weight;
 	lerp(current_weight);
 
-	if (::Render->get_generation() == IRender_interface::GENERATION_R2)
-	{
+	if (::Render->get_render_lighting_type() == IRender_interface::RENDER_DYNAMIC_LIGHTED)
 		calculate_dynamic_sun_dir();
 
-		// tonemapping in PS
+	if (::Render->get_render_type() == IRender_interface::RENDER_R2)
+	{
 		CurrentEnv->sky_r_textures.push_back(mk_pair(2, autoexposure));
 		CurrentEnv->sky_r_textures_env.push_back(mk_pair(2, autoexposure));
 		CurrentEnv->clouds_r_textures.push_back(mk_pair(2, autoexposure));
