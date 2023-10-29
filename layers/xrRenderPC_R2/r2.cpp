@@ -102,23 +102,31 @@ void CRender::create()
 	// hardware
 	///////////////////////////////////////////////////
 	// Smap res choosing
-	switch (ps_r2_sun_quality)
+#pragma todo(Deathman to Deathman: Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot/point источников света)
+	if (o.sunstatic)
 	{
-	case 1:
 		o.smapsize = 1024;
-		break;
-	case 2:
-		o.smapsize = 1536;
-		break;
-	case 3:
-		o.smapsize = 1536;
-		break;
-	case 4:
-		o.smapsize = 2048;
-		break;
-	case 5:
-		o.smapsize = 2560;
-		break;
+	}
+	else
+	{
+		switch (ps_r2_sun_quality)
+		{
+		case 1:
+			o.smapsize = 1024;
+			break;
+		case 2:
+			o.smapsize = 1536;
+			break;
+		case 3:
+			o.smapsize = 1536;
+			break;
+		case 4:
+			o.smapsize = 2048;
+			break;
+		case 5:
+			o.smapsize = 2560;
+			break;
+		}
 	}
 	///////////////////////////////////////////////////
 
