@@ -232,25 +232,23 @@ CRenderTarget::CRenderTarget()
 
 	//	NORMAL
 	{
-		u32 w = Device.dwWidth, h = Device.dwHeight;
-
-		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, w, h, D3DFMT_A16B16G16R16F);
-		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, w, h, D3DFMT_A16B16G16R16F);
-		rt_Accumulator.create(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F);
+		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_Accumulator.create(r2_RT_accum, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, w, h, D3DFMT_A8R8G8B8);
-			rt_Generic_0.create(r2_RT_generic0, w, h, D3DFMT_A8R8G8B8);
-			rt_Generic_1.create(r2_RT_generic1, w, h, D3DFMT_A8R8G8B8);
-			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A8R8G8B8);
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 		}
 		else
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, w, h, D3DFMT_A16B16G16R16F);
-			rt_Generic_0.create(r2_RT_generic0, w, h, D3DFMT_A16B16G16R16F);
-			rt_Generic_1.create(r2_RT_generic1, w, h, D3DFMT_A16B16G16R16F);
-			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A16B16G16R16F);
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		}
 	}
 
@@ -344,21 +342,19 @@ CRenderTarget::CRenderTarget()
 	// AO
 	if (RImplementation.o.advancedpp)
 	{
-		u32 Weight = Device.dwWidth, Height = Device.dwHeight;
-
-		u32 BaseAOTexWeight = Weight, BaseAOTexHeight = Height;
+		u32 AOTexWeight = dwWidth, AOTexHeight = dwHeight;
 
 		if (ps_r2_ao_quality <= 2)
 		{
-			BaseAOTexWeight *= 0.85f;
-			BaseAOTexHeight *= 0.85f;
+			AOTexWeight *= 0.85f;
+			AOTexHeight *= 0.85f;
 		}
 
 		// Create rendertarget
-		rt_ao_base.create(r2_RT_ao_base, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao_blurred1.create(r2_RT_ao_blurred1, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao_blurred2.create(r2_RT_ao_blurred2, BaseAOTexWeight, BaseAOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao.create(r2_RT_ao, Weight, Height, D3DFMT_X8R8G8B8);
+		rt_ao_base.create(r2_RT_ao_base, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao_blurred1.create(r2_RT_ao_blurred1, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao_blurred2.create(r2_RT_ao_blurred2, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
+		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_X8R8G8B8);
 
 		// Create shader resource
 		s_ao.create(b_ao, "r2\\ao");
@@ -383,7 +379,7 @@ CRenderTarget::CRenderTarget()
 			u_setrt(rt_LUM_pool[it], 0, 0, 0);
 			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L));
 		}
-		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
+		u_setrt(dwWidth, dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 	}
 
 	// COMBINE
