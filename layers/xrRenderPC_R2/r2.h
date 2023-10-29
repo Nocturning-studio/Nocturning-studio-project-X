@@ -67,9 +67,7 @@ class CRender : public R_dsgraph_structure
 		u32 disasm : 1;
 		u32 advancedpp : 1; //	advanced post process (DOF, AO, etc.)
 
-		u32 forcegloss : 1;
 		u32 forceskinw : 1;
-		float forcegloss_v;
 	} o;
 	struct _stats
 	{
@@ -133,7 +131,6 @@ class CRender : public R_dsgraph_structure
 	void LoadBuffers(CStreamReader* fs, BOOL _alternative);
 	void LoadVisuals(IReader* fs);
 	void LoadLights(IReader* fs);
-	void LoadPortals(IReader* fs);
 	void LoadSectors(IReader* fs);
 	void LoadSWIs(CStreamReader* fs);
 
@@ -143,10 +140,8 @@ class CRender : public R_dsgraph_structure
 	void add_leafs_Static(IRender_Visual* pVisual);	 // if detected node's full visibility
 
   public:
-	IRender_Sector* rimp_detectSector(Fvector& P, Fvector& D);
 	void render_main(Fmatrix& mCombined, bool _fportals);
 	void render_forward();
-	void render_smap_direct(Fmatrix& mCombined);
 	void render_indirect(light* L);
 	void render_lights(light_Package& LP);
 	void render_menu();
