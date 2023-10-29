@@ -85,7 +85,7 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	case IRender_interface::SM_FOR_GAMESAVE: {
 		// texture
 		IDirect3DTexture9* texture = NULL;
-		hr = D3DXCreateTexture(HW.pDevice, GAMESAVE_SIZE, GAMESAVE_SIZE, 1, 0, D3DFMT_DXT1, D3DPOOL_SCRATCH, &texture);
+		hr = D3DXCreateTexture(HW.pDevice, GAMESAVE_SIZE, GAMESAVE_SIZE, 1, 0, D3DFMT_DXT5, D3DPOOL_SCRATCH, &texture);
 		if (hr != D3D_OK)
 			goto _end_;
 		if (NULL == texture)
@@ -123,16 +123,6 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	case IRender_interface::SM_NORMAL: {
 		string64 t_stemp;
 		string_path buf;
-		sprintf_s(buf, sizeof(buf), "ss_%s_%s_(%s).png", Core.UserName, timestamp(t_stemp),
-				  (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
-		ID3DXBuffer* saved = 0;
-		CHK_DX(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_PNG, pFB, 0, 0));
-		IWriter* fs = FS.w_open("$screenshots$", buf);
-		R_ASSERT(fs);
-		fs->w(saved->GetBufferPointer(), saved->GetBufferSize());
-		FS.w_close(fs);
-		_RELEASE(saved);
-
 		if (strstr(Core.Params, "-ss_jpg"))
 		{
 			sprintf_s(buf, sizeof(buf), "ssq_%s_%s_(%s).jpg", Core.UserName, timestamp(t_stemp),
@@ -145,13 +135,12 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 			FS.w_close(fs);
 			_RELEASE(saved);
 		}
-
-		if (strstr(Core.Params, "-ss_tga"))
-		{ // hq
-			sprintf_s(buf, sizeof(buf), "ssq_%s_%s_(%s).tga", Core.UserName, timestamp(t_stemp),
+		else
+		{
+			sprintf_s(buf, sizeof(buf), "ss_%s_%s_(%s).png", Core.UserName, timestamp(t_stemp),
 					  (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
 			ID3DXBuffer* saved = 0;
-			CHK_DX(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_TGA, pFB, 0, 0));
+			CHK_DX(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_PNG, pFB, 0, 0));
 			IWriter* fs = FS.w_open("$screenshots$", buf);
 			R_ASSERT(fs);
 			fs->w(saved->GetBufferPointer(), saved->GetBufferSize());
