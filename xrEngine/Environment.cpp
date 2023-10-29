@@ -481,6 +481,8 @@ void CEnvironment::OnFrame()
 
 	if (::Render->get_render_lighting_type() == IRender_interface::RENDER_DYNAMIC_LIGHTED)
 		calculate_dynamic_sun_dir();
+	else
+		CurrentEnv->sun_dir.setHP(deg2rad(292.0f), deg2rad(-25.0f));
 
 	if (::Render->get_render_type() == IRender_interface::RENDER_R2)
 	{
