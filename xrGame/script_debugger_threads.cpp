@@ -7,7 +7,6 @@
 #include "script_thread.h"
 #include "script_debugger.h"
 
-
 u32 CDbgScriptThreads::Fill()
 {
 	u32 res = 0;
@@ -17,7 +16,7 @@ u32 CDbgScriptThreads::Fill()
 
 	if (sp)
 		res += FillFrom(sp);
-	
+
 	sp = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
 	if (sp)
 		res += FillFrom(sp);
@@ -31,16 +30,17 @@ u32 CDbgScriptThreads::Fill()
 u32 CDbgScriptThreads::FillFrom(CScriptProcess* sp)
 {
 	m_threads.clear();
-	const CScriptProcess::SCRIPT_REGISTRY &vScripts = 	sp->scripts();
+	const CScriptProcess::SCRIPT_REGISTRY& vScripts = sp->scripts();
 	CScriptProcess::SCRIPT_REGISTRY::const_iterator It = vScripts.begin();
-	for(;It!=vScripts.end(); ++It){
+	for (; It != vScripts.end(); ++It)
+	{
 		SScriptThread th;
-//		th.pScript		= (*It);
-		th.lua			= (*It)->lua();
-		th.scriptID		= (*It)->thread_reference();
-		th.active		= (*It)->active();
-		strcat			(th.name, *(*It)->script_name());
-		strcat			(th.process, *sp->name());
+		//		th.pScript		= (*It);
+		th.lua = (*It)->lua();
+		th.scriptID = (*It)->thread_reference();
+		th.active = (*It)->active();
+		strcat(th.name, *(*It)->script_name());
+		strcat(th.process, *sp->name());
 		m_threads.push_back(th);
 	}
 	return m_threads.size();
@@ -49,22 +49,23 @@ u32 CDbgScriptThreads::FillFrom(CScriptProcess* sp)
 lua_State* CDbgScriptThreads::FindScript(int nThreadID)
 {
 	xr_vector<SScriptThread>::iterator It = m_threads.begin();
-	for(;It!=m_threads.end();++It){
-		if( (*It).scriptID == nThreadID )
+	for (; It != m_threads.end(); ++It)
+	{
+		if ((*It).scriptID == nThreadID)
 			return (*It).lua;
 	}
 	return 0;
 }
 
-void  CDbgScriptThreads::DrawThreads()
+void CDbgScriptThreads::DrawThreads()
 {
-	//CScriptDebugger::GetDebugger()->ClearThreads();
+	// CScriptDebugger::GetDebugger()->ClearThreads();
 	m_debugger->ClearThreads();
 	xr_vector<SScriptThread>::iterator It = m_threads.begin();
-	for(;It!=m_threads.end();++It){
+	for (; It != m_threads.end(); ++It)
+	{
 		SScriptThread th;
 		th = *It;
 		m_debugger->AddThread(th);
 	}
 }
-

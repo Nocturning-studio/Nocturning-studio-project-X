@@ -20,8 +20,10 @@ void CRenderDevice::_Destroy(BOOL bKeepTextures)
 	Memory.mem_compact();
 }
 
-void CRenderDevice::Destroy(void) {
-	if (!b_is_Ready)			return;
+void CRenderDevice::Destroy(void)
+{
+	if (!b_is_Ready)
+		return;
 
 	Log("Destroying Direct3D...");
 
@@ -59,9 +61,9 @@ void CRenderDevice::Reset(bool precache)
 
 	ShowCursor(TRUE);
 	u32 tm_start = TimerAsync();
-	//if (g_pGamePersistent) 
+	// if (g_pGamePersistent)
 	//{
-		//.		g_pGamePersistent->Environment().OnDeviceDestroy();
+	//.		g_pGamePersistent->Environment().OnDeviceDestroy();
 	//}
 
 	Resources->reset_begin();

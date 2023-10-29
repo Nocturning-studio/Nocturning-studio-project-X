@@ -14,18 +14,20 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDemoPlay::CDemoPlay(const char* name, float ms, u32 cycles, float life_time) : CEffectorCam(cefDemo, life_time/*,FALSE*/)
+CDemoPlay::CDemoPlay(const char* name, float ms, u32 cycles, float life_time)
+	: CEffectorCam(cefDemo, life_time /*,FALSE*/)
 {
 	Msg("*** Playing demo: %s", name);
 	Console->Execute("hud_weapon 0");
-	if (g_bBenchmark)	Console->Execute("hud_draw 0");
+	if (g_bBenchmark)
+		Console->Execute("hud_draw 0");
 
 	fSpeed = ms;
 	dwCyclesLeft = cycles ? cycles : 1;
 
 	m_pMotion = 0;
 	m_MParam = 0;
-	string_path			nm, fn;
+	string_path nm, fn;
 	strcpy_s(nm, sizeof(nm), name);
 
 	if (strext(nm))
@@ -39,14 +41,17 @@ CDemoPlay::CDemoPlay(const char* name, float ms, u32 cycles, float life_time) : 
 		m_MParam->Set(m_pMotion);
 		m_MParam->Play();
 	}
-	else {
-		if (!FS.exist(name)) {
+	else
+	{
+		if (!FS.exist(name))
+		{
 			g_pGameLevel->Cameras().RemoveCamEffector(cefDemo);
 			return;
 		}
 		IReader* fs = FS.r_open(name);
 		u32 sz = fs->length();
-		if (sz % sizeof(Fmatrix) != 0) {
+		if (sz % sizeof(Fmatrix) != 0)
+		{
 			FS.r_close(fs);
 			g_pGameLevel->Cameras().RemoveCamEffector(cefDemo);
 			return;
@@ -68,12 +73,14 @@ CDemoPlay::~CDemoPlay()
 	xr_delete(m_pMotion);
 	xr_delete(m_MParam);
 	Console->Execute("hud_weapon 1");
-	if (g_bBenchmark)		Console->Execute("hud_draw 1");
+	if (g_bBenchmark)
+		Console->Execute("hud_draw 1");
 }
 
 void CDemoPlay::stat_Start()
 {
-	if (stat_started)		return;
+	if (stat_started)
+		return;
 	stat_started = TRUE;
 	Sleep(1);
 	stat_StartFrame = Device.dwFrame;
@@ -84,18 +91,19 @@ void CDemoPlay::stat_Start()
 	fStartTime = 0;
 }
 
-extern string512		g_sBenchmarkName;
+extern string512 g_sBenchmarkName;
 
 void CDemoPlay::stat_Stop()
 {
-	if (!stat_started)		return;
+	if (!stat_started)
+		return;
 	stat_started = FALSE;
-	float	stat_total = stat_Timer_total.GetElapsed_sec();
+	float stat_total = stat_Timer_total.GetElapsed_sec();
 
-	float	rfps_min, rfps_max, rfps_middlepoint, rfps_average;
+	float rfps_min, rfps_max, rfps_middlepoint, rfps_average;
 
 	// total
-	u32	dwFramesTotal = Device.dwFrame - stat_StartFrame;
+	u32 dwFramesTotal = Device.dwFrame - stat_StartFrame;
 	rfps_average = float(dwFramesTotal) / stat_total;
 
 	// min/max/average
@@ -104,17 +112,20 @@ void CDemoPlay::stat_Stop()
 	rfps_middlepoint = 0;
 	for (u32 it = 1; it < stat_table.size(); it++)
 	{
-		float	fps = 1.f / stat_table[it];
-		if (fps < rfps_min)	rfps_min = fps;
-		if (fps > rfps_max)	rfps_max = fps;
+		float fps = 1.f / stat_table[it];
+		if (fps < rfps_min)
+			rfps_min = fps;
+		if (fps > rfps_max)
+			rfps_max = fps;
 		rfps_middlepoint += fps;
 	}
 	rfps_middlepoint /= float(stat_table.size() - 1);
 
 	Msg("* [DEMO] FPS: average[%f], min[%f], max[%f], middle[%f]", rfps_average, rfps_min, rfps_max, rfps_middlepoint);
 
-	if (g_bBenchmark) {
-		string_path			fname;
+	if (g_bBenchmark)
+	{
+		string_path fname;
 
 		if (xr_strlen(g_sBenchmarkName))
 			sprintf_s(fname, sizeof(fname), "%s.result", g_sBenchmarkName);
@@ -122,7 +133,7 @@ void CDemoPlay::stat_Stop()
 			strcpy_s(fname, sizeof(fname), "benchmark.result");
 
 		FS.update_path(fname, "$app_data_root$", fname);
-		CInifile			res(fname, FALSE, FALSE, TRUE);
+		CInifile res(fname, FALSE, FALSE, TRUE);
 		res.w_float("general", "renderer", float(::Render->get_generation()) / 10.f, "dx-level required");
 		res.w_float("general", "min", rfps_min, "absolute minimum");
 		res.w_float("general", "max", rfps_max, "absolute maximum");
@@ -130,9 +141,11 @@ void CDemoPlay::stat_Stop()
 		res.w_float("general", "middle", rfps_middlepoint, "per-frame middle-point");
 		for (u32 it = 1; it < stat_table.size(); it++)
 		{
-			string32		id;
+			string32 id;
 			sprintf_s(id, sizeof(id), "%7d", it);
-			for (u32 c = 0; id[c]; c++) if (' ' == id[c]) id[c] = '0';
+			for (u32 c = 0; id[c]; c++)
+				if (' ' == id[c])
+					id[c] = '0';
 			res.w_float("per_frame_stats", id, 1.f / stat_table[it]);
 		}
 
@@ -140,12 +153,14 @@ void CDemoPlay::stat_Stop()
 	}
 }
 
-#define FIX(a) while (a>=m_count) a-=m_count
+#define FIX(a)                                                                                                         \
+	while (a >= m_count)                                                                                               \
+	a -= m_count
 void spline1(float t, Fvector* p, Fvector* ret)
 {
-	float     t2 = t * t;
-	float     t3 = t2 * t;
-	float     m[4];
+	float t2 = t * t;
+	float t3 = t2 * t;
+	float m[4];
 
 	ret->x = 0.0f;
 	ret->y = 0.0f;
@@ -166,7 +181,8 @@ void spline1(float t, Fvector* p, Fvector* ret)
 BOOL CDemoPlay::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float& fFar, float& fAspect)
 {
 	// skeep a few frames before counting
-	if (Device.dwPrecacheFrame)	return	TRUE;
+	if (Device.dwPrecacheFrame)
+		return TRUE;
 	stat_Start();
 
 	// Per-frame statistics
@@ -183,53 +199,72 @@ BOOL CDemoPlay::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float& 
 		m_pMotion->_Evaluate(m_MParam->Frame(), P, R);
 		m_MParam->Update(Device.fTimeDelta, 1.f, true);
 		fLifeTime -= Device.fTimeDelta;
-		if (m_MParam->bWrapped) { stat_Stop(); stat_Start(); }
+		if (m_MParam->bWrapped)
+		{
+			stat_Stop();
+			stat_Start();
+		}
 		mRotate.setXYZi(R.x, R.y, R.z);
 		D.set(mRotate.k);
 		N.set(mRotate.j);
 	}
 	else
 	{
-		if (seq.empty()) {
+		if (seq.empty())
+		{
 			g_pGameLevel->Cameras().RemoveCamEffector(cefDemo);
-			return		TRUE;
+			return TRUE;
 		}
 
 		fStartTime += Device.fTimeDelta;
 
-		float	ip;
-		float	p = fStartTime / fSpeed;
-		float	t = modff(p, &ip);
-		int		frame = iFloor(ip);
+		float ip;
+		float p = fStartTime / fSpeed;
+		float t = modff(p, &ip);
+		int frame = iFloor(ip);
 		VERIFY(t >= 0);
 
 		if (frame >= m_count)
 		{
 			dwCyclesLeft--;
-			if (0 == dwCyclesLeft)	return FALSE;
+			if (0 == dwCyclesLeft)
+				return FALSE;
 			fStartTime = 0;
 			// just continue
 			// stat_Stop			();
 			// stat_Start			();
 		}
 
-		int f1 = frame; FIX(f1);
-		int f2 = f1 + 1;  FIX(f2);
-		int f3 = f2 + 1;  FIX(f3);
-		int f4 = f3 + 1;  FIX(f4);
+		int f1 = frame;
+		FIX(f1);
+		int f2 = f1 + 1;
+		FIX(f2);
+		int f3 = f2 + 1;
+		FIX(f3);
+		int f4 = f3 + 1;
+		FIX(f4);
 
-		Fmatrix* m1, * m2, * m3, * m4;
+		Fmatrix *m1, *m2, *m3, *m4;
 		Fvector v[4];
 		m1 = (Fmatrix*)&seq[f1];
 		m2 = (Fmatrix*)&seq[f2];
 		m3 = (Fmatrix*)&seq[f3];
 		m4 = (Fmatrix*)&seq[f4];
 
-		for (int i = 0; i < 4; i++) {
-			v[0].x = m1->m[i][0]; v[0].y = m1->m[i][1];  v[0].z = m1->m[i][2];
-			v[1].x = m2->m[i][0]; v[1].y = m2->m[i][1];  v[1].z = m2->m[i][2];
-			v[2].x = m3->m[i][0]; v[2].y = m3->m[i][1];  v[2].z = m3->m[i][2];
-			v[3].x = m4->m[i][0]; v[3].y = m4->m[i][1];  v[3].z = m4->m[i][2];
+		for (int i = 0; i < 4; i++)
+		{
+			v[0].x = m1->m[i][0];
+			v[0].y = m1->m[i][1];
+			v[0].z = m1->m[i][2];
+			v[1].x = m2->m[i][0];
+			v[1].y = m2->m[i][1];
+			v[1].z = m2->m[i][2];
+			v[2].x = m3->m[i][0];
+			v[2].y = m3->m[i][1];
+			v[2].z = m3->m[i][2];
+			v[3].x = m4->m[i][0];
+			v[3].y = m4->m[i][1];
+			v[3].z = m4->m[i][2];
 			spline1(t, &(v[0]), (Fvector*)&(Device.mView.m[i][0]));
 		}
 

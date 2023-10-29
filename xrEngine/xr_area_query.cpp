@@ -2,7 +2,7 @@
 #include "xr_area.h"
 #include "xr_object.h"
 
-using namespace	collide;
+using namespace collide;
 
 /*
 const u32	clStatic		= clQUERY_STATIC+clGET_TRIS;

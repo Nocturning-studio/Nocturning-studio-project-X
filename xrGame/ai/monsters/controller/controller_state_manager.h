@@ -3,14 +3,15 @@
 
 class CController;
 
-class CStateManagerController : public CMonsterStateManager<CController> {
+class CStateManagerController : public CMonsterStateManager<CController>
+{
 
 	typedef CMonsterStateManager<CController> inherited;
 
-public:
-						CStateManagerController		(CController *obj);
-	virtual				~CStateManagerController	();
+  public:
+	CStateManagerController(CController* obj);
+	virtual ~CStateManagerController();
 
-	virtual void		reinit						();
-	virtual	void		execute						();
+	virtual void reinit();
+	virtual void execute();
 };

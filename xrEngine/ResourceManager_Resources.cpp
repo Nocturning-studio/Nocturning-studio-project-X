@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#pragma warning(disable:4995)
+#pragma warning(disable : 4995)
 #include <d3dx9.h>
 #ifndef _EDITOR
-#pragma comment( lib, "d3dx9.lib"		)
+#pragma comment(lib, "d3dx9.lib")
 #include "render.h"
 #endif
-#pragma warning(default:4995)
+#pragma warning(default : 4995)
 
 #include "ResourceManager.h"
 #include "tss.h"
@@ -16,8 +16,7 @@
 
 void fix_texture_name(LPSTR fn);
 
-template <class T>
-BOOL	reclaim(xr_vector<T*>& vec, const T* ptr);
+template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr);
 
 //--------------------------------------------------------------------------------------------------------------
 SState* CResourceManager::_CreateState(SimulatorStates& state_code)
@@ -25,9 +24,11 @@ SState* CResourceManager::_CreateState(SimulatorStates& state_code)
 	// Search equal state-code
 	for (u32 it = 0; it < v_states.size(); it++)
 	{
-		SState* C = v_states[it];;
+		SState* C = v_states[it];
+		;
 		SimulatorStates& base = C->state_code;
-		if (base.equal(state_code))	return C;
+		if (base.equal(state_code))
+			return C;
 	}
 
 	// Create New
@@ -37,15 +38,18 @@ SState* CResourceManager::_CreateState(SimulatorStates& state_code)
 	v_states.back()->state_code = state_code;
 	return v_states.back();
 }
-void		CResourceManager::_DeleteState(const SState* state)
+void CResourceManager::_DeleteState(const SState* state)
 {
-	if (0 == (state->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_states, state))						return;
+	if (0 == (state->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_states, state))
+		return;
 	Msg("! ERROR: Failed to find compiled stateblock");
 }
 
 //--------------------------------------------------------------------------------------------------------------
-SPass* CResourceManager::_CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T, ref_matrix_list& _M, ref_constant_list& _C)
+SPass* CResourceManager::_CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable,
+									 ref_texture_list& _T, ref_matrix_list& _M, ref_constant_list& _C)
 {
 	for (u32 it = 0; it < v_passes.size(); it++)
 		if (v_passes[it]->equal(_state, _ps, _vs, _ctable, _T, _M, _C))
@@ -67,20 +71,23 @@ SPass* CResourceManager::_CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs
 	return v_passes.back();
 }
 
-void		CResourceManager::_DeletePass(const SPass* P)
+void CResourceManager::_DeletePass(const SPass* P)
 {
-	if (0 == (P->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_passes, P))						return;
+	if (0 == (P->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_passes, P))
+		return;
 	Msg("! ERROR: Failed to find compiled pass");
 }
 
 //--------------------------------------------------------------------------------------------------------------
-static BOOL	dcl_equal(D3DVERTEXELEMENT9* a, D3DVERTEXELEMENT9* b)
+static BOOL dcl_equal(D3DVERTEXELEMENT9* a, D3DVERTEXELEMENT9* b)
 {
 	// check sizes
 	u32 a_size = D3DXGetDeclLength(a);
 	u32 b_size = D3DXGetDeclLength(b);
-	if (a_size != b_size)	return FALSE;
+	if (a_size != b_size)
+		return FALSE;
 	return 0 == memcmp(a, b, a_size * sizeof(D3DVERTEXELEMENT9));
 }
 
@@ -89,8 +96,10 @@ SDeclaration* CResourceManager::_CreateDecl(D3DVERTEXELEMENT9* dcl)
 	// Search equal code
 	for (u32 it = 0; it < v_declarations.size(); it++)
 	{
-		SDeclaration* D = v_declarations[it];;
-		if (dcl_equal(dcl, &*D->dcl_code.begin()))	return D;
+		SDeclaration* D = v_declarations[it];
+		;
+		if (dcl_equal(dcl, &*D->dcl_code.begin()))
+			return D;
 	}
 
 	// Create _new
@@ -103,10 +112,12 @@ SDeclaration* CResourceManager::_CreateDecl(D3DVERTEXELEMENT9* dcl)
 	return D;
 }
 
-void		CResourceManager::_DeleteDecl(const SDeclaration* dcl)
+void CResourceManager::_DeleteDecl(const SDeclaration* dcl)
 {
-	if (0 == (dcl->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_declarations, dcl))					return;
+	if (0 == (dcl->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_declarations, dcl))
+		return;
 	Msg("! ERROR: Failed to find compiled vertex-declarator");
 }
 
@@ -115,20 +126,27 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 {
 	string_path name;
 	strcpy(name, _name);
-	if (0 == ::Render->m_skinning)	strcat(name, "_0");
-	if (1 == ::Render->m_skinning)	strcat(name, "_1");
-	if (2 == ::Render->m_skinning)	strcat(name, "_2");
-	if (3 == ::Render->m_skinning)	strcat(name, "_3");
-	if (4 == ::Render->m_skinning)	strcat(name, "_4");
+	if (0 == ::Render->m_skinning)
+		strcat(name, "_0");
+	if (1 == ::Render->m_skinning)
+		strcat(name, "_1");
+	if (2 == ::Render->m_skinning)
+		strcat(name, "_2");
+	if (3 == ::Render->m_skinning)
+		strcat(name, "_3");
+	if (4 == ::Render->m_skinning)
+		strcat(name, "_4");
 	LPSTR N = LPSTR(name);
 	map_VS::iterator I = m_vs.find(N);
-	if (I != m_vs.end())	return I->second;
+	if (I != m_vs.end())
+		return I->second;
 	else
 	{
 		SVS* _vs = xr_new<SVS>();
 		_vs->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_vs.insert(mk_pair(_vs->set_name(name), _vs));
-		if (0 == stricmp(_name, "null")) {
+		if (0 == stricmp(_name, "null"))
+		{
 			_vs->vs = NULL;
 			return _vs;
 		}
@@ -158,34 +176,46 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		data[size] = 0;
 		FS.r_close(file);
 
-		if (strstr(data, "main_vs_1_1")) { c_target = "vs_1_1"; c_entry = "main_vs_1_1"; }
-		if (strstr(data, "main_vs_2_0")) { c_target = "vs_2_0"; c_entry = "main_vs_2_0"; }
+		if (strstr(data, "main_vs_1_1"))
+		{
+			c_target = "vs_1_1";
+			c_entry = "main_vs_1_1";
+		}
+		if (strstr(data, "main_vs_2_0"))
+		{
+			c_target = "vs_2_0";
+			c_entry = "main_vs_2_0";
+		}
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
 #endif
-		HRESULT const _hr = ::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, (void*&)_vs);
+		HRESULT const _hr = ::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target,
+													 D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, (void*&)_vs);
 
-		if (FAILED(_hr)) {
+		if (FAILED(_hr))
+		{
 			FlushLog();
 		}
 
-		//CHECK_OR_EXIT(
+		// CHECK_OR_EXIT(
 		//	!FAILED(_hr),
 		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
 		//);
-		//R_ASSERT(!FAILED(_hr));
+		// R_ASSERT(!FAILED(_hr));
 
 		return _vs;
 	}
 }
 
-void	CResourceManager::_DeleteVS(const SVS* vs)
+void CResourceManager::_DeleteVS(const SVS* vs)
 {
-	if (0 == (vs->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (vs->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*vs->cName);
 	map_VS::iterator I = m_vs.find(N);
-	if (I != m_vs.end()) {
+	if (I != m_vs.end())
+	{
 		m_vs.erase(I);
 		return;
 	}
@@ -228,40 +258,65 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 		FS.r_close(file);
 
 		// Select target
-		LPCSTR						c_target = "ps_2_0";
-		LPCSTR						c_entry = "main";
-		if (strstr(data, "main_ps_1_1")) { c_target = "ps_1_1"; c_entry = "main_ps_1_1"; }
-		if (strstr(data, "main_ps_1_2")) { c_target = "ps_1_2"; c_entry = "main_ps_1_2"; }
-		if (strstr(data, "main_ps_1_3")) { c_target = "ps_1_3"; c_entry = "main_ps_1_3"; }
-		if (strstr(data, "main_ps_1_4")) { c_target = "ps_1_4"; c_entry = "main_ps_1_4"; }
-		if (strstr(data, "main_ps_2_0")) { c_target = "ps_2_0"; c_entry = "main_ps_2_0"; }
+		LPCSTR c_target = "ps_2_0";
+		LPCSTR c_entry = "main";
+		if (strstr(data, "main_ps_1_1"))
+		{
+			c_target = "ps_1_1";
+			c_entry = "main_ps_1_1";
+		}
+		if (strstr(data, "main_ps_1_2"))
+		{
+			c_target = "ps_1_2";
+			c_entry = "main_ps_1_2";
+		}
+		if (strstr(data, "main_ps_1_3"))
+		{
+			c_target = "ps_1_3";
+			c_entry = "main_ps_1_3";
+		}
+		if (strstr(data, "main_ps_1_4"))
+		{
+			c_target = "ps_1_4";
+			c_entry = "main_ps_1_4";
+		}
+		if (strstr(data, "main_ps_2_0"))
+		{
+			c_target = "ps_2_0";
+			c_entry = "main_ps_2_0";
+		}
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
 #endif
-		HRESULT const _hr = ::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target, D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, (void*&)_ps);
+		HRESULT const _hr =
+			::Render->shader_compile(name, (DWORD const*)data, (UINT)size, c_entry, c_target,
+									 D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, (void*&)_ps);
 
-		if (FAILED(_hr)) {
+		if (FAILED(_hr))
+		{
 			FlushLog();
 		}
 
-		//CHECK_OR_EXIT(
+		// CHECK_OR_EXIT(
 		//	!FAILED(_hr),
 		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
 		//);
 
-		//R_ASSERT(!FAILED(_hr));
+		// R_ASSERT(!FAILED(_hr));
 
 		return _ps;
 	}
 }
 
-void	CResourceManager::_DeletePS(const SPS* ps)
+void CResourceManager::_DeletePS(const SPS* ps)
 {
-	if (0 == (ps->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (ps->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*ps->cName);
 	map_PS::iterator I = m_ps.find(N);
-	if (I != m_ps.end()) {
+	if (I != m_ps.end())
+	{
 		m_ps.erase(I);
 		return;
 	}
@@ -270,17 +325,21 @@ void	CResourceManager::_DeletePS(const SPS* ps)
 
 R_constant_table* CResourceManager::_CreateConstantTable(R_constant_table& C)
 {
-	if (C.empty())		return NULL;
+	if (C.empty())
+		return NULL;
 	for (u32 it = 0; it < v_constant_tables.size(); it++)
-		if (v_constant_tables[it]->equal(C))	return v_constant_tables[it];
+		if (v_constant_tables[it]->equal(C))
+			return v_constant_tables[it];
 	v_constant_tables.push_back(xr_new<R_constant_table>(C));
 	v_constant_tables.back()->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	return v_constant_tables.back();
 }
-void				CResourceManager::_DeleteConstantTable(const R_constant_table* C)
+void CResourceManager::_DeleteConstantTable(const R_constant_table* C)
 {
-	if (0 == (C->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_constant_tables, C))				return;
+	if (0 == (C->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_constant_tables, C))
+		return;
 	Msg("! ERROR: Failed to find compiled constant-table");
 }
 
@@ -292,22 +351,26 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f)
 	// ***** first pass - search already created RT
 	LPSTR N = LPSTR(Name);
 	map_RT::iterator I = m_rtargets.find(N);
-	if (I != m_rtargets.end())	return		I->second;
+	if (I != m_rtargets.end())
+		return I->second;
 	else
 	{
 		CRT* RT = xr_new<CRT>();
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_rtargets.insert(mk_pair(RT->set_name(Name), RT));
-		if (Device.b_is_Ready)	RT->create(Name, w, h, f);
-		return					RT;
+		if (Device.b_is_Ready)
+			RT->create(Name, w, h, f);
+		return RT;
 	}
 }
-void	CResourceManager::_DeleteRT(const CRT* RT)
+void CResourceManager::_DeleteRT(const CRT* RT)
 {
-	if (0 == (RT->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (RT->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*RT->cName);
 	map_RT::iterator I = m_rtargets.find(N);
-	if (I != m_rtargets.end()) {
+	if (I != m_rtargets.end())
+	{
 		m_rtargets.erase(I);
 		return;
 	}
@@ -321,29 +384,33 @@ CRTC* CResourceManager::_CreateRTC(LPCSTR Name, u32 size, D3DFORMAT f)
 	// ***** first pass - search already created RTC
 	LPSTR N = LPSTR(Name);
 	map_RTC::iterator I = m_rtargets_c.find(N);
-	if (I != m_rtargets_c.end())	return I->second;
+	if (I != m_rtargets_c.end())
+		return I->second;
 	else
 	{
 		CRTC* RT = xr_new<CRTC>();
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_rtargets_c.insert(mk_pair(RT->set_name(Name), RT));
-		if (Device.b_is_Ready)	RT->create(Name, size, f);
-		return					RT;
+		if (Device.b_is_Ready)
+			RT->create(Name, size, f);
+		return RT;
 	}
 }
-void	CResourceManager::_DeleteRTC(const CRTC* RT)
+void CResourceManager::_DeleteRTC(const CRTC* RT)
 {
-	if (0 == (RT->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (RT->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*RT->cName);
 	map_RTC::iterator I = m_rtargets_c.find(N);
-	if (I != m_rtargets_c.end()) {
+	if (I != m_rtargets_c.end())
+	{
 		m_rtargets_c.erase(I);
 		return;
 	}
 	Msg("! ERROR: Failed to find render-target '%s'", *RT->cName);
 }
 //--------------------------------------------------------------------------------------------------------------
-void	CResourceManager::DBG_VerifyGeoms()
+void CResourceManager::DBG_VerifyGeoms()
 {
 	/*
 	for (u32 it=0; it<v_geoms.size(); it++)
@@ -371,7 +438,8 @@ SGeometry* CResourceManager::CreateGeom(D3DVERTEXELEMENT9* decl, IDirect3DVertex
 	for (u32 it = 0; it < v_geoms.size(); it++)
 	{
 		SGeometry& G = *(v_geoms[it]);
-		if ((G.dcl == dcl) && (G.vb == vb) && (G.ib == ib) && (G.vb_stride == vb_stride))	return v_geoms[it];
+		if ((G.dcl == dcl) && (G.vb == vb) && (G.ib == ib) && (G.vb_stride == vb_stride))
+			return v_geoms[it];
 	}
 
 	SGeometry* Geom = xr_new<SGeometry>();
@@ -381,20 +449,22 @@ SGeometry* CResourceManager::CreateGeom(D3DVERTEXELEMENT9* decl, IDirect3DVertex
 	Geom->vb_stride = vb_stride;
 	Geom->ib = ib;
 	v_geoms.push_back(Geom);
-	return	Geom;
+	return Geom;
 }
 SGeometry* CResourceManager::CreateGeom(u32 FVF, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib)
 {
-	D3DVERTEXELEMENT9	dcl[MAX_FVF_DECL_SIZE];
+	D3DVERTEXELEMENT9 dcl[MAX_FVF_DECL_SIZE];
 	CHK_DX(D3DXDeclaratorFromFVF(FVF, dcl));
 	SGeometry* g = CreateGeom(dcl, vb, ib);
-	return	g;
+	return g;
 }
 
-void		CResourceManager::DeleteGeom(const SGeometry* Geom)
+void CResourceManager::DeleteGeom(const SGeometry* Geom)
 {
-	if (0 == (Geom->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_geoms, Geom))							return;
+	if (0 == (Geom->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_geoms, Geom))
+		return;
 	Msg("! ERROR: Failed to find compiled geometry-declaration");
 }
 
@@ -402,41 +472,46 @@ void		CResourceManager::DeleteGeom(const SGeometry* Geom)
 CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 {
 	// DBG_VerifyTextures	();
-	if (0 == xr_strcmp(_Name, "null"))	return 0;
+	if (0 == xr_strcmp(_Name, "null"))
+		return 0;
 	R_ASSERT(_Name && _Name[0]);
-	string_path		Name;
+	string_path Name;
 	strcpy_s(Name, _Name); //. andy if (strext(Name)) *strext(Name)=0;
 	fix_texture_name(Name);
 	// ***** first pass - search already loaded texture
 	LPSTR N = LPSTR(Name);
 	map_TextureIt I = m_textures.find(N);
-	if (I != m_textures.end())	return	I->second;
+	if (I != m_textures.end())
+		return I->second;
 	else
 	{
 		CTexture* T = xr_new<CTexture>();
 		T->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_textures.insert(mk_pair(T->set_name(Name), T));
 		T->Preload();
-		if (Device.b_is_Ready && !bDeferredLoad) T->Load();
-		return		T;
+		if (Device.b_is_Ready && !bDeferredLoad)
+			T->Load();
+		return T;
 	}
 }
-void	CResourceManager::_DeleteTexture(const CTexture* T)
+void CResourceManager::_DeleteTexture(const CTexture* T)
 {
 	// DBG_VerifyTextures	();
 
-	if (0 == (T->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (T->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*T->cName);
 	map_Texture::iterator I = m_textures.find(N);
-	if (I != m_textures.end()) {
+	if (I != m_textures.end())
+	{
 		m_textures.erase(I);
 		return;
 	}
 	Msg("! ERROR: Failed to find texture surface '%s'", *T->cName);
 }
 
-//#ifdef DEBUG
-void	CResourceManager::DBG_VerifyTextures()
+// #ifdef DEBUG
+void CResourceManager::DBG_VerifyTextures()
 {
 	map_Texture::iterator I = m_textures.begin();
 	map_Texture::iterator E = m_textures.end();
@@ -448,38 +523,42 @@ void	CResourceManager::DBG_VerifyTextures()
 		R_ASSERT(0 == xr_strcmp(I->first, *I->second->cName));
 	}
 }
-//#endif
+// #endif
 
 //--------------------------------------------------------------------------------------------------------------
 CMatrix* CResourceManager::_CreateMatrix(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);
-	if (0 == stricmp(Name, "$null"))	return NULL;
+	if (0 == stricmp(Name, "$null"))
+		return NULL;
 
 	LPSTR N = LPSTR(Name);
 	map_Matrix::iterator I = m_matrices.find(N);
-	if (I != m_matrices.end())	return I->second;
+	if (I != m_matrices.end())
+		return I->second;
 	else
 	{
 		CMatrix* M = xr_new<CMatrix>();
 		M->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		M->dwReference = 1;
 		m_matrices.insert(mk_pair(M->set_name(Name), M));
-		return			M;
+		return M;
 	}
 }
-void	CResourceManager::_DeleteMatrix(const CMatrix* M)
+void CResourceManager::_DeleteMatrix(const CMatrix* M)
 {
-	if (0 == (M->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (M->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*M->cName);
 	map_Matrix::iterator I = m_matrices.find(N);
-	if (I != m_matrices.end()) {
+	if (I != m_matrices.end())
+	{
 		m_matrices.erase(I);
 		return;
 	}
 	Msg("! ERROR: Failed to find xform-def '%s'", *M->cName);
 }
-void	CResourceManager::ED_UpdateMatrix(LPCSTR Name, CMatrix* data)
+void CResourceManager::ED_UpdateMatrix(LPCSTR Name, CMatrix* data)
 {
 	CMatrix* M = _CreateMatrix(Name);
 	*M = *data;
@@ -488,40 +567,45 @@ void	CResourceManager::ED_UpdateMatrix(LPCSTR Name, CMatrix* data)
 CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);
-	if (0 == stricmp(Name, "$null"))	return NULL;
+	if (0 == stricmp(Name, "$null"))
+		return NULL;
 
 	LPSTR N = LPSTR(Name);
 	map_Constant::iterator I = m_constants.find(N);
-	if (I != m_constants.end())	return I->second;
+	if (I != m_constants.end())
+		return I->second;
 	else
 	{
 		CConstant* C = xr_new<CConstant>();
 		C->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		C->dwReference = 1;
 		m_constants.insert(mk_pair(C->set_name(Name), C));
-		return	C;
+		return C;
 	}
 }
-void	CResourceManager::_DeleteConstant(const CConstant* C)
+void CResourceManager::_DeleteConstant(const CConstant* C)
 {
-	if (0 == (C->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
+	if (0 == (C->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
 	LPSTR N = LPSTR(*C->cName);
 	map_Constant::iterator I = m_constants.find(N);
-	if (I != m_constants.end()) {
+	if (I != m_constants.end())
+	{
 		m_constants.erase(I);
 		return;
 	}
 	Msg("! ERROR: Failed to find R1-constant-def '%s'", *C->cName);
 }
 
-void	CResourceManager::ED_UpdateConstant(LPCSTR Name, CConstant* data)
+void CResourceManager::ED_UpdateConstant(LPCSTR Name, CConstant* data)
 {
 	CConstant* C = _CreateConstant(Name);
 	*C = *data;
 }
 
 //--------------------------------------------------------------------------------------------------------------
-bool	cmp_tl(const std::pair<u32, ref_texture>& _1, const std::pair<u32, ref_texture>& _2) {
+bool cmp_tl(const std::pair<u32, ref_texture>& _1, const std::pair<u32, ref_texture>& _2)
+{
 	return _1.first < _2.first;
 }
 STextureList* CResourceManager::_CreateTextureList(STextureList& L)
@@ -530,62 +614,83 @@ STextureList* CResourceManager::_CreateTextureList(STextureList& L)
 	for (u32 it = 0; it < lst_textures.size(); it++)
 	{
 		STextureList* base = lst_textures[it];
-		if (L.equal(*base))			return base;
+		if (L.equal(*base))
+			return base;
 	}
 	STextureList* lst = xr_new<STextureList>(L);
 	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	lst_textures.push_back(lst);
 	return lst;
 }
-void			CResourceManager::_DeleteTextureList(const STextureList* L)
+void CResourceManager::_DeleteTextureList(const STextureList* L)
 {
-	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(lst_textures, L))					return;
+	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(lst_textures, L))
+		return;
 	Msg("! ERROR: Failed to find compiled list of textures");
 }
 //--------------------------------------------------------------------------------------------------------------
 SMatrixList* CResourceManager::_CreateMatrixList(SMatrixList& L)
 {
 	BOOL bEmpty = TRUE;
-	for (u32 i = 0; i < L.size(); i++)	if (L[i]) { bEmpty = FALSE; break; }
-	if (bEmpty)	return NULL;
+	for (u32 i = 0; i < L.size(); i++)
+		if (L[i])
+		{
+			bEmpty = FALSE;
+			break;
+		}
+	if (bEmpty)
+		return NULL;
 
 	for (u32 it = 0; it < lst_matrices.size(); it++)
 	{
 		SMatrixList* base = lst_matrices[it];
-		if (L.equal(*base))			return base;
+		if (L.equal(*base))
+			return base;
 	}
 	SMatrixList* lst = xr_new<SMatrixList>(L);
 	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	lst_matrices.push_back(lst);
 	return lst;
 }
-void			CResourceManager::_DeleteMatrixList(const SMatrixList* L)
+void CResourceManager::_DeleteMatrixList(const SMatrixList* L)
 {
-	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(lst_matrices, L))					return;
+	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(lst_matrices, L))
+		return;
 	Msg("! ERROR: Failed to find compiled list of xform-defs");
 }
 //--------------------------------------------------------------------------------------------------------------
 SConstantList* CResourceManager::_CreateConstantList(SConstantList& L)
 {
 	BOOL bEmpty = TRUE;
-	for (u32 i = 0; i < L.size(); i++)	if (L[i]) { bEmpty = FALSE; break; }
-	if (bEmpty)	return NULL;
+	for (u32 i = 0; i < L.size(); i++)
+		if (L[i])
+		{
+			bEmpty = FALSE;
+			break;
+		}
+	if (bEmpty)
+		return NULL;
 
 	for (u32 it = 0; it < lst_constants.size(); it++)
 	{
 		SConstantList* base = lst_constants[it];
-		if (L.equal(*base))			return base;
+		if (L.equal(*base))
+			return base;
 	}
 	SConstantList* lst = xr_new<SConstantList>(L);
 	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	lst_constants.push_back(lst);
 	return lst;
 }
-void			CResourceManager::_DeleteConstantList(const SConstantList* L)
+void CResourceManager::_DeleteConstantList(const SConstantList* L)
 {
-	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(lst_constants, L))					return;
+	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(lst_constants, L))
+		return;
 	Msg("! ERROR: Failed to find compiled list of r1-constant-defs");
 }

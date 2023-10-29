@@ -10,65 +10,64 @@
 #include "iinputreceiver.h"
 #include "effector.h"
 
-class ENGINE_API CDemoRecord :
-	public CEffectorCam,
-	public IInputReceiver
+class ENGINE_API CDemoRecord : public CEffectorCam, public IInputReceiver
 {
-private:
-	int			iCount;
-	IWriter*	file;
-	Fvector		m_HPB;
-	Fvector		m_Position;
-	Fmatrix		m_Camera;
-	u32			m_Stage;
+  private:
+	int iCount;
+	IWriter* file;
+	Fvector m_HPB;
+	Fvector m_Position;
+	Fmatrix m_Camera;
+	u32 m_Stage;
 
-	Fvector		m_vT;
-	Fvector		m_vR;
-	Fvector		m_vVelocity;
-	Fvector		m_vAngularVelocity;
-	float		m_fFov;
-	Fvector		m_vGlobalDepthOfFieldParameters;
-	bool		m_bAutofocusEnabled;
-	bool		m_bGridEnabled;
-	bool		m_bBordersEnabled;
-	bool		m_bWatermarkEnabled;
-	bool		m_bShowInputInfo;
-	bool		m_bGlobalHudDraw;
-	bool		m_bGlobalCrosshairDraw;
+	Fvector m_vT;
+	Fvector m_vR;
+	Fvector m_vVelocity;
+	Fvector m_vAngularVelocity;
+	float m_fFov;
+	Fvector m_vGlobalDepthOfFieldParameters;
+	bool m_bAutofocusEnabled;
+	bool m_bGridEnabled;
+	bool m_bBordersEnabled;
+	bool m_bWatermarkEnabled;
+	bool m_bShowInputInfo;
+	bool m_bGlobalHudDraw;
+	bool m_bGlobalCrosshairDraw;
 
-	BOOL		m_bMakeCubeMap;
-	BOOL		m_bMakeScreenshot;
-	BOOL		m_bMakeLevelMap;
-	BOOL		m_bOverlapped;
+	BOOL m_bMakeCubeMap;
+	BOOL m_bMakeScreenshot;
+	BOOL m_bMakeLevelMap;
+	BOOL m_bOverlapped;
 
-	float		m_fSpeed0;
-	float		m_fSpeed1;
-	float		m_fSpeed2;
-	float		m_fSpeed3;
-	float		m_fAngSpeed0;
-	float		m_fAngSpeed1;
-	float		m_fAngSpeed2;
-	float		m_fAngSpeed3;
+	float m_fSpeed0;
+	float m_fSpeed1;
+	float m_fSpeed2;
+	float m_fSpeed3;
+	float m_fAngSpeed0;
+	float m_fAngSpeed1;
+	float m_fAngSpeed2;
+	float m_fAngSpeed3;
 
-	void		MakeCubeMapFace(Fvector& D, Fvector& N);
-	void		MakeLevelMapProcess();
-	void		MakeScreenshotFace();
-	void		RecordKey();
-	void		MakeCubemap();
-	void		MakeScreenshot();
-	void		MakeLevelMapScreenshot();
-	void		ShowInputInfo();
-public:
+	void MakeCubeMapFace(Fvector& D, Fvector& N);
+	void MakeLevelMapProcess();
+	void MakeScreenshotFace();
+	void RecordKey();
+	void MakeCubemap();
+	void MakeScreenshot();
+	void MakeLevelMapScreenshot();
+	void ShowInputInfo();
+
+  public:
 	CDemoRecord(const char* name, float life_time = 60 * 60 * 1000);
-	virtual		~CDemoRecord();
+	virtual ~CDemoRecord();
 
-	void		ChangeDepthOfField(int direction);
-	void		ChangeFieldOfView(int direction);
-	void		SwitchAutofocusState();
-	void		SwitchGridState();
-	void		SwitchCinemaBordersState();
-	void		SwitchWatermarkVisibility();
-	void		SwitchShowInputInfo();
+	void ChangeDepthOfField(int direction);
+	void ChangeFieldOfView(int direction);
+	void SwitchAutofocusState();
+	void SwitchGridState();
+	void SwitchCinemaBordersState();
+	void SwitchWatermarkVisibility();
+	void SwitchShowInputInfo();
 
 	virtual void IR_OnKeyboardPress(int dik);
 	virtual void IR_OnKeyboardHold(int dik);
@@ -76,8 +75,11 @@ public:
 	virtual void IR_OnMouseHold(int btn);
 	virtual void IR_OnMouseWheel(int direction);
 
-	virtual BOOL Overlapped() { return m_bOverlapped; }
-	virtual	BOOL Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar, float& fAspect);
+	virtual BOOL Overlapped()
+	{
+		return m_bOverlapped;
+	}
+	virtual BOOL Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar, float& fAspect);
 };
 
 #endif // !defined(AFX_FDEMORECORD_H__D7638760_FB61_11D3_B4E3_4854E82A090D__INCLUDED_)

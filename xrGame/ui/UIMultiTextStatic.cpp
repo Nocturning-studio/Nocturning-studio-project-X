@@ -12,16 +12,16 @@
 #include "../../xrEngine/CustomHUD.h"
 
 //////////////////////////////////////////////////////////////////////////
-CUIMultiTextStatic::CUIMultiTextStatic				()
+CUIMultiTextStatic::CUIMultiTextStatic()
 {
 	m_vPhrases.clear();
 };
 
-CUIMultiTextStatic::~CUIMultiTextStatic				()
+CUIMultiTextStatic::~CUIMultiTextStatic()
 {
 }
 
-CUIMultiTextStatic::SinglePhrase * CUIMultiTextStatic::AddPhrase()
+CUIMultiTextStatic::SinglePhrase* CUIMultiTextStatic::AddPhrase()
 {
 	m_vPhrases.resize(m_vPhrases.size() + 1);
 	return &m_vPhrases.back();
@@ -38,8 +38,8 @@ void CUIMultiTextStatic::RemovePhraseByIndex(u32 idx)
 
 void CUIMultiTextStatic::Draw()
 {
-	Fvector2			p;
-	GetAbsolutePos		(p);
+	Fvector2 p;
+	GetAbsolutePos(p);
 
 	for (Phrases_it it = m_vPhrases.begin(); it != m_vPhrases.end(); ++it)
 	{
@@ -63,14 +63,12 @@ void CUIMultiTextStatic::Update()
 
 //////////////////////////////////////////////////////////////////////////
 
-CUIMultiTextStatic::SinglePhrase * CUIMultiTextStatic::GetPhraseByIndex(u32 idx)
+CUIMultiTextStatic::SinglePhrase* CUIMultiTextStatic::GetPhraseByIndex(u32 idx)
 {
 	R_ASSERT(idx < m_vPhrases.size());
 
 	return &m_vPhrases[idx];
 }
-
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -80,9 +78,7 @@ CUIMultiTextStatic::SinglePhrase * CUIMultiTextStatic::GetPhraseByIndex(u32 idx)
 
 //////////////////////////////////////////////////////////////////////////
 
-CUIMultiTextStatic::SPh::SPh()
-	:	elipsisPos			(CUIStatic::eepEnd),
-		maxWidth			(-1.0f)
+CUIMultiTextStatic::SPh::SPh() : elipsisPos(CUIStatic::eepEnd), maxWidth(-1.0f)
 {
 	effect.SetStyleParams(CUITextBanner::tbsNone);
 	effect.StopAnimation();
@@ -90,16 +86,16 @@ CUIMultiTextStatic::SPh::SPh()
 
 //////////////////////////////////////////////////////////////////////////
 
-void CUIMultiTextStatic::SPh::SetText(const char *fmt, ...)
+void CUIMultiTextStatic::SPh::SetText(const char* fmt, ...)
 {
-	va_list		Print;                                                                  
-	string256	msg;
-	xr_string	buf;
+	va_list Print;
+	string256 msg;
+	xr_string buf;
 
 	va_start(Print, fmt);
-		vsprintf(msg, fmt, Print);
-		buf += msg;
-		msg[0] = '\n';
+	vsprintf(msg, fmt, Print);
+	buf += msg;
+	msg[0] = '\n';
 	va_end(Print);
 
 	str = buf.c_str();
@@ -123,13 +119,13 @@ void CUIMultiTextStatic::SPh::SetText(const char *fmt, ...)
 
 #include "../string_table.h"
 
-void CUICaption::addCustomMessage(const shared_str& msg_name, float x, float y, float font_size, 
-								  CGameFont *pFont, CGameFont::EAligment al, u32 color, LPCSTR def_str)
+void CUICaption::addCustomMessage(const shared_str& msg_name, float x, float y, float font_size, CGameFont* pFont,
+								  CGameFont::EAligment al, u32 color, LPCSTR def_str)
 {
-//	R_ASSERT2( (m_indices.find(msg_name) == m_indices.end()),"message already defined !!!" );
-	R_ASSERT2( u32(-1)==findIndexOf_(msg_name),"message already defined !!!" );
+	//	R_ASSERT2( (m_indices.find(msg_name) == m_indices.end()),"message already defined !!!" );
+	R_ASSERT2(u32(-1) == findIndexOf_(msg_name), "message already defined !!!");
 
-	SinglePhrase * sp = AddPhrase();
+	SinglePhrase* sp = AddPhrase();
 	sp->outX = x;
 	sp->outY = y;
 	sp->effect.SetFontSize(font_size);
@@ -140,15 +136,15 @@ void CUICaption::addCustomMessage(const shared_str& msg_name, float x, float y, 
 	sp->str = *CStringTable().translate(def_str);
 	sp->key = msg_name;
 
-//	m_indices[msg_name] = m_vPhrases.size()-1;
-
+	//	m_indices[msg_name] = m_vPhrases.size()-1;
 }
 
 u32 CUICaption::findIndexOf_(const shared_str& key_)
 {
 	for (Phrases_it it = m_vPhrases.begin(); it != m_vPhrases.end(); ++it)
 	{
-		if((*it).key==key_) return (u32)std::distance(m_vPhrases.begin(),it);
+		if ((*it).key == key_)
+			return (u32)std::distance(m_vPhrases.begin(), it);
 	}
 	return u32(-1);
 }
@@ -156,42 +152,41 @@ u32 CUICaption::findIndexOf_(const shared_str& key_)
 u32 CUICaption::findIndexOf(const shared_str& key_)
 {
 	u32 res = findIndexOf_(key_);
-	R_ASSERT3(res!=u32(-1),"cannot find msg ",*key_);
+	R_ASSERT3(res != u32(-1), "cannot find msg ", *key_);
 	return res;
 }
 
 void CUICaption::removeCustomMessage(const shared_str& msg_name)
 {
-//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
+	//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
 	RemovePhraseByIndex(findIndexOf(msg_name));
-//	m_indices.erase(msg_name);
+	//	m_indices.erase(msg_name);
 }
 
 EffectParams* CUICaption::customizeMessage(const shared_str& msg_name, const CUITextBanner::TextBannerStyles styleName)
 {
-//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
-	
-	SinglePhrase * sp = GetPhraseByIndex( findIndexOf(msg_name) );
+	//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
+
+	SinglePhrase* sp = GetPhraseByIndex(findIndexOf(msg_name));
 	sp->effect.PlayAnimation();
 	return sp->effect.SetStyleParams(styleName);
-	
 }
 
 void CUICaption::setCaption(const shared_str& msg_name, LPCSTR message_to_out, u32 color, bool replaceColor)
 {
-//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
-	SinglePhrase * sp = GetPhraseByIndex(findIndexOf(msg_name));
+	//	R_ASSERT2( (m_indices.find(msg_name) != m_indices.end()),"message not defined !!!" );
+	SinglePhrase* sp = GetPhraseByIndex(findIndexOf(msg_name));
 	sp->str = *CStringTable().translate(message_to_out);
 
-	if(replaceColor)
+	if (replaceColor)
 		sp->effect.SetTextColor(color);
 }
 
 void CUICaption::Draw()
 {
-	if (psHUD_Flags.is(HUD_DRAW|HUD_DRAW_RT))
+	if (psHUD_Flags.is(HUD_DRAW | HUD_DRAW_RT))
 	{
 		inherited::Draw();
 		inherited::Update();
-	}	
+	}
 }

@@ -22,7 +22,8 @@ FHierrarhyVisual::FHierrarhyVisual() : IRender_Visual()
 
 FHierrarhyVisual::~FHierrarhyVisual()
 {
-	if (!bDontDelete) {
+	if (!bDontDelete)
+	{
 		for (u32 i = 0; i < children.size(); i++)
 			::Render->model_Delete(children[i]);
 	}
@@ -31,7 +32,8 @@ FHierrarhyVisual::~FHierrarhyVisual()
 
 void FHierrarhyVisual::Release()
 {
-	if (!bDontDelete) {
+	if (!bDontDelete)
+	{
 		for (u32 i = 0; i < children.size(); i++)
 			children[i]->Release();
 	}
@@ -45,7 +47,8 @@ void FHierrarhyVisual::Load(const char* N, IReader* data, u32 dwFlags)
 		// From Link
 		u32 cnt = data->r_u32();
 		children.resize(cnt);
-		for (u32 i = 0; i < cnt; i++) {
+		for (u32 i = 0; i < cnt; i++)
+		{
 #ifdef _EDITOR
 			THROW;
 #else
@@ -61,12 +64,15 @@ void FHierrarhyVisual::Load(const char* N, IReader* data, u32 dwFlags)
 		{
 			// From stream
 			IReader* OBJ = data->open_chunk(OGF_CHILDREN);
-			if (OBJ) {
+			if (OBJ)
+			{
 				IReader* O = OBJ->open_chunk(0);
-				for (int count = 1; O; count++) {
-					string_path			name_load, short_name, num;
+				for (int count = 1; O; count++)
+				{
+					string_path name_load, short_name, num;
 					strcpy_s(short_name, N);
-					if (strext(short_name)) *strext(short_name) = 0;
+					if (strext(short_name))
+						*strext(short_name) = 0;
 					strconcat(sizeof(name_load), name_load, short_name, ":", itoa(count, num, 10));
 					children.push_back(::Render->model_CreateChild(name_load, O));
 					O->close();
@@ -83,7 +89,7 @@ void FHierrarhyVisual::Load(const char* N, IReader* data, u32 dwFlags)
 	}
 }
 
-void	FHierrarhyVisual::Copy(IRender_Visual* pSrc)
+void FHierrarhyVisual::Copy(IRender_Visual* pSrc)
 {
 	IRender_Visual::Copy(pSrc);
 
@@ -91,7 +97,8 @@ void	FHierrarhyVisual::Copy(IRender_Visual* pSrc)
 
 	children.clear();
 	children.reserve(pFrom->children.size());
-	for (u32 i = 0; i < pFrom->children.size(); i++) {
+	for (u32 i = 0; i < pFrom->children.size(); i++)
+	{
 		IRender_Visual* p = ::Render->model_Duplicate(pFrom->children[i]);
 		children.push_back(p);
 	}

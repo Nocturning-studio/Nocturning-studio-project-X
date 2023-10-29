@@ -1,5 +1,6 @@
 #pragma once
-enum {
+enum
+{
 	ID_YOU_WON = 100,
 	ID_RANK_0,
 	ID_RANK_1,
@@ -13,5 +14,5 @@ enum {
 	ID_COUNTDOWN_4,
 	ID_COUNTDOWN_5,
 
-	ID_DM_forcedword		= u32(-1)
+	ID_DM_forcedword = u32(-1)
 };

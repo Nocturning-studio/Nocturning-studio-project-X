@@ -6,7 +6,7 @@
 
 class ENGINE_API CSimulatorTSS
 {
-public:
+  public:
 	IC void Set(SimulatorStates& container, u32 S, u32 N, u32 V)
 	{
 		container.set_TSS(S, N, V);
@@ -63,7 +63,7 @@ public:
 
 class ENGINE_API CSimulatorRS
 {
-public:
+  public:
 	IC void Set(SimulatorStates& container, u32 N, u32 V)
 	{
 		R_ASSERT(N < 256);
@@ -73,21 +73,52 @@ public:
 
 class ENGINE_API CSimulator
 {
-public:
-	CSimulatorTSS		TSS;
-	CSimulatorRS		RS;
-	SimulatorStates		container;
-public:
-	CSimulator() { Invalidate(); }
-	IC void				Invalidate() { container.clear(); }
-	IC void				SetTSS(u32 S, u32 N, u32 V) { TSS.Set(container, S, N, V); }
-	IC void				SetSAMP(u32 S, u32 N, u32 V) { container.set_SAMP(S, N, V); }
-	IC void				SetColor(u32 S, u32 a, u32 b, u32 c) { TSS.SetColor(container, S, a, b, c); }
-	IC void				SetColor3(u32 S, u32 a, u32 b, u32 c, u32 d) { TSS.SetColor3(container, S, a, b, c, d); }
-	IC void				SetAlpha(u32 S, u32 a, u32 b, u32 c) { TSS.SetAlpha(container, S, a, b, c); }
-	IC void				SetAlpha3(u32 S, u32 a, u32 b, u32 c, u32 d) { TSS.SetAlpha3(container, S, a, b, c, d); }
-	IC void				SetRS(u32 N, u32 V) { RS.Set(container, N, V); }
-	IC SimulatorStates& GetContainer() { return container; }
+  public:
+	CSimulatorTSS TSS;
+	CSimulatorRS RS;
+	SimulatorStates container;
+
+  public:
+	CSimulator()
+	{
+		Invalidate();
+	}
+	IC void Invalidate()
+	{
+		container.clear();
+	}
+	IC void SetTSS(u32 S, u32 N, u32 V)
+	{
+		TSS.Set(container, S, N, V);
+	}
+	IC void SetSAMP(u32 S, u32 N, u32 V)
+	{
+		container.set_SAMP(S, N, V);
+	}
+	IC void SetColor(u32 S, u32 a, u32 b, u32 c)
+	{
+		TSS.SetColor(container, S, a, b, c);
+	}
+	IC void SetColor3(u32 S, u32 a, u32 b, u32 c, u32 d)
+	{
+		TSS.SetColor3(container, S, a, b, c, d);
+	}
+	IC void SetAlpha(u32 S, u32 a, u32 b, u32 c)
+	{
+		TSS.SetAlpha(container, S, a, b, c);
+	}
+	IC void SetAlpha3(u32 S, u32 a, u32 b, u32 c, u32 d)
+	{
+		TSS.SetAlpha3(container, S, a, b, c, d);
+	}
+	IC void SetRS(u32 N, u32 V)
+	{
+		RS.Set(container, N, V);
+	}
+	IC SimulatorStates& GetContainer()
+	{
+		return container;
+	}
 };
 
 #endif

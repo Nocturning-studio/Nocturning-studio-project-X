@@ -14,7 +14,7 @@
 #include "ui\UIVideoPlayerWnd.h"
 
 #define ONLINE_RADIUS				2.f
-#define MIN_SPRING_TO_SLEEP			0.8f	
+#define MIN_SPRING_TO_SLEEP			0.8f
 
 namespace ACTOR_DEFS{
 	const char * easCanSleepResult		= "can_sleep";
@@ -32,7 +32,7 @@ void CActor::UpdateSleep()
 	{
 		m_fOldTimeFactor = Level().GetGameTimeFactor();
 		Level().Server->game->SetGameTimeFactor(m_fSleepTimeFactor);
-		
+
 		if (ai().get_alife()) {
 			m_fOldOnlineRadius = ai().alife().switch_distance();
 			NET_Packet		P;
@@ -42,9 +42,9 @@ void CActor::UpdateSleep()
 		}
 
 		m_pSleepEffectorPP->m_eSleepState = CSleepEffectorPP::SLEEPING;
-		
+
 		VERIFY(!conditions().m_actor_sleep_wnd->IsPlaying());
-		
+
 		conditions().m_actor_sleep_wnd->Play		();
 		conditions().m_actor_sleep_wnd->Activate	();
 	}

@@ -9,56 +9,56 @@
 //	SEEK_SET	0	File beginning
 //	SEEK_CUR	1	Current file pointer position
 //	SEEK_END	2	End-of-file
-int ov_seek_func(void *datasource, s64 offset, int whence)
+int ov_seek_func(void* datasource, s64 offset, int whence)
 {
 	switch (whence)
 	{
 	case SEEK_SET:
-		((IReader *)datasource)->seek((int)offset);
+		((IReader*)datasource)->seek((int)offset);
 		break;
 	case SEEK_CUR:
-		((IReader *)datasource)->advance((int)offset);
+		((IReader*)datasource)->advance((int)offset);
 		break;
 	case SEEK_END:
-		((IReader *)datasource)->seek((int)offset + ((IReader *)datasource)->length());
+		((IReader*)datasource)->seek((int)offset + ((IReader*)datasource)->length());
 		break;
 	}
 	return 0;
 }
 
-size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+size_t ov_read_func(void* ptr, size_t size, size_t nmemb, void* datasource)
 {
-	IReader *F = (IReader *)datasource;
+	IReader* F = (IReader*)datasource;
 	size_t exist_block = _max(0ul, iFloor(F->elapsed() / (float)size));
 	size_t read_block = _min(exist_block, nmemb);
 	F->r(ptr, (int)(read_block * size));
 	return read_block;
 }
 
-int ov_close_func(void *datasource)
+int ov_close_func(void* datasource)
 {
 	return 0;
 }
 
-long ov_tell_func(void *datasource)
+long ov_tell_func(void* datasource)
 {
-	return ((IReader *)datasource)->tell();
+	return ((IReader*)datasource)->tell();
 }
 
-void CSoundRender_Source::decompress(u32 line, OggVorbis_File *ovf)
+void CSoundRender_Source::decompress(u32 line, OggVorbis_File* ovf)
 {
 	VERIFY(ovf);
 	// decompression of one cache-line
 	u32 line_size = SoundRender->cache.get_linesize();
-	char *dest = (char *)SoundRender->cache.get_dataptr(CAT, line);
+	char* dest = (char*)SoundRender->cache.get_dataptr(CAT, line);
 	u32 buf_offs = (line * line_size) / 2 / m_wformat.nChannels;
 	u32 left_file = dwBytesTotal - buf_offs;
 	u32 left = (u32)_min(left_file, line_size);
 
 	// seek
 	u32 cur_pos = u32(ov_pcm_tell(ovf));
-	if (cur_pos != buf_offs)	
-		ov_pcm_seek(ovf, buf_offs);	
+	if (cur_pos != buf_offs)
+		ov_pcm_seek(ovf, buf_offs);
 
 	// decompress
 	i_decompress_fr(ovf, dest, left);
@@ -71,22 +71,22 @@ void CSoundRender_Source::LoadWave(LPCSTR pName)
 	// Load file into memory and parse WAV-format
 	OggVorbis_File ovf;
 	ov_callbacks ovc = {ov_read_func, ov_seek_func, ov_close_func, ov_tell_func};
-	IReader *wave = FS.r_open(pname.c_str());
+	IReader* wave = FS.r_open(pname.c_str());
 	R_ASSERT3(wave && wave->length(), "Can't open wave file:", pname.c_str());
 	ov_open_callbacks(wave, &ovf, NULL, 0, ovc);
 
-	vorbis_info *ovi = ov_info(&ovf, -1);
+	vorbis_info* ovi = ov_info(&ovf, -1);
 	// verify
 	R_ASSERT3(ovi, "Invalid source info:", pName);
 
 #ifdef DEBUG
-	if (ovi->channels == 2)	
-		Msg("stereo sound source [%s]", pName);	
+	if (ovi->channels == 2)
+		Msg("stereo sound source [%s]", pName);
 #endif // #ifdef DEBUG
 
 	ZeroMemory(&m_wformat, sizeof(WAVEFORMATEX));
 
-	m_wformat.nSamplesPerSec = (ovi->rate); //44100;
+	m_wformat.nSamplesPerSec = (ovi->rate); // 44100;
 	m_wformat.wFormatTag = WAVE_FORMAT_PCM;
 	m_wformat.nChannels = u16(ovi->channels);
 	m_wformat.wBitsPerSample = 16;
@@ -98,7 +98,7 @@ void CSoundRender_Source::LoadWave(LPCSTR pName)
 	dwBytesTotal = u32(pcm_total * m_wformat.nBlockAlign);
 	fTimeTotal = s_f_def_source_footer + dwBytesTotal / float(m_wformat.nAvgBytesPerSec);
 
-	vorbis_comment *ovm = ov_comment(&ovf, -1);
+	vorbis_comment* ovm = ov_comment(&ovf, -1);
 
 	if (ovm->comments)
 	{
@@ -130,16 +130,16 @@ void CSoundRender_Source::LoadWave(LPCSTR pName)
 			m_fMaxAIDist = F.r_float();
 		}
 #ifdef DEBUG
-		else		
-			Log("! Invalid ogg-comment version, file: ", pName);		
+		else
+			Log("! Invalid ogg-comment version, file: ", pName);
 #endif
 	}
 #ifdef DEBUG
-	else	
+	else
 		Log("! Missing ogg-comment, file: ", pName);
 #endif
-	
-	//R_ASSERT3((m_fMaxAIDist >= 0.1f) && (m_fMaxDist >= 0.1f), "Invalid max distance.", pName);
+
+	// R_ASSERT3((m_fMaxAIDist >= 0.1f) && (m_fMaxDist >= 0.1f), "Invalid max distance.", pName);
 	if (!(m_fMaxAIDist >= 0.1f) && !(m_fMaxDist >= 0.1f))
 		Log("Invalid max distance, file", pName);
 
@@ -159,7 +159,6 @@ void CSoundRender_Source::load(LPCSTR name)
 	fname = N;
 	strconcat(sizeof(fn), fn, N, ".ogg");
 
-
 	if (!FS.exist("$level$", fn))
 		FS.update_path(fn, "$game_sounds$", fn);
 
@@ -167,7 +166,7 @@ void CSoundRender_Source::load(LPCSTR name)
 	{
 		Msg("! Can't find sound '%s'", name);
 		R_ASSERT3(FS.exist(fn), "! Can't find sound", name);
-		FS.update_path (fn,"$game_sounds$","$no_sound.ogg");
+		FS.update_path(fn, "$game_sounds$", "$no_sound.ogg");
 	}
 
 	LoadWave(fn);

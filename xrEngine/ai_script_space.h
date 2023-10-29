@@ -9,13 +9,14 @@
 #pragma once
 
 // Lua
-#pragma warning(disable:4244)
-#pragma warning(disable:4995)
-#pragma warning(disable:4530)
-#pragma warning(disable:4267)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4995)
+#pragma warning(disable : 4530)
+#pragma warning(disable : 4267)
 
-extern "C" {
-	//#define BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+extern "C"
+{
+	// #define BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
@@ -26,16 +27,17 @@ extern "C" {
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
-#pragma warning(default:4244)
-#pragma warning(default:4995)
-#pragma warning(default:4267)
+#pragma warning(default : 4244)
+#pragma warning(default : 4995)
+#pragma warning(default : 4267)
 
 typedef lua_State CLuaVirtualMachine;
 
-struct SMemberCallback {
+struct SMemberCallback
+{
 	luabind::functor<void>* m_lua_function;
 	luabind::object* m_lua_object;
-	shared_str				m_method_name;
+	shared_str m_method_name;
 };
 
 #include "ai_script_lua_space.h"

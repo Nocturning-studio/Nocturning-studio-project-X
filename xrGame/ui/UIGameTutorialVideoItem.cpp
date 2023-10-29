@@ -13,7 +13,7 @@ extern ENGINE_API BOOL bShowPauseString;
 //-----------------------------------------------------------------------------
 // Tutorial Item
 //-----------------------------------------------------------------------------
-CUISequenceVideoItem::CUISequenceVideoItem(CUISequencer* owner) :CUISequenceItem(owner)
+CUISequenceVideoItem::CUISequenceVideoItem(CUISequencer* owner) : CUISequenceItem(owner)
 {
 	m_texture = NULL;
 	m_flags.set(etiPlaying | etiNeedStart | etiDelayed | etiBackVisible, FALSE);
@@ -32,7 +32,7 @@ CUISequenceVideoItem::~CUISequenceVideoItem()
 
 bool CUISequenceVideoItem::IsPlaying()
 {
-	return					(!!m_flags.test(etiPlaying));
+	return (!!m_flags.test(etiPlaying));
 }
 
 void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
@@ -59,7 +59,7 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 
 	m_delay = _max(xml->ReadFlt("delay", 0, 0.f), 0.f);
 
-	//ui-components
+	// ui-components
 	m_wnd = xr_new<CUIStatic>();
 	m_wnd->SetAutoDelete(false);
 	CUIXmlInit::InitStatic(*xml, "video_wnd", 0, m_wnd);
@@ -73,7 +73,7 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 		bool is_16_9 = UI()->is_16_9_mode();
 		float kw_image = UI_BASE_WIDTH / texture_coords.width();
 
-		Fvector2										wnd_size;
+		Fvector2 wnd_size;
 
 		wnd_size.x = UI_BASE_WIDTH;
 		wnd_size.y = texture_coords.height() * kw_image;
@@ -95,33 +95,43 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 void CUISequenceVideoItem::Update()
 {
 	// deferred start
-	if (Device.dwTimeContinual >= m_time_start) {
-		if (m_flags.test(etiDelayed)) {
+	if (Device.dwTimeContinual >= m_time_start)
+	{
+		if (m_flags.test(etiDelayed))
+		{
 			m_owner->MainWnd()->AttachChild(m_wnd);
 			m_wnd->Show(true);
 			m_flags.set(etiDelayed, FALSE);
 		}
 	}
-	else return;
+	else
+		return;
 
-	u32 sync_tm = (0 == m_sound._handle()) ? Device.dwTimeContinual : (m_sound._feedback() ? m_sound._feedback()->play_time() : m_sync_time);
+	u32 sync_tm = (0 == m_sound._handle()) ? Device.dwTimeContinual
+										   : (m_sound._feedback() ? m_sound._feedback()->play_time() : m_sync_time);
 	m_sync_time = sync_tm;
 	// processing A&V
-	if (m_texture) {
+	if (m_texture)
+	{
 		BOOL is_playing = m_sound._handle() ? !!m_sound._feedback() : m_texture->video_IsPlaying();
-		if (is_playing) {
+		if (is_playing)
+		{
 			m_texture->video_Sync(m_sync_time);
 		}
-		else {
+		else
+		{
 			// sync start
-			if (m_flags.test(etiNeedStart)) {
+			if (m_flags.test(etiNeedStart))
+			{
 				m_sound.play_at_pos(NULL, Fvector().set(0.f, 0.f, 0.f), sm_2D);
 				m_texture->video_Play(FALSE, m_sync_time);
 				m_flags.set(etiNeedStart, FALSE);
 				CUIWindow* w = m_owner->MainWnd()->FindChild("back");
-				if (w)					w->Show(!!m_flags.test(etiBackVisible));
+				if (w)
+					w->Show(!!m_flags.test(etiBackVisible));
 			}
-			else {
+			else
+			{
 				m_flags.set(etiPlaying, FALSE);
 			}
 		}
@@ -130,7 +140,8 @@ void CUISequenceVideoItem::Update()
 
 void CUISequenceVideoItem::OnRender()
 {
-	if (NULL == m_texture && m_wnd->GetShader()) {
+	if (NULL == m_texture && m_wnd->GetShader())
+	{
 		RCache.set_Shader(m_wnd->GetShader());
 		m_texture = RCache.get_ActiveTexture(0);
 		m_texture->video_Stop();
@@ -142,7 +153,8 @@ void CUISequenceVideoItem::Start()
 	inherited::Start();
 	m_flags.set(etiStoredPauseState, Device.Paused());
 
-	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState)) {
+	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
+	{
 		Device.Pause(TRUE, TRUE, TRUE, "videoitem_start");
 		bShowPauseString = FALSE;
 	}
@@ -160,9 +172,11 @@ void CUISequenceVideoItem::Start()
 	m_time_start = Device.dwTimeContinual + iFloor(m_delay * 1000.f);
 	m_flags.set(etiDelayed, TRUE);
 
-	if (m_flags.test(etiBackVisible)) {
+	if (m_flags.test(etiBackVisible))
+	{
 		CUIWindow* w = m_owner->MainWnd()->FindChild("back");
-		if (w)					w->Show(true);
+		if (w)
+			w->Show(true);
 	}
 }
 

@@ -1,13 +1,11 @@
 #pragma once
 
-#define TEMPLATE_SPECIALIZATION template <\
-	typename _Object\
->
+#define TEMPLATE_SPECIALIZATION template <typename _Object>
 
 #define CStateMonsterControlledAttackAbstract CStateMonsterControlledAttack<_Object>
 
 TEMPLATE_SPECIALIZATION
-CStateMonsterControlledAttackAbstract::CStateMonsterControlledAttack(_Object *obj) : inherited(obj)
+CStateMonsterControlledAttackAbstract::CStateMonsterControlledAttack(_Object* obj) : inherited(obj)
 {
 }
 
@@ -40,9 +38,9 @@ void CStateMonsterControlledAttackAbstract::critical_finalize()
 }
 
 TEMPLATE_SPECIALIZATION
-const CEntityAlive *CStateMonsterControlledAttackAbstract::get_enemy()
+const CEntityAlive* CStateMonsterControlledAttackAbstract::get_enemy()
 {
-	CControlledEntityBase *entity = smart_cast<CControlledEntityBase *>(object);
+	CControlledEntityBase* entity = smart_cast<CControlledEntityBase*>(object);
 	VERIFY(entity);
 	return smart_cast<const CEntityAlive*>(entity->get_data().m_object);
 }

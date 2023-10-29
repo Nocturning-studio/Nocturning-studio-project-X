@@ -1,9 +1,11 @@
 #ifndef ETextureParamsH
 #define ETextureParamsH
 
-#pragma pack(push,1)
-struct ECORE_API STextureParams {
-	enum ETType {
+#pragma pack(push, 1)
+struct ECORE_API STextureParams
+{
+	enum ETType
+	{
 		ttImage = 0,
 		ttCubeMap,
 		ttBumpMap,
@@ -11,7 +13,8 @@ struct ECORE_API STextureParams {
 		ttTerrain,
 		ttForceU32 = u32(-1)
 	};
-	enum ETFormat {
+	enum ETFormat
+	{
 		tfDXT1 = 0,
 		tfADXT1,
 		tfDXT3,
@@ -28,20 +31,23 @@ struct ECORE_API STextureParams {
 		tfA8L8,
 		tfForceU32 = u32(-1)
 	};
-	enum ETBumpMode {
+	enum ETBumpMode
+	{
 		tbmResereved = 0,
 		tbmNone,
 		tbmUse,
 		tbmForceU32 = u32(-1)
 	};
-	enum ETMaterial {
+	enum ETMaterial
+	{
 		tmOrenNayar_Blin = 0,
 		tmBlin_Phong,
 		tmPhong_Metal,
 		tmMetal_OrenNayar,
 		tmForceU32 = u32(-1)
 	};
-	enum {
+	enum
+	{
 		kMIPFilterAdvanced = 5,
 
 		kMIPFilterPoint = 2,
@@ -63,7 +69,8 @@ struct ECORE_API STextureParams {
 		kMIPFilterKaiser = 14,
 	};
 
-	enum {
+	enum
+	{
 		flGenerateMipMaps = (1 << 0),
 		flBinaryAlpha = (1 << 1),
 		flAlphaBorder = (1 << 4),
@@ -83,27 +90,27 @@ struct ECORE_API STextureParams {
 	};
 
 	// texture part
-	ETFormat	        fmt;
-	Flags32		        flags;
-	u32			        border_color;
-	u32			        fade_color;
-	u32			        fade_amount;
-	u8					fade_delay;
-	u32			        mip_filter;
-	int			        width;
-	int			        height;
+	ETFormat fmt;
+	Flags32 flags;
+	u32 border_color;
+	u32 fade_color;
+	u32 fade_amount;
+	u8 fade_delay;
+	u32 mip_filter;
+	int width;
+	int height;
 	// detail ext
-	shared_str			detail_name;
-	float		        detail_scale;
-	ETType		        type;
+	shared_str detail_name;
+	float detail_scale;
+	ETType type;
 	// material
-	ETMaterial			material;
-	float				material_weight;
+	ETMaterial material;
+	float material_weight;
 	// bump
-	float 				bump_virtual_height;
-	ETBumpMode			bump_mode;
-	shared_str			bump_name;
-	shared_str			ext_normal_map_name;
+	float bump_virtual_height;
+	ETBumpMode bump_mode;
+	shared_str bump_name;
+	shared_str ext_normal_map_name;
 
 	STextureParams()
 	{
@@ -145,34 +152,34 @@ struct ECORE_API STextureParams {
 	void Load(IReader& F);
 	void Save(IWriter& F);
 #ifdef _EDITOR
-	PropValue::TOnChange			OnTypeChangeEvent;
-	void __stdcall	OnTypeChange(PropValue* v);
-	void 			FillProp(LPCSTR base_name, PropItemVec& items, PropValue::TOnChange OnChangeEvent);
-	LPCSTR 			FormatString();
-	u32 			MemoryUsage(LPCSTR base_name);
+	PropValue::TOnChange OnTypeChangeEvent;
+	void __stdcall OnTypeChange(PropValue* v);
+	void FillProp(LPCSTR base_name, PropItemVec& items, PropValue::TOnChange OnChangeEvent);
+	LPCSTR FormatString();
+	u32 MemoryUsage(LPCSTR base_name);
 #endif
 };
-#pragma pack( pop )
+#pragma pack(pop)
 
 struct xr_token;
-extern xr_token	tparam_token[];
-extern xr_token	tfmt_token[];
-extern xr_token	ttype_token[];
+extern xr_token tparam_token[];
+extern xr_token tfmt_token[];
+extern xr_token ttype_token[];
 
 //----------------------------------------------------
-#define THM_CHUNK_VERSION				0x0810
-#define THM_CHUNK_DATA					0x0811
-#define THM_CHUNK_TEXTUREPARAM			0x0812
-#define THM_CHUNK_TYPE					0x0813
-#define THM_CHUNK_TEXTURE_TYPE			0x0814
-#define THM_CHUNK_DETAIL_EXT			0x0815
-#define THM_CHUNK_MATERIAL				0x0816
-#define THM_CHUNK_BUMP					0x0817
-#define THM_CHUNK_EXT_NORMALMAP			0x0818
-#define THM_CHUNK_FADE_DELAY			0x0819
+#define THM_CHUNK_VERSION 0x0810
+#define THM_CHUNK_DATA 0x0811
+#define THM_CHUNK_TEXTUREPARAM 0x0812
+#define THM_CHUNK_TYPE 0x0813
+#define THM_CHUNK_TEXTURE_TYPE 0x0814
+#define THM_CHUNK_DETAIL_EXT 0x0815
+#define THM_CHUNK_MATERIAL 0x0816
+#define THM_CHUNK_BUMP 0x0817
+#define THM_CHUNK_EXT_NORMALMAP 0x0818
+#define THM_CHUNK_FADE_DELAY 0x0819
 //----------------------------------------------------
-#define THUMB_WIDTH 	128
-#define THUMB_HEIGHT 	128
-#define THUMB_SIZE 		THUMB_HEIGHT*THUMB_WIDTH
+#define THUMB_WIDTH 128
+#define THUMB_HEIGHT 128
+#define THUMB_SIZE THUMB_HEIGHT* THUMB_WIDTH
 //----------------------------------------------------
 #endif /*_INCDEF_TextureParams_H_*/

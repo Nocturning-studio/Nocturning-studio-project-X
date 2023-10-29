@@ -3,14 +3,15 @@
 
 #include "ode_include.h"
 
-class CPHBaseBodyEffector 
+class CPHBaseBodyEffector
 {
-protected:
+  protected:
 	dBodyID m_body;
-public:
+
+  public:
 	void Init(dBodyID body)
-		{
-			m_body=body;
-		}
+	{
+		m_body = body;
+	}
 };
 #endif

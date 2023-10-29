@@ -13,13 +13,14 @@
 class CAgentManager;
 class CObject;
 
-class CAgentManagerPlanner : public CActionPlanner<CAgentManager> {
-private:
-	typedef CActionPlanner<CAgentManager>	inherited;
+class CAgentManagerPlanner : public CActionPlanner<CAgentManager>
+{
+  private:
+	typedef CActionPlanner<CAgentManager> inherited;
 
-public:
-	virtual void		setup				(CAgentManager *object);
-			void		add_evaluators		();
-			void		add_actions			();
-			void		remove_links		(CObject *object);
+  public:
+	virtual void setup(CAgentManager* object);
+	void add_evaluators();
+	void add_actions();
+	void remove_links(CObject* object);
 };

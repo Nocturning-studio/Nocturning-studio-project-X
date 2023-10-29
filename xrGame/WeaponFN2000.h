@@ -6,18 +6,19 @@
 #include "WeaponMagazined.h"
 #include "script_export_space.h"
 
-class CWeaponFN2000: public CWeaponMagazined
+class CWeaponFN2000 : public CWeaponMagazined
 {
-private:
+  private:
 	typedef CWeaponMagazined inherited;
-public:
-	CWeaponFN2000	();
-	virtual			~CWeaponFN2000	();
-/*	virtual void	Load			(LPCSTR section);
-	virtual void			Fire2Start			();
-	virtual void			Fire2End			();
 
-	virtual bool Action(s32 cmd, u32 flags);*/
+  public:
+	CWeaponFN2000();
+	virtual ~CWeaponFN2000();
+	/*	virtual void	Load			(LPCSTR section);
+		virtual void			Fire2Start			();
+		virtual void			Fire2End			();
+
+		virtual bool Action(s32 cmd, u32 flags);*/
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

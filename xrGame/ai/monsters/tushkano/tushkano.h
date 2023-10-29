@@ -3,19 +3,18 @@
 #include "../controlled_entity.h"
 #include "../../../script_export_space.h"
 
-class CTushkano :	public CBaseMonster,
-					public CControlledEntity<CTushkano> {
+class CTushkano : public CBaseMonster, public CControlledEntity<CTushkano>
+{
 
+	typedef CBaseMonster inherited;
+	typedef CControlledEntity<CTushkano> CControlled;
 
-	typedef		CBaseMonster					inherited;
-	typedef		CControlledEntity<CTushkano>	CControlled;
+  public:
+	CTushkano();
+	virtual ~CTushkano();
 
-public:
-					CTushkano 			();
-	virtual			~CTushkano 			();	
-
-	virtual void	Load				(LPCSTR section);
-	virtual void	CheckSpecParams		(u32 spec_params);
+	virtual void Load(LPCSTR section);
+	virtual void CheckSpecParams(u32 spec_params);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

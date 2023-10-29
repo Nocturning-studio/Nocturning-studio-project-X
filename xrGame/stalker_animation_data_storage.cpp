@@ -12,51 +12,53 @@
 #include "object_broker.h"
 #include "../xrEngine/skeletonanimated.h"
 
-CStalkerAnimationDataStorage	*g_stalker_animation_data_storage = 0;
+CStalkerAnimationDataStorage* g_stalker_animation_data_storage = 0;
 
-class data_predicate {
-private:
-	CKinematicsAnimated			*m_object;
+class data_predicate
+{
+  private:
+	CKinematicsAnimated* m_object;
 
-public:
-	IC			data_predicate	(CKinematicsAnimated *skeleton_animated)
+  public:
+	IC data_predicate(CKinematicsAnimated* skeleton_animated)
 	{
-		VERIFY				(skeleton_animated);
-		m_object			= skeleton_animated;
+		VERIFY(skeleton_animated);
+		m_object = skeleton_animated;
 	}
 
-	IC	bool	operator()		(const CStalkerAnimationDataStorage::OBJECT &object) const
+	IC bool operator()(const CStalkerAnimationDataStorage::OBJECT& object) const
 	{
 		if (m_object->LL_MotionsSlotCount() != object.first->LL_MotionsSlotCount())
-			return			(false);
+			return (false);
 
-		for (u16 i=0, n=m_object->LL_MotionsSlotCount(); i<n; ++i)
+		for (u16 i = 0, n = m_object->LL_MotionsSlotCount(); i < n; ++i)
 			if (!(m_object->LL_MotionsSlot(i) == object.first->LL_MotionsSlot(i)))
-				return		(false);
+				return (false);
 
-		return				(true);
+		return (true);
 	}
 };
 
-CStalkerAnimationDataStorage::~CStalkerAnimationDataStorage	()
+CStalkerAnimationDataStorage::~CStalkerAnimationDataStorage()
 {
-	clear					();
+	clear();
 }
 
-void CStalkerAnimationDataStorage::clear					()
+void CStalkerAnimationDataStorage::clear()
 {
-	while (!m_objects.empty()) {
-		xr_delete			(m_objects.back().second);
-		m_objects.pop_back	();
+	while (!m_objects.empty())
+	{
+		xr_delete(m_objects.back().second);
+		m_objects.pop_back();
 	}
 }
 
-const CStalkerAnimationData *CStalkerAnimationDataStorage::object	(CKinematicsAnimated *skeleton_animated)
+const CStalkerAnimationData* CStalkerAnimationDataStorage::object(CKinematicsAnimated* skeleton_animated)
 {
-	OBJECTS::const_iterator	I = std::find_if(m_objects.begin(),m_objects.end(),data_predicate(skeleton_animated));
+	OBJECTS::const_iterator I = std::find_if(m_objects.begin(), m_objects.end(), data_predicate(skeleton_animated));
 	if (I != m_objects.end())
-		return				((*I).second);
+		return ((*I).second);
 
-	m_objects.push_back		(std::make_pair(skeleton_animated,xr_new<CStalkerAnimationData>(skeleton_animated)));
-	return					(m_objects.back().second);
+	m_objects.push_back(std::make_pair(skeleton_animated, xr_new<CStalkerAnimationData>(skeleton_animated)));
+	return (m_objects.back().second);
 }

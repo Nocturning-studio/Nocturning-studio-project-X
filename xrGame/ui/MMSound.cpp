@@ -4,14 +4,17 @@
 #include "xrUIXmlParser.h"
 #include "../../xrSound/Sound.h"
 
-CMMSound::CMMSound() {
+CMMSound::CMMSound()
+{
 }
 
-CMMSound::~CMMSound() {
+CMMSound::~CMMSound()
+{
 	all_Stop();
 }
 
-void CMMSound::Init(CUIXml& xml_doc, LPCSTR path) {
+void CMMSound::Init(CUIXml& xml_doc, LPCSTR path)
+{
 	string256 _path;
 	m_bRandom = xml_doc.ReadAttribInt(path, 0, "random") ? true : false;
 
@@ -32,38 +35,44 @@ void CMMSound::Init(CUIXml& xml_doc, LPCSTR path) {
 		m_whell_click.create(xml_doc.Read(_path, 0, ""), st_Effect, sg_SourceType);
 }
 
-bool CMMSound::check_file(LPCSTR fname) {
-	string_path		_path;
+bool CMMSound::check_file(LPCSTR fname)
+{
+	string_path _path;
 	strconcat(sizeof(_path), _path, fname, ".ogg");
 	return FS.exist("$game_sounds$", _path) ? true : false;
 }
 
-void CMMSound::whell_Play() {
+void CMMSound::whell_Play()
+{
 	if (m_whell._handle() && !m_whell._feedback())
 		m_whell.play(NULL, sm_Looped | sm_2D);
 }
 
-void CMMSound::whell_Stop() {
+void CMMSound::whell_Stop()
+{
 	if (m_whell._feedback())
 		m_whell.stop();
 }
 
-void CMMSound::whell_Click() {
+void CMMSound::whell_Click()
+{
 	if (m_whell_click._handle())
 		m_whell_click.play(NULL, sm_2D);
 }
 
-void CMMSound::whell_UpdateMoving(float frequency) {
+void CMMSound::whell_UpdateMoving(float frequency)
+{
 	m_whell.set_frequency(frequency);
 }
 
-void CMMSound::music_Play() {
+void CMMSound::music_Play()
+{
 	if (m_play_list.empty())
 		return;
 
 	int i = Random.randI(m_play_list.size());
 
-	string_path		_path;
+	string_path _path;
 	strconcat(sizeof(_path), _path, m_play_list[i].c_str(), ".ogg");
 	VERIFY(FS.exist("$game_sounds$", _path));
 
@@ -73,9 +82,10 @@ void CMMSound::music_Play() {
 
 void CMMSound::music_Update()
 {
-	if (Device.Paused()) return;
+	if (Device.Paused())
+		return;
 
-	if ( 0==m_music_stereo._feedback() )
+	if (0 == m_music_stereo._feedback())
 		music_Play();
 }
 
@@ -84,7 +94,8 @@ void CMMSound::music_Stop()
 	m_music_stereo.stop();
 }
 
-void CMMSound::all_Stop() {
+void CMMSound::all_Stop()
+{
 	music_Stop();
 	m_whell.stop();
 	m_whell_click.stop();

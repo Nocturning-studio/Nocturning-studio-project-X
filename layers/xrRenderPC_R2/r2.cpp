@@ -10,29 +10,50 @@
 #include <boost/crc.hpp>
 #include "../xrEngine\r_constants.h"
 //////////////////////////////////////////////////////////////////////////
-CRender	RImplementation;
+CRender RImplementation;
 //////////////////////////////////////////////////////////////////////////
 class CGlow : public IRender_Glow
 {
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false) { }
-	virtual void					set_active(bool b) { bActive = b; }
-	virtual bool					get_active() { return bActive; }
-	virtual void					set_position(const Fvector& P) { }
-	virtual void					set_direction(const Fvector& D) { }
-	virtual void					set_radius(float R) { }
-	virtual void					set_texture(LPCSTR name) { }
-	virtual void					set_color(const Fcolor& C) { }
-	virtual void					set_color(float r, float g, float b) { }
+  public:
+	bool bActive;
+
+  public:
+	CGlow() : bActive(false)
+	{
+	}
+	virtual void set_active(bool b)
+	{
+		bActive = b;
+	}
+	virtual bool get_active()
+	{
+		return bActive;
+	}
+	virtual void set_position(const Fvector& P)
+	{
+	}
+	virtual void set_direction(const Fvector& D)
+	{
+	}
+	virtual void set_radius(float R)
+	{
+	}
+	virtual void set_texture(LPCSTR name)
+	{
+	}
+	virtual void set_color(const Fcolor& C)
+	{
+	}
+	virtual void set_color(float r, float g, float b)
+	{
+	}
 };
 
-float		r_dtex_range = 50.f;
+float r_dtex_range = 50.f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_dynamic(IRender_Visual* pVisual, float cdist_sq)
 {
-	int		id = SE_R2_SHADOW;
+	int id = SE_R2_SHADOW;
 	if (CRender::PHASE_NORMAL == RImplementation.phase)
 	{
 		id = ((_sqrt(cdist_sq) - pVisual->vis.sphere.R) < r_dtex_range) ? SE_R2_NORMAL_HQ : SE_R2_NORMAL_LQ;
@@ -42,7 +63,7 @@ ShaderElement* CRender::rimp_select_sh_dynamic(IRender_Visual* pVisual, float cd
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdist_sq)
 {
-	int		id = SE_R2_SHADOW;
+	int id = SE_R2_SHADOW;
 	if (CRender::PHASE_NORMAL == RImplementation.phase)
 	{
 		id = ((_sqrt(cdist_sq) - pVisual->vis.sphere.R) < r_dtex_range) ? SE_R2_NORMAL_HQ : SE_R2_NORMAL_LQ;
@@ -50,13 +71,14 @@ ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdi
 	return pVisual->shader->E[id]._get();
 }
 //////////////////////////////////////////////////////////////////////////
-static class cl_parallax : public R_constant_setup {
+static class cl_parallax : public R_constant_setup
+{
 	virtual void setup(R_constant* C)
 	{
-		float			h = ps_r2_df_parallax_h;
+		float h = ps_r2_df_parallax_h;
 		RCache.set_c(C, h, -h / 2.f, 1.f / r_dtex_range, 1.f / r_dtex_range);
 	}
-}	binder_parallax;
+} binder_parallax;
 //////////////////////////////////////////////////////////////////////////
 static class cl_sun_far : public R_constant_setup
 {
@@ -65,7 +87,7 @@ static class cl_sun_far : public R_constant_setup
 		float fValue = ps_r2_sun_far;
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
-}	binder_sun_far;
+} binder_sun_far;
 //////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
@@ -79,7 +101,7 @@ void CRender::create()
 
 	// hardware
 	///////////////////////////////////////////////////
-	//Smap res choosing
+	// Smap res choosing
 	switch (ps_r2_sun_quality)
 	{
 	case 1:
@@ -104,19 +126,20 @@ void CRender::create()
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
 	// Check for NULL render target support
-	D3DFORMAT	nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
+	D3DFORMAT nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 	o.nullrt = HW.support(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 	/*
 	if (o.nullrt)		{
 	Msg				("* NULLRT supported and used");
 	};
 	*/
-	if (o.nullrt) {
+	if (o.nullrt)
+	{
 		Msg("* NULLRT supported");
 
 		//.	    _tzset			();
 		//.		??? _strdate	( date, 128 );	???
-		//.		??? if (date < 22-march-07)		
+		//.		??? if (date < 22-march-07)
 		if (0)
 		{
 			u32 device_id = HW.Caps.id_device;
@@ -131,7 +154,7 @@ void CRender::create()
 			case 0x197:
 			case 0x19D:
 			case 0x19E: {
-				disable_nullrt = true;	//G80
+				disable_nullrt = true; // G80
 				break;
 			}
 			case 0x400:
@@ -142,7 +165,7 @@ void CRender::create()
 			case 0x405:
 			case 0x40E:
 			case 0x40F: {
-				disable_nullrt = true;	//G84
+				disable_nullrt = true; // G84
 				break;
 			}
 			case 0x420:
@@ -153,21 +176,23 @@ void CRender::create()
 			case 0x42D:
 			case 0x42E:
 			case 0x42F: {
-				disable_nullrt = true;	// G86
+				disable_nullrt = true; // G86
 				break;
 			}
 			}
-			if (disable_nullrt)	o.nullrt = false;
+			if (disable_nullrt)
+				o.nullrt = false;
 		};
-		if (o.nullrt)	Msg("* ...and used");
+		if (o.nullrt)
+			Msg("* ...and used");
 	};
-
 
 	// SMAP / DST
 	o.HW_smap_FETCH4 = FALSE;
 	o.HW_smap = HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap_PCF = o.HW_smap;
-	if (o.HW_smap) {
+	if (o.HW_smap)
+	{
 		o.HW_smap_FORMAT = D3DFMT_D24X8;
 		Msg("* HWDST/PCF supported and used");
 	}
@@ -176,9 +201,11 @@ void CRender::create()
 	o.fp16_blend = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
 	// search for ATI formats
-	if (!o.HW_smap && (0 == strstr(Core.Params, "-nodf24"))) {
+	if (!o.HW_smap && (0 == strstr(Core.Params, "-nodf24")))
+	{
 		o.HW_smap = HW.support((D3DFORMAT)(MAKEFOURCC('D', 'F', '2', '4')), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
-		if (o.HW_smap) {
+		if (o.HW_smap)
+		{
 			o.HW_smap_FORMAT = MAKEFOURCC('D', 'F', '2', '4');
 			o.HW_smap_PCF = FALSE;
 			o.HW_smap_FETCH4 = TRUE;
@@ -187,7 +214,8 @@ void CRender::create()
 	}
 
 	// emulate ATI-R4xx series
-	if (strstr(Core.Params, "-r4xx")) {
+	if (strstr(Core.Params, "-r4xx"))
+	{
 		o.mrtmixdepth = FALSE;
 		o.HW_smap = FALSE;
 		o.HW_smap_PCF = FALSE;
@@ -195,35 +223,45 @@ void CRender::create()
 		o.fp16_blend = FALSE;
 	}
 
-	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
+	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256),
+			  "Hardware doesn't meet minimum feature-level");
 
 	// nvstencil on NV40 and up
 	o.nvstencil = FALSE;
-	if ((HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40))	o.nvstencil = TRUE;
-	if (strstr(Core.Params, "-nonvs"))		o.nvstencil = FALSE;
+	if ((HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40))
+		o.nvstencil = TRUE;
+	if (strstr(Core.Params, "-nonvs"))
+		o.nvstencil = FALSE;
 
 	// nv-dbt
 	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);
-	if (o.nvdbt)		Msg("* NV-DBT supported and used");
+	if (o.nvdbt)
+		Msg("* NV-DBT supported and used");
 
 	// options (smap-pool-size)
-	if (strstr(Core.Params, "-smap1536"))	o.smapsize = 1536;
-	if (strstr(Core.Params, "-smap2048"))	o.smapsize = 2048;
-	if (strstr(Core.Params, "-smap2560"))	o.smapsize = 2560;
-	if (strstr(Core.Params, "-smap3072"))	o.smapsize = 3072;
-	if (strstr(Core.Params, "-smap4096"))	o.smapsize = 4096;
+	if (strstr(Core.Params, "-smap1536"))
+		o.smapsize = 1536;
+	if (strstr(Core.Params, "-smap2048"))
+		o.smapsize = 2048;
+	if (strstr(Core.Params, "-smap2560"))
+		o.smapsize = 2560;
+	if (strstr(Core.Params, "-smap3072"))
+		o.smapsize = 3072;
+	if (strstr(Core.Params, "-smap4096"))
+		o.smapsize = 4096;
 
 	// gloss
 	char* g = strstr(Core.Params, "-gloss ");
 	o.forcegloss = g ? TRUE : FALSE;
-	if (g) {
+	if (g)
+	{
 		o.forcegloss_v = float(atoi(g + xr_strlen("-gloss "))) / 255.f;
 	}
 
 	// options
 	o.bug = (strstr(Core.Params, "-bug")) ? TRUE : FALSE;
 	o.sunfilter = (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
-	//o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
+	// o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
 	o.sunstatic = r2_sun_static;
 	o.advancedpp = r2_advanced_pp;
 	o.sjitter = (strstr(Core.Params, "-sjitter")) ? TRUE : FALSE;
@@ -243,13 +281,13 @@ void CRender::create()
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
 
-	Target = xr_new<CRenderTarget>();	// Main target
+	Target = xr_new<CRenderTarget>(); // Main target
 
 	Models = xr_new<CModelPool>();
 	PSLibrary.OnCreate();
 	HWOCC.occq_create(occq_size);
 
-	//rmNormal					();
+	// rmNormal					();
 	marker = 0;
 	ZeroMemory(q_sync_point, sizeof(q_sync_point));
 	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
@@ -259,7 +297,7 @@ void CRender::create()
 	::PortalTraverser.initialize();
 }
 
-void					CRender::destroy()
+void CRender::destroy()
 {
 	::PortalTraverser.destroy();
 	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
@@ -269,7 +307,7 @@ void					CRender::destroy()
 	xr_delete(Target);
 	PSLibrary.OnDestroy();
 	Device.seqFrame.Remove(this);
-	r_dsgraph_destroy(); //FIX BY IXRAY (THANKS BY DEATHMAN)
+	r_dsgraph_destroy(); // FIX BY IXRAY (THANKS BY DEATHMAN)
 }
 
 void CRender::reset_begin()
@@ -278,9 +316,12 @@ void CRender::reset_begin()
 	// BUG-ID: 10646
 	{
 		u32 it = 0;
-		for (it = 0; it < Lights_LastFrame.size(); it++) {
-			if (0 == Lights_LastFrame[it])	continue;
-			try {
+		for (it = 0; it < Lights_LastFrame.size(); it++)
+		{
+			if (0 == Lights_LastFrame[it])
+				continue;
+			try
+			{
 				Lights_LastFrame[it]->svis.resetoccq();
 			}
 			catch (...)
@@ -315,38 +356,57 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
 	Models->DeleteQueue();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC)) {
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	{
 		// MT-details (@front)
 		Device.seqParallel.insert(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+								  fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 
 		// MT-HOM (@front)
-		Device.seqParallel.insert(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
+		Device.seqParallel.insert(Device.seqParallel.begin(), fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 	}
 }
 
 BOOL CRender::is_sun()
 {
-	if (o.sunstatic)		return FALSE;
-	Fcolor					sun_color = ((light*)Lights.sun_adapted._get())->color;
-	return					(ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
+	if (o.sunstatic)
+		return FALSE;
+	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
+	return (ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
 }
 
 // Implementation
-IRender_ObjectSpecific* CRender::ros_create(IRenderable* parent) { return xr_new<CROS_impl>(); }
-void					CRender::ros_destroy(IRender_ObjectSpecific*& p) { xr_delete(p); }
-IRender_Visual* CRender::model_Create(LPCSTR name, IReader* data) { return Models->Create(name, data); }
-IRender_Visual* CRender::model_CreateChild(LPCSTR name, IReader* data) { return Models->CreateChild(name, data); }
-IRender_Visual* CRender::model_Duplicate(IRender_Visual* V) { return Models->Instance_Duplicate(V); }
-void					CRender::model_Delete(IRender_Visual*& V, BOOL bDiscard) { Models->Delete(V, bDiscard); }
+IRender_ObjectSpecific* CRender::ros_create(IRenderable* parent)
+{
+	return xr_new<CROS_impl>();
+}
+void CRender::ros_destroy(IRender_ObjectSpecific*& p)
+{
+	xr_delete(p);
+}
+IRender_Visual* CRender::model_Create(LPCSTR name, IReader* data)
+{
+	return Models->Create(name, data);
+}
+IRender_Visual* CRender::model_CreateChild(LPCSTR name, IReader* data)
+{
+	return Models->CreateChild(name, data);
+}
+IRender_Visual* CRender::model_Duplicate(IRender_Visual* V)
+{
+	return Models->Instance_Duplicate(V);
+}
+void CRender::model_Delete(IRender_Visual*& V, BOOL bDiscard)
+{
+	Models->Delete(V, bDiscard);
+}
 IRender_DetailModel* CRender::model_CreateDM(IReader* F)
 {
 	CDetail* D = xr_new<CDetail>();
 	D->Load(F);
 	return D;
 }
-void					CRender::model_Delete(IRender_DetailModel*& F)
+void CRender::model_Delete(IRender_DetailModel*& F)
 {
 	if (F)
 	{
@@ -358,104 +418,192 @@ void					CRender::model_Delete(IRender_DetailModel*& F)
 }
 IRender_Visual* CRender::model_CreatePE(LPCSTR name)
 {
-	PS::CPEDef* SE = PSLibrary.FindPED(name);		R_ASSERT3(SE, "Particle effect doesn't exist", name);
-	return					Models->CreatePE(SE);
+	PS::CPEDef* SE = PSLibrary.FindPED(name);
+	R_ASSERT3(SE, "Particle effect doesn't exist", name);
+	return Models->CreatePE(SE);
 }
 IRender_Visual* CRender::model_CreateParticles(LPCSTR name)
 {
 	PS::CPEDef* SE = PSLibrary.FindPED(name);
-	if (SE) return			Models->CreatePE(SE);
-	else {
-		PS::CPGDef* SG = PSLibrary.FindPGD(name);		R_ASSERT3(SG, "Particle effect or group doesn't exist", name);
-		return				Models->CreatePG(SG);
+	if (SE)
+		return Models->CreatePE(SE);
+	else
+	{
+		PS::CPGDef* SG = PSLibrary.FindPGD(name);
+		R_ASSERT3(SG, "Particle effect or group doesn't exist", name);
+		return Models->CreatePG(SG);
 	}
 }
-void					CRender::models_Prefetch() { Models->Prefetch(); }
-void					CRender::models_Clear(BOOL b_complete) { Models->ClearPool(b_complete); }
-
-ref_shader				CRender::getShader(int id) { VERIFY(id<int(Shaders.size()));	return Shaders[id]; }
-IRender_Portal* CRender::getPortal(int id) { VERIFY(id<int(Portals.size()));	return Portals[id]; }
-IRender_Sector* CRender::getSector(int id) { VERIFY(id<int(Sectors.size()));	return Sectors[id]; }
-IRender_Sector* CRender::getSectorActive() { return pLastSector; }
-IRender_Visual* CRender::getVisual(int id) { VERIFY(id<int(Visuals.size()));	return Visuals[id]; }
-D3DVERTEXELEMENT9* CRender::getVB_Format(int id, BOOL	_alt) {
-	if (_alt) { VERIFY(id<int(xDC.size()));	return xDC[id].begin(); }
-	else { VERIFY(id<int(nDC.size()));	return nDC[id].begin(); }
-}
-IDirect3DVertexBuffer9* CRender::getVB(int id, BOOL	_alt) {
-	if (_alt) { VERIFY(id<int(xVB.size()));	return xVB[id]; }
-	else { VERIFY(id<int(nVB.size()));	return nVB[id]; }
-}
-IDirect3DIndexBuffer9* CRender::getIB(int id, BOOL	_alt) {
-	if (_alt) { VERIFY(id<int(xIB.size()));	return xIB[id]; }
-	else { VERIFY(id<int(nIB.size()));	return nIB[id]; }
-}
-FSlideWindowItem* CRender::getSWI(int id) { VERIFY(id<int(SWIs.size()));		return &SWIs[id]; }
-IRender_Target* CRender::getTarget() { return Target; }
-
-IRender_Light* CRender::light_create() { return Lights.Create(); }
-IRender_Glow* CRender::glow_create() { return xr_new<CGlow>(); }
-
-void					CRender::flush() { r_dsgraph_render_graph(0); }
-
-BOOL					CRender::occ_visible(vis_data& P) { return HOM.visible(P); }
-BOOL					CRender::occ_visible(sPoly& P) { return HOM.visible(P); }
-BOOL					CRender::occ_visible(Fbox& P) { return HOM.visible(P); }
-
-void					CRender::add_Visual(IRender_Visual* V) { add_leafs_Dynamic(V); }
-void					CRender::add_Geometry(IRender_Visual* V) { add_Static(V, View->getMask()); }
-void					CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* verts)
+void CRender::models_Prefetch()
 {
-	if (T->suppress_wm)	return;
+	Models->Prefetch();
+}
+void CRender::models_Clear(BOOL b_complete)
+{
+	Models->ClearPool(b_complete);
+}
+
+ref_shader CRender::getShader(int id)
+{
+	VERIFY(id < int(Shaders.size()));
+	return Shaders[id];
+}
+IRender_Portal* CRender::getPortal(int id)
+{
+	VERIFY(id < int(Portals.size()));
+	return Portals[id];
+}
+IRender_Sector* CRender::getSector(int id)
+{
+	VERIFY(id < int(Sectors.size()));
+	return Sectors[id];
+}
+IRender_Sector* CRender::getSectorActive()
+{
+	return pLastSector;
+}
+IRender_Visual* CRender::getVisual(int id)
+{
+	VERIFY(id < int(Visuals.size()));
+	return Visuals[id];
+}
+D3DVERTEXELEMENT9* CRender::getVB_Format(int id, BOOL _alt)
+{
+	if (_alt)
+	{
+		VERIFY(id < int(xDC.size()));
+		return xDC[id].begin();
+	}
+	else
+	{
+		VERIFY(id < int(nDC.size()));
+		return nDC[id].begin();
+	}
+}
+IDirect3DVertexBuffer9* CRender::getVB(int id, BOOL _alt)
+{
+	if (_alt)
+	{
+		VERIFY(id < int(xVB.size()));
+		return xVB[id];
+	}
+	else
+	{
+		VERIFY(id < int(nVB.size()));
+		return nVB[id];
+	}
+}
+IDirect3DIndexBuffer9* CRender::getIB(int id, BOOL _alt)
+{
+	if (_alt)
+	{
+		VERIFY(id < int(xIB.size()));
+		return xIB[id];
+	}
+	else
+	{
+		VERIFY(id < int(nIB.size()));
+		return nIB[id];
+	}
+}
+FSlideWindowItem* CRender::getSWI(int id)
+{
+	VERIFY(id < int(SWIs.size()));
+	return &SWIs[id];
+}
+IRender_Target* CRender::getTarget()
+{
+	return Target;
+}
+
+IRender_Light* CRender::light_create()
+{
+	return Lights.Create();
+}
+IRender_Glow* CRender::glow_create()
+{
+	return xr_new<CGlow>();
+}
+
+void CRender::flush()
+{
+	r_dsgraph_render_graph(0);
+}
+
+BOOL CRender::occ_visible(vis_data& P)
+{
+	return HOM.visible(P);
+}
+BOOL CRender::occ_visible(sPoly& P)
+{
+	return HOM.visible(P);
+}
+BOOL CRender::occ_visible(Fbox& P)
+{
+	return HOM.visible(P);
+}
+
+void CRender::add_Visual(IRender_Visual* V)
+{
+	add_leafs_Dynamic(V);
+}
+void CRender::add_Geometry(IRender_Visual* V)
+{
+	add_Static(V, View->getMask());
+}
+void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* verts)
+{
+	if (T->suppress_wm)
+		return;
 	VERIFY2(_valid(P) && _valid(s) && T && verts && (s > EPS_L), "Invalid static wallmark params");
 	Wallmarks->AddStaticWallmark(T, verts, P, &*S, s);
 }
 
-void					CRender::clear_static_wallmarks()
+void CRender::clear_static_wallmarks()
 {
 	Wallmarks->clear();
 }
 
-void					CRender::add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
+void CRender::add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
 {
 	Wallmarks->AddSkeletonWallmark(wm);
 }
-void					CRender::add_SkeletonWallmark(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start, const Fvector& dir, float size)
+void CRender::add_SkeletonWallmark(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start,
+								   const Fvector& dir, float size)
 {
 	Wallmarks->AddSkeletonWallmark(xf, obj, sh, start, dir, size);
 }
-void					CRender::add_Occluder(Fbox2& bb_screenspace)
+void CRender::add_Occluder(Fbox2& bb_screenspace)
 {
 	HOM.occlude(bb_screenspace);
 }
-void					CRender::set_Object(IRenderable* O)
+void CRender::set_Object(IRenderable* O)
 {
 	val_pObject = O;
 }
-void					CRender::rmNear()
+void CRender::rmNear()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = { 0,0,T->get_width(),T->get_height(),0,0.02f };
+	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 0.02f};
 	CHK_DX(HW.pDevice->SetViewport(&VP));
 }
-void					CRender::rmFar()
+void CRender::rmFar()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = { 0,0,T->get_width(),T->get_height(),0.99999f,1.f };
+	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0.99999f, 1.f};
 	CHK_DX(HW.pDevice->SetViewport(&VP));
 }
-void					CRender::rmNormal()
+void CRender::rmNormal()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = { 0,0,T->get_width(),T->get_height(),0,1.f };
+	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 1.f};
 	CHK_DX(HW.pDevice->SetViewport(&VP));
 }
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() : m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
@@ -465,30 +613,38 @@ CRender::~CRender()
 }
 
 #include "..\xrEngine\GameFont.h"
-//#include "../xrRender/xrRender_console.cpp"
-void	CRender::Statistics(CGameFont* _F)
+// #include "../xrRender/xrRender_console.cpp"
+void CRender::Statistics(CGameFont* _F)
 {
 	CGameFont& F = *_F;
-	F.OutNext(" **** LT:%2d,LV:%2d **** ", stats.l_total, stats.l_visible);	stats.l_visible = 0;
+	F.OutNext(" **** LT:%2d,LV:%2d **** ", stats.l_total, stats.l_visible);
+	stats.l_visible = 0;
 	F.OutNext("    S(%2d)   | (%2d)NS   ", stats.l_shadowed, stats.l_unshadowed);
-	F.OutNext("smap use[%2d], merge[%2d], finalclip[%2d]", stats.s_used, stats.s_merged - stats.s_used, stats.s_finalclip);
-	stats.s_used = 0; stats.s_merged = 0; stats.s_finalclip = 0;
+	F.OutNext("smap use[%2d], merge[%2d], finalclip[%2d]", stats.s_used, stats.s_merged - stats.s_used,
+			  stats.s_finalclip);
+	stats.s_used = 0;
+	stats.s_merged = 0;
+	stats.s_finalclip = 0;
 	F.OutSkip();
 	F.OutNext(" **** Occ-Q(%03.1f) **** ", 100.f * f32(stats.o_culled) / f32(stats.o_queries ? stats.o_queries : 1));
-	F.OutNext(" total  : %2d", stats.o_queries);	stats.o_queries = 0;
-	F.OutNext(" culled : %2d", stats.o_culled);	stats.o_culled = 0;
+	F.OutNext(" total  : %2d", stats.o_queries);
+	stats.o_queries = 0;
+	F.OutNext(" culled : %2d", stats.o_culled);
+	stats.o_culled = 0;
 	F.OutSkip();
-	u32	ict = stats.ic_total + stats.ic_culled;
+	u32 ict = stats.ic_total + stats.ic_culled;
 	F.OutNext(" **** iCULL(%03.1f) **** ", 100.f * f32(stats.ic_culled) / f32(ict ? ict : 1));
-	F.OutNext(" visible: %2d", stats.ic_total);	stats.ic_total = 0;
-	F.OutNext(" culled : %2d", stats.ic_culled);	stats.ic_culled = 0;
+	F.OutNext(" visible: %2d", stats.ic_total);
+	stats.ic_total = 0;
+	F.OutNext(" culled : %2d", stats.ic_culled);
+	stats.ic_culled = 0;
 #ifdef DEBUG
 	HOM.stats();
 #endif
 }
 
 /////////
-#pragma comment(lib,"d3dx9.lib")
+#pragma comment(lib, "d3dx9.lib")
 /*
 extern "C"
 {
@@ -498,7 +654,7 @@ LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
 */
 void CRender::addShaderOption(const char* name, const char* value)
 {
-	D3DXMACRO macro = { name, value };
+	D3DXMACRO macro = {name, value};
 	m_ShaderOptions.push_back(macro);
 }
 
@@ -507,20 +663,16 @@ void CRender::clearAllShaderOptions()
 	m_ShaderOptions.clear();
 }
 
-static HRESULT create_shader(
-	LPCSTR const pTarget,
-	DWORD const* buffer,
-	u32	const buffer_size,
-	LPCSTR const file_name,
-	void*& result,
-	bool const disasm
-)
+static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 const buffer_size, LPCSTR const file_name,
+							 void*& result, bool const disasm)
 {
 	HRESULT _result = E_FAIL;
-	if (pTarget[0] == 'p') {
+	if (pTarget[0] == 'p')
+	{
 		SPS* sps_result = (SPS*)result;
 		_result = HW.pDevice->CreatePixelShader(buffer, &sps_result->ps);
-		if (!SUCCEEDED(_result)) {
+		if (!SUCCEEDED(_result))
+		{
 			Log("! PS: ", file_name);
 			Msg("! CreatePixelShader hr == 0x%08x", _result);
 			return E_FAIL;
@@ -530,7 +682,7 @@ static HRESULT create_shader(
 		_result = D3DXFindShaderComment(buffer, MAKEFOURCC('C', 'T', 'A', 'B'), &data, NULL);
 		if (SUCCEEDED(_result) && data)
 		{
-			LPD3DXSHADER_CONSTANTTABLE	pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
+			LPD3DXSHADER_CONSTANTTABLE pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
 			sps_result->constants.parse(pConstants, 0x1);
 		}
 		else
@@ -539,10 +691,12 @@ static HRESULT create_shader(
 			Msg("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
-	else {
+	else
+	{
 		SVS* svs_result = (SVS*)result;
 		_result = HW.pDevice->CreateVertexShader(buffer, &svs_result->vs);
-		if (!SUCCEEDED(_result)) {
+		if (!SUCCEEDED(_result))
+		{
 			Log("! VS: ", file_name);
 			Msg("! CreatePixelShader hr == 0x%08x", _result);
 			return E_FAIL;
@@ -552,7 +706,7 @@ static HRESULT create_shader(
 		_result = D3DXFindShaderComment(buffer, MAKEFOURCC('C', 'T', 'A', 'B'), &data, NULL);
 		if (SUCCEEDED(_result) && data)
 		{
-			LPD3DXSHADER_CONSTANTTABLE	pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
+			LPD3DXSHADER_CONSTANTTABLE pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
 			svs_result->constants.parse(pConstants, 0x2);
 		}
 		else
@@ -566,8 +720,9 @@ static HRESULT create_shader(
 	{
 		ID3DXBuffer* _disasm = 0;
 		D3DXDisassembleShader(LPDWORD(buffer), TRUE, 0, &_disasm);
-		string_path	dname;
-		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", file_name, ('v' == pTarget[0]) ? "_vertex_shader.txt" : "_pixel_shader.txt");
+		string_path dname;
+		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", file_name,
+				  ('v' == pTarget[0]) ? "_vertex_shader.txt" : "_pixel_shader.txt");
 		IWriter* W = FS.w_open("$app_data_root$", dname);
 		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
 		FS.w_close(W);
@@ -578,18 +733,21 @@ static HRESULT create_shader(
 }
 
 //--------------------------------------------------------------------------------------------------------------
-class	includer : public ID3DXInclude
+class includer : public ID3DXInclude
 {
-public:
-	HRESULT __stdcall	Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+  public:
+	HRESULT __stdcall Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData,
+						   UINT* pBytes)
 	{
-		string_path				pname;
+		string_path pname;
 		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
 		IReader* R = FS.r_open("$game_shaders$", pname);
-		if (0 == R) {
+		if (0 == R)
+		{
 			// possibly in shared directory or somewhere else - open directly
 			R = FS.r_open("$game_shaders$", pFileName);
-			if (0 == R)			return			E_FAIL;
+			if (0 == R)
+				return E_FAIL;
 		}
 
 		// duplicate and zero-terminate
@@ -601,26 +759,22 @@ public:
 
 		*ppData = data;
 		*pBytes = static_cast<u32>(size);
-		return	D3D_OK;
+		return D3D_OK;
 	}
-	HRESULT __stdcall	Close(LPCVOID	pData)
+	HRESULT __stdcall Close(LPCVOID pData)
 	{
 		xr_free(pData);
-		return	D3D_OK;
+		return D3D_OK;
 	}
 };
 
-static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask, size_t const mask_length);
-static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result);
+static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask,
+								size_t const mask_length);
+static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id,
+								   FS_FileSet const& file_set, string_path& result);
 
-HRESULT	CRender::shader_compile(
-	LPCSTR name,
-	DWORD const* pSrcData,
-	UINT SrcDataLen,
-	LPCSTR pFunctionName,
-	LPCSTR pTarget,
-	DWORD Flags,
-	void*& result)
+HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
+								LPCSTR pTarget, DWORD Flags, void*& result)
 {
 	D3DXMACRO defines[512]{};
 	int def_it = 0;
@@ -671,9 +825,9 @@ HRESULT	CRender::shader_compile(
 
 	size_t len = 0;
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// R2a/R2/R2.5 defines
-//////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// R2a/R2/R2.5 defines
+	//////////////////////////////////////////////////////////////////////////////////////////////
 	{
 		sprintf(c_smapsize, "%d", u32(o.smapsize));
 		defines[def_it].Name = "SMAP_size";
@@ -685,7 +839,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.smapsize);
 	++len;
 
-	if (o.fp16_filter) 
+	if (o.fp16_filter)
 	{
 		defines[def_it].Name = "FP16_FILTER";
 		defines[def_it].Definition = "1";
@@ -694,7 +848,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.fp16_filter);
 	++len;
 
-	if (o.fp16_blend) 
+	if (o.fp16_blend)
 	{
 		defines[def_it].Name = "FP16_BLEND";
 		defines[def_it].Definition = "1";
@@ -703,7 +857,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.fp16_blend);
 	++len;
 
-	if (o.HW_smap) 
+	if (o.HW_smap)
 	{
 		defines[def_it].Name = "USE_HWSMAP";
 		defines[def_it].Definition = "1";
@@ -712,7 +866,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap);
 	++len;
 
-	if (o.HW_smap_PCF) 
+	if (o.HW_smap_PCF)
 	{
 		defines[def_it].Name = "USE_HWSMAP_PCF";
 		defines[def_it].Definition = "1";
@@ -721,7 +875,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap_PCF);
 	++len;
 
-	if (o.HW_smap_FETCH4) 
+	if (o.HW_smap_FETCH4)
 	{
 		defines[def_it].Name = "USE_FETCH4";
 		defines[def_it].Definition = "1";
@@ -730,7 +884,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.HW_smap_FETCH4);
 	++len;
 
-	if (o.sjitter) 
+	if (o.sjitter)
 	{
 		defines[def_it].Name = "USE_SJITTER";
 		defines[def_it].Definition = "1";
@@ -739,7 +893,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sjitter);
 	++len;
 
-	if (HW.Caps.raster_major >= 3) 
+	if (HW.Caps.raster_major >= 3)
 	{
 		defines[def_it].Name = "USE_BRANCHING";
 		defines[def_it].Definition = "1";
@@ -748,7 +902,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HW.Caps.raster_major >= 3);
 	++len;
 
-	if (HW.Caps.geometry.bVTF) 
+	if (HW.Caps.geometry.bVTF)
 	{
 		defines[def_it].Name = "USE_VTF";
 		defines[def_it].Definition = "1";
@@ -757,7 +911,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HW.Caps.geometry.bVTF);
 	++len;
 
-	if (o.Tshadows) 
+	if (o.Tshadows)
 	{
 		defines[def_it].Name = "USE_TSHADOWS";
 		defines[def_it].Definition = "1";
@@ -778,7 +932,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(ps_r2_debug_frame_layers);
 	++len;
 
-	if (o.sunfilter) 
+	if (o.sunfilter)
 	{
 		defines[def_it].Name = "USE_SUNFILTER";
 		defines[def_it].Definition = "1";
@@ -787,7 +941,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sunfilter);
 	++len;
 
-	if (o.sunstatic) 
+	if (o.sunstatic)
 	{
 		defines[def_it].Name = "USE_R2_STATIC_SUN";
 		defines[def_it].Definition = "1";
@@ -796,7 +950,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(o.sunstatic);
 	++len;
 
-	if (o.advancedpp) 
+	if (o.advancedpp)
 	{
 		defines[def_it].Name = "USE_R2_ADVANCED_POSTPROCESS";
 		defines[def_it].Definition = "1";
@@ -818,7 +972,7 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HardOptimization);
 	++len;
 
-	if (o.forcegloss) 
+	if (o.forcegloss)
 	{
 		sprintf(c_gloss, "%f", o.forcegloss_v);
 		defines[def_it].Name = "FORCE_GLOSS";
@@ -829,7 +983,7 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	int vignette = ps_vignette_mode;
-	if(vignette)
+	if (vignette)
 	{
 		sprintf(c_vignette, "%d", vignette);
 		defines[def_it].Name = "VIGNETTE_MODE";
@@ -893,7 +1047,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(HdrEnabled);
 	++len;
 
-	if (o.forceskinw) {
+	if (o.forceskinw)
+	{
 		defines[def_it].Name = "SKIN_COLOR";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -902,7 +1057,8 @@ HRESULT	CRender::shader_compile(
 	++len;
 
 	// skinning
-	if (m_skinning < 0) {
+	if (m_skinning < 0)
+	{
 		defines[def_it].Name = "SKIN_NONE";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -915,7 +1071,8 @@ HRESULT	CRender::shader_compile(
 		++len;
 	}
 
-	if (0 == m_skinning) {
+	if (0 == m_skinning)
+	{
 		defines[def_it].Name = "SKIN_0";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -923,7 +1080,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(0 == m_skinning);
 	++len;
 
-	if (1 == m_skinning) {
+	if (1 == m_skinning)
+	{
 		defines[def_it].Name = "SKIN_1";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -931,7 +1089,8 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(1 == m_skinning);
 	++len;
 
-	if (2 == m_skinning) {
+	if (2 == m_skinning)
+	{
 		defines[def_it].Name = "SKIN_2";
 		defines[def_it].Definition = "1";
 		def_it++;
@@ -939,9 +1098,9 @@ HRESULT	CRender::shader_compile(
 	sh_name[len] = '0' + char(2 == m_skinning);
 	++len;
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// R2.5 only defines
-//////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// R2.5 only defines
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	if (RImplementation.o.advancedpp)
 	{
@@ -969,7 +1128,7 @@ HRESULT	CRender::shader_compile(
 		sh_name[len] = '0' + (char)ps_r2_mblur_quality;
 		++len;
 
-		if (ps_r2_postprocess_flags.test(R2FLAG_DOF)) 
+		if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
 		{
 			sprintf(c_dof, "%d", 1);
 			defines[def_it].Name = "USE_DOF";
@@ -1110,11 +1269,13 @@ HRESULT	CRender::shader_compile(
 			defines[def_it].Name = "SUN_SHAFTS_QUALITY";
 			defines[def_it].Definition = c_sun_shafts;
 			def_it++;
-			sh_name[len] = '0' + char(ps_r2_sun_shafts); ++len;
+			sh_name[len] = '0' + char(ps_r2_sun_shafts);
+			++len;
 		}
 		else
 		{
-			sh_name[len] = '0'; ++len;
+			sh_name[len] = '0';
+			++len;
 		}
 		//////////////////////////////////////////////////////////////////////////
 
@@ -1136,14 +1297,14 @@ HRESULT	CRender::shader_compile(
 	defines[def_it].Definition = 0;
 	def_it++;
 
-	//Precache
+	// Precache
 
 	HRESULT _result = E_FAIL;
 
 	char extension[3];
 	strncpy_s(extension, pTarget, 2);
 
-	string_path	folder_name, folder = {0};
+	string_path folder_name, folder = {0};
 	strcpy(folder, "precompiled_shaders\\");
 	strcat(folder, getShaderPath());
 	strcat(folder, "\\");
@@ -1161,7 +1322,8 @@ HRESULT	CRender::shader_compile(
 	FS.file_list(m_file_set, folder_name, FS_ListFiles | FS_RootOnly, "*");
 
 	string_path temp_file_name, file_name;
-	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name)) {
+	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name))
+	{
 		//		Msg				( "no library shader found" );
 		string_path file = {0};
 		strcpy(file, "shaders_cache\\");
@@ -1183,7 +1345,7 @@ HRESULT	CRender::shader_compile(
 
 	if (FS.exist(file_name))
 	{
-		//Msg("opening library or cache shader...");
+		// Msg("opening library or cache shader...");
 		IReader* file = FS.r_open(file_name);
 		if (file->length() > 4)
 		{
@@ -1196,7 +1358,8 @@ HRESULT	CRender::shader_compile(
 
 			if (real_crc == crc)
 			{
-				_result = create_shader(pTarget, (DWORD*)file->pointer(), static_cast<u32>(file->elapsed()), file_name, result, o.disasm);
+				_result = create_shader(pTarget, (DWORD*)file->pointer(), static_cast<u32>(file->elapsed()), file_name,
+										result, o.disasm);
 			}
 		}
 		file->close();
@@ -1204,10 +1367,13 @@ HRESULT	CRender::shader_compile(
 
 	if (FAILED(_result))
 	{
-		// 
-		if (0 == xr_strcmp(pFunctionName, "main")) {
-			if ('v' == pTarget[0])			pTarget = D3DXGetVertexShaderProfile(HW.pDevice);	// vertex	"vs_2_a"; //	
-			else							pTarget = D3DXGetPixelShaderProfile(HW.pDevice);	// pixel	"ps_2_a"; //	
+		//
+		if (0 == xr_strcmp(pFunctionName, "main"))
+		{
+			if ('v' == pTarget[0])
+				pTarget = D3DXGetVertexShaderProfile(HW.pDevice); // vertex	"vs_2_a"; //
+			else
+				pTarget = D3DXGetPixelShaderProfile(HW.pDevice); // pixel	"ps_2_a"; //
 		}
 
 		includer Includer;
@@ -1216,22 +1382,28 @@ HRESULT	CRender::shader_compile(
 		LPD3DXCONSTANTTABLE pConstants = NULL;
 		LPD3DXINCLUDE pInclude = (LPD3DXINCLUDE)&Includer;
 
-		_result = D3DXCompileShader((LPCSTR)pSrcData, SrcDataLen, defines, pInclude, pFunctionName, pTarget, Flags | D3DXSHADER_USE_LEGACY_D3DX9_31_DLL | D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_PACKMATRIX_COLUMNMAJOR, &pShaderBuf, &pErrorBuf, &pConstants);
+		_result = D3DXCompileShader((LPCSTR)pSrcData, SrcDataLen, defines, pInclude, pFunctionName, pTarget,
+									Flags | D3DXSHADER_USE_LEGACY_D3DX9_31_DLL | D3DXSHADER_PACKMATRIX_ROWMAJOR |
+										D3DXSHADER_PACKMATRIX_COLUMNMAJOR,
+									&pShaderBuf, &pErrorBuf, &pConstants);
 
-		if (SUCCEEDED(_result)) {
+		if (SUCCEEDED(_result))
+		{
 			IWriter* file = FS.w_open(file_name);
 
 			boost::crc_32_type processor;
-			processor.process_block(pShaderBuf->GetBufferPointer(), ((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize());
+			processor.process_block(pShaderBuf->GetBufferPointer(),
+									((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize());
 			u32 const crc = processor.checksum();
 
 			file->w_u32(crc);
 			file->w(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 			FS.w_close(file);
 
-			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
+			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(),
+									file_name, result, o.disasm);
 
-			if (pErrorBuf) 
+			if (pErrorBuf)
 			{
 				Log("! ", file_name);
 				Log("! Warning: ", (LPCSTR)pErrorBuf->GetBufferPointer());
@@ -1240,7 +1412,8 @@ HRESULT	CRender::shader_compile(
 		else
 		{
 			Log("! ", file_name);
-			R_ASSERT2(SUCCEEDED(_result), make_string("! Can't compile shader: %s, %s", file_name, (LPCSTR)pErrorBuf->GetBufferPointer()));
+			R_ASSERT2(SUCCEEDED(_result),
+					  make_string("! Can't compile shader: %s, %s", file_name, (LPCSTR)pErrorBuf->GetBufferPointer()));
 			if (pErrorBuf)
 				Log("! Error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
 			else
@@ -1251,18 +1424,12 @@ HRESULT	CRender::shader_compile(
 	return _result;
 }
 
-static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask, size_t const mask_length)
+static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask,
+								size_t const mask_length)
 {
 	size_t const full_shader_id_length = xr_strlen(full_shader_id);
-	R_ASSERT2(
-		full_shader_id_length == mask_length,
-		make_string(
-			"bad cache for shader %s, [%s], [%s]",
-			debug_shader_id,
-			mask,
-			full_shader_id
-		)
-	);
+	R_ASSERT2(full_shader_id_length == mask_length,
+			  make_string("bad cache for shader %s, [%s], [%s]", debug_shader_id, mask, full_shader_id));
 	char const* i = full_shader_id;
 	char const* const e = full_shader_id + full_shader_id_length;
 	char const* j = mask;
@@ -1280,7 +1447,8 @@ static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_
 	return true;
 }
 
-static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result)
+static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id,
+								   FS_FileSet const& file_set, string_path& result)
 {
 #ifdef DEBUG
 	LPCSTR temp = "";
@@ -1299,7 +1467,7 @@ static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const fu
 
 	strcpy(result, temp);
 	return found;
-#else // #ifdef DEBUG
+#else  // #ifdef DEBUG
 	FS_FileSet::const_iterator i = file_set.begin();
 	FS_FileSet::const_iterator const e = file_set.end();
 	for (; i != e; ++i)

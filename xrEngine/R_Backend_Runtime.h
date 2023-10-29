@@ -7,34 +7,71 @@
 #include "sh_constant.h"
 #include "sh_rt.h"
 
-IC void		R_xforms::set_c_w(R_constant* C) { c_w = C;	RCache.set_c(C, m_w); };
-IC void		R_xforms::set_c_invw(R_constant* C) { c_invw = C;	apply_invw(); };
-IC void		R_xforms::set_c_v(R_constant* C) { c_v = C;	RCache.set_c(C, m_v); };
-IC void		R_xforms::set_c_p(R_constant* C) { c_p = C;	RCache.set_c(C, m_p); };
-IC void		R_xforms::set_c_wv(R_constant* C) { c_wv = C;	RCache.set_c(C, m_wv); };
-IC void		R_xforms::set_c_vp(R_constant* C) { c_vp = C;	RCache.set_c(C, m_vp); };
-IC void		R_xforms::set_c_wvp(R_constant* C) { c_wvp = C;	RCache.set_c(C, m_wvp); };
+IC void R_xforms::set_c_w(R_constant* C)
+{
+	c_w = C;
+	RCache.set_c(C, m_w);
+};
+IC void R_xforms::set_c_invw(R_constant* C)
+{
+	c_invw = C;
+	apply_invw();
+};
+IC void R_xforms::set_c_v(R_constant* C)
+{
+	c_v = C;
+	RCache.set_c(C, m_v);
+};
+IC void R_xforms::set_c_p(R_constant* C)
+{
+	c_p = C;
+	RCache.set_c(C, m_p);
+};
+IC void R_xforms::set_c_wv(R_constant* C)
+{
+	c_wv = C;
+	RCache.set_c(C, m_wv);
+};
+IC void R_xforms::set_c_vp(R_constant* C)
+{
+	c_vp = C;
+	RCache.set_c(C, m_vp);
+};
+IC void R_xforms::set_c_wvp(R_constant* C)
+{
+	c_wvp = C;
+	RCache.set_c(C, m_wvp);
+};
 
-IC void		CBackend::set_xform(u32 ID, const Fmatrix& M)
+IC void CBackend::set_xform(u32 ID, const Fmatrix& M)
 {
 	stat.xforms++;
 	CHK_DX(HW.pDevice->SetTransform((D3DTRANSFORMSTATETYPE)ID, (D3DMATRIX*)&M));
 }
-IC	void	CBackend::set_xform_world(const Fmatrix& M)
+IC void CBackend::set_xform_world(const Fmatrix& M)
 {
 	xforms.set_W(M);
 }
-IC	void	CBackend::set_xform_view(const Fmatrix& M)
+IC void CBackend::set_xform_view(const Fmatrix& M)
 {
 	xforms.set_V(M);
 }
-IC	void	CBackend::set_xform_project(const Fmatrix& M)
+IC void CBackend::set_xform_project(const Fmatrix& M)
 {
 	xforms.set_P(M);
 }
-IC	const Fmatrix& CBackend::get_xform_world() { return xforms.get_W(); }
-IC	const Fmatrix& CBackend::get_xform_view() { return xforms.get_V(); }
-IC	const Fmatrix& CBackend::get_xform_project() { return xforms.get_P(); }
+IC const Fmatrix& CBackend::get_xform_world()
+{
+	return xforms.get_W();
+}
+IC const Fmatrix& CBackend::get_xform_view()
+{
+	return xforms.get_V();
+}
+IC const Fmatrix& CBackend::get_xform_project()
+{
+	return xforms.get_P();
+}
 
 IC void CBackend::set_RT(IDirect3DSurface9* RT, u32 ID)
 {
@@ -47,7 +84,7 @@ IC void CBackend::set_RT(IDirect3DSurface9* RT, u32 ID)
 	}
 }
 
-IC void	CBackend::set_ZB(IDirect3DSurface9* ZB)
+IC void CBackend::set_ZB(IDirect3DSurface9* ZB)
 {
 	if (ZB != pZB)
 	{
@@ -58,7 +95,7 @@ IC void	CBackend::set_ZB(IDirect3DSurface9* ZB)
 	}
 }
 
-ICF void	CBackend::set_States(IDirect3DStateBlock9* _state)
+ICF void CBackend::set_States(IDirect3DStateBlock9* _state)
 {
 	if (state != _state)
 	{
@@ -77,7 +114,8 @@ IC void CBackend::set_Matrices(SMatrixList* _M)
 	if (M != _M)
 	{
 		M = _M;
-		if (M) {
+		if (M)
+		{
 			for (u32 it = 0; it < M->size(); it++)
 			{
 				CMatrix* mat = &*((*M)[it]);
@@ -97,23 +135,27 @@ IC void CBackend::set_Matrices(SMatrixList* _M)
 IC void CBackend::set_Constants(R_constant_table* C)
 {
 	// caching
-	if (ctable == C)	return;
+	if (ctable == C)
+		return;
 	ctable = C;
 	xforms.unmap();
-	if (0 == C)		return;
+	if (0 == C)
+		return;
 
 	PGO(Msg("PGO:c-table"));
 
 	// process constant-loaders
-	R_constant_table::c_table::iterator	it = C->table.begin();
-	R_constant_table::c_table::iterator	end = C->table.end();
-	for (; it != end; it++) {
+	R_constant_table::c_table::iterator it = C->table.begin();
+	R_constant_table::c_table::iterator end = C->table.end();
+	for (; it != end; it++)
+	{
 		R_constant* C = &**it;
-		if (C->handler)	C->handler->setup(C);
+		if (C->handler)
+			C->handler->setup(C);
 	}
 }
 
-IC void CBackend::set_Element(ShaderElement* S, u32	pass)
+IC void CBackend::set_Element(ShaderElement* S, u32 pass)
 {
 	SPass& P = *(S->passes[pass]);
 	set_States(P.state);
@@ -226,34 +268,71 @@ IC void CBackend::set_Geometry(SGeometry* _geom)
 	set_Indices(_geom->ib);
 }
 
-IC void	CBackend::set_Scissor(Irect* R)
+IC void CBackend::set_Scissor(Irect* R)
 {
-	if (R) {
+	if (R)
+	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE));
 		RECT* clip = (RECT*)R;
 		CHK_DX(HW.pDevice->SetScissorRect(clip));
 	}
-	else {
+	else
+	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE));
 	}
 }
 
-IC void CBackend::set_Stencil(u32 _enable, u32 _func, u32 _ref, u32 _mask, u32 _writemask, u32 _fail, u32 _pass, u32 _zfail)
+IC void CBackend::set_Stencil(u32 _enable, u32 _func, u32 _ref, u32 _mask, u32 _writemask, u32 _fail, u32 _pass,
+							  u32 _zfail)
 {
 	// Simple filter
-	if (stencil_enable != _enable) { stencil_enable = _enable;		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, _enable)); }
-	if (!stencil_enable)					return;
-	if (stencil_func != _func) { stencil_func = _func;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, _func)); }
-	if (stencil_ref != _ref) { stencil_ref = _ref;				CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, _ref)); }
-	if (stencil_mask != _mask) { stencil_mask = _mask;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILMASK, _mask)); }
-	if (stencil_writemask != _writemask) { stencil_writemask = _writemask;	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, _writemask)); }
-	if (stencil_fail != _fail) { stencil_fail = _fail;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFAIL, _fail)); }
-	if (stencil_pass != _pass) { stencil_pass = _pass;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILPASS, _pass)); }
-	if (stencil_zfail != _zfail) { stencil_zfail = _zfail;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, _zfail)); }
+	if (stencil_enable != _enable)
+	{
+		stencil_enable = _enable;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, _enable));
+	}
+	if (!stencil_enable)
+		return;
+	if (stencil_func != _func)
+	{
+		stencil_func = _func;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, _func));
+	}
+	if (stencil_ref != _ref)
+	{
+		stencil_ref = _ref;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, _ref));
+	}
+	if (stencil_mask != _mask)
+	{
+		stencil_mask = _mask;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILMASK, _mask));
+	}
+	if (stencil_writemask != _writemask)
+	{
+		stencil_writemask = _writemask;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, _writemask));
+	}
+	if (stencil_fail != _fail)
+	{
+		stencil_fail = _fail;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFAIL, _fail));
+	}
+	if (stencil_pass != _pass)
+	{
+		stencil_pass = _pass;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILPASS, _pass));
+	}
+	if (stencil_zfail != _zfail)
+	{
+		stencil_zfail = _zfail;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, _zfail));
+	}
 }
-IC void	CBackend::set_ColorWriteEnable(u32 _mask)
+IC void CBackend::set_ColorWriteEnable(u32 _mask)
 {
-	if (colorwrite_mask != _mask) {
+	if (colorwrite_mask != _mask)
+	{
 		colorwrite_mask = _mask;
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, _mask));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE1, _mask));
@@ -261,9 +340,13 @@ IC void	CBackend::set_ColorWriteEnable(u32 _mask)
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE3, _mask));
 	}
 }
-ICF void	CBackend::set_CullMode(u32 _mode)
+ICF void CBackend::set_CullMode(u32 _mode)
 {
-	if (cull_mode != _mode) { cull_mode = _mode;			CHK_DX(HW.pDevice->SetRenderState(D3DRS_CULLMODE, _mode)); }
+	if (cull_mode != _mode)
+	{
+		cull_mode = _mode;
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_CULLMODE, _mode));
+	}
 }
 
 #endif

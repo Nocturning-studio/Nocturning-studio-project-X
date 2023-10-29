@@ -5,7 +5,7 @@
 // refs
 class XRSOUND_EDITOR_API CSoundRender_Environment : public CSound_environment
 {
-public:
+  public:
 	u32 version;
 	shared_str name;
 
@@ -22,35 +22,35 @@ public:
 	float EnvironmentSize;		// environment size in meters
 	float EnvironmentDiffusion; // environment diffusion
 	float AirAbsorptionHF;		// change in level per meter at 5 kHz
-public:
+  public:
 	CSoundRender_Environment(void);
 	~CSoundRender_Environment(void);
 	void set_identity();
 	void set_default();
 	void clamp();
-	void lerp(CSoundRender_Environment &A, CSoundRender_Environment &B, float f);
-	bool load(IReader *fs);
-	void save(IWriter *fs);
+	void lerp(CSoundRender_Environment& A, CSoundRender_Environment& B, float f);
+	bool load(IReader* fs);
+	void save(IWriter* fs);
 };
 
 class XRSOUND_EDITOR_API SoundEnvironment_LIB
 {
-public:
-	DEFINE_VECTOR(CSoundRender_Environment *, SE_VEC, SE_IT);
+  public:
+	DEFINE_VECTOR(CSoundRender_Environment*, SE_VEC, SE_IT);
 
-private:
+  private:
 	SE_VEC library;
 
-public:
+  public:
 	void Load(LPCSTR name);
 	bool Save(LPCSTR name);
 	void Unload();
 	int GetID(LPCSTR name);
-	CSoundRender_Environment *Get(LPCSTR name);
-	CSoundRender_Environment *Get(int id);
-	CSoundRender_Environment *Append(CSoundRender_Environment *parent = 0);
+	CSoundRender_Environment* Get(LPCSTR name);
+	CSoundRender_Environment* Get(int id);
+	CSoundRender_Environment* Append(CSoundRender_Environment* parent = 0);
 	void Remove(LPCSTR name);
 	void Remove(int id);
-	SE_VEC &Library();
+	SE_VEC& Library();
 };
 #endif

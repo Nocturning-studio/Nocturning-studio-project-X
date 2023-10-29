@@ -51,7 +51,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		u32 chunk = 0;
 		string256 ref_name;
 		Fmatrix transform;
-		Fvector zero_vel = { 0.f, 0.f, 0.f };
+		Fvector zero_vel = {0.f, 0.f, 0.f};
 		for (IReader* OBJ = F->open_chunk_iterator(chunk); OBJ; OBJ = F->open_chunk_iterator(chunk, OBJ))
 		{
 			OBJ->r_stringZ(ref_name, sizeof(ref_name));
@@ -109,17 +109,20 @@ BOOL CLevel::Load_GameSpecific_After()
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 		if (pLevel->section_exist("level_scripts") && pLevel->line_exist("level_scripts", "script"))
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", pLevel->r_string("level_scripts", "script")));
+			ai().script_engine().add_script_process(
+				ScriptEngine::eScriptProcessorLevel,
+				xr_new<CScriptProcess>("level", pLevel->r_string("level_scripts", "script")));
 		else
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
+			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,
+													xr_new<CScriptProcess>("level", ""));
 	}
 
 	if (!g_dedicated_server && game && (GameID() != GAME_SINGLE))
 	{
 		CInifile& gameLtx = *pGameIni;
-		if (gameLtx.section_exist(Level().name())) 
+		if (gameLtx.section_exist(Level().name()))
 		{
-			if (gameLtx.line_exist(Level().name(), "weathers")) 
+			if (gameLtx.line_exist(Level().name(), "weathers"))
 			{
 				LPCSTR weathers_sect = gameLtx.r_string(Level().name(), "weathers");
 				GamePersistent().Environment().SetWeather(weathers_sect);

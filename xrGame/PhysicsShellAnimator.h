@@ -6,14 +6,11 @@ class animation_movement_controller;
 class CPhysicsShellAnimator
 {
 	friend class CPhysicsShellAnimatorBoneData;
-	xr_vector<CPhysicsShellAnimatorBoneData>		m_bones_data;
-	CPhysicsShell*									m_pPhysicsShell;
+	xr_vector<CPhysicsShellAnimatorBoneData> m_bones_data;
+	CPhysicsShell* m_pPhysicsShell;
 
-
-public:
-													CPhysicsShellAnimator		(CPhysicsShell* _pPhysicsShell);
-													~CPhysicsShellAnimator		();
-	void											OnFrame						();
+  public:
+	CPhysicsShellAnimator(CPhysicsShell* _pPhysicsShell);
+	~CPhysicsShellAnimator();
+	void OnFrame();
 };
-	
-

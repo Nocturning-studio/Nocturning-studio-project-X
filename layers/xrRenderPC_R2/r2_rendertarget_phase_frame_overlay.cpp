@@ -8,7 +8,7 @@ void CRenderTarget::photo_grid()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -22,21 +22,25 @@ void CRenderTarget::photo_grid()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_frame_overlay->E[0]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
@@ -47,7 +51,7 @@ void CRenderTarget::cinema_borders()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -61,21 +65,25 @@ void CRenderTarget::cinema_borders()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_frame_overlay->E[1]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
@@ -86,7 +94,7 @@ void CRenderTarget::watermark()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -100,21 +108,25 @@ void CRenderTarget::watermark()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_frame_overlay->E[2]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 

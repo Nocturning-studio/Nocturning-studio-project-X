@@ -9,7 +9,6 @@
 #include "XR_IOConsole.h"
 #include "xr_ioc_cmd.h"
 
-
 bool CConsole::GetBool(LPCSTR cmd) const
 {
 	IConsole_Command* cc = GetCommand(cmd);
@@ -50,7 +49,6 @@ IConsole_Command* CConsole::GetCommand(LPCSTR cmd) const
 		return it->second;
 }
 
-
 int CConsole::GetInteger(LPCSTR cmd, int& min, int& max) const
 {
 	min = 0;
@@ -77,11 +75,11 @@ LPCSTR CConsole::GetString(LPCSTR cmd) const
 {
 	IConsole_Command* cc = GetCommand(cmd);
 	if (!cc)
-		return				NULL;
+		return NULL;
 
 	static IConsole_Command::TStatus stat;
 	cc->Status(stat);
-	return					stat;
+	return stat;
 }
 
 LPCSTR CConsole::GetToken(LPCSTR cmd) const
@@ -98,7 +96,7 @@ xr_token* CConsole::GetXRToken(LPCSTR cmd) const
 	{
 		return cf->GetToken();
 	}
-	return					NULL;
+	return NULL;
 }
 
 Fvector* CConsole::GetFVectorPtr(LPCSTR cmd) const
@@ -109,7 +107,7 @@ Fvector* CConsole::GetFVectorPtr(LPCSTR cmd) const
 	{
 		return cf->GetValuePtr();
 	}
-	return					NULL;
+	return NULL;
 }
 
 Fvector CConsole::GetFVector(LPCSTR cmd) const

@@ -34,21 +34,21 @@ void print_time(LPCSTR S, _TIME_ID tTimeID)
 	NORMALIZE_VARIABLE(Week,		tTimeID,   4,1);
 	NORMALIZE_VARIABLE(Months,		tTimeID,  12,1);
 	Years = u32(tTimeID) + 1;
-	Msg("%s year %d month %d week %d day %d time %d:%d:%d.%d",S,Years,Months,Week,Days,Hours,Minutes,Seconds,Milliseconds);
+	Msg("%s year %d month %d week %d day %d time
+%d:%d:%d.%d",S,Years,Months,Week,Days,Hours,Minutes,Seconds,Milliseconds);
 }
 
 /**/
-CALifeCombatManager::CALifeCombatManager	(xrServer *server, LPCSTR section) :
-	CALifeSimulatorBase	(server,section)
+CALifeCombatManager::CALifeCombatManager(xrServer* server, LPCSTR section) : CALifeSimulatorBase(server, section)
 {
-/**
-	seed						(u32(CPU::QPC() & 0xffffffff));
-	m_dwMaxCombatIterationCount	= pSettings->r_u32	(section,"max_combat_iteration_count");
-	for (int i=0; i<2; ++i) {
-		m_tpaCombatGroups[i].clear();
-		m_tpaCombatGroups[i].reserve(255);
-	}
-/**/
+	/**
+		seed						(u32(CPU::QPC() & 0xffffffff));
+		m_dwMaxCombatIterationCount	= pSettings->r_u32	(section,"max_combat_iteration_count");
+		for (int i=0; i<2; ++i) {
+			m_tpaCombatGroups[i].clear();
+			m_tpaCombatGroups[i].reserve(255);
+		}
+	/**/
 }
 
 /**
@@ -84,10 +84,8 @@ ECombatAction CALifeCombatManager::choose_combat_action(int iCombatGroupIndex)
 {
 	ai().ef_storage().alife_evaluation(true);
 	if (eCombatTypeMonsterMonster != combat_type())
-		if (((eCombatTypeAnomalyMonster == combat_type()) && !iCombatGroupIndex) || ((eCombatTypeMonsterAnomaly == combat_type()) && iCombatGroupIndex))
-			return(eCombatActionAttack);
-		else
-			return(eCombatActionRetreat);
+		if (((eCombatTypeAnomalyMonster == combat_type()) && !iCombatGroupIndex) || ((eCombatTypeMonsterAnomaly ==
+combat_type()) && iCombatGroupIndex)) return(eCombatActionAttack); else return(eCombatActionRetreat);
 
 	SCHEDULE_P_VECTOR	&Members = m_tpaCombatGroups[iCombatGroupIndex];
 	SCHEDULE_P_VECTOR	&Enemies = m_tpaCombatGroups[iCombatGroupIndex ^ 1];
@@ -134,7 +132,8 @@ ECombatAction CALifeCombatManager::choose_combat_action(int iCombatGroupIndex)
 	return((j >= J) ? eCombatActionAttack : eCombatActionRetreat);
 }
 
-bool CALifeCombatManager::bfCheckObjectDetection(CSE_ALifeSchedulable *tpALifeSchedulable1, CSE_ALifeSchedulable *tpALifeSchedulable2)
+bool CALifeCombatManager::bfCheckObjectDetection(CSE_ALifeSchedulable *tpALifeSchedulable1, CSE_ALifeSchedulable
+*tpALifeSchedulable2)
 {
 	ai().ef_storage().alife_evaluation(true);
 	switch (combat_type()) {
@@ -142,21 +141,25 @@ bool CALifeCombatManager::bfCheckObjectDetection(CSE_ALifeSchedulable *tpALifeSc
 			ai().ef_storage().alife().member_item()	= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable1);
 			ai().ef_storage().alife().member()	= tpALifeSchedulable1;
 			ai().ef_storage().alife().enemy()		= tpALifeSchedulable2;
-			return										(randF(100) < ai().ef_storage().m_pfEnemyDetectProbability->ffGetValue());
+			return										(randF(100) <
+ai().ef_storage().m_pfEnemyDetectProbability->ffGetValue());
 		}
 		case eCombatTypeAnomalyMonster : {
 			ai().ef_storage().alife().enemy()		= tpALifeSchedulable1;
-			return										(randF(100) < ai().ef_storage().m_pfAnomalyInteractProbability->ffGetValue());
+			return										(randF(100) <
+ai().ef_storage().m_pfAnomalyInteractProbability->ffGetValue());
 		}
 		case eCombatTypeMonsterAnomaly : {
 			ai().ef_storage().alife().member_item()	= tpALifeSchedulable1->tpfGetBestDetector();
 			ai().ef_storage().alife().member()	= tpALifeSchedulable1;
 			ai().ef_storage().alife().enemy()		= tpALifeSchedulable2;
-			return										(randF(100) < ai().ef_storage().m_pfAnomalyDetectProbability->ffGetValue());
+			return										(randF(100) <
+ai().ef_storage().m_pfAnomalyDetectProbability->ffGetValue());
 		}
 		case eCombatTypeSmartTerrain : {
-			CSE_ALifeSmartZone							*smart_zone	= smart_cast<CSE_ALifeSmartZone*>(tpALifeSchedulable1);
-			return										(!smart_zone ? false : randF(100) < 100.f*smart_zone->detect_probability());
+			CSE_ALifeSmartZone							*smart_zone	=
+smart_cast<CSE_ALifeSmartZone*>(tpALifeSchedulable1); return										(!smart_zone ? false
+: randF(100) < 100.f*smart_zone->detect_probability());
 		}
 		default :										NODEFAULT;
 	}
@@ -165,32 +168,27 @@ bool CALifeCombatManager::bfCheckObjectDetection(CSE_ALifeSchedulable *tpALifeSc
 #endif // DEBUG
 }
 
-bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSchedulable1, CSE_ALifeSchedulable *tpALifeSchedulable2, int &iCombatGroupIndex, bool &bMutualDetection)
+bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSchedulable1, CSE_ALifeSchedulable
+*tpALifeSchedulable2, int &iCombatGroupIndex, bool &bMutualDetection)
 {
 	if (!tpALifeSchedulable1->bfActive() || !tpALifeSchedulable2->bfActive())
 		return(false);
-	
+
 	// determine combat type
-	CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract1	= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable1);
-	CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract2	= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable2);
-	if (!l_tpALifeMonsterAbstract1) {
-		if (!l_tpALifeMonsterAbstract2)
-			return(false);
-		else {
-			CSE_ALifeCustomZone		*l_tpALifeSpaceRestrictor = smart_cast<CSE_ALifeCustomZone*>(tpALifeSchedulable2);
-			R_ASSERT2				(l_tpALifeSpaceRestrictor,"Unknown schedulable object class");
-			m_combat_type			= eCombatTypeAnomalyMonster;
+	CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract1	=
+smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable1); CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract2	=
+smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable2); if (!l_tpALifeMonsterAbstract1) { if
+(!l_tpALifeMonsterAbstract2) return(false); else { CSE_ALifeCustomZone		*l_tpALifeSpaceRestrictor =
+smart_cast<CSE_ALifeCustomZone*>(tpALifeSchedulable2); R_ASSERT2				(l_tpALifeSpaceRestrictor,"Unknown
+schedulable object class"); m_combat_type			= eCombatTypeAnomalyMonster;
 		}
 	}
 	else {
 		if (!l_tpALifeMonsterAbstract2) {
-			CSE_ALifeCustomZone			*l_tpALifeSpaceRestrictor = smart_cast<CSE_ALifeCustomZone*>(tpALifeSchedulable2);
-			if (!l_tpALifeSpaceRestrictor) {
-				CSE_ALifeSmartZone		*smart_zone = smart_cast<CSE_ALifeSmartZone*>(tpALifeSchedulable2);
-				if (smart_zone)
-					m_combat_type		= eCombatTypeSmartTerrain;
-				else
-					R_ASSERT2			(false,"Unknown schedulable object class");
+			CSE_ALifeCustomZone			*l_tpALifeSpaceRestrictor =
+smart_cast<CSE_ALifeCustomZone*>(tpALifeSchedulable2); if (!l_tpALifeSpaceRestrictor) { CSE_ALifeSmartZone
+*smart_zone = smart_cast<CSE_ALifeSmartZone*>(tpALifeSchedulable2); if (smart_zone) m_combat_type		=
+eCombatTypeSmartTerrain; else R_ASSERT2			(false,"Unknown schedulable object class");
 			}
 			else
 				m_combat_type			= eCombatTypeMonsterAnomaly;
@@ -198,24 +196,23 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 		else {
 			m_combat_type			= eCombatTypeMonsterMonster;
 			if (eRelationTypeFriend == relation_type(l_tpALifeMonsterAbstract1,l_tpALifeMonsterAbstract2)) {
-				CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract1 = smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeMonsterAbstract1);
-				CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract2 = smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeMonsterAbstract2);
-				if (l_tpALifeHumanAbstract1 && l_tpALifeHumanAbstract2) {
-					iCombatGroupIndex = 0;
-					return(true);
+				CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract1 =
+smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeMonsterAbstract1); CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract2 =
+smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeMonsterAbstract2); if (l_tpALifeHumanAbstract1 && l_tpALifeHumanAbstract2)
+{ iCombatGroupIndex = 0; return(true);
 				}
 				else
 					return(false);
 			}
 		}
 	}
-	
+
 	// perform interaction
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {
-		GameGraph::_GRAPH_ID			l_tGraphID = l_tpALifeMonsterAbstract1 ? l_tpALifeMonsterAbstract1->m_tGraphID : l_tpALifeMonsterAbstract2->m_tGraphID;
-		print_time						("\n[LSS]",time_manager().game_time());
-		Msg								("[LSS] %s met %s on the graph point %d (level %s[%d][%d][%d][%d], [%f][%f][%f])",
+		GameGraph::_GRAPH_ID			l_tGraphID = l_tpALifeMonsterAbstract1 ? l_tpALifeMonsterAbstract1->m_tGraphID :
+l_tpALifeMonsterAbstract2->m_tGraphID; print_time						("\n[LSS]",time_manager().game_time()); Msg
+("[LSS] %s met %s on the graph point %d (level %s[%d][%d][%d][%d], [%f][%f][%f])",
 			tpALifeSchedulable1->base()->name_replace(),
 			tpALifeSchedulable2->base()->name_replace(),
 			l_tGraphID,
@@ -228,7 +225,7 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 		);
 	}
 #endif
-	
+
 	bMutualDetection				= false;
 	iCombatGroupIndex				= -1;
 
@@ -236,14 +233,16 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 		iCombatGroupIndex			= 0;
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg						("[LSS] %s detected %s",tpALifeSchedulable1->base()->name_replace(),tpALifeSchedulable2->base()->name_replace());
+			Msg						("[LSS] %s detected
+%s",tpALifeSchedulable1->base()->name_replace(),tpALifeSchedulable2->base()->name_replace());
 		}
 #endif
 	}
 	else {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg						("[LSS] %s didn't detect %s",tpALifeSchedulable1->base()->name_replace(),tpALifeSchedulable2->base()->name_replace());
+			Msg						("[LSS] %s didn't detect
+%s",tpALifeSchedulable1->base()->name_replace(),tpALifeSchedulable2->base()->name_replace());
 		}
 #endif
 	}
@@ -257,7 +256,8 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 	if (bfCheckObjectDetection(tpALifeSchedulable2,tpALifeSchedulable1)) {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg						("[LSS] %s detected %s",tpALifeSchedulable2->base()->name_replace(),tpALifeSchedulable1->base()->name_replace());
+			Msg						("[LSS] %s detected
+%s",tpALifeSchedulable2->base()->name_replace(),tpALifeSchedulable1->base()->name_replace());
 		}
 #endif
 		if (!iCombatGroupIndex)
@@ -268,7 +268,8 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 	else {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg						("[LSS] %s didn't detect %s",tpALifeSchedulable2->base()->name_replace(),tpALifeSchedulable1->base()->name_replace());
+			Msg						("[LSS] %s didn't detect
+%s",tpALifeSchedulable2->base()->name_replace(),tpALifeSchedulable1->base()->name_replace());
 		}
 #endif
 	}
@@ -294,10 +295,13 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 bool CALifeCombatManager::bfCheckIfRetreated(int iCombatGroupIndex)
 {
 	ai().ef_storage().alife_evaluation(true);
-	ai().ef_storage().alife().member_item()	= (eCombatTypeMonsterMonster == combat_type()) ? smart_cast<CSE_ALifeObject*>(m_tpaCombatGroups[iCombatGroupIndex][0]) : m_tpaCombatGroups[iCombatGroupIndex][0]->m_tpBestDetector;
-	ai().ef_storage().alife().member()	= m_tpaCombatGroups[iCombatGroupIndex][0];
-	ai().ef_storage().alife().enemy()		= m_tpaCombatGroups[iCombatGroupIndex ^ 1][0];
-	return										(randF(100) < ((eCombatTypeMonsterMonster != combat_type()) ? ai().ef_storage().m_pfAnomalyRetreatProbability->ffGetValue() : ai().ef_storage().m_pfEnemyRetreatProbability->ffGetValue()));
+	ai().ef_storage().alife().member_item()	= (eCombatTypeMonsterMonster == combat_type()) ?
+smart_cast<CSE_ALifeObject*>(m_tpaCombatGroups[iCombatGroupIndex][0]) :
+m_tpaCombatGroups[iCombatGroupIndex][0]->m_tpBestDetector; ai().ef_storage().alife().member()	=
+m_tpaCombatGroups[iCombatGroupIndex][0]; ai().ef_storage().alife().enemy()		= m_tpaCombatGroups[iCombatGroupIndex ^
+1][0]; return										(randF(100) < ((eCombatTypeMonsterMonster != combat_type()) ?
+ai().ef_storage().m_pfAnomalyRetreatProbability->ffGetValue() :
+ai().ef_storage().m_pfEnemyRetreatProbability->ffGetValue()));
 }
 
 void CALifeCombatManager::vfPerformAttackAction(int iCombatGroupIndex)
@@ -318,12 +322,15 @@ void CALifeCombatManager::vfPerformAttackAction(int iCombatGroupIndex)
 			l_tHitType		= (*I)->m_tpCurrentBestWeapon->m_tHitType;
 			l_fHitPower		= (*I)->m_tpCurrentBestWeapon->m_fHitPower;
 		}
-		
+
 		ai().ef_storage().alife().member_item() = smart_cast<CSE_ALifeObject*>(*I);
 		ai().ef_storage().alife().member() = *I;
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg				("[LSS] %s attacks with %s(%d ammo) %d times in a row",(*I)->base()->name_replace(),(*I)->m_tpCurrentBestWeapon ? (*I)->m_tpCurrentBestWeapon->name_replace() : "its natural weapon",(*I)->m_tpCurrentBestWeapon ? (*I)->m_tpCurrentBestWeapon->m_dwAmmoAvailable : 0,iFloor(ai().ef_storage().m_pfWeaponAttackTimes->ffGetValue() + .5f));
+			Msg				("[LSS] %s attacks with %s(%d ammo) %d times in a
+row",(*I)->base()->name_replace(),(*I)->m_tpCurrentBestWeapon ? (*I)->m_tpCurrentBestWeapon->name_replace() : "its
+natural weapon",(*I)->m_tpCurrentBestWeapon ? (*I)->m_tpCurrentBestWeapon->m_dwAmmoAvailable :
+0,iFloor(ai().ef_storage().m_pfWeaponAttackTimes->ffGetValue() + .5f));
 		}
 #endif
 		for (int i=0, n=iFloor(ai().ef_storage().m_pfWeaponAttackTimes->ffGetValue() + .5f); i<n; ++i) {
@@ -331,20 +338,21 @@ void CALifeCombatManager::vfPerformAttackAction(int iCombatGroupIndex)
 				// choose random enemy group member and perform hit with random power
 				// multiplied by immunity factor
 				int							l_iIndex = randI(m_tpaCombatGroups[iCombatGroupIndex ^ 1].size());
-				CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatGroups[iCombatGroupIndex ^ 1][l_iIndex]);
-				R_ASSERT2					(l_tpALifeMonsterAbstract,"Invalid combat object");
-				float						l_fHit = randF(l_fHitPower*0.5f,l_fHitPower*1.5f);
-				l_tpALifeMonsterAbstract->fHealth -= l_tpALifeMonsterAbstract->m_fpImmunityFactors[l_tHitType]*l_fHit;
-#ifdef DEBUG
-				if (psAI_Flags.test(aiALife)) {
-					Msg						("[LSS] %s %s %s [power %5.2f][damage %5.2f][health %5.2f][creatures left %d]",(*I)->base()->name_replace(),l_tpALifeMonsterAbstract->fHealth <= 0 ? "killed" : "attacked",l_tpALifeMonsterAbstract->name_replace(),l_fHit,l_tpALifeMonsterAbstract->m_fpImmunityFactors[l_tHitType]*l_fHit,_max(l_tpALifeMonsterAbstract->fHealth,0.f),l_tpALifeMonsterAbstract->fHealth >= EPS_L ? m_tpaCombatGroups[iCombatGroupIndex ^ 1].size() : m_tpaCombatGroups[iCombatGroupIndex ^ 1].size() - 1);
+				CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract =
+smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatGroups[iCombatGroupIndex ^ 1][l_iIndex]); R_ASSERT2
+(l_tpALifeMonsterAbstract,"Invalid combat object"); float						l_fHit =
+randF(l_fHitPower*0.5f,l_fHitPower*1.5f); l_tpALifeMonsterAbstract->fHealth -=
+l_tpALifeMonsterAbstract->m_fpImmunityFactors[l_tHitType]*l_fHit; #ifdef DEBUG if (psAI_Flags.test(aiALife)) { Msg
+("[LSS] %s %s %s [power %5.2f][damage %5.2f][health %5.2f][creatures left
+%d]",(*I)->base()->name_replace(),l_tpALifeMonsterAbstract->fHealth <= 0 ? "killed" :
+"attacked",l_tpALifeMonsterAbstract->name_replace(),l_fHit,l_tpALifeMonsterAbstract->m_fpImmunityFactors[l_tHitType]*l_fHit,_max(l_tpALifeMonsterAbstract->fHealth,0.f),l_tpALifeMonsterAbstract->fHealth
+>= EPS_L ? m_tpaCombatGroups[iCombatGroupIndex ^ 1].size() : m_tpaCombatGroups[iCombatGroupIndex ^ 1].size() - 1);
 				}
 #endif
 				// check if victim became dead
 				if (l_tpALifeMonsterAbstract->fHealth <= 0) {
-					m_tpaCombatGroups[iCombatGroupIndex ^ 1].erase(m_tpaCombatGroups[iCombatGroupIndex ^ 1].begin() + l_iIndex);
-					if (m_tpaCombatGroups[iCombatGroupIndex ^ 1].empty())
-						return;
+					m_tpaCombatGroups[iCombatGroupIndex ^ 1].erase(m_tpaCombatGroups[iCombatGroupIndex ^ 1].begin() +
+l_iIndex); if (m_tpaCombatGroups[iCombatGroupIndex ^ 1].empty()) return;
 				}
 			}
 			else {
@@ -372,20 +380,18 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 		CSE_ALifeGroupAbstract	*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract*>(m_tpaCombatObjects[i]);
 		if (l_tpALifeGroupAbstract) {
 			for (int I=0, N=l_tpALifeGroupAbstract->m_tpMembers.size() ; I<N; ++I) {
-				CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<CSE_ALifeMonsterAbstract*>(objects().object(l_tpALifeGroupAbstract->m_tpMembers[I]));
-				R_ASSERT2					(l_tpALifeMonsterAbstract,"Invalid group member!");
-				l_tpALifeMonsterAbstract->vfUpdateWeaponAmmo	();
-				if (l_tpALifeMonsterAbstract->fHealth <= EPS_L) {
-					append_item_vector							(l_tpALifeMonsterAbstract->children,m_temp_item_vector);
-					l_tpALifeMonsterAbstract->m_bDirectControl	= true;
+				CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract =
+smart_cast<CSE_ALifeMonsterAbstract*>(objects().object(l_tpALifeGroupAbstract->m_tpMembers[I])); R_ASSERT2
+(l_tpALifeMonsterAbstract,"Invalid group member!"); l_tpALifeMonsterAbstract->vfUpdateWeaponAmmo	(); if
+(l_tpALifeMonsterAbstract->fHealth <= EPS_L) { append_item_vector
+(l_tpALifeMonsterAbstract->children,m_temp_item_vector); l_tpALifeMonsterAbstract->m_bDirectControl	= true;
 					l_tpALifeGroupAbstract->m_tpMembers.erase	(l_tpALifeGroupAbstract->m_tpMembers.begin() + I);
-					assign_death_position						(l_tpALifeMonsterAbstract, l_tGraphID, m_tpaCombatObjects[i ^ 1]);
-					l_tpALifeMonsterAbstract->vfDetachAll		();
-					R_ASSERT									(l_tpALifeMonsterAbstract->children.empty());
-					register_object								(l_tpALifeMonsterAbstract);
-					CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
-					if (l_tpALifeInventoryItem)
-						m_temp_item_vector.push_back			(l_tpALifeInventoryItem);
+					assign_death_position						(l_tpALifeMonsterAbstract, l_tGraphID,
+m_tpaCombatObjects[i ^ 1]); l_tpALifeMonsterAbstract->vfDetachAll		(); R_ASSERT
+(l_tpALifeMonsterAbstract->children.empty()); register_object								(l_tpALifeMonsterAbstract);
+					CSE_ALifeInventoryItem *l_tpALifeInventoryItem =
+smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract); if (l_tpALifeInventoryItem) m_temp_item_vector.push_back
+(l_tpALifeInventoryItem);
 					--l_tpALifeGroupAbstract->m_wCount;
 					--I;
 					--N;
@@ -394,13 +400,14 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 		}
 		else {
 			m_tpaCombatObjects[i]->vfUpdateWeaponAmmo			();
-			CSE_ALifeMonsterAbstract							*l_tpALifeMonsterAbstract = smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatObjects[i]);
-			if (l_tpALifeMonsterAbstract && (l_tpALifeMonsterAbstract->fHealth <= EPS_L)) {
-				kill_entity										(l_tpALifeMonsterAbstract,l_tGraphID,m_tpaCombatObjects[i ^ 1]);
+			CSE_ALifeMonsterAbstract							*l_tpALifeMonsterAbstract =
+smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatObjects[i]); if (l_tpALifeMonsterAbstract &&
+(l_tpALifeMonsterAbstract->fHealth <= EPS_L)) { kill_entity
+(l_tpALifeMonsterAbstract,l_tGraphID,m_tpaCombatObjects[i ^ 1]);
 			}
 		}
 	}
-	
+
 	if (m_temp_item_vector.empty() || (eCombatTypeMonsterMonster != combat_type())) {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
@@ -426,11 +433,12 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 		}
 		default							: NODEFAULT;
 	}
-	
+
 	if (l_iGroupIndex >= 0) {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			Msg							("[LSS] Starting taking items [%s][%f]",m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatObjects[l_iGroupIndex])->fHealth);
+			Msg							("[LSS] Starting taking items
+[%s][%f]",m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),smart_cast<CSE_ALifeMonsterAbstract*>(m_tpaCombatObjects[l_iGroupIndex])->fHealth);
 		}
 #endif
 		m_tpaCombatObjects[l_iGroupIndex]->vfAttachItems();
@@ -438,7 +446,8 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 	m_temp_item_vector.clear();
 }
 
-ALife::ERelationType	CALifeCombatManager::relation_type	(CSE_ALifeMonsterAbstract *tpALifeMonsterAbstract1, CSE_ALifeMonsterAbstract *tpALifeMonsterAbstract2) const
+ALife::ERelationType	CALifeCombatManager::relation_type	(CSE_ALifeMonsterAbstract *tpALifeMonsterAbstract1,
+CSE_ALifeMonsterAbstract *tpALifeMonsterAbstract2) const
 {
 	CSE_ALifeTraderAbstract* human1 = smart_cast<CSE_ALifeTraderAbstract*>(tpALifeMonsterAbstract1);
 	CSE_ALifeTraderAbstract* human2 = smart_cast<CSE_ALifeTraderAbstract*>(tpALifeMonsterAbstract2);
@@ -455,20 +464,22 @@ ALife::ERelationType	CALifeCombatManager::relation_type	(CSE_ALifeMonsterAbstrac
 		return(ALife::eRelationTypeNeutral);
 }
 /**/
-void CALifeCombatManager::kill_entity	(CSE_ALifeMonsterAbstract *l_tpALifeMonsterAbstract, const GameGraph::_GRAPH_ID &l_tGraphID, CSE_ALifeSchedulable *schedulable)
+void CALifeCombatManager::kill_entity(CSE_ALifeMonsterAbstract* l_tpALifeMonsterAbstract,
+									  const GameGraph::_GRAPH_ID& l_tGraphID, CSE_ALifeSchedulable* schedulable)
 {
-	VERIFY									(l_tpALifeMonsterAbstract->g_Alive());
-	append_item_vector						(l_tpALifeMonsterAbstract->children,m_temp_item_vector);
-	GameGraph::_GRAPH_ID					l_tGraphID1 = l_tpALifeMonsterAbstract->m_tGraphID;
-	assign_death_position					(l_tpALifeMonsterAbstract, l_tGraphID, schedulable);
-	l_tpALifeMonsterAbstract->vfDetachAll	();
-	R_ASSERT								(l_tpALifeMonsterAbstract->children.empty());
-	scheduled().remove						(l_tpALifeMonsterAbstract);
-	if (l_tpALifeMonsterAbstract->m_tGraphID != l_tGraphID1) {
-		graph().remove						(l_tpALifeMonsterAbstract,l_tGraphID1);
-		graph().add							(l_tpALifeMonsterAbstract,l_tpALifeMonsterAbstract->m_tGraphID);
+	VERIFY(l_tpALifeMonsterAbstract->g_Alive());
+	append_item_vector(l_tpALifeMonsterAbstract->children, m_temp_item_vector);
+	GameGraph::_GRAPH_ID l_tGraphID1 = l_tpALifeMonsterAbstract->m_tGraphID;
+	assign_death_position(l_tpALifeMonsterAbstract, l_tGraphID, schedulable);
+	l_tpALifeMonsterAbstract->vfDetachAll();
+	R_ASSERT(l_tpALifeMonsterAbstract->children.empty());
+	scheduled().remove(l_tpALifeMonsterAbstract);
+	if (l_tpALifeMonsterAbstract->m_tGraphID != l_tGraphID1)
+	{
+		graph().remove(l_tpALifeMonsterAbstract, l_tGraphID1);
+		graph().add(l_tpALifeMonsterAbstract, l_tpALifeMonsterAbstract->m_tGraphID);
 	}
-	CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
+	CSE_ALifeInventoryItem* l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
 	if (l_tpALifeInventoryItem)
-		m_temp_item_vector.push_back		(l_tpALifeInventoryItem);
+		m_temp_item_vector.push_back(l_tpALifeInventoryItem);
 }

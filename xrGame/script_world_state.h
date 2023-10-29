@@ -13,8 +13,9 @@
 
 typedef GraphEngineSpace::CWorldState CScriptWorldState;
 
-class CScriptWorldStateWrapper {
-public:
+class CScriptWorldStateWrapper
+{
+  public:
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CScriptWorldStateWrapper)

@@ -15,32 +15,19 @@
 
 #include "xr_object.h"
 
-extern ENGINE_API Flags32 ps_psp_ls_flags = { PSP_VIEW | NORMAL_VIEW };
-extern ENGINE_API Flags32 ps_weather_ls_flags = { WEATHER_EFFECTS };
-extern ENGINE_API Flags32 ps_effectors_ls_flags = { VIEW_BOBBING_ENABLED };
-extern ENGINE_API Flags32 ps_game_ls_flags = { INTRO_ENABLE | TUTORIALS_ENABLE };
+extern ENGINE_API Flags32 ps_psp_ls_flags = {PSP_VIEW | NORMAL_VIEW};
+extern ENGINE_API Flags32 ps_weather_ls_flags = {WEATHER_EFFECTS};
+extern ENGINE_API Flags32 ps_effectors_ls_flags = {VIEW_BOBBING_ENABLED};
+extern ENGINE_API Flags32 ps_game_ls_flags = {INTRO_ENABLE | TUTORIALS_ENABLE};
 
 extern xr_token* vid_mode_token;
 
-xr_token							vid_quality_token[] = {
-	{ "renderer_r1",				0											},
-	{ "renderer_r2a",				1											},
-	{ "renderer_r2",				2											},
-	{ "renderer_r2.5",				3											},
-	{ 0,							0											}
-};
+xr_token vid_quality_token[] = {
+	{"renderer_r1", 0}, {"renderer_r2a", 1}, {"renderer_r2", 2}, {"renderer_r2.5", 3}, {0, 0}};
 
-xr_token							vid_bpp_token[] = {
-	{ "16",							16											},
-	{ "32",							32											},
-	{ 0,							0											}
-};
+xr_token vid_bpp_token[] = {{"16", 16}, {"32", 32}, {0, 0}};
 
-xr_token							wpn_zoom_button_mode[] = {
-	{ "st_opt_press",				1											},
-	{ "st_opt_hold",				2											},
-	{ 0,							0											}
-};
+xr_token wpn_zoom_button_mode[] = {{"st_opt_press", 1}, {"st_opt_hold", 2}, {0, 0}};
 
 void IConsole_Command::add_to_LRU(shared_str const& arg)
 {
@@ -60,10 +47,10 @@ void IConsole_Command::add_to_LRU(shared_str const& arg)
 	}
 }
 
-void  IConsole_Command::add_LRU_to_tips(vecTips& tips)
+void IConsole_Command::add_LRU_to_tips(vecTips& tips)
 {
-	vecLRU::reverse_iterator	it_rb = m_LRU.rbegin();
-	vecLRU::reverse_iterator	it_re = m_LRU.rend();
+	vecLRU::reverse_iterator it_rb = m_LRU.rbegin();
+	vecLRU::reverse_iterator it_re = m_LRU.rend();
 	for (; it_rb != it_re; ++it_rb)
 	{
 		tips.push_back((*it_rb));
@@ -73,9 +60,13 @@ void  IConsole_Command::add_LRU_to_tips(vecTips& tips)
 //-----------------------------------------------------------------------
 class CCC_Quit : public IConsole_Command
 {
-public:
-	CCC_Quit(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_Quit(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		//		TerminateProcess(GetCurrentProcess(),0);
 		Console->Hide();
 		Engine.Event.Defer("KERNEL:disconnect");
@@ -86,12 +77,18 @@ public:
 #ifdef DEBUG_MEMORY_MANAGER
 class CCC_MemStat : public IConsole_Command
 {
-public:
-	CCC_MemStat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_MemStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		string_path fn;
-		if (args && args[0])	sprintf_s(fn, sizeof(fn), "%s.dump", args);
-		else				strcpy_s_s(fn, sizeof(fn), "x:\\$memory$.dump");
+		if (args && args[0])
+			sprintf_s(fn, sizeof(fn), "%s.dump", args);
+		else
+			strcpy_s_s(fn, sizeof(fn), "x:\\$memory$.dump");
 		Memory.mem_statistic(fn);
 		//		g_pStringContainer->dump			();
 		//		g_pSharedMemoryContainer->dump		();
@@ -102,46 +99,75 @@ public:
 #ifdef DEBUG_MEMORY_MANAGER
 class CCC_DbgMemCheck : public IConsole_Command
 {
-public:
-	CCC_DbgMemCheck(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { if (Memory.debug_mode) { Memory.dbg_check(); } else { Msg("~ Run with -mem_debug options."); } }
+  public:
+	CCC_DbgMemCheck(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		if (Memory.debug_mode)
+		{
+			Memory.dbg_check();
+		}
+		else
+		{
+			Msg("~ Run with -mem_debug options.");
+		}
+	}
 };
 #endif // DEBUG_MEMORY_MANAGER
 
 class CCC_DbgStrCheck : public IConsole_Command
 {
-public:
-	CCC_DbgStrCheck(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->verify(); }
+  public:
+	CCC_DbgStrCheck(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		g_pStringContainer->verify();
+	}
 };
 
 class CCC_DbgStrDump : public IConsole_Command
 {
-public:
-	CCC_DbgStrDump(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->dump(); }
+  public:
+	CCC_DbgStrDump(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		g_pStringContainer->dump();
+	}
 };
 
 #ifndef DEDICATED_SERVER
 class CCC_soundDevice : public CCC_Token
 {
 	typedef CCC_Token inherited;
-public:
-	CCC_soundDevice(LPCSTR N) :inherited(N, &snd_device_id, NULL) {};
-	virtual			~CCC_soundDevice()
-	{}
+
+  public:
+	CCC_soundDevice(LPCSTR N) : inherited(N, &snd_device_id, NULL){};
+	virtual ~CCC_soundDevice()
+	{
+	}
 
 	virtual void Execute(LPCSTR args)
 	{
 		GetToken();
-		if (!tokens)				return;
+		if (!tokens)
+			return;
 		inherited::Execute(args);
 	}
 
-	virtual void	Status(TStatus& S)
+	virtual void Status(TStatus& S)
 	{
 		GetToken();
-		if (!tokens)				return;
+		if (!tokens)
+			return;
 		inherited::Status(S);
 	}
 
@@ -154,7 +180,8 @@ public:
 	virtual void Save(IWriter* F)
 	{
 		GetToken();
-		if (!tokens)				return;
+		if (!tokens)
+			return;
 		inherited::Save(F);
 	}
 };
@@ -163,36 +190,50 @@ public:
 //-----------------------------------------------------------------------
 class CCC_MotionsStat : public IConsole_Command
 {
-public:
-	CCC_MotionsStat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_MotionsStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		g_pMotionsContainer->dump();
 	}
 };
 class CCC_TexturesStat : public IConsole_Command
 {
-public:
-	CCC_TexturesStat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_TexturesStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Device.Resources->_DumpMemoryUsage();
 	}
 };
 //-----------------------------------------------------------------------
 class CCC_E_Dump : public IConsole_Command
 {
-public:
-	CCC_E_Dump(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_E_Dump(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Engine.Event.Dump();
 	}
 };
 class CCC_E_Signal : public IConsole_Command
 {
-public:
-	CCC_E_Signal(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR args) {
-		char	Event[128], Param[128];
-		Event[0] = 0; Param[0] = 0;
+  public:
+	CCC_E_Signal(LPCSTR N) : IConsole_Command(N){};
+	virtual void Execute(LPCSTR args)
+	{
+		char Event[128], Param[128];
+		Event[0] = 0;
+		Param[0] = 0;
 		sscanf(args, "%[^,],%s", Event, Param);
 		Engine.Event.Signal(Event, (u64)Param);
 	}
@@ -200,16 +241,22 @@ public:
 //-----------------------------------------------------------------------
 class CCC_Help : public IConsole_Command
 {
-public:
-	CCC_Help(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_Help(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Log("- --- Command listing: start ---");
 		CConsole::vecCMD_IT it;
 		for (it = Console->Commands.begin(); it != Console->Commands.end(); it++)
 		{
 			IConsole_Command& C = *(it->second);
-			TStatus _S; C.Status(_S);
-			TInfo	_I;	C.Info(_I);
+			TStatus _S;
+			C.Status(_S);
+			TInfo _I;
+			C.Info(_I);
 
 			Msg("%-20s (%-10s) --- %s", C.Name(), _S, _I);
 		}
@@ -217,27 +264,30 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
-void 			crashthread(void*)
+void crashthread(void*)
 {
 	Sleep(1000);
 	Msg("~ crash thread activated");
-	u64			clk = CPU::GetCLK();
-	CRandom		rndg;
+	u64 clk = CPU::GetCLK();
+	CRandom rndg;
 	rndg.seed(s32(clk));
-	for (;;) {
+	for (;;)
+	{
 		Sleep(1);
-		__try {
-			//try {
+		__try
+		{
+			// try {
 			union {
-				struct {
-					u8	_b0;
-					u8	_b1;
-					u8	_b2;
-					u8	_b3;
+				struct
+				{
+					u8 _b0;
+					u8 _b1;
+					u8 _b2;
+					u8 _b3;
 				};
-				uintptr_t	_ptri;
+				uintptr_t _ptri;
 				u32* _ptr;
-			}		rndptr;
+			} rndptr;
 			rndptr._b0 = u8(rndg.randI(0, 256));
 			rndptr._b1 = u8(rndg.randI(0, 256));
 			rndptr._b2 = u8(rndg.randI(0, 256));
@@ -248,25 +298,34 @@ void 			crashthread(void*)
 			//	// OK
 			//}
 		}
-		__except (EXCEPTION_EXECUTE_HANDLER) {
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
 			// OK
 		}
 	}
 }
 class CCC_Crash : public IConsole_Command
 {
-public:
-	CCC_Crash(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_Crash(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		thread_spawn(crashthread, "crash", 0, 0);
 	}
 };
 
 class CCC_DumpResources : public IConsole_Command
 {
-public:
-	CCC_DumpResources(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_DumpResources(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Device.Resources->Dump(args != NULL);
 	}
 };
@@ -274,9 +333,13 @@ public:
 XRCORE_API void _dump_open_files(int mode);
 class CCC_DumpOpenFiles : public IConsole_Command
 {
-public:
-	CCC_DumpOpenFiles(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = FALSE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_DumpOpenFiles(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = FALSE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		int _mode = atoi(args);
 		_dump_open_files(_mode);
 	}
@@ -285,11 +348,14 @@ public:
 //-----------------------------------------------------------------------
 class CCC_SaveCFG : public IConsole_Command
 {
-public:
-	CCC_SaveCFG(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+  public:
+	CCC_SaveCFG(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
 	virtual void Execute(LPCSTR args)
 	{
-		string_path			cfg_full_name;
+		string_path cfg_full_name;
 		strcpy_s(cfg_full_name, (xr_strlen(args) > 0) ? args : Console->ConfigFile);
 
 		bool b_abs_name = xr_strlen(cfg_full_name) > 2 && cfg_full_name[1] == ':';
@@ -305,7 +371,8 @@ public:
 		if (FS.exist(cfg_full_name))
 			b_allow = SetFileAttributes(cfg_full_name, FILE_ATTRIBUTE_NORMAL);
 
-		if (b_allow) {
+		if (b_allow)
+		{
 			IWriter* F = FS.w_open(cfg_full_name);
 			CConsole::vecCMD_IT it;
 			for (it = Console->Commands.begin(); it != Console->Commands.end(); it++)
@@ -317,19 +384,19 @@ public:
 			Msg("!Cannot store config file [%s]", cfg_full_name);
 	}
 };
-CCC_LoadCFG::CCC_LoadCFG(LPCSTR N) : IConsole_Command(N)
-{};
+CCC_LoadCFG::CCC_LoadCFG(LPCSTR N) : IConsole_Command(N){};
 
 void CCC_LoadCFG::Execute(LPCSTR args)
 {
 	Msg("Executing config-script \"%s\"...", args);
-	string_path						cfg_name;
+	string_path cfg_name;
 
 	strcpy_s(cfg_name, args);
-	if (strext(cfg_name))			*strext(cfg_name) = 0;
+	if (strext(cfg_name))
+		*strext(cfg_name) = 0;
 	strcat(cfg_name, ".ltx");
 
-	string_path						cfg_full_name;
+	string_path cfg_full_name;
 
 	FS.update_path(cfg_full_name, "$app_data_root$", cfg_name);
 
@@ -338,9 +405,11 @@ void CCC_LoadCFG::Execute(LPCSTR args)
 
 	IReader* F = FS.r_open(cfg_full_name);
 
-	string1024						str;
-	if (F != NULL) {
-		while (!F->eof()) {
+	string1024 str;
+	if (F != NULL)
+	{
+		while (!F->eof())
+		{
 			F->r_string(str, sizeof(str));
 			if (allow(str))
 				Console->Execute(str);
@@ -348,13 +417,13 @@ void CCC_LoadCFG::Execute(LPCSTR args)
 		FS.r_close(F);
 		Msg("[%s] successfully loaded.", cfg_full_name);
 	}
-	else {
+	else
+	{
 		Msg("! Cannot open script file [%s]", cfg_full_name);
 	}
 }
 
-CCC_LoadCFG_custom::CCC_LoadCFG_custom(LPCSTR cmd)
-	:CCC_LoadCFG(cmd)
+CCC_LoadCFG_custom::CCC_LoadCFG_custom(LPCSTR cmd) : CCC_LoadCFG(cmd)
 {
 	strcpy_s(m_cmd, cmd);
 };
@@ -366,26 +435,28 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 //-----------------------------------------------------------------------
 class CCC_Start : public IConsole_Command
 {
-	void	parse(LPSTR dest, LPCSTR args, LPCSTR name)
+	void parse(LPSTR dest, LPCSTR args, LPCSTR name)
 	{
 		dest[0] = 0;
 		if (strstr(args, name))
 			sscanf(strstr(args, name) + xr_strlen(name), "(%[^)])", dest);
 	}
-public:
-	CCC_Start(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args) {
+
+  public:
+	CCC_Start(LPCSTR N) : IConsole_Command(N){};
+	virtual void Execute(LPCSTR args)
+	{
 		/*		if (g_pGameLevel)	{
 					Log		("! Please disconnect/unload first");
 					return;
 				}
 		*/
-		string4096	op_server, op_client;
+		string4096 op_server, op_client;
 		op_server[0] = 0;
 		op_client[0] = 0;
 
-		parse(op_server, args, "server");	// 1. server
-		parse(op_client, args, "client");	// 2. client
+		parse(op_server, args, "server"); // 1. server
+		parse(op_client, args, "client"); // 2. client
 
 		if (!op_client[0] && strstr(op_server, "single"))
 			strcpy_s(op_client, "localhost");
@@ -395,59 +466,79 @@ public:
 			Log("! Can't start game without client. Arguments: '%s'.", args);
 			return;
 		}
-		Engine.Event.Defer("KERNEL:start", u64(xr_strlen(op_server) ? xr_strdup(op_server) : 0), u64(xr_strdup(op_client)));
+		Engine.Event.Defer("KERNEL:start", u64(xr_strlen(op_server) ? xr_strdup(op_server) : 0),
+						   u64(xr_strdup(op_client)));
 	}
 };
 
 class CCC_Disconnect : public IConsole_Command
 {
-public:
-	CCC_Disconnect(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_Disconnect(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Engine.Event.Defer("KERNEL:disconnect");
 	}
 };
 //-----------------------------------------------------------------------
 class CCC_VID_Reset : public IConsole_Command
 {
-public:
-	CCC_VID_Reset(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		if (Device.b_is_Ready) {
+  public:
+	CCC_VID_Reset(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		if (Device.b_is_Ready)
+		{
 			Device.Reset();
 		}
 	}
 };
 class CCC_VidMode : public CCC_Token
 {
-	u32		_dummy;
-public:
-	CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
-	virtual void	Execute(LPCSTR args) {
+	u32 _dummy;
+
+  public:
+	CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL)
+	{
+		bEmptyArgsHandled = FALSE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		u32 _w, _h;
 		int cnt = sscanf(args, "%dx%d", &_w, &_h);
-		if (cnt == 2) {
+		if (cnt == 2)
+		{
 			psCurrentVidMode[0] = _w;
 			psCurrentVidMode[1] = _h;
 		}
-		else {
+		else
+		{
 			Msg("! Wrong video mode [%s]", args);
 			return;
 		}
 	}
-	virtual void	Status(TStatus& S)
+	virtual void Status(TStatus& S)
 	{
 		sprintf_s(S, sizeof(S), "%dx%d", psCurrentVidMode[0], psCurrentVidMode[1]);
 	}
-	virtual xr_token* GetToken() { return vid_mode_token; }
-	virtual void	Info(TInfo& I)
+	virtual xr_token* GetToken()
+	{
+		return vid_mode_token;
+	}
+	virtual void Info(TInfo& I)
 	{
 		strcpy_s(I, sizeof(I), "change screen resolution WxH");
 	}
 
-	virtual void	fill_tips(vecTips& tips, u32 mode)
+	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
-		TStatus  str, cur;
+		TStatus str, cur;
 		Status(cur);
 
 		bool res = false;
@@ -477,19 +568,25 @@ public:
 //-----------------------------------------------------------------------
 class CCC_SND_Restart : public IConsole_Command
 {
-public:
-	CCC_SND_Restart(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_SND_Restart(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Sound->_restart();
 	}
 };
 
 //-----------------------------------------------------------------------
-float	ps_gamma = 1.f, ps_brightness = 1.f, ps_contrast = 1.f;
+float ps_gamma = 1.f, ps_brightness = 1.f, ps_contrast = 1.f;
 class CCC_Gamma : public CCC_Float
 {
-public:
-	CCC_Gamma(LPCSTR N, float* V) : CCC_Float(N, V, 0.5f, 1.5f) {}
+  public:
+	CCC_Gamma(LPCSTR N, float* V) : CCC_Float(N, V, 0.5f, 1.5f)
+	{
+	}
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -503,16 +600,20 @@ public:
 
 //-----------------------------------------------------------------------
 
-extern  INT	g_bDR_LM_UsePointsBBox;
-extern	INT	g_bDR_LM_4Steps;
-extern	INT g_iDR_LM_Step;
-extern	Fvector	g_DR_LM_Min, g_DR_LM_Max;
+extern INT g_bDR_LM_UsePointsBBox;
+extern INT g_bDR_LM_4Steps;
+extern INT g_iDR_LM_Step;
+extern Fvector g_DR_LM_Min, g_DR_LM_Max;
 
 class CCC_DR_ClearPoint : public IConsole_Command
 {
-public:
-	CCC_DR_ClearPoint(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_DR_ClearPoint(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		g_DR_LM_Min.x = 1000000.0f;
 		g_DR_LM_Min.z = 1000000.0f;
 
@@ -525,16 +626,24 @@ public:
 
 class CCC_DR_TakePoint : public IConsole_Command
 {
-public:
-	CCC_DR_TakePoint(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_DR_TakePoint(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		Fvector CamPos = Device.vCameraPosition;
 
-		if (g_DR_LM_Min.x > CamPos.x)	g_DR_LM_Min.x = CamPos.x;
-		if (g_DR_LM_Min.z > CamPos.z)	g_DR_LM_Min.z = CamPos.z;
+		if (g_DR_LM_Min.x > CamPos.x)
+			g_DR_LM_Min.x = CamPos.x;
+		if (g_DR_LM_Min.z > CamPos.z)
+			g_DR_LM_Min.z = CamPos.z;
 
-		if (g_DR_LM_Max.x < CamPos.x)	g_DR_LM_Max.x = CamPos.x;
-		if (g_DR_LM_Max.z < CamPos.z)	g_DR_LM_Max.z = CamPos.z;
+		if (g_DR_LM_Max.x < CamPos.x)
+			g_DR_LM_Max.x = CamPos.x;
+		if (g_DR_LM_Max.z < CamPos.z)
+			g_DR_LM_Max.z = CamPos.z;
 
 		Msg("Local BBox (%f, %f) - (%f, %f)", g_DR_LM_Min.x, g_DR_LM_Min.z, g_DR_LM_Max.x, g_DR_LM_Max.z);
 	}
@@ -542,22 +651,26 @@ public:
 
 class CCC_DR_UsePoints : public CCC_Integer
 {
-public:
-	CCC_DR_UsePoints(LPCSTR N, int* V, int _min = 0, int _max = 999) : CCC_Integer(N, V, _min, _max) {};
-	virtual void	Save(IWriter* F) {};
+  public:
+	CCC_DR_UsePoints(LPCSTR N, int* V, int _min = 0, int _max = 999) : CCC_Integer(N, V, _min, _max){};
+	virtual void Save(IWriter* F){};
 };
 
-ENGINE_API BOOL r2_sun_static  = FALSE;
+ENGINE_API BOOL r2_sun_static = FALSE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;
 
-u32				renderer_value = 0;
+u32 renderer_value = 0;
 class CCC_r2 : public CCC_Token
 {
 	typedef CCC_Token inherited;
-public:
-	CCC_r2(LPCSTR N) : inherited(N, &renderer_value, vid_quality_token) { renderer_value = 0; };
 
-	virtual void	Execute(LPCSTR args)
+  public:
+	CCC_r2(LPCSTR N) : inherited(N, &renderer_value, vid_quality_token)
+	{
+		renderer_value = 0;
+	};
+
+	virtual void Execute(LPCSTR args)
 	{
 #ifdef DEDICATED_SERVER
 		inherited::Execute("renderer_r1");
@@ -566,11 +679,12 @@ public:
 #endif // DEDICATED_SERVER
 
 		psDeviceFlags.set(rsR2, (renderer_value > 0));
-		r2_sun_static  = (renderer_value < 2);
+		r2_sun_static = (renderer_value < 2);
 		r2_advanced_pp = (renderer_value > 2);
 	}
 
-	virtual void	Save(IWriter* F) {
+	virtual void Save(IWriter* F)
+	{
 		if (!strstr(Core.Params, "-r2"))
 		{
 			inherited::Save(F);
@@ -584,21 +698,21 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
-ENGINE_API float	psHUD_FOV = 0.45f;
+ENGINE_API float psHUD_FOV = 0.45f;
 
-extern int			psSkeletonUpdate;
-extern int			rsDVB_Size;
-extern int			rsDIB_Size;
-extern int			psNET_ClientUpdate;
-extern int			psNET_ClientPending;
-extern int			psNET_ServerUpdate;
-extern int			psNET_ServerPending;
-extern int			psNET_DedicatedSleep;
-extern char			psNET_Name[32];
-extern Flags32		psEnvFlags;
-extern float		r__dtex_range;
+extern int psSkeletonUpdate;
+extern int rsDVB_Size;
+extern int rsDIB_Size;
+extern int psNET_ClientUpdate;
+extern int psNET_ClientPending;
+extern int psNET_ServerUpdate;
+extern int psNET_ServerPending;
+extern int psNET_DedicatedSleep;
+extern char psNET_Name[32];
+extern Flags32 psEnvFlags;
+extern float r__dtex_range;
 
-extern int			g_ErrorLineCount;
+extern int g_ErrorLineCount;
 
 void CCC_Register()
 {
@@ -671,7 +785,7 @@ void CCC_Register()
 	//	CMD4(CCC_Integer,	"rs_vb_size",			&rsDVB_Size,		32,		4096);
 	//	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
 
-		// Texture manager
+	// Texture manager
 	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 0, 4);
 	CMD4(CCC_Integer, "net_dedicated_sleep", &psNET_DedicatedSleep, 0, 64);
 
@@ -730,25 +844,26 @@ void CCC_Register()
 	CMD3(CCC_Mask, "game_tutorials_enable", &ps_game_ls_flags, TUTORIALS_ENABLE);
 
 	CMD1(CCC_r2, "renderer");
-	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);
-	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale"); clamp(psSoundOcclusionScale, 0.1f, .5f);
+	// psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff, EPS_S,	2.f);
+	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale");
+	clamp(psSoundOcclusionScale, 0.1f, .5f);
 
-	extern	int	g_Dump_Export_Obj;
-	extern	int	g_Dump_Import_Obj;
+	extern int g_Dump_Export_Obj;
+	extern int g_Dump_Import_Obj;
 	CMD4(CCC_Integer, "net_dbg_dump_export_obj", &g_Dump_Export_Obj, 0, 1);
 	CMD4(CCC_Integer, "net_dbg_dump_import_obj", &g_Dump_Import_Obj, 0, 1);
 
-//	if (strstr(Core.Params, "designer"))
-//	{
-		CMD1(CCC_DR_TakePoint, "demo_record_take_point");
-		CMD1(CCC_DR_ClearPoint, "demo_record_clear_points");
-		CMD4(CCC_DR_UsePoints, "demo_record_use_points", &g_bDR_LM_UsePointsBBox, 0, 1);
-		CMD4(CCC_DR_UsePoints, "demo_record_4step", &g_bDR_LM_4Steps, 0, 1);
-		CMD4(CCC_DR_UsePoints, "demo_record_step", &g_iDR_LM_Step, 0, 3);
-//	}
+	//	if (strstr(Core.Params, "designer"))
+	//	{
+	CMD1(CCC_DR_TakePoint, "demo_record_take_point");
+	CMD1(CCC_DR_ClearPoint, "demo_record_clear_points");
+	CMD4(CCC_DR_UsePoints, "demo_record_use_points", &g_bDR_LM_UsePointsBBox, 0, 1);
+	CMD4(CCC_DR_UsePoints, "demo_record_4step", &g_bDR_LM_4Steps, 0, 1);
+	CMD4(CCC_DR_UsePoints, "demo_record_step", &g_iDR_LM_Step, 0, 3);
+	//	}
 	CMD1(CCC_DumpResources, "dump_resources");
 	CMD1(CCC_DumpOpenFiles, "dump_open_files");
-	//#endif
+	// #endif
 
 	extern int g_svTextConsoleUpdateRate;
 	CMD4(CCC_Integer, "sv_console_update_rate", &g_svTextConsoleUpdateRate, 1, 100);

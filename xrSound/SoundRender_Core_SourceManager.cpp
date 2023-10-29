@@ -4,7 +4,7 @@
 #include "SoundRender_Core.h"
 #include "SoundRender_Source.h"
 
-CSoundRender_Source *CSoundRender_Core::i_create_source(LPCSTR name)
+CSoundRender_Source* CSoundRender_Core::i_create_source(LPCSTR name)
 {
 	// Search
 	string256 id;
@@ -18,13 +18,13 @@ CSoundRender_Source *CSoundRender_Core::i_create_source(LPCSTR name)
 	}
 
 	// Load a _new one
-	CSoundRender_Source *S = xr_new<CSoundRender_Source>();
+	CSoundRender_Source* S = xr_new<CSoundRender_Source>();
 	S->load(id);
 	s_sources.push_back(S);
 	return S;
 }
 
-void CSoundRender_Core::i_destroy_source(CSoundRender_Source *S)
+void CSoundRender_Core::i_destroy_source(CSoundRender_Source* S)
 {
 	// No actual destroy at all
 }

@@ -10,12 +10,13 @@
 
 class CSE_ALifeOnlineOfflineGroup;
 
-class CALifeOnlineOfflineGroupBrain {
-private:
-	CSE_ALifeOnlineOfflineGroup	*m_object;
+class CALifeOnlineOfflineGroupBrain
+{
+  private:
+	CSE_ALifeOnlineOfflineGroup* m_object;
 
-public:
-	IC							CALifeOnlineOfflineGroupBrain	(CSE_ALifeOnlineOfflineGroup *object);
+  public:
+	IC CALifeOnlineOfflineGroupBrain(CSE_ALifeOnlineOfflineGroup* object);
 };
 
 #include "alife_online_offline_group_brain_inline.h"

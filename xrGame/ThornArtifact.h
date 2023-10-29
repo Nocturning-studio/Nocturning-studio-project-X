@@ -6,15 +6,16 @@
 #pragma once
 #include "artifact.h"
 
-class CThornArtefact : public CArtefact 
+class CThornArtefact : public CArtefact
 {
-private:
+  private:
 	typedef CArtefact inherited;
-public:
+
+  public:
 	CThornArtefact(void);
 	virtual ~CThornArtefact(void);
 
-	virtual void Load				(LPCSTR section);
+	virtual void Load(LPCSTR section);
 
-protected:
+  protected:
 };

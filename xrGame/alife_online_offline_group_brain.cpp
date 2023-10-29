@@ -8,4 +8,3 @@
 
 #include "stdafx.h"
 #include "alife_online_offline_group_brain.h"
-

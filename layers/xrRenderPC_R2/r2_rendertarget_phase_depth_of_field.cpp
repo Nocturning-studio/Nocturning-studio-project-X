@@ -8,7 +8,7 @@ void CRenderTarget::depth_of_field_pass_first()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -22,15 +22,19 @@ void CRenderTarget::depth_of_field_pass_first()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_dof->E[0]);
 
 	Fvector3 dof;
@@ -42,10 +46,10 @@ void CRenderTarget::depth_of_field_pass_first()
 	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
@@ -56,7 +60,7 @@ void CRenderTarget::depth_of_field_pass_second()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -70,15 +74,19 @@ void CRenderTarget::depth_of_field_pass_second()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_dof->E[1]);
 
 	Fvector3 dof;
@@ -90,10 +98,10 @@ void CRenderTarget::depth_of_field_pass_second()
 	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
@@ -104,7 +112,7 @@ void CRenderTarget::depth_of_field_pass_third()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -118,15 +126,19 @@ void CRenderTarget::depth_of_field_pass_third()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_dof->E[2]);
 
 	Fvector3 dof;
@@ -138,10 +150,10 @@ void CRenderTarget::depth_of_field_pass_third()
 	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
 	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
@@ -149,9 +161,9 @@ void CRenderTarget::phase_depth_of_field()
 {
 	depth_of_field_pass_first();
 
-	if(ps_r2_dof_quality >= 2 && !ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
-	depth_of_field_pass_second();
+	if (ps_r2_dof_quality >= 2 && !ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
+		depth_of_field_pass_second();
 
 	if (ps_r2_dof_quality >= 3 && !ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
-	depth_of_field_pass_third();
+		depth_of_field_pass_third();
 }

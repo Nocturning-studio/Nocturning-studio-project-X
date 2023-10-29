@@ -7,156 +7,204 @@
 
 #define DEFAULT_ITEM_HEIGHT 30
 
-
-DEF_LIST (LIST_ITEM_LIST, CUIListItem*);
+DEF_LIST(LIST_ITEM_LIST, CUIListItem*);
 class CUIScrollBar;
 class CUIFrameLineWnd;
 
-class CUIListWnd :public CUIWindow
+class CUIListWnd : public CUIWindow
 {
-private:
-	typedef			CUIWindow inherited;
-	friend class	CUIGameLog;
+  private:
+	typedef CUIWindow inherited;
+	friend class CUIGameLog;
 
-	shared_str		m_scrollbar_profile;
-	void			DrawActiveBackFrame		(const Frect& rect, CUIListItem * itm);
-public:
-					CUIListWnd				();
-	virtual			~CUIListWnd				();
+	shared_str m_scrollbar_profile;
+	void DrawActiveBackFrame(const Frect& rect, CUIListItem* itm);
 
-	virtual void	 Init					(float x, float y, float width, float height);
-	virtual void	 Init					(float x, float y, float width, float height, float item_height);
+  public:
+	CUIListWnd();
+	virtual ~CUIListWnd();
 
-	virtual bool	 OnMouse				(float x, float y, EUIMessages mouse_action);
-	virtual bool	 OnKeyboard				(int dik, EUIMessages keyboard_action);
+	virtual void Init(float x, float y, float width, float height);
+	virtual void Init(float x, float y, float width, float height, float item_height);
 
-	virtual void	 SendMessage			(CUIWindow *pWnd, s16 msg, void* pData);
-	virtual void	 Draw					();
-	virtual void	 Update					();
-	virtual void	 DetachChild			(CUIWindow* pChild);
-			void	SetScrollBarProfile		(LPCSTR profile)		{m_scrollbar_profile=profile;};
+	virtual bool OnMouse(float x, float y, EUIMessages mouse_action);
+	virtual bool OnKeyboard(int dik, EUIMessages keyboard_action);
+
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);
+	virtual void Draw();
+	virtual void Update();
+	virtual void DetachChild(CUIWindow* pChild);
+	void SetScrollBarProfile(LPCSTR profile)
+	{
+		m_scrollbar_profile = profile;
+	};
 
 	// Добавление элементов в листбокс
 	template <class Element>
-	bool			 AddItem				(const char*  str, const float shift = 0.0f, void* pData = NULL,
-											int value = 0, int insertBeforeIdx = -1);
+	bool AddItem(const char* str, const float shift = 0.0f, void* pData = NULL, int value = 0,
+				 int insertBeforeIdx = -1);
 
-	virtual bool	AddItem_script			(CUIListItem* item);
+	virtual bool AddItem_script(CUIListItem* item);
 
-	template <class Element>
-	bool			AddItem					(Element* pItem, int insertBeforeIdx = -1);
-	
-	void 			RemoveItem				(int index);
-	void 			RemoveAll				();
-	//находит первый элемент с заданной pData, иначе -1
-	int 			FindItem				(void* pData);
-	int 			FindItemWithValue		(int iValue);
-	CUIListItem*	GetItem					(int index);
+	template <class Element> bool AddItem(Element* pItem, int insertBeforeIdx = -1);
+
+	void RemoveItem(int index);
+	void RemoveAll();
+	// находит первый элемент с заданной pData, иначе -1
+	int FindItem(void* pData);
+	int FindItemWithValue(int iValue);
+	CUIListItem* GetItem(int index);
 	// Получить индекс элемента по адресу. Либо -1 если нет такого
-	int				GetItemPos				(CUIListItem *pItem);
+	int GetItemPos(CUIListItem* pItem);
 
-	void			SetItemWidth			(float iItemWidth);
-	float			GetItemWidth			()							{return m_iItemWidth;}
+	void SetItemWidth(float iItemWidth);
+	float GetItemWidth()
+	{
+		return m_iItemWidth;
+	}
 
-	void			SetItemHeight			(float iItemHeight); 
-	float			GetItemHeight			()							{return m_iItemHeight;}
-    virtual void	SetHeight				(float height);
+	void SetItemHeight(float iItemHeight);
+	float GetItemHeight()
+	{
+		return m_iItemHeight;
+	}
+	virtual void SetHeight(float height);
 
-	void			SetAlwaysShowScroll		(bool flag = true)			{m_bAlwaysShowScroll = flag;}
-	void			EnableAlwaysShowScroll	(bool flag)					{m_bAlwaysShowScroll_enable = flag;}
+	void SetAlwaysShowScroll(bool flag = true)
+	{
+		m_bAlwaysShowScroll = flag;
+	}
+	void EnableAlwaysShowScroll(bool flag)
+	{
+		m_bAlwaysShowScroll_enable = flag;
+	}
 
+	int GetItemsCount()
+	{
+		return m_ItemList.size();
+	}
 
-	int				GetItemsCount			()							{return m_ItemList.size();}
+	// подготовить все элементы заново
+	void Reset();
 
-	//подготовить все элементы заново
-	void 			Reset					();
+	void EnableScrollBar(bool enable);
+	bool IsScrollBarEnabled();
+	void UpdateScrollBar();
 
-	void 			EnableScrollBar			(bool enable);
-	bool 			IsScrollBarEnabled		();
-	void 			UpdateScrollBar			();
+	void ScrollToBegin();
+	void ScrollToEnd();
+	void ScrollToPos(int position);
 
-	void 			ScrollToBegin			();
-	void 			ScrollToEnd				();
-	void 			ScrollToPos				(int position);
-	
-	IC bool			IsActiveBackgroundEnabled()								{return m_bActiveBackground;}
-	void			EnableActiveBackground	(bool enable);
+	IC bool IsActiveBackgroundEnabled()
+	{
+		return m_bActiveBackground;
+	}
+	void EnableActiveBackground(bool enable);
 
-	virtual void	SetWidth				(float width);
+	virtual void SetWidth(float width);
 
-	void			SetTextColor			(u32 color)						{m_dwFontColor = color;} 
-	u32				GetTextColor			()								{return m_dwFontColor;}
+	void SetTextColor(u32 color)
+	{
+		m_dwFontColor = color;
+	}
+	u32 GetTextColor()
+	{
+		return m_dwFontColor;
+	}
 
-	//делает активными (как кнопки) элементы списка
-	void 			ActivateList			(bool activity);
-	bool 			IsListActive			()								{return m_bListActivity;}
+	// делает активными (как кнопки) элементы списка
+	void ActivateList(bool activity);
+	bool IsListActive()
+	{
+		return m_bListActivity;
+	}
 
-	void 			SetVertFlip				(bool vert_flip)				{m_bVertFlip = vert_flip;}
-	bool 			GetVertFlip				() {return m_bVertFlip;}
+	void SetVertFlip(bool vert_flip)
+	{
+		m_bVertFlip = vert_flip;
+	}
+	bool GetVertFlip()
+	{
+		return m_bVertFlip;
+	}
 
 	// Принудительная установка фокуса
-	void			SetFocusedItem			(int iNewFocusedItem);
-	int				GetFocusedItem			()								{ return m_iFocusedItem; }
-	int				GetSelectedItem			()								{ return m_iSelectedItem; }
-	void			SetSelectedItem			(int sel)						{m_iSelectedItem = sel;}
-	void			ShowSelectedItem		(bool show = true);
-	
-	void			ResetFocusCapture		()								{ m_bForceFocusedItem = false; }
+	void SetFocusedItem(int iNewFocusedItem);
+	int GetFocusedItem()
+	{
+		return m_iFocusedItem;
+	}
+	int GetSelectedItem()
+	{
+		return m_iSelectedItem;
+	}
+	void SetSelectedItem(int sel)
+	{
+		m_iSelectedItem = sel;
+	}
+	void ShowSelectedItem(bool show = true);
 
-	int				GetListPosition			() const						{ return m_iFirstShownIndex; }
+	void ResetFocusCapture()
+	{
+		m_bForceFocusedItem = false;
+	}
 
+	int GetListPosition() const
+	{
+		return m_iFirstShownIndex;
+	}
 
-protected:
-	void			create_active_back		();
-	void			destroy_active_back		();
+  protected:
+	void create_active_back();
+	void destroy_active_back();
 
-	CUIScrollBar*	m_ScrollBar;
+	CUIScrollBar* m_ScrollBar;
 
-	//обновления елементов списка, вызвается
-	//если произошли изменения
-	void			UpdateList				();
+	// обновления елементов списка, вызвается
+	// если произошли изменения
+	void UpdateList();
 
-	//список элементов листа
-	LIST_ITEM_LIST	m_ItemList; 
+	// список элементов листа
+	LIST_ITEM_LIST m_ItemList;
 
-	//размеры элемента списка
-	float		m_iItemHeight;
-	float		m_iItemWidth;
+	// размеры элемента списка
+	float m_iItemHeight;
+	float m_iItemWidth;
 
-	//количество рядов для элементов
-	int		m_iRowNum;
-	
-	//индекс первого показанного элемента
-	int		m_iFirstShownIndex;
+	// количество рядов для элементов
+	int m_iRowNum;
 
-	//элемент над которым курсор в данный момент или -1, если такого нет
-	int		m_iFocusedItem;
-	int		m_iFocusedItemGroupID;
-	int     m_iSelectedItem;
-	int     m_iSelectedItemGroupID;
+	// индекс первого показанного элемента
+	int m_iFirstShownIndex;
 
-	bool	m_bShowSelectedItem;
-	bool	m_bAlwaysShowScroll_enable;
-	bool	m_bAlwaysShowScroll;
-	bool	m_bActiveBackground;
+	// элемент над которым курсор в данный момент или -1, если такого нет
+	int m_iFocusedItem;
+	int m_iFocusedItemGroupID;
+	int m_iSelectedItem;
+	int m_iSelectedItemGroupID;
+
+	bool m_bShowSelectedItem;
+	bool m_bAlwaysShowScroll_enable;
+	bool m_bAlwaysShowScroll;
+	bool m_bActiveBackground;
 	// Если хотим принудительно выставлять фокус, то поднять этот флаг
-	bool	m_bForceFocusedItem;
+	bool m_bForceFocusedItem;
 
-	//подсветка активного элемента
-	CUIFrameLineWnd*	m_ActiveBackgroundFrame;
+	// подсветка активного элемента
+	CUIFrameLineWnd* m_ActiveBackgroundFrame;
 
-	//текущий цвет текста
-	u32		m_dwFontColor;
-	bool	m_bListActivity;
+	// текущий цвет текста
+	u32 m_dwFontColor;
+	bool m_bListActivity;
 
-	//переворот списка по вертикали
-	bool	m_bVertFlip;
-	
+	// переворот списка по вертикали
+	bool m_bVertFlip;
+
 	// Признак того, что мышь подвинули
-	bool	m_bUpdateMouseMove;
+	bool m_bUpdateMouseMove;
 
 	// Текущий уникальный идентификатор
-	int		m_iLastUniqueID;
+	int m_iLastUniqueID;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

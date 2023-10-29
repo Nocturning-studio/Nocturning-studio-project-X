@@ -6,43 +6,49 @@
 
 class CUIStatic;
 
-
-class CUIFrameWindow: public CUIWindow,
-					  public CUIMultiTextureOwner
+class CUIFrameWindow : public CUIWindow, public CUIMultiTextureOwner
 {
-private:
+  private:
 	typedef CUIWindow inherited;
-public:
+
+  public:
 	using CUIWindow::Draw;
-					CUIFrameWindow				();
+	CUIFrameWindow();
 
-	virtual void	Init						(LPCSTR base_name, float x, float y, float width, float height);
-	virtual void	Init						(float x, float y, float width, float height);
-	virtual void	Init						(LPCSTR base_name, Frect* pRect);
+	virtual void Init(LPCSTR base_name, float x, float y, float width, float height);
+	virtual void Init(float x, float y, float width, float height);
+	virtual void Init(LPCSTR base_name, Frect* pRect);
 
-	virtual void	InitTexture					(const char* texture);
-			void	SetTextureColor				(u32 color)										{m_UIWndFrame.SetTextureColor(color);}
+	virtual void InitTexture(const char* texture);
+	void SetTextureColor(u32 color)
+	{
+		m_UIWndFrame.SetTextureColor(color);
+	}
 
-	virtual void	SetWidth					(float width);
-	virtual void	SetHeight					(float height);
-	
-			void	SetColor					(u32 cl);
+	virtual void SetWidth(float width);
+	virtual void SetHeight(float height);
 
-	virtual void	Draw						();
-	virtual void	Update						();
-	
-	//текст заголовка
-	CUIStatic*		UITitleText;
-	CUIStatic*		GetTitleStatic				()										{return UITitleText;};
-	void			SetVisiblePart				(CUIFrameRect::EFramePart p, BOOL b)	{m_UIWndFrame.SetVisiblePart(p,b);};
+	void SetColor(u32 cl);
 
-protected:
+	virtual void Draw();
+	virtual void Update();
 
-	CUIFrameRect	m_UIWndFrame;
+	// текст заголовка
+	CUIStatic* UITitleText;
+	CUIStatic* GetTitleStatic()
+	{
+		return UITitleText;
+	};
+	void SetVisiblePart(CUIFrameRect::EFramePart p, BOOL b)
+	{
+		m_UIWndFrame.SetVisiblePart(p, b);
+	};
 
-	void			FrameClip					(const Frect parentAbsR);
-	
-private:
-	inline void		ClampMax_Zero				(Frect &r);
+  protected:
+	CUIFrameRect m_UIWndFrame;
 
+	void FrameClip(const Frect parentAbsR);
+
+  private:
+	inline void ClampMax_Zero(Frect& r);
 };

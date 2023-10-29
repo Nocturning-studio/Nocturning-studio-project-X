@@ -10,7 +10,7 @@
 #include "xrLevel.h"
 #include "CameraManager.h"
 
-ENGINE_API	IGame_Level* g_pGameLevel = NULL;
+ENGINE_API IGame_Level* g_pGameLevel = NULL;
 
 IGame_Level::IGame_Level()
 {
@@ -53,13 +53,13 @@ void IGame_Level::net_Stop()
 }
 
 //-------------------------------------------------------------------------------------------
-extern CStatTimer				tscreate;
+extern CStatTimer tscreate;
 
 BOOL IGame_Level::Load(u32 dwNum)
 {
 	// Initialize level data
 	pApp->Level_Set(dwNum);
-	string_path					temp;
+	string_path temp;
 	if (!FS.exist(temp, "$level$", "level.ltx"))
 		Debug.fatal(DEBUG_INFO, "Can't find level configuration file '%s'.", temp);
 	pLevel = xr_new<CInifile>(temp);
@@ -70,7 +70,7 @@ BOOL IGame_Level::Load(u32 dwNum)
 	IReader& fs = *LL_Stream;
 
 	// Header
-	hdrLEVEL					H;
+	hdrLEVEL H;
 	fs.r_chunk_safe(fsL_HEADER, &H, sizeof(H));
 	R_ASSERT2(XRCL_PRODUCTION_VERSION == H.XRLC_version, "Incompatible level version.");
 
@@ -80,7 +80,7 @@ BOOL IGame_Level::Load(u32 dwNum)
 	pApp->LoadSwitch();
 
 	// HUD + Environment
-//.	pHUD						= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
+	//.	pHUD						= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 	if (g_hud)
 		pHUD = g_hud;
 	else
@@ -100,7 +100,8 @@ BOOL IGame_Level::Load(u32 dwNum)
 	// Done
 	FS.r_close(LL_Stream);
 	bReady = true;
-	if (!g_dedicated_server)	IR_Capture();
+	if (!g_dedicated_server)
+		IR_Capture();
 #ifndef DEDICATED_SERVER
 	Device.seqRender.Add(this);
 #endif
@@ -110,18 +111,20 @@ BOOL IGame_Level::Load(u32 dwNum)
 	return TRUE;
 }
 
-int		psNET_DedicatedSleep = 5;
-void	IGame_Level::OnRender()
+int psNET_DedicatedSleep = 5;
+void IGame_Level::OnRender()
 {
 #ifndef DEDICATED_SERVER
 	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
 
-		// Level render, only when no client output required
-	if (!g_dedicated_server) {
+	// Level render, only when no client output required
+	if (!g_dedicated_server)
+	{
 		Render->Calculate();
 		Render->Render();
 	}
-	else {
+	else
+	{
 		Sleep(psNET_DedicatedSleep);
 	}
 
@@ -131,10 +134,10 @@ void	IGame_Level::OnRender()
 #endif
 }
 
-void	IGame_Level::OnFrame()
+void IGame_Level::OnFrame()
 {
 	// Log				("- level:on-frame: ",u32(Device.dwFrame));
-//	if (_abs(Device.fTimeDelta)<EPS_S) return;
+	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
 
 	// Update all objects
 	VERIFY(bReady);
@@ -145,10 +148,11 @@ void	IGame_Level::OnFrame()
 	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))
 	{
 		Sounds_Random_dwNextTime = Device.dwTimeGlobal + ::Random.randI(10000, 20000);
-		Fvector	pos;
+		Fvector pos;
 		pos.random_dir().normalize().mul(::Random.randF(30, 100)).add(Device.vCameraPosition);
-		int		id = ::Random.randI(Sounds_Random.size());
-		if (Sounds_Random_Enabled) {
+		int id = ::Random.randI(Sounds_Random.size());
+		if (Sounds_Random_Enabled)
+		{
 			Sounds_Random[id].play_at_pos(0, pos, 0);
 			Sounds_Random[id].set_volume(1.f);
 			Sounds_Random[id].set_range(10, 200);

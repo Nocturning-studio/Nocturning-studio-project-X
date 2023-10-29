@@ -4,52 +4,52 @@
 
 class ENGINE_API CTextConsole : public CConsole
 {
-private:
+  private:
 	typedef CConsole inherited;
 
-private:
+  private:
 	HWND* m_pMainWnd;
 
-	HWND	m_hConsoleWnd;
-	void	CreateConsoleWnd();
+	HWND m_hConsoleWnd;
+	void CreateConsoleWnd();
 
-	HWND	m_hLogWnd;
-	void	CreateLogWnd();
+	HWND m_hLogWnd;
+	void CreateLogWnd();
 
-	bool	m_bScrollLog;
-	u32		m_dwStartLine;
-	void	DrawLog(HDC hDC, RECT* pRect);
+	bool m_bScrollLog;
+	u32 m_dwStartLine;
+	void DrawLog(HDC hDC, RECT* pRect);
 
-private:
-	HFONT	m_hLogWndFont;
-	HFONT	m_hPrevFont;
-	HBRUSH	m_hBackGroundBrush;
+  private:
+	HFONT m_hLogWndFont;
+	HFONT m_hPrevFont;
+	HBRUSH m_hBackGroundBrush;
 
-	HDC		m_hDC_LogWnd;
-	HDC		m_hDC_LogWnd_BackBuffer;
+	HDC m_hDC_LogWnd;
+	HDC m_hDC_LogWnd_BackBuffer;
 	HBITMAP m_hBB_BM, m_hOld_BM;
 
-	bool	m_bNeedUpdate;
-	u32		m_dwLastUpdateTime;
+	bool m_bNeedUpdate;
+	u32 m_dwLastUpdateTime;
 
-	u32		m_last_time;
+	u32 m_last_time;
 	CServerInfo m_server_info;
 
-public:
+  public:
 	CTextConsole();
-	virtual			~CTextConsole();
+	virtual ~CTextConsole();
 
-	virtual	void	Initialize();
-	virtual	void	Destroy();
+	virtual void Initialize();
+	virtual void Destroy();
 
-	virtual void	OnRender();
-	virtual void	OnFrame();
+	virtual void OnRender();
+	virtual void OnFrame();
 
 	//	virtual void	IR_OnKeyboardPress		(int dik);
 
-	void	AddString(LPCSTR string);
-	void	OnPaint();
+	void AddString(LPCSTR string);
+	void OnPaint();
 
-};// class TextConsole
+}; // class TextConsole
 
-//extern ENGINE_API CTextConsole* TextConsole;
+// extern ENGINE_API CTextConsole* TextConsole;

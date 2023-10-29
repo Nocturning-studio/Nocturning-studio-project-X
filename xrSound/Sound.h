@@ -79,32 +79,37 @@ class CSound_UserDataVisitor;
 
 class CSound_UserData : public xr_resource
 {
-public:
-	virtual ~CSound_UserData() {}
-	virtual void accept(CSound_UserDataVisitor *) = 0;
+  public:
+	virtual ~CSound_UserData()
+	{
+	}
+	virtual void accept(CSound_UserDataVisitor*) = 0;
 	virtual void invalidate() = 0;
 };
 typedef resptr_core<CSound_UserData, resptr_base<CSound_UserData>> CSound_UserDataPtr;
 
 class ref_sound_data : public xr_resource
 {
-public:
-	CSound_source *handle;	  //!< Pointer to wave-source interface
-	CSound_emitter *feedback; //!< Pointer to emitter, automaticaly clears on emitter-stop
+  public:
+	CSound_source* handle;	  //!< Pointer to wave-source interface
+	CSound_emitter* feedback; //!< Pointer to emitter, automaticaly clears on emitter-stop
 	esound_type s_type;
 	int g_type;		   //!< Sound type, usually for AI
-	CObject *g_object; //!< Game object that emitts ref_sound
+	CObject* g_object; //!< Game object that emitts ref_sound
 	CSound_UserDataPtr g_userdata;
 	shared_str fn_attached[2];
 
 	u32 dwBytesTotal;
 	float fTimeTotal;
 
-public:
+  public:
 	ref_sound_data();
 	ref_sound_data(LPCSTR fName, esound_type sound_type, int game_type);
 	virtual ~ref_sound_data();
-	float get_length_sec() const { return fTimeTotal; };
+	float get_length_sec() const
+	{
+		return fTimeTotal;
+	};
 };
 
 typedef resptr_core<ref_sound_data, resptr_base<ref_sound_data>> ref_sound_data_ptr;
@@ -113,20 +118,30 @@ typedef resptr_core<ref_sound_data, resptr_base<ref_sound_data>> ref_sound_data_
 \brief Sound source + control
 
 The main class respresenting source/emitter interface
-This class infact just hides internals and redirect calls to 
+This class infact just hides internals and redirect calls to
 specific sub-systems
 */
 struct ref_sound
 {
 	ref_sound_data_ptr _p;
 
-public:
-	ref_sound() {}
-	~ref_sound() {}
+  public:
+	ref_sound()
+	{
+	}
+	~ref_sound()
+	{
+	}
 
-	IC CSound_source *_handle() const { return _p ? _p->handle : 0; }
-	IC CSound_emitter *_feedback() { return _p ? _p->feedback : 0; }
-	IC CObject *_g_object()
+	IC CSound_source* _handle() const
+	{
+		return _p ? _p->handle : 0;
+	}
+	IC CSound_emitter* _feedback()
+	{
+		return _p ? _p->feedback : 0;
+	}
+	IC CObject* _g_object()
 	{
 		VERIFY(_p);
 		return _p->g_object;
@@ -157,32 +172,36 @@ public:
 	IC void create(LPCSTR name, esound_type sound_type, int game_type);
 	IC void attach_tail(LPCSTR name);
 
-	IC void clone(const ref_sound &from, esound_type sound_type, int game_type);
+	IC void clone(const ref_sound& from, esound_type sound_type, int game_type);
 	//! Destroys and unload wave
 	IC void destroy();
 
-	IC void play(CObject *O, u32 flags = 0, float delay = 0.f);
-	IC void play_at_pos(CObject *O, const Fvector &pos, u32 flags = 0, float delay = 0.f);
-	IC void play_no_feedback(CObject *O, u32 flags = 0, float delay = 0.f, Fvector *pos = 0, float *vol = 0, float *freq = 0, Fvector2 *range = 0);
+	IC void play(CObject* O, u32 flags = 0, float delay = 0.f);
+	IC void play_at_pos(CObject* O, const Fvector& pos, u32 flags = 0, float delay = 0.f);
+	IC void play_no_feedback(CObject* O, u32 flags = 0, float delay = 0.f, Fvector* pos = 0, float* vol = 0,
+							 float* freq = 0, Fvector2* range = 0);
 
 	IC void stop();
 	IC void stop_deffered();
-	IC void set_position(const Fvector &pos);
+	IC void set_position(const Fvector& pos);
 	IC void set_frequency(float freq);
 	IC void set_range(float min, float max);
 	IC void set_volume(float vol);
 	IC void set_priority(float vol);
 
-	IC const CSound_params *get_params();
-	IC void set_params(CSound_params *p);
-	IC float get_length_sec() const { return _p ? _p->get_length_sec() : 0.0f; };
+	IC const CSound_params* get_params();
+	IC void set_params(CSound_params* p);
+	IC float get_length_sec() const
+	{
+		return _p ? _p->get_length_sec() : 0.0f;
+	};
 };
 
 /// definition (Sound Source)
 class XRSOUND_API CSound_source
 {
-public:
-	virtual	float length_sec() const = 0;
+  public:
+	virtual float length_sec() const = 0;
 	virtual u32 game_type() const = 0;
 	virtual LPCSTR file_name() const = 0;
 	virtual u16 channels_num() const = 0;
@@ -194,13 +213,13 @@ public:
 /// definition (Sound Source)
 class XRSOUND_API CSound_environment
 {
-public:
+  public:
 };
 
 /// definition (Sound Params)
 class XRSOUND_API CSound_params
 {
-public:
+  public:
 	Fvector position;
 	float base_volume;
 	float volume;
@@ -213,30 +232,30 @@ public:
 /// definition (Sound Interface)
 class XRSOUND_API CSound_emitter
 {
-public:
+  public:
 	virtual BOOL is_2D() = 0;
 	virtual void switch_to_2D() = 0;
 	virtual void switch_to_3D() = 0;
-	virtual void set_position(const Fvector &pos) = 0;
+	virtual void set_position(const Fvector& pos) = 0;
 	virtual void set_frequency(float freq) = 0;
 	virtual void set_range(float min, float max) = 0;
 	virtual void set_volume(float vol) = 0;
 	virtual void set_priority(float vol) = 0;
 	virtual void stop(BOOL bDeffered) = 0;
-	virtual const CSound_params *get_params() = 0;
+	virtual const CSound_params* get_params() = 0;
 	virtual u32 play_time() = 0;
 };
 
 /// definition (Sound Stream Interface)
 class XRSOUND_API CSound_stream_interface
 {
-public:
+  public:
 };
 
 /// definition (Sound Stream Interface)
 class XRSOUND_API CSound_stats
 {
-public:
+  public:
 	u32 _rendered;
 	u32 _simulated;
 	u32 _cache_hits;
@@ -246,7 +265,7 @@ public:
 
 class XRSOUND_API CSound_stats_ext
 {
-public:
+  public:
 	struct SItem
 	{
 		shared_str name;
@@ -254,7 +273,7 @@ public:
 		float volume;
 		esound_type type;
 		int game_type;
-		CObject *game_object;
+		CObject* game_object;
 		struct
 		{
 			u32 _3D : 1;
@@ -264,9 +283,15 @@ public:
 	DEFINE_VECTOR(SItem, item_vec, item_vec_it);
 	item_vec items;
 
-public:
-	void clear() { items.clear(); }
-	void append(const SItem &itm) { items.push_back(itm); }
+  public:
+	void clear()
+	{
+		items.clear();
+	}
+	void append(const SItem& itm)
+	{
+		items.push_back(itm);
+	}
 };
 
 /// definition (Sound Callback)
@@ -278,13 +303,15 @@ class XRSOUND_API CSound_manager_interface
 	virtual void _initialize(u64 window) = 0;
 	virtual void _clear() = 0;
 
-protected:
+  protected:
 	friend class ref_sound_data;
-	virtual void _create_data(ref_sound_data &S, LPCSTR fName, esound_type sound_type, int game_type) = 0;
-	virtual void _destroy_data(ref_sound_data &S) = 0;
+	virtual void _create_data(ref_sound_data& S, LPCSTR fName, esound_type sound_type, int game_type) = 0;
+	virtual void _destroy_data(ref_sound_data& S) = 0;
 
-public:
-	virtual ~CSound_manager_interface() {}
+  public:
+	virtual ~CSound_manager_interface()
+	{
+	}
 
 	static void _create(u64 window);
 	static void _destroy();
@@ -293,32 +320,33 @@ public:
 	virtual BOOL i_locked() = 0;
 
 	/// Sound interface
-	virtual void create(ref_sound &S, LPCSTR fName, esound_type sound_type, int game_type) = 0;
+	virtual void create(ref_sound& S, LPCSTR fName, esound_type sound_type, int game_type) = 0;
 	virtual void attach_tail(ref_sound& S, LPCSTR fName) = 0;
-	virtual void clone(ref_sound &S, const ref_sound &from, esound_type sound_type, int game_type) = 0;
-	virtual void destroy(ref_sound &S) = 0;
+	virtual void clone(ref_sound& S, const ref_sound& from, esound_type sound_type, int game_type) = 0;
+	virtual void destroy(ref_sound& S) = 0;
 	virtual void stop_emitters() = 0;
 	virtual int pause_emitters(bool val) = 0;
 
-	virtual void play(ref_sound &S, CObject *O, u32 flags = 0, float delay = 0.f) = 0;
-	virtual void play_at_pos(ref_sound &S, CObject *O, const Fvector &pos, u32 flags = 0, float delay = 0.f) = 0;
-	virtual void play_no_feedback(ref_sound &S, CObject *O, u32 flags = 0, float delay = 0.f, Fvector *pos = 0, float *vol = 0, float *freq = 0, Fvector2 *range = 0) = 0;
+	virtual void play(ref_sound& S, CObject* O, u32 flags = 0, float delay = 0.f) = 0;
+	virtual void play_at_pos(ref_sound& S, CObject* O, const Fvector& pos, u32 flags = 0, float delay = 0.f) = 0;
+	virtual void play_no_feedback(ref_sound& S, CObject* O, u32 flags = 0, float delay = 0.f, Fvector* pos = 0,
+								  float* vol = 0, float* freq = 0, Fvector2* range = 0) = 0;
 
 	virtual void set_master_volume(float f = psSoundVFactor) = 0;
-	virtual void set_geometry_env(IReader *I) = 0;
-	virtual void set_geometry_som(IReader *I) = 0;
-	virtual void set_geometry_occ(CDB::MODEL *M) = 0;
-	virtual void set_handler(sound_event *E) = 0;
+	virtual void set_geometry_env(IReader* I) = 0;
+	virtual void set_geometry_som(IReader* I) = 0;
+	virtual void set_geometry_occ(CDB::MODEL* M) = 0;
+	virtual void set_handler(sound_event* E) = 0;
 
-	virtual void update(const Fvector &P, const Fvector &D, const Fvector &N) = 0;
-	virtual void statistic(CSound_stats *s0, CSound_stats_ext *s1) = 0;
+	virtual void update(const Fvector& P, const Fvector& D, const Fvector& N) = 0;
+	virtual void statistic(CSound_stats* s0, CSound_stats_ext* s1) = 0;
 
-	virtual float get_occlusion_to(const Fvector &hear_pt, const Fvector &snd_pt, float dispersion = 0.2f) = 0;
+	virtual float get_occlusion_to(const Fvector& hear_pt, const Fvector& snd_pt, float dispersion = 0.2f) = 0;
 
-	virtual void object_relcase(CObject *obj) = 0;
-	virtual const Fvector &listener_position() = 0;
+	virtual void object_relcase(CObject* obj) = 0;
+	virtual const Fvector& listener_position() = 0;
 };
-extern XRSOUND_API CSound_manager_interface *Sound;
+extern XRSOUND_API CSound_manager_interface* Sound;
 
 /// utils, accessors, helpers
 IC ref_sound_data::ref_sound_data()
@@ -330,8 +358,14 @@ IC ref_sound_data::ref_sound_data()
 	s_type = st_Effect;
 }
 
-IC ref_sound_data::ref_sound_data(LPCSTR fName, esound_type sound_type, int game_type) { ::Sound->_create_data(*this, fName, sound_type, game_type); }
-IC ref_sound_data::~ref_sound_data() { ::Sound->_destroy_data(*this); }
+IC ref_sound_data::ref_sound_data(LPCSTR fName, esound_type sound_type, int game_type)
+{
+	::Sound->_create_data(*this, fName, sound_type, game_type);
+}
+IC ref_sound_data::~ref_sound_data()
+{
+	::Sound->_destroy_data(*this);
+}
 
 IC void ref_sound::create(LPCSTR name, esound_type sound_type, int game_type)
 {
@@ -339,13 +373,13 @@ IC void ref_sound::create(LPCSTR name, esound_type sound_type, int game_type)
 	::Sound->create(*this, name, sound_type, game_type);
 }
 
-IC void	ref_sound::attach_tail(LPCSTR name)
+IC void ref_sound::attach_tail(LPCSTR name)
 {
 	VERIFY(!::Sound->i_locked());
 	::Sound->attach_tail(*this, name);
 }
 
-IC void ref_sound::clone(const ref_sound &from, esound_type sound_type, int game_type)
+IC void ref_sound::clone(const ref_sound& from, esound_type sound_type, int game_type)
 {
 	VERIFY(!::Sound->i_locked());
 	::Sound->clone(*this, from, sound_type, game_type);
@@ -357,25 +391,26 @@ IC void ref_sound::destroy()
 	::Sound->destroy(*this);
 }
 
-IC void ref_sound::play(CObject *O, u32 flags, float d)
+IC void ref_sound::play(CObject* O, u32 flags, float d)
 {
 	VERIFY(!::Sound->i_locked());
 	::Sound->play(*this, O, flags, d);
 }
 
-IC void ref_sound::play_at_pos(CObject *O, const Fvector &pos, u32 flags, float d)
+IC void ref_sound::play_at_pos(CObject* O, const Fvector& pos, u32 flags, float d)
 {
 	VERIFY(!::Sound->i_locked());
 	::Sound->play_at_pos(*this, O, pos, flags, d);
 }
 
-IC void ref_sound::play_no_feedback(CObject *O, u32 flags, float d, Fvector *pos, float *vol, float *freq, Fvector2 *range)
+IC void ref_sound::play_no_feedback(CObject* O, u32 flags, float d, Fvector* pos, float* vol, float* freq,
+									Fvector2* range)
 {
 	VERIFY(!::Sound->i_locked());
 	::Sound->play_no_feedback(*this, O, flags, d, pos, vol, freq, range);
 }
 
-IC void ref_sound::set_position(const Fvector &pos)
+IC void ref_sound::set_position(const Fvector& pos)
 {
 	VERIFY(!::Sound->i_locked());
 	VERIFY(_feedback());
@@ -424,7 +459,7 @@ IC void ref_sound::stop_deffered()
 		_feedback()->stop(TRUE);
 }
 
-IC const CSound_params *ref_sound::get_params()
+IC const CSound_params* ref_sound::get_params()
 {
 	VERIFY(!::Sound->i_locked());
 	if (_feedback())
@@ -433,7 +468,7 @@ IC const CSound_params *ref_sound::get_params()
 		return NULL;
 }
 
-IC void ref_sound::set_params(CSound_params *p)
+IC void ref_sound::set_params(CSound_params* p)
 {
 	VERIFY(!::Sound->i_locked());
 	if (_feedback())

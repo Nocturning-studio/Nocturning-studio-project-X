@@ -14,121 +14,161 @@ class CInventoryItem;
 #include "actor_defs.h"
 #include "weaponHUD.h"
 
-class CHudItem {
-protected: //чтоб нельзя было вызвать на прямую
+class CHudItem
+{
+  protected: // чтоб нельзя было вызвать на прямую
 	CHudItem(void);
 	virtual ~CHudItem(void);
-	virtual DLL_Pure*_construct			();
-private:
-	u32				m_state;
-	u32				m_nextState;
-public:
-	virtual void	Load				(LPCSTR section);
-	virtual CHudItem*cast_hud_item		()	 { return this; }
+	virtual DLL_Pure* _construct();
 
+  private:
+	u32 m_state;
+	u32 m_nextState;
 
-	virtual void	PlaySound			(HUD_SOUND& snd, const Fvector& position);
-										
+  public:
+	virtual void Load(LPCSTR section);
+	virtual CHudItem* cast_hud_item()
+	{
+		return this;
+	}
+
+	virtual void PlaySound(HUD_SOUND& snd, const Fvector& position);
+
 	///////////////////////////////////////////////
 	// общие функции HUD
 	///////////////////////////////////////////////
 
-	IC void			SetHUDmode			(BOOL H)		{	hud_mode = H;								}
-	IC BOOL			GetHUDmode			()				{	return hud_mode;							}
-	
-	virtual bool	IsPending			()		const	{   return m_bPending;}
-	virtual void	StopHUDSounds		()				{};
-	
-	//для предачи команд владельцем
-	virtual bool	Action				(s32 cmd, u32 flags);
-	virtual void	onMovementChanged	(ACTOR_DEFS::EMoveCommand cmd)				{};
+	IC void SetHUDmode(BOOL H)
+	{
+		hud_mode = H;
+	}
+	IC BOOL GetHUDmode()
+	{
+		return hud_mode;
+	}
 
-	virtual void	OnDrawUI			()				{};
-	
-	IC		u32		GetNextState		() const			{return		m_nextState;}
-	IC		u32		GetState			() const			{return		m_state;}
+	virtual bool IsPending() const
+	{
+		return m_bPending;
+	}
+	virtual void StopHUDSounds(){};
 
-	IC		void	SetState			(u32 v)				{m_state = v;}
-	IC		void	SetNextState		(u32 v)				{m_nextState = v;}
-	//посылка сообщения на сервер о смене состояния оружия 
-	virtual void	SwitchState			(u32 S);
-	//прием сообщения с сервера и его обработка
-	virtual void	OnStateSwitch		(u32 S);
-	virtual void	OnEvent				(NET_Packet& P, u16 type);
+	// для предачи команд владельцем
+	virtual bool Action(s32 cmd, u32 flags);
+	virtual void onMovementChanged(ACTOR_DEFS::EMoveCommand cmd){};
 
-	virtual void	OnH_A_Chield		();
-	virtual void	OnH_B_Chield		();
-	virtual void	OnH_B_Independent	(bool just_before_destroy);
-	virtual void	OnH_A_Independent	();
-	
-	virtual	BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
+	virtual void OnDrawUI(){};
 
-	virtual void	StartIdleAnim		() {};
+	IC u32 GetNextState() const
+	{
+		return m_nextState;
+	}
+	IC u32 GetState() const
+	{
+		return m_state;
+	}
 
-	
-	virtual bool	Activate			();
-	virtual void	Deactivate			();
-	
-	virtual void	OnActiveItem		() {};
-	virtual void	OnHiddenItem		() {};
+	IC void SetState(u32 v)
+	{
+		m_state = v;
+	}
+	IC void SetNextState(u32 v)
+	{
+		m_nextState = v;
+	}
+	// посылка сообщения на сервер о смене состояния оружия
+	virtual void SwitchState(u32 S);
+	// прием сообщения с сервера и его обработка
+	virtual void OnStateSwitch(u32 S);
+	virtual void OnEvent(NET_Packet& P, u16 type);
 
-	virtual void	OnAnimationEnd		(u32 state)				{};
+	virtual void OnH_A_Chield();
+	virtual void OnH_B_Chield();
+	virtual void OnH_B_Independent(bool just_before_destroy);
+	virtual void OnH_A_Independent();
 
-	virtual void	UpdateCL			();
-	virtual void	renderable_Render	();
+	virtual BOOL net_Spawn(CSE_Abstract* DC);
+	virtual void net_Destroy();
 
-	virtual void	Hide() = 0;
-	virtual void	Show() = 0;
+	virtual void StartIdleAnim(){};
 
-	virtual void	UpdateHudPosition	();
-	
-	//просчет инерции для HUD 
-	virtual void	UpdateHudInertion		(Fmatrix& hud_trans);
-	//просчет дополнительных вычислений (переопределяется в потомках)
-	virtual void	UpdateHudAdditonal		(Fmatrix&);
+	virtual bool Activate();
+	virtual void Deactivate();
 
+	virtual void OnActiveItem(){};
+	virtual void OnHiddenItem(){};
 
-	virtual	void	UpdateXForm			() = 0;
-	void					animGet		(MotionSVec& lst, LPCSTR prefix);
+	virtual void OnAnimationEnd(u32 state){};
 
-	CWeaponHUD*		GetHUD				() {return m_pHUD;}
+	virtual void UpdateCL();
+	virtual void renderable_Render();
 
-protected:
-	//TRUE - оружие занято, выполнением некоторого действия
-	bool					m_bPending;
+	virtual void Hide() = 0;
+	virtual void Show() = 0;
 
-	CWeaponHUD*				m_pHUD;
-	BOOL					hud_mode;
-	shared_str				hud_sect;
-	bool					m_bRenderHud;
+	virtual void UpdateHudPosition();
 
-	//время нахождения в текущем состоянии
-	u32						m_dwStateTime;
+	// просчет инерции для HUD
+	virtual void UpdateHudInertion(Fmatrix& hud_trans);
+	// просчет дополнительных вычислений (переопределяется в потомках)
+	virtual void UpdateHudAdditonal(Fmatrix&);
 
-	//кадры момента пересчета XFORM и FirePos
-	u32						dwFP_Frame;
-	u32						dwXF_Frame;
+	virtual void UpdateXForm() = 0;
+	void animGet(MotionSVec& lst, LPCSTR prefix);
 
-	//вкл/выкл инерции (временное, с плавным возвращением оружия в состояние без инерции)
-	void					StartHudInertion();
-	void					StopHudInertion();
-private:
-	bool					m_bInertionEnable;
-	bool					m_bInertionAllow;
-protected:
-	u32						m_animation_slot;
-public:
-	IC		u32				animation_slot			()	{	return m_animation_slot;}
+	CWeaponHUD* GetHUD()
+	{
+		return m_pHUD;
+	}
 
-private:
-	CPhysicItem				*m_object;
-	CInventoryItem			*m_item;
+  protected:
+	// TRUE - оружие занято, выполнением некоторого действия
+	bool m_bPending;
 
-public:
-	IC CPhysicItem&			object					() const {	VERIFY(m_object); return(*m_object);}
-	IC CInventoryItem&		item					() const {	VERIFY(m_item);	return(*m_item);}
+	CWeaponHUD* m_pHUD;
+	BOOL hud_mode;
+	shared_str hud_sect;
+	bool m_bRenderHud;
 
-	virtual void			on_renderable_Render	() = 0;
+	// время нахождения в текущем состоянии
+	u32 m_dwStateTime;
+
+	// кадры момента пересчета XFORM и FirePos
+	u32 dwFP_Frame;
+	u32 dwXF_Frame;
+
+	// вкл/выкл инерции (временное, с плавным возвращением оружия в состояние без инерции)
+	void StartHudInertion();
+	void StopHudInertion();
+
+  private:
+	bool m_bInertionEnable;
+	bool m_bInertionAllow;
+
+  protected:
+	u32 m_animation_slot;
+
+  public:
+	IC u32 animation_slot()
+	{
+		return m_animation_slot;
+	}
+
+  private:
+	CPhysicItem* m_object;
+	CInventoryItem* m_item;
+
+  public:
+	IC CPhysicItem& object() const
+	{
+		VERIFY(m_object);
+		return (*m_object);
+	}
+	IC CInventoryItem& item() const
+	{
+		VERIFY(m_item);
+		return (*m_item);
+	}
+
+	virtual void on_renderable_Render() = 0;
 };
-

@@ -4,20 +4,20 @@
 #include "IGame_Persistent.h"
 #include "environment.h"
 #ifndef _EDITOR
-#	include "x_ray.h"
-#	include "IGame_Level.h"
-#	include "XR_IOConsole.h"
-#	include "resourcemanager.h"
-#	include "Render.h"
-#	include "ps_instance.h"
-#	include "CustomHUD.h"
+#include "x_ray.h"
+#include "IGame_Level.h"
+#include "XR_IOConsole.h"
+#include "resourcemanager.h"
+#include "Render.h"
+#include "ps_instance.h"
+#include "CustomHUD.h"
 #endif
 
 #ifdef _EDITOR
 bool g_dedicated_server = false;
 #endif
 
-ENGINE_API	IGame_Persistent* g_pGamePersistent = NULL;
+ENGINE_API IGame_Persistent* g_pGamePersistent = NULL;
 
 IGame_Persistent::IGame_Persistent()
 {
@@ -68,19 +68,20 @@ void IGame_Persistent::OnAppEnd()
 
 void IGame_Persistent::PreStart(LPCSTR op)
 {
-	string256						prev_type;
-	params							new_game_params;
+	string256 prev_type;
+	params new_game_params;
 	strcpy_s(prev_type, m_game_params.m_game_type);
 	new_game_params.parse_cmd_line(op);
 
 	// change game type
-	if (0 != xr_strcmp(prev_type, new_game_params.m_game_type)) {
+	if (0 != xr_strcmp(prev_type, new_game_params.m_game_type))
+	{
 		OnGameEnd();
 	}
 }
 void IGame_Persistent::Start(LPCSTR op)
 {
-	string256						prev_type;
+	string256 prev_type;
 	strcpy_s(prev_type, m_game_params.m_game_type);
 	m_game_params.parse_cmd_line(op);
 	// change game type
@@ -93,7 +94,8 @@ void IGame_Persistent::Start(LPCSTR op)
 			DEL_INSTANCE(g_hud);
 #endif
 	}
-	else UpdateGameType();
+	else
+		UpdateGameType();
 
 	VERIFY(ps_destroy.empty());
 }
@@ -113,11 +115,12 @@ void IGame_Persistent::OnGameStart()
 {
 #ifndef _EDITOR
 	LoadTitle("st_prefetching_objects");
-	if (strstr(Core.Params, "-noprefetch"))	return;
+	if (strstr(Core.Params, "-noprefetch"))
+		return;
 
 	// prefetch game objects & models
-	float	p_time = 1000.f * Device.GetTimerGlobal()->GetElapsed_sec();
-	u32	mem_0 = Memory.mem_usage();
+	float p_time = 1000.f * Device.GetTimerGlobal()->GetElapsed_sec();
+	u32 mem_0 = Memory.mem_usage();
 
 	Log("Loading objects...");
 	ObjectPool.prefetch();
@@ -126,7 +129,7 @@ void IGame_Persistent::OnGameStart()
 	Device.Resources->DeferredUpload();
 
 	p_time = 1000.f * Device.GetTimerGlobal()->GetElapsed_sec() - p_time;
-	u32		p_mem = Memory.mem_usage() - mem_0;
+	u32 p_mem = Memory.mem_usage() - mem_0;
 
 	Msg("* [prefetch] time:    %d ms", iFloor(p_time));
 	Msg("* [prefetch] memory:  %dKb", p_mem / 1024);
@@ -193,19 +196,22 @@ void IGame_Persistent::destroy_particles(const bool& all_particles)
 	}
 
 	// delete active particles
-	if (all_particles) {
+	if (all_particles)
+	{
 		for (; !ps_active.empty();)
 			(*ps_active.begin())->PSI_internal_delete();
 	}
-	else {
-		u32								active_size = ps_active.size();
+	else
+	{
+		u32 active_size = ps_active.size();
 		CPS_Instance** I = (CPS_Instance**)_alloca(active_size * sizeof(CPS_Instance*));
 		std::copy(ps_active.begin(), ps_active.end(), I);
 
-		struct destroy_on_game_load {
+		struct destroy_on_game_load
+		{
 			static IC bool predicate(CPS_Instance* const& object)
 			{
-				return					(!object->destroy_on_game_load());
+				return (!object->destroy_on_game_load());
 			}
 		};
 

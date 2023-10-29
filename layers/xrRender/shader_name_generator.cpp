@@ -18,11 +18,8 @@ extern u32 ps_r2_debug_textures;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void fix_texture_name(LPSTR fn);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void generate_shader_name(CBlender_Compile& C,
-						  bool bIsHightQualityGeometry,
-						  LPCSTR VertexShaderName,
-						  LPCSTR PixelShaderName,
-						  BOOL bUseAlpha)
+void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPCSTR VertexShaderName,
+						  LPCSTR PixelShaderName, BOOL bUseAlpha)
 {
 	// Output shader names
 	string_path NewPixelShaderName;
@@ -42,7 +39,7 @@ void generate_shader_name(CBlender_Compile& C,
 	string_path LightMapTexture;
 	string_path BakedAOTexture;
 
-	string_path Dummy = { 0 };
+	string_path Dummy = {0};
 
 	// Get  for base texture for material with debug
 	switch (ps_r2_debug_textures)
@@ -58,11 +55,11 @@ void generate_shader_name(CBlender_Compile& C,
 		break;
 	}
 
-	// Add extension to texture  and chek for null 
+	// Add extension to texture  and chek for null
 	fix_texture_name(AlbedoTexture);
 
 	// Check bump existing
-	ref_texture	refAlbedoTexture;
+	ref_texture refAlbedoTexture;
 	refAlbedoTexture.create(AlbedoTexture);
 	bool bUseBump = refAlbedoTexture.bump_exist();
 
@@ -84,7 +81,7 @@ void generate_shader_name(CBlender_Compile& C,
 	// Get  for base texture for material
 	strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), *C.L_textures[0]);
 
-	// Get detail texture 
+	// Get detail texture
 	if (bUseDetail)
 		strcpy_s(DetailAlbedoTexture, sizeof(DetailAlbedoTexture), C.detail_texture);
 	else
@@ -112,7 +109,8 @@ void generate_shader_name(CBlender_Compile& C,
 	else
 	{
 		pcstr LightMapTextureName = C.L_textures[2].c_str();
-		if (LightMapTextureName[0] == 'l' && LightMapTextureName[1] == 'm' && LightMapTextureName[2] == 'a' && LightMapTextureName[3] == 'p')
+		if (LightMapTextureName[0] == 'l' && LightMapTextureName[1] == 'm' && LightMapTextureName[2] == 'a' &&
+			LightMapTextureName[3] == 'p')
 		{
 			bUseLightMap = true;
 		}
@@ -159,27 +157,35 @@ void generate_shader_name(CBlender_Compile& C,
 	if (bUseDetail)
 		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
 
-	//RImplementation.addShaderOption("TEST_DEFINE", "1");
+	// RImplementation.addShaderOption("TEST_DEFINE", "1");
 
 	// Create shader pass
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);
 
-	C.r_Sampler("s_base", AlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_base", AlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_baked_ao", BakedAOTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_baked_ao", BakedAOTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_bumpX", BumpCorrectionTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_bumpX", BumpCorrectionTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_bump", BumpTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_bump", BumpTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_detail", DetailAlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_detail", DetailAlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_detailBump", DetailBumpTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_detailBump", DetailBumpTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+				D3DTEXF_ANISOTROPIC);
 
-	C.r_Sampler("s_detailBumpX", DetailBumpCorrectionTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	C.r_Sampler("s_detailBumpX", DetailBumpCorrectionTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
+				D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 	if (bUseLightMap)
-		C.r_Sampler("s_hemi", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		C.r_Sampler("s_hemi", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
+					D3DTEXF_LINEAR);
 
 	jitter(C);
 

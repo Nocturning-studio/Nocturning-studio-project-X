@@ -15,10 +15,10 @@ class CSoundRender_TargetA : public CSoundRender_Target
 
 	ALuint buf_block;
 
-private:
+  private:
 	void fill_block(ALuint BufferID);
 
-public:
+  public:
 	CSoundRender_TargetA(void);
 	virtual ~CSoundRender_TargetA(void);
 
@@ -26,7 +26,7 @@ public:
 	virtual void _destroy();
 	virtual void _restart();
 
-	virtual void start(CSoundRender_Emitter *E);
+	virtual void start(CSoundRender_Emitter* E);
 	virtual void render();
 	virtual void rewind();
 	virtual void stop();

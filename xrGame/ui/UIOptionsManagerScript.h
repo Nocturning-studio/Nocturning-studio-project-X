@@ -2,8 +2,9 @@
 #pragma once
 #include "../script_export_space.h"
 
-class CUIOptionsManagerScript {
-public:
+class CUIOptionsManagerScript
+{
+  public:
 	void SaveBackupValues(const char* group);
 	void SetCurrentValues(const char* group);
 	void SaveValues(const char* group);

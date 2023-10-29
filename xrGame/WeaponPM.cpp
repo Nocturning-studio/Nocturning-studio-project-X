@@ -16,12 +16,8 @@ CWeaponPM::~CWeaponPM()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
-void CWeaponPM::script_register	(lua_State *L)
+#pragma optimize("s", on)
+void CWeaponPM::script_register(lua_State* L)
 {
-	module(L)
-	[
-		class_<CWeaponPM,CGameObject>("CWeaponPM")
-			.def(constructor<>())
-	];
+	module(L)[class_<CWeaponPM, CGameObject>("CWeaponPM").def(constructor<>())];
 }

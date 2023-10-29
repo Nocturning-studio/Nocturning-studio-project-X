@@ -8,61 +8,56 @@
 
 #pragma once
 
-IC	const CStalkerAnimationManager::SCRIPT_ANIMATIONS &CStalkerAnimationManager::script_animations	() const
+IC const CStalkerAnimationManager::SCRIPT_ANIMATIONS& CStalkerAnimationManager::script_animations() const
 {
-	return							(m_script_animations);
+	return (m_script_animations);
 }
 
-IC	CStalkerAnimationPair &CStalkerAnimationManager::global	()
+IC CStalkerAnimationPair& CStalkerAnimationManager::global()
 {
-	return							(m_global);
+	return (m_global);
 }
 
-IC	CStalkerAnimationPair &CStalkerAnimationManager::head	()
+IC CStalkerAnimationPair& CStalkerAnimationManager::head()
 {
-	return							(m_head);
+	return (m_head);
 }
 
-IC	CStalkerAnimationPair &CStalkerAnimationManager::torso	()
+IC CStalkerAnimationPair& CStalkerAnimationManager::torso()
 {
-	return							(m_torso);
+	return (m_torso);
 }
 
-IC	CStalkerAnimationPair &CStalkerAnimationManager::legs	()
+IC CStalkerAnimationPair& CStalkerAnimationManager::legs()
 {
-	return							(m_legs);
+	return (m_legs);
 }
 
-IC	CStalkerAnimationPair &CStalkerAnimationManager::script	()
+IC CStalkerAnimationPair& CStalkerAnimationManager::script()
 {
-	return							(m_script);
+	return (m_script);
 }
 
-IC	CAI_Stalker	&CStalkerAnimationManager::object			() const
+IC CAI_Stalker& CStalkerAnimationManager::object() const
 {
-	VERIFY							(m_object);
-	return							(*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
-IC	void CStalkerAnimationManager::pop_script_animation		()
+IC void CStalkerAnimationManager::pop_script_animation()
 {
-	VERIFY							(!script_animations().empty());
-	m_script_animations.pop_front	();
-	script().reset					();
+	VERIFY(!script_animations().empty());
+	m_script_animations.pop_front();
+	script().reset();
 }
 
-IC	void CStalkerAnimationManager::clear_script_animations	()
+IC void CStalkerAnimationManager::clear_script_animations()
 {
-	m_script_animations.clear		();
-	script().reset					();
+	m_script_animations.clear();
+	script().reset();
 }
 
-IC	bool CStalkerAnimationManager::non_script_need_update	() const
+IC bool CStalkerAnimationManager::non_script_need_update() const
 {
-	return							(
-		m_global.need_update() ||
-		m_head.need_update() ||
-		m_torso.need_update() ||
-		m_legs.need_update()
-	);
+	return (m_global.need_update() || m_head.need_update() || m_torso.need_update() || m_legs.need_update());
 }

@@ -2,7 +2,7 @@
 
 void CRenderTarget::phase_create_ao()
 {
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -22,7 +22,7 @@ void CRenderTarget::phase_create_ao()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Set output RT
+	// Set output RT
 	u_setrt(rt_ao_base, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -31,41 +31,45 @@ void CRenderTarget::phase_create_ao()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	switch (ps_r2_ao)
 	{
-	case 1: //SSAO
+	case 1: // SSAO
 		RCache.set_Element(s_ao->E[0]);
 		break;
-	case 2: //HDAO
+	case 2: // HDAO
 		RCache.set_Element(s_ao->E[1]);
 		break;
-	case 3: //HBAO
+	case 3: // HBAO
 		RCache.set_Element(s_ao->E[2]);
 		break;
 	}
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Set constants
+	// Set constants
 	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
 void CRenderTarget::phase_diagonal_filter()
 {
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -85,7 +89,7 @@ void CRenderTarget::phase_diagonal_filter()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Set output RT
+	// Set output RT
 	u_setrt(rt_ao_blurred1, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -94,30 +98,34 @@ void CRenderTarget::phase_diagonal_filter()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_ao->E[3]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Set constants
+	// Set constants
 	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
 void CRenderTarget::phase_strided_filter()
 {
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -137,7 +145,7 @@ void CRenderTarget::phase_strided_filter()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Set output RT
+	// Set output RT
 	u_setrt(rt_ao_blurred2, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -146,30 +154,34 @@ void CRenderTarget::phase_strided_filter()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_ao->E[4]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Set constants
+	// Set constants
 	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
 void CRenderTarget::phase_finalize()
 {
-	//Constants
+	// Constants
 	u32 Offset = 0;
 	u32 C = color_rgba(0, 0, 0, 255);
 
@@ -183,7 +195,7 @@ void CRenderTarget::phase_finalize()
 	p0.set(0.5f / w, 0.5f / h);
 	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	//Set output RT
+	// Set output RT
 	u_setrt(rt_ao, nullptr, nullptr, HW.pBaseZB);
 
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, C, 1.0f, 0L));
@@ -192,24 +204,28 @@ void CRenderTarget::phase_finalize()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	//Fill vertex buffer
+	// Fill vertex buffer
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	//Set pass
+	// Set pass
 	RCache.set_Element(s_ao->E[5]);
 
-	//Set geometry
+	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	//Set constants
+	// Set constants
 	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
 
-	//Draw
+	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 

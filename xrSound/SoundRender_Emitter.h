@@ -7,7 +7,7 @@ class CSoundRender_Emitter : public CSound_emitter
 {
 	float starting_delay;
 
-public:
+  public:
 	enum State
 	{
 		stStopped = 0,
@@ -27,13 +27,16 @@ public:
 		stFORCEDWORD = u32(-1)
 	};
 
-public:
+  public:
 #ifdef DEBUG
 	u32 dbg_ID;
 #endif
 
-	CSoundRender_Target *target;
-	IC CSoundRender_Source* source() { return (CSoundRender_Source*)owner_data->handle; };
+	CSoundRender_Target* target;
+	IC CSoundRender_Source* source()
+	{
+		return (CSoundRender_Source*)owner_data->handle;
+	};
 	ref_sound_data_ptr owner_data;
 
 	u32 get_bytes_total() const;
@@ -58,8 +61,8 @@ public:
 	BOOL b2D;
 	BOOL bStopping;
 	BOOL bRewind;
-	float fTimeStarted;			// time of "Start"
-	float fTimeToStop;			// time to "Stop"
+	float fTimeStarted; // time of "Start"
+	float fTimeToStop;	// time to "Stop"
 	float fTimeToPropagade;
 
 	u32 marker;
@@ -69,15 +72,21 @@ public:
 	u32 get_cursor(bool b_absolute) const;
 	void move_cursor(int offset);
 
-public:
+  public:
 	void Event_Propagade();
 	void Event_ReleaseOwner();
-	bool isPlaying(void) { return m_current_state != stStopped; }
+	bool isPlaying(void)
+	{
+		return m_current_state != stStopped;
+	}
 
-	virtual BOOL is_2D() { return b2D; }
+	virtual BOOL is_2D()
+	{
+		return b2D;
+	}
 	virtual void switch_to_2D();
 	virtual void switch_to_3D();
-	virtual void set_position(const Fvector &pos);
+	virtual void set_position(const Fvector& pos);
 
 	virtual void set_frequency(float scale)
 	{
@@ -95,14 +104,20 @@ public:
 		VERIFY(_valid(vol));
 		p_source.volume = vol;
 	}
-	virtual void set_priority(float p) { priority_scale = p; }
-	virtual const CSound_params *get_params() { return &p_source; }
+	virtual void set_priority(float p)
+	{
+		priority_scale = p;
+	}
+	virtual const CSound_params* get_params()
+	{
+		return &p_source;
+	}
 
-	void fill_block(void *ptr, u32 size);
-	void fill_data(u8 *ptr, u32 offset, u32 size);
+	void fill_block(void* ptr, u32 size);
+	void fill_data(u8* ptr, u32 offset, u32 size);
 
 	float priority();
-	void start(ref_sound *_owner, BOOL _loop, float delay);
+	void start(ref_sound* _owner, BOOL _loop, float delay);
 	void cancel(); // manager forces out of rendering
 	void update(float dt);
 	BOOL update_culling(float dt);

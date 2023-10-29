@@ -30,7 +30,8 @@ void CRenderTarget::create_gbuffer()
 	u_setrt(rt_GBuffer_Position, rt_GBuffer_Normal, rt_GBuffer_Albedo, HW.pBaseZB);
 
 	// Stencil - write 0x1 at pixel pos
-	RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
+	RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE,
+					   D3DSTENCILOP_KEEP);
 
 	// Misc	- draw only front-faces
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE));

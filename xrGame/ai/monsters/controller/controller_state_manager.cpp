@@ -25,26 +25,26 @@
 
 #include "../states/state_test_state.h"
 
-CStateManagerController::CStateManagerController(CController *obj) : inherited(obj)
+CStateManagerController::CStateManagerController(CController* obj) : inherited(obj)
 {
-	add_state(eStateRest,					xr_new<CStateMonsterRest<CController> >					(obj));
-	add_state(eStatePanic,					xr_new<CStateMonsterPanic<CController> >				(obj));
-	add_state(eStateHearInterestingSound,	xr_new<CStateMonsterHearInterestingSound<CController> >	(obj));
-	add_state(eStateHearDangerousSound,		xr_new<CStateMonsterHearDangerousSound<CController> >	(obj));
-	add_state(eStateHitted,					xr_new<CStateMonsterHitted<CController> >				(obj));
-	
-	add_state(eStateAttack,					xr_new<CStateMonsterAttackRun<CController> >			(obj));
+	add_state(eStateRest, xr_new<CStateMonsterRest<CController>>(obj));
+	add_state(eStatePanic, xr_new<CStateMonsterPanic<CController>>(obj));
+	add_state(eStateHearInterestingSound, xr_new<CStateMonsterHearInterestingSound<CController>>(obj));
+	add_state(eStateHearDangerousSound, xr_new<CStateMonsterHearDangerousSound<CController>>(obj));
+	add_state(eStateHitted, xr_new<CStateMonsterHitted<CController>>(obj));
 
-	//add_state(
-	//	eStateAttack, 
+	add_state(eStateAttack, xr_new<CStateMonsterAttackRun<CController>>(obj));
+
+	// add_state(
+	//	eStateAttack,
 	//	xr_new<CStateControllerAttack<CController> > (obj,
-	//		xr_new<CStateMonsterAttackRun<CController> >(obj), 
+	//		xr_new<CStateMonsterAttackRun<CController> >(obj),
 	//		xr_new<CStateMonsterAttackMelee<CController> >(obj)
 	//	)
 	//);
 
-	add_state(eStateEat,		xr_new<CStateMonsterEat<CController> >(obj));
-	add_state(eStateCustom,		xr_new<CStateControlHide<CController> >(obj));
+	add_state(eStateEat, xr_new<CStateMonsterEat<CController>>(obj));
+	add_state(eStateCustom, xr_new<CStateControlHide<CController>>(obj));
 }
 
 CStateManagerController::~CStateManagerController()
@@ -57,36 +57,53 @@ void CStateManagerController::reinit()
 	object->set_mental_state(CController::eStateIdle);
 }
 
-
-#define FIND_ENEMY_TIME_ENEMY_HIDDEN	5000
-#define FIND_ENEMY_MAX_DISTANCE			10.f
+#define FIND_ENEMY_TIME_ENEMY_HIDDEN 5000
+#define FIND_ENEMY_MAX_DISTANCE 10.f
 
 void CStateManagerController::execute()
 {
 	u32 state_id = u32(-1);
-		
-	const CEntityAlive* enemy	= object->EnemyMan.get_enemy();
 
-	if (enemy) {
-		switch (object->EnemyMan.get_danger_type()) {
-			case eStrong:	state_id = eStatePanic; break;
-			case eWeak:		state_id = eStateAttack; break;
+	const CEntityAlive* enemy = object->EnemyMan.get_enemy();
+
+	if (enemy)
+	{
+		switch (object->EnemyMan.get_danger_type())
+		{
+		case eStrong:
+			state_id = eStatePanic;
+			break;
+		case eWeak:
+			state_id = eStateAttack;
+			break;
 		}
-	} else if (object->HitMemory.is_hit()) {
+	}
+	else if (object->HitMemory.is_hit())
+	{
 		state_id = eStateHitted;
-	} else if (object->hear_dangerous_sound) {
+	}
+	else if (object->hear_dangerous_sound)
+	{
 		state_id = eStateHearDangerousSound;
-	} else if (object->hear_interesting_sound) {
+	}
+	else if (object->hear_interesting_sound)
+	{
 		state_id = eStateHearInterestingSound;
-	} else {
-		if (can_eat())	state_id = eStateEat;
-		else			state_id = eStateRest;
+	}
+	else
+	{
+		if (can_eat())
+			state_id = eStateEat;
+		else
+			state_id = eStateRest;
 	}
 
-	if (enemy) object->set_controlled_task(eTaskAttack);
-	else object->set_controlled_task(eTaskFollow);
+	if (enemy)
+		object->set_controlled_task(eTaskAttack);
+	else
+		object->set_controlled_task(eTaskFollow);
 
-	select_state(state_id); 
+	select_state(state_id);
 
 	// выполнить текущее состояние
 	get_state_current()->execute();

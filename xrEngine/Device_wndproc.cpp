@@ -9,8 +9,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_ACTIVATE:
-	{
+	case WM_ACTIVATE: {
 		Device.OnWM_Activate(wParam, lParam);
 		/*
 					u16 fActive						= LOWORD(wParam);

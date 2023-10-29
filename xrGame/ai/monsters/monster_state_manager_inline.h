@@ -1,8 +1,6 @@
 #pragma once
 
-#define TEMPLATE_SPECIALIZATION template <\
-	typename _Object\
->
+#define TEMPLATE_SPECIALIZATION template <typename _Object>
 
 #define CMonsterStateManagerAbstract CMonsterStateManager<_Object>
 
@@ -33,18 +31,24 @@ void CMonsterStateManagerAbstract::execute_script_state()
 TEMPLATE_SPECIALIZATION
 bool CMonsterStateManagerAbstract::can_eat()
 {
-	if (!object->CorpseMan.get_corpse()) return false;
+	if (!object->CorpseMan.get_corpse())
+		return false;
 
 	return check_state(eStateEat);
 }
 
 TEMPLATE_SPECIALIZATION
-bool CMonsterStateManagerAbstract::check_state(u32 state_id) 
+bool CMonsterStateManagerAbstract::check_state(u32 state_id)
 {
-	if (prev_substate == state_id) {
-		if (!get_state_current()->check_completion())		return true;
-	} else {
-		if (get_state(state_id)->check_start_conditions())	return true;
+	if (prev_substate == state_id)
+	{
+		if (!get_state_current()->check_completion())
+			return true;
+	}
+	else
+	{
+		if (get_state(state_id)->check_start_conditions())
+			return true;
 	}
 
 	return false;
@@ -57,11 +61,10 @@ void CMonsterStateManagerAbstract::critical_finalize()
 }
 
 TEMPLATE_SPECIALIZATION
-EMonsterState CMonsterStateManagerAbstract::get_state_type() 
+EMonsterState CMonsterStateManagerAbstract::get_state_type()
 {
 	return inherited::get_state_type();
 }
 
-
-#undef CMonsterStateManagerAbstract 
+#undef CMonsterStateManagerAbstract
 #undef TEMPLATE_SPECIALIZATION

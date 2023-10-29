@@ -1,10 +1,10 @@
 #pragma once
 
 // refs
-class ENGINE_API				CObject;
+class ENGINE_API CObject;
 
 //-----------------------------------------------------------------------------------------------------------
-class ENGINE_API 				IGame_ObjectPool
+class ENGINE_API IGame_ObjectPool
 {
 	/*
 	private:
@@ -18,15 +18,16 @@ class ENGINE_API 				IGame_ObjectPool
 	private:
 		POOL						map_POOL;
 	*/
-	typedef xr_vector<CObject*>	ObjectVec;
-	typedef ObjectVec::iterator	ObjectVecIt;
-	ObjectVec					m_PrefetchObjects;
-public:
-	void						prefetch();
-	void						clear();
+	typedef xr_vector<CObject*> ObjectVec;
+	typedef ObjectVec::iterator ObjectVecIt;
+	ObjectVec m_PrefetchObjects;
 
-	CObject* create(LPCSTR	name);
-	void						destroy(CObject* O);
+  public:
+	void prefetch();
+	void clear();
+
+	CObject* create(LPCSTR name);
+	void destroy(CObject* O);
 
 	IGame_ObjectPool();
 	virtual ~IGame_ObjectPool();

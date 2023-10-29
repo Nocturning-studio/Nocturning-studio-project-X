@@ -5,12 +5,12 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#pragma warning(disable:4995)
+#pragma warning(disable : 4995)
 #include <d3dx9.h>
-#pragma warning(default:4995)
+#pragma warning(default : 4995)
 
 #ifndef _EDITOR
-#include	"Render.h"
+#include "Render.h"
 #endif
 #include "SkeletonX.h"
 #include "SkeletonCustom.h"
@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-shared_str	s_bones_array_const;
+shared_str s_bones_array_const;
 
-#pragma pack(push,1)
+#pragma pack(push, 1)
 /*
 float u_P	(s16 v)
 {
@@ -57,12 +57,12 @@ float errN	(Fvector3 v, u8* qv)	{ return 0; }
 
 static	D3DVERTEXELEMENT9 dwDecl_01W	[] =	// 24bytes
 {
-	{ 0, 0,		D3DDECLTYPE_SHORT4,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },	// : P						: 2	: -12..+12
-	{ 0, 8,		D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_NORMAL,		0 },	// : N, w=index(RC, 0..1)	: 1	:  -1..+1
-	{ 0, 12,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TANGENT,		0 },	// : T						: 1	:  -1..+1
-	{ 0, 16,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_BINORMAL,		0 },	// : B						: 1	:  -1..+1
-	{ 0, 20,	D3DDECLTYPE_SHORT2,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TEXCOORD,		0 },	// : tc						: 1	: -16..+16
-	D3DDECL_END()
+	{ 0, 0,		D3DDECLTYPE_SHORT4,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },	// : P
+: 2	: -12..+12 { 0, 8,		D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_NORMAL,		0 },	// : N,
+w=index(RC, 0..1)	: 1	:  -1..+1 { 0, 12,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TANGENT,
+0 },	// : T						: 1	:  -1..+1 { 0, 16,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT,
+D3DDECLUSAGE_BINORMAL,		0 },	// : B						: 1	:  -1..+1 { 0, 20,	D3DDECLTYPE_SHORT2,
+D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TEXCOORD,		0 },	// : tc						: 1	: -16..+16 D3DDECL_END()
 };
 struct	vertHW_1W
 {
@@ -100,11 +100,12 @@ struct	vertHW_1W
 
 static	D3DVERTEXELEMENT9 dwDecl_2W	[] =	// 28bytes
 {
-	{ 0, 0,		D3DDECLTYPE_SHORT4,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },	// : p					: 2	: -12..+12
-	{ 0, 8,		D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_NORMAL,		0 },	// : n.xyz, w = weight	: 1	:  -1..+1, w=0..1
-	{ 0, 12,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TANGENT,		0 },	// : T						: 1	:  -1..+1
-	{ 0, 16,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_BINORMAL,		0 },	// : B						: 1	:  -1..+1
-	{ 0, 20,	D3DDECLTYPE_SHORT4,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TEXCOORD,		0 },	// : xy(tc), zw(indices): 2	: -16..+16, zw[0..32767]
+	{ 0, 0,		D3DDECLTYPE_SHORT4,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },	// : p
+: 2	: -12..+12 { 0, 8,		D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_NORMAL,		0 },	// :
+n.xyz, w = weight	: 1	:  -1..+1, w=0..1 { 0, 12,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT,
+0 },	// : T						: 1	:  -1..+1 { 0, 16,	D3DDECLTYPE_D3DCOLOR,	D3DDECLMETHOD_DEFAULT,
+D3DDECLUSAGE_BINORMAL,		0 },	// : B						: 1	:  -1..+1 { 0, 20,	D3DDECLTYPE_SHORT4,
+D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_TEXCOORD,		0 },	// : xy(tc), zw(indices): 2	: -16..+16, zw[0..32767]
 	D3DDECL_END()
 };
 struct	vertHW_2W
@@ -227,9 +228,9 @@ void CSkeletonX::_Render(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
 		_Render_soft(hGeom, vCount, iOffset, pCount);
 		RCache.stat.r.s_dynamic_sw.add(vCount);
 		break;
-	case RM_SINGLE:
-	{
-		Fmatrix	W;	W.mul_43(RCache.xforms.m_w, Parent->LL_GetTransform_R(u16(RMS_boneid)));
+	case RM_SINGLE: {
+		Fmatrix W;
+		W.mul_43(RCache.xforms.m_w, Parent->LL_GetTransform_R(u16(RMS_boneid)));
 		RCache.set_xform_world(W);
 		RCache.set_Geometry(hGeom);
 		RCache.Render(D3DPT_TRIANGLELIST, 0, 0, vCount, iOffset, pCount);
@@ -237,14 +238,14 @@ void CSkeletonX::_Render(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
 	}
 	break;
 	case RM_SKINNING_1B:
-	case RM_SKINNING_2B:
-	{
+	case RM_SKINNING_2B: {
 		// transfer matrices
-		ref_constant			array = RCache.get_c(s_bones_array_const);
-		u32						count = RMS_bonecount;
-		for (u32 mid = 0; mid < count; mid++) {
+		ref_constant array = RCache.get_c(s_bones_array_const);
+		u32 count = RMS_bonecount;
+		for (u32 mid = 0; mid < count; mid++)
+		{
 			Fmatrix& M = Parent->LL_GetTransform_R(u16(mid));
-			u32			id = mid * 3;
+			u32 id = mid * 3;
 			RCache.set_ca(&*array, id + 0, M._11, M._21, M._31, M._41);
 			RCache.set_ca(&*array, id + 1, M._12, M._22, M._32, M._42);
 			RCache.set_ca(&*array, id + 2, M._13, M._23, M._33, M._43);
@@ -253,8 +254,10 @@ void CSkeletonX::_Render(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
 		// render
 		RCache.set_Geometry(hGeom);
 		RCache.Render(D3DPT_TRIANGLELIST, 0, 0, vCount, iOffset, pCount);
-		if (RM_SKINNING_1B == RenderMode)	RCache.stat.r.s_dynamic_1B.add(vCount);
-		else							RCache.stat.r.s_dynamic_2B.add(vCount);
+		if (RM_SKINNING_1B == RenderMode)
+			RCache.stat.r.s_dynamic_1B.add(vCount);
+		else
+			RCache.stat.r.s_dynamic_2B.add(vCount);
 	}
 	break;
 	}
@@ -274,19 +277,18 @@ void CSkeletonX::_Render_soft(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCou
 		Device.Statistic->RenderDUMP_SKIN.Begin();
 		if (*Vertices1W)
 		{
-			PSGP.skin1W(
-				Dest,										// dest
-				*Vertices1W,								// source
-				vCount,										// count
-				Parent->bone_instances						// bones
+			PSGP.skin1W(Dest,				   // dest
+						*Vertices1W,		   // source
+						vCount,				   // count
+						Parent->bone_instances // bones
 			);
 		}
-		else {
-			PSGP.skin2W(
-				Dest,										// dest
-				*Vertices2W,								// source
-				vCount,										// count
-				Parent->bone_instances						// bones
+		else
+		{
+			PSGP.skin2W(Dest,				   // dest
+						*Vertices2W,		   // source
+						vCount,				   // count
+						Parent->bone_instances // bones
 			);
 		}
 		Device.Statistic->RenderDUMP_SKIN.End();
@@ -302,18 +304,18 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
 {
 	s_bones_array_const = "sbones_array";
 #pragma todo("container is created in stack!")
-	xr_vector<u16>	bids;
+	xr_vector<u16> bids;
 
 	// Load vertices
 	R_ASSERT(data->find_chunk(OGF_VERTICES));
 
-	u16			hw_bones = u16((HW.Caps.geometry.dwRegisters - 22) / 3);
-	u16			sw_bones = 0;
+	u16 hw_bones = u16((HW.Caps.geometry.dwRegisters - 22) / 3);
+	u16 sw_bones = 0;
 #ifdef _EDITOR
 	hw_bones = 0;
 #endif
 
-	u32			dwVertType, size, it, crc;
+	u32 dwVertType, size, it, crc;
 	dwVertType = data->r_u32();
 	dwVertCount = data->r_u32();
 
@@ -325,29 +327,35 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
 	{
 		size = dwVertCount * sizeof(vertBoned1W);
 		vertBoned1W* VO = (vertBoned1W*)data->pointer();
-		for (it = 0; it < dwVertCount; it++) {
-			u16		mid = (u16)VO[it].matrix;
-			if (bids.end() == std::find(bids.begin(), bids.end(), mid))	bids.push_back(mid);
-			if (mid > sw_bones)	sw_bones = mid;
+		for (it = 0; it < dwVertCount; it++)
+		{
+			u16 mid = (u16)VO[it].matrix;
+			if (bids.end() == std::find(bids.begin(), bids.end(), mid))
+				bids.push_back(mid);
+			if (mid > sw_bones)
+				sw_bones = mid;
 		}
 #ifdef _EDITOR
 		// software
 		crc = crc32(data->pointer(), size);
 		Vertices1W.create(crc, dwVertCount, (vertBoned1W*)data->pointer());
 #else
-		if (1 == bids.size()) {
+		if (1 == bids.size())
+		{
 			// HW- single bone
 			RenderMode = RM_SINGLE;
 			RMS_boneid = *bids.begin();
 			Render->shader_option_skinning(0);
 		}
-		else if (sw_bones <= hw_bones) {
+		else if (sw_bones <= hw_bones)
+		{
 			// HW- one weight
 			RenderMode = RM_SKINNING_1B;
 			RMS_bonecount = sw_bones + 1;
 			Render->shader_option_skinning(1);
 		}
-		else {
+		else
+		{
 			// software
 			crc = crc32(data->pointer(), size);
 			Vertices1W.create(crc, dwVertCount, (vertBoned1W*)data->pointer());
@@ -360,19 +368,26 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
 	{
 		size = dwVertCount * sizeof(vertBoned2W);
 		vertBoned2W* VO = (vertBoned2W*)data->pointer();
-		for (it = 0; it < dwVertCount; it++) {
-			if (VO[it].matrix0 > sw_bones)	sw_bones = VO[it].matrix0;
-			if (VO[it].matrix1 > sw_bones)	sw_bones = VO[it].matrix1;
-			if (bids.end() == std::find(bids.begin(), bids.end(), VO[it].matrix0))	bids.push_back(VO[it].matrix0);
-			if (bids.end() == std::find(bids.begin(), bids.end(), VO[it].matrix1))	bids.push_back(VO[it].matrix1);
+		for (it = 0; it < dwVertCount; it++)
+		{
+			if (VO[it].matrix0 > sw_bones)
+				sw_bones = VO[it].matrix0;
+			if (VO[it].matrix1 > sw_bones)
+				sw_bones = VO[it].matrix1;
+			if (bids.end() == std::find(bids.begin(), bids.end(), VO[it].matrix0))
+				bids.push_back(VO[it].matrix0);
+			if (bids.end() == std::find(bids.begin(), bids.end(), VO[it].matrix1))
+				bids.push_back(VO[it].matrix1);
 		}
-		if (sw_bones <= hw_bones) {
+		if (sw_bones <= hw_bones)
+		{
 			// HW- two weights
 			RenderMode = RM_SKINNING_2B;
 			RMS_bonecount = sw_bones + 1;
 			Render->shader_option_skinning(2);
 		}
-		else {
+		else
+		{
 			// software
 			crc = crc32(data->pointer(), size);
 			Vertices2W.create(crc, dwVertCount, (vertBoned2W*)data->pointer());
@@ -395,11 +410,13 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
 	}
 }
 
-BOOL	CSkeletonX::has_visible_bones()
+BOOL CSkeletonX::has_visible_bones()
 {
-	//IRender_Visual*	me	= dynamic_cast<IRender_Visual*>	(this);
-	//Msg	("~ has_visible_bones: mode[%d] - count[%d], name=%s",RenderMode,BonesUsed.size(),me->dbg_name.c_str());	//.
-	if (RM_SINGLE == RenderMode) {
+	// IRender_Visual*	me	= dynamic_cast<IRender_Visual*>	(this);
+	// Msg	("~ has_visible_bones: mode[%d] - count[%d], name=%s",RenderMode,BonesUsed.size(),me->dbg_name.c_str());
+	// //.
+	if (RM_SINGLE == RenderMode)
+	{
 		//	Msg	("* has_visible_bones: bone-list: |%d:%s",RMS_boneid,Parent->LL_BoneName_dbg(RMS_boneid));
 		return Parent->LL_GetBoneVisible((u16)RMS_boneid);
 	}
@@ -415,32 +432,37 @@ BOOL	CSkeletonX::has_visible_bones()
 	*/
 
 	for (u32 it = 0; it < BonesUsed.size(); it++)
-		if (Parent->LL_GetBoneVisible(BonesUsed[it])) {
+		if (Parent->LL_GetBoneVisible(BonesUsed[it]))
+		{
 			// Msg		("* has_visible_bones: visible: %d",	BonesUsed[it]);
-			return	TRUE;
+			return TRUE;
 		}
 	// Msg		("* has_visible_bones: non-visible");
-	return	FALSE;
+	return FALSE;
 }
 
 //-----------------------------------------------------------------------------------------------------
 // Wallmarks
 //-----------------------------------------------------------------------------------------------------
 #include "cl_intersect.h"
-BOOL	CSkeletonX::_PickBoneSoft1W(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces)
+BOOL CSkeletonX::_PickBoneSoft1W(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices,
+								 CBoneData::FacesVec& faces)
 {
 	VERIFY(*Vertices1W);
 	bool intersect = FALSE;
-	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++) {
-		Fvector			p[3];
+	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++)
+	{
+		Fvector p[3];
 		u32 idx = (*it) * 3;
-		for (u32 k = 0; k < 3; k++) {
+		for (u32 k = 0; k < 3; k++)
+		{
 			vertBoned1W& vert = Vertices1W[indices[idx + k]];
 			const Fmatrix& xform = Parent->LL_GetBoneInstance((u16)vert.matrix).mRenderTransform;
 			xform.transform_tiny(p[k], vert.P);
 		}
 		float u, v, range = flt_max;
-		if (CDB::TestRayTri(S, D, p, u, v, range, true) && (range < dist)) {
+		if (CDB::TestRayTri(S, D, p, u, v, range, true) && (range < dist))
+		{
 			normal.mknormal(p[0], p[1], p[2]);
 			dist = range;
 			intersect = TRUE;
@@ -449,15 +471,18 @@ BOOL	CSkeletonX::_PickBoneSoft1W(Fvector& normal, float& dist, const Fvector& S,
 	return intersect;
 }
 
-BOOL CSkeletonX::_PickBoneSoft2W(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces)
+BOOL CSkeletonX::_PickBoneSoft2W(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices,
+								 CBoneData::FacesVec& faces)
 {
 	VERIFY(*Vertices2W);
 	bool intersect = FALSE;
-	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++) {
-		Fvector			p[3];
+	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++)
+	{
+		Fvector p[3];
 		u32 idx = (*it) * 3;
-		for (u32 k = 0; k < 3; k++) {
-			Fvector		P0, P1;
+		for (u32 k = 0; k < 3; k++)
+		{
+			Fvector P0, P1;
 			vertBoned2W& vert = Vertices2W[indices[idx + k]];
 			Fmatrix& xform0 = Parent->LL_GetBoneInstance(vert.matrix0).mRenderTransform;
 			Fmatrix& xform1 = Parent->LL_GetBoneInstance(vert.matrix1).mRenderTransform;
@@ -466,7 +491,8 @@ BOOL CSkeletonX::_PickBoneSoft2W(Fvector& normal, float& dist, const Fvector& S,
 			p[k].lerp(P0, P1, vert.w);
 		}
 		float u, v, range = flt_max;
-		if (CDB::TestRayTri(S, D, p, u, v, range, true) && (range < dist)) {
+		if (CDB::TestRayTri(S, D, p, u, v, range, true) && (range < dist))
+		{
 			normal.mknormal(p[0], p[1], p[2]);
 			dist = range;
 			intersect = TRUE;
@@ -476,14 +502,17 @@ BOOL CSkeletonX::_PickBoneSoft2W(Fvector& normal, float& dist, const Fvector& S,
 }
 
 // Fill Vertices
-void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size, u16* indices, CBoneData::FacesVec& faces)
+void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size,
+									 u16* indices, CBoneData::FacesVec& faces)
 {
 	VERIFY(*Vertices1W);
-	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++) {
-		Fvector			p[3];
+	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++)
+	{
+		Fvector p[3];
 		u32 idx = (*it) * 3;
 		CSkeletonWallmark::WMFace F;
-		for (u32 k = 0; k < 3; k++) {
+		for (u32 k = 0; k < 3; k++)
+		{
 			vertBoned1W& vert = Vertices1W[indices[idx + k]];
 			F.bone_id[k][0] = (u16)vert.matrix;
 			F.bone_id[k][1] = F.bone_id[k][0];
@@ -495,11 +524,13 @@ void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm,
 		Fvector test_normal;
 		test_normal.mknormal(p[0], p[1], p[2]);
 		float cosa = test_normal.dotproduct(normal);
-		if (cosa < EPS)			continue;
+		if (cosa < EPS)
+			continue;
 		if (CDB::TestSphereTri(wm.ContactPoint(), size, p))
 		{
-			Fvector				UV;
-			for (u32 k = 0; k < 3; k++) {
+			Fvector UV;
+			for (u32 k = 0; k < 3; k++)
+			{
 				Fvector2& uv = F.uv[k];
 				view.transform_tiny(UV, p[k]);
 				uv.x = (1 + UV.x) * .5f;
@@ -509,15 +540,18 @@ void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm,
 		}
 	}
 }
-void CSkeletonX::_FillVerticesSoft2W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size, u16* indices, CBoneData::FacesVec& faces)
+void CSkeletonX::_FillVerticesSoft2W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size,
+									 u16* indices, CBoneData::FacesVec& faces)
 {
 	VERIFY(*Vertices2W);
-	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++) {
-		Fvector			p[3];
+	for (CBoneData::FacesVecIt it = faces.begin(); it != faces.end(); it++)
+	{
+		Fvector p[3];
 		u32 idx = (*it) * 3;
 		CSkeletonWallmark::WMFace F;
-		for (u32 k = 0; k < 3; k++) {
-			Fvector		P0, P1;
+		for (u32 k = 0; k < 3; k++)
+		{
+			Fvector P0, P1;
 			vertBoned2W& vert = Vertices2W[indices[idx + k]];
 			F.bone_id[k][0] = vert.matrix0;
 			F.bone_id[k][1] = vert.matrix1;
@@ -532,10 +566,13 @@ void CSkeletonX::_FillVerticesSoft2W(const Fmatrix& view, CSkeletonWallmark& wm,
 		Fvector test_normal;
 		test_normal.mknormal(p[0], p[1], p[2]);
 		float cosa = test_normal.dotproduct(normal);
-		if (cosa < EPS)			continue;
-		if (CDB::TestSphereTri(wm.ContactPoint(), size, p)) {
-			Fvector				UV;
-			for (u32 k = 0; k < 3; k++) {
+		if (cosa < EPS)
+			continue;
+		if (CDB::TestSphereTri(wm.ContactPoint(), size, p))
+		{
+			Fvector UV;
+			for (u32 k = 0; k < 3; k++)
+			{
 				Fvector2& uv = F.uv[k];
 				view.transform_tiny(UV, p[k]);
 				uv.x = (1 + UV.x) * .5f;

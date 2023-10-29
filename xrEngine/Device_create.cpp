@@ -16,7 +16,8 @@ void CRenderDevice::_SetupStates()
 	vCameraRight.set(1, 0, 0);
 
 	HW.Caps.Update();
-	for (u32 i = 0; i < HW.Caps.raster.dwStages; i++) {
+	for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
+	{
 		float fBias = -.5f;
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, 4));
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)(&fBias))));
@@ -39,17 +40,25 @@ void CRenderDevice::_SetupStates()
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE));
 
-	if (psDeviceFlags.test(rsWireframe)) { CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME)); }
-	else { CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID)); }
+	if (psDeviceFlags.test(rsWireframe))
+	{
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+	}
+	else
+	{
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
+	}
 
 	// ******************** Fog parameters
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, 0));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_RANGEFOGENABLE, FALSE));
-	if (HW.Caps.bTableFog) {
+	if (HW.Caps.bTableFog)
+	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP2));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE));
 	}
-	else {
+	else
+	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP2));
 	}
@@ -82,7 +91,8 @@ void CRenderDevice::_Create(LPCSTR shName)
 
 void CRenderDevice::Create()
 {
-	if (b_is_Ready)		return;		// prevent double call
+	if (b_is_Ready)
+		return; // prevent double call
 	Statistic = xr_new<CStats>();
 	Log("Starting RENDER device...");
 
@@ -99,7 +109,7 @@ void CRenderDevice::Create()
 	fFOV = 90.f;
 	fASPECT = 1.f;
 
-	string_path			fname;
+	string_path fname;
 	FS.update_path(fname, "$game_data$", "shaders.xr");
 
 	//////////////////////////////////////////////////////////////////////////

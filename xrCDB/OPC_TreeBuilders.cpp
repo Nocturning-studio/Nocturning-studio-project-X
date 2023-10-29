@@ -23,7 +23,7 @@
  *	\author		Pierre Terdiman
  *	\version	1.2
  *	\date		March, 20, 2001
-*/
+ */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@
  *	\author		Pierre Terdiman
  *	\version	1.2
  *	\date		March, 20, 2001
-*/
+ */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,13 +56,14 @@ using namespace Opcode;
 bool AABBTreeOfAABBsBuilder::ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box) const
 {
 	// Checkings
-	if(!primitives || !nb_prims)	return false;
+	if (!primitives || !nb_prims)
+		return false;
 
 	// Initialize global box
 	global_box = mAABBList[primitives[0]];
 
 	// Loop through boxes
-	for(udword i=1;i<nb_prims;i++)
+	for (udword i = 1; i < nb_prims; i++)
 	{
 		// Update global box
 		global_box.Add(mAABBList[primitives[i]]);
@@ -98,14 +99,15 @@ float AABBTreeOfAABBsBuilder::GetSplittingValue(udword index, udword axis) const
 bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box) const
 {
 	// Checkings
-	if(!primitives || !nb_prims)	return false;
+	if (!primitives || !nb_prims)
+		return false;
 
 	// Initialize global box
 	Point Min(flt_max, flt_max, flt_max);
 	Point Max(flt_min, flt_min, flt_min);
 
 	// Loop through triangles
-	for(udword i=0;i<nb_prims;i++)
+	for (udword i = 0; i < nb_prims; i++)
 	{
 		// Get current triangle-vertices
 		const Point& p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
@@ -129,16 +131,17 @@ bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const udword* primitives, udwo
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float AABBTreeOfTrianglesBuilder::GetSplittingValue(udword index, udword axis) const
 {
-/*	// Compute center of triangle
-	Point Center;
-	mTriList[index].Center(mVerts, Center);
-	// Return value
-	return Center[axis];*/
+	/*	// Compute center of triangle
+		Point Center;
+		mTriList[index].Center(mVerts, Center);
+		// Return value
+		return Center[axis];*/
 
 	// Compute correct component from center of triangle
-	return	(((const float*)mVerts[mTriList[index].mVRef[0]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[1]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[2]])[axis])*INV3;
+	return (((const float*)mVerts[mTriList[index].mVRef[0]])[axis] +
+			((const float*)mVerts[mTriList[index].mVRef[1]])[axis] +
+			((const float*)mVerts[mTriList[index].mVRef[2]])[axis]) *
+		   INV3;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,13 +154,14 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(udword index, udword axis) c
  *	\return		splitting value
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float AABBTreeOfTrianglesBuilder::GetSplittingValue(const udword* primitives, udword nb_prims, const AABB& global_box, udword axis)	const
+float AABBTreeOfTrianglesBuilder::GetSplittingValue(const udword* primitives, udword nb_prims, const AABB& global_box,
+													udword axis) const
 {
-	if(mRules&SPLIT_GEOMCENTER)
+	if (mRules & SPLIT_GEOMCENTER)
 	{
 		// Loop through triangles
 		float SplitValue = 0.0f;
-		for(udword i=0;i<nb_prims;i++)
+		for (udword i = 0; i < nb_prims; i++)
 		{
 			// Get current triangle-vertices
 			const Point& p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
@@ -168,7 +172,8 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(const udword* primitives, ud
 			SplitValue += ((const float*)p1)[axis];
 			SplitValue += ((const float*)p2)[axis];
 		}
-		return SplitValue / float(nb_prims*3);
+		return SplitValue / float(nb_prims * 3);
 	}
-	else return AABBTreeBuilder::GetSplittingValueEx(primitives, nb_prims, global_box, axis);
+	else
+		return AABBTreeBuilder::GetSplittingValueEx(primitives, nb_prims, global_box, axis);
 }

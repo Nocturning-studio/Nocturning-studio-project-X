@@ -19,13 +19,14 @@ CEffectorFall::~CEffectorFall()
 BOOL CEffectorFall::Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar, float& fAspect)
 {
 	fPhase += FALL_SPEED * Device.fTimeDelta;
-	if (fPhase < 1)	p.y -= FALL_MAXDIST * fPower * _sin(M_PI * fPhase + M_PI);
-	else			fLifeTime = -1;
+	if (fPhase < 1)
+		p.y -= FALL_MAXDIST * fPower * _sin(M_PI * fPhase + M_PI);
+	else
+		fLifeTime = -1;
 	return TRUE;
 }
 
-CEffectorDOF::CEffectorDOF(const Fvector4& dof)
-	:CEffectorCam(eCEDOF, 100000)
+CEffectorDOF::CEffectorDOF(const Fvector4& dof) : CEffectorCam(eCEDOF, 100000)
 {
 	GamePersistent().SetEffectorDOF(Fvector().set(dof.x, dof.y, dof.z));
 	m_fPhase = Device.fTimeGlobal + dof.w;
@@ -38,5 +39,5 @@ BOOL CEffectorDOF::Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, floa
 		GamePersistent().RestoreEffectorDOF();
 		fLifeTime = -1;
 	}
-	return				TRUE;
+	return TRUE;
 }

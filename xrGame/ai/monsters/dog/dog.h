@@ -4,30 +4,30 @@
 #include "../controlled_entity.h"
 #include "../../../script_export_space.h"
 
-class CAI_Dog : public CBaseMonster, 
-				public CControlledEntity<CAI_Dog> {
-	
-	typedef		CBaseMonster				inherited;
-	typedef		CControlledEntity<CAI_Dog>	CControlled;
+class CAI_Dog : public CBaseMonster, public CControlledEntity<CAI_Dog>
+{
 
-public:
-					CAI_Dog				();
-	virtual			~CAI_Dog			();	
+	typedef CBaseMonster inherited;
+	typedef CControlledEntity<CAI_Dog> CControlled;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reinit				();
+  public:
+	CAI_Dog();
+	virtual ~CAI_Dog();
 
-	virtual void	CheckSpecParams		(u32 spec_params);
+	virtual void Load(LPCSTR section);
+	virtual void reinit();
 
-	virtual bool	ability_can_drag		() {return true;}
-	
+	virtual void CheckSpecParams(u32 spec_params);
 
-private:
-#ifdef _DEBUG	
-	virtual void	debug_on_key		(int key);
+	virtual bool ability_can_drag()
+	{
+		return true;
+	}
+
+  private:
+#ifdef _DEBUG
+	virtual void debug_on_key(int key);
 #endif
-
-
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -8,10 +8,7 @@
 #include "../Level.h"
 #include "../../xrEngine/xr_object.h"
 
-CUIChatWnd::CUIChatWnd(CUIGameLog *pList)
-	:	pUILogList				(pList),
-		sendNextMessageToTeam	(false),
-		pOwner					(NULL)
+CUIChatWnd::CUIChatWnd(CUIGameLog* pList) : pUILogList(pList), sendNextMessageToTeam(false), pOwner(NULL)
 {
 	R_ASSERT(pUILogList);
 }
@@ -35,14 +32,14 @@ void CUIChatWnd::Init(CUIXml& uiXml)
 
 //////////////////////////////////////////////////////////////////////////
 
-void CUIChatWnd::SetEditBoxPrefix(const shared_str &prefix)
+void CUIChatWnd::SetEditBoxPrefix(const shared_str& prefix)
 {
-	UIPrefix.SetText			(*prefix);
-	UIPrefix.AdjustWidthToText	();
-	Fvector2					_pos;
-	_pos.x						= UIPrefix.GetWndPos().x + UIPrefix.GetWidth() + 5.0f;
-	_pos.y						= UIEditBox.GetWndPos().y;
-	UIEditBox.SetWndPos			(_pos);
+	UIPrefix.SetText(*prefix);
+	UIPrefix.AdjustWidthToText();
+	Fvector2 _pos;
+	_pos.x = UIPrefix.GetWndPos().x + UIPrefix.GetWidth() + 5.0f;
+	_pos.y = UIEditBox.GetWndPos().y;
+	UIEditBox.SetWndPos(_pos);
 }
 
 void CUIChatWnd::Show()
@@ -65,15 +62,15 @@ void CUIChatWnd::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status
 {
 	if (&UIEditBox == pChildWindow && false == capture_status)
 	{
-			shared_str phrase = UIEditBox.GetText();
-			if (pOwner)
-			{
-				if (sendNextMessageToTeam)
-					pOwner->OnKeyboardPress(kCHAT_TEAM);
-				else
-					pOwner->OnKeyboardPress(kCHAT);
-			}
-			UIEditBox.SetText("");
+		shared_str phrase = UIEditBox.GetText();
+		if (pOwner)
+		{
+			if (sendNextMessageToTeam)
+				pOwner->OnKeyboardPress(kCHAT_TEAM);
+			else
+				pOwner->OnKeyboardPress(kCHAT);
+		}
+		UIEditBox.SetText("");
 	}
 
 	inherited::SetKeyboardCapture(pChildWindow, capture_status);

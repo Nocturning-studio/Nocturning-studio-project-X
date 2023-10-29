@@ -4,26 +4,27 @@
 #include "ActorEffector.h"
 #include "../xrEngine/ObjectAnimator.h"
 
-void CAnimatorCamEffectorScriptCB::ProcessIfInvalid(Fvector &p, Fvector &d, Fvector &n, float& fFov, float& fFar, float& fAspect)
+void CAnimatorCamEffectorScriptCB::ProcessIfInvalid(Fvector& p, Fvector& d, Fvector& n, float& fFov, float& fFar,
+													float& fAspect)
 {
-	if(m_bAbsolutePositioning)
+	if (m_bAbsolutePositioning)
 	{
-		const Fmatrix& m			= m_objectAnimator->XFORM();
-		d							= m.k;
-		n							= m.j;
-		p							= m.c;
+		const Fmatrix& m = m_objectAnimator->XFORM();
+		d = m.k;
+		n = m.j;
+		p = m.c;
 	}
 }
 
 BOOL CAnimatorCamEffectorScriptCB::Valid()
 {
 	BOOL res = inherited::Valid();
-	if(!res && cb_name.size() )
+	if (!res && cb_name.size())
 	{
-		luabind::functor<LPCSTR>			fl;
-		R_ASSERT							(ai().script_engine().functor<LPCSTR>(*cb_name,fl));
-		fl									();
-		cb_name								= "";
+		luabind::functor<LPCSTR> fl;
+		R_ASSERT(ai().script_engine().functor<LPCSTR>(*cb_name, fl));
+		fl();
+		cb_name = "";
 	}
 	return res;
 }

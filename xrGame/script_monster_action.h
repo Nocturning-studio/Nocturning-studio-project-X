@@ -14,17 +14,18 @@
 
 class CScriptGameObject;
 
-class CScriptMonsterAction : public CScriptAbstractAction {
-public: 
-	MonsterSpace::EScriptMonsterGlobalAction	m_tAction;
-	CObject										*m_tObject;
+class CScriptMonsterAction : public CScriptAbstractAction
+{
+  public:
+	MonsterSpace::EScriptMonsterGlobalAction m_tAction;
+	CObject* m_tObject;
 
-public:
-	IC				CScriptMonsterAction	();
-	IC				CScriptMonsterAction	(MonsterSpace::EScriptMonsterGlobalAction action);
-	IC				CScriptMonsterAction	(MonsterSpace::EScriptMonsterGlobalAction action, CScriptGameObject *tObj);
-	virtual			~CScriptMonsterAction	();
-			void	SetObject				(CScriptGameObject *tObj);
+  public:
+	IC CScriptMonsterAction();
+	IC CScriptMonsterAction(MonsterSpace::EScriptMonsterGlobalAction action);
+	IC CScriptMonsterAction(MonsterSpace::EScriptMonsterGlobalAction action, CScriptGameObject* tObj);
+	virtual ~CScriptMonsterAction();
+	void SetObject(CScriptGameObject* tObj);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

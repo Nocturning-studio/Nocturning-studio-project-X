@@ -3,11 +3,12 @@
 
 #include "ph_shell_interface.h"
 
-class CPHShellSimpleCreator: public IPhysicShellCreator
+class CPHShellSimpleCreator : public IPhysicShellCreator
 {
-public:
+  public:
 	virtual void CreatePhysicsShell();
-protected:
-private:
+
+  protected:
+  private:
 };
 #endif

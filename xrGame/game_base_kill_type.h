@@ -1,6 +1,7 @@
 #pragma once
 
-enum KILL_TYPE{
+enum KILL_TYPE
+{
 	KT_HIT = 0,
 	KT_BLEEDING,
 	KT_RADIATION,
@@ -12,18 +13,18 @@ enum SPECIAL_KILL_TYPE
 	SKT_NONE = 0,
 	SKT_HEADSHOT,
 	SKT_BACKSTAB,
-	
+
 	SKT_KNIFEKILL,
 	SKT_PDA,
 
-	SKT_KIR,	//Kill in Row
+	SKT_KIR, // Kill in Row
 
 	SKT_NEWRANK,
 
 	SKT_FORCEDWORD = u32(-1)
 };
 
-enum KILL_RES 
+enum KILL_RES
 {
 	KR_NONE = 0,
 	KR_SELF,
@@ -32,5 +33,5 @@ enum KILL_RES
 	KR_RIVAL,
 	KR_RIVAL_CRITICAL,
 
-	KR_FORCEDWORD	= u32 (-1)
+	KR_FORCEDWORD = u32(-1)
 };

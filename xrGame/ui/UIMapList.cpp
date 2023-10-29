@@ -15,24 +15,25 @@
 
 #include "../object_broker.h"
 
-extern ENGINE_API string512  g_sLaunchOnExit_app;
-extern ENGINE_API string512  g_sLaunchOnExit_params;
+extern ENGINE_API string512 g_sLaunchOnExit_app;
+extern ENGINE_API string512 g_sLaunchOnExit_params;
 
-xr_token	game_types		[];
+xr_token game_types[];
 
-CUIMapList::CUIMapList(){
+CUIMapList::CUIMapList()
+{
 	m_item2del = -1;
 
-	m_pList1		= xr_new<CUIListBox>();
-	m_pList2		= xr_new<CUIListBox>();
-	m_pFrame1		= xr_new<CUIFrameWindow>();
-	m_pFrame2		= xr_new<CUIFrameWindow>();
-	m_pLbl1			= xr_new<CUILabel>();
-	m_pLbl2			= xr_new<CUILabel>();
-	m_pBtnLeft		= xr_new<CUI3tButton>();
-	m_pBtnRight		= xr_new<CUI3tButton>();
-	m_pBtnUp		= xr_new<CUI3tButton>();
-	m_pBtnDown		= xr_new<CUI3tButton>();
+	m_pList1 = xr_new<CUIListBox>();
+	m_pList2 = xr_new<CUIListBox>();
+	m_pFrame1 = xr_new<CUIFrameWindow>();
+	m_pFrame2 = xr_new<CUIFrameWindow>();
+	m_pLbl1 = xr_new<CUILabel>();
+	m_pLbl2 = xr_new<CUILabel>();
+	m_pBtnLeft = xr_new<CUI3tButton>();
+	m_pBtnRight = xr_new<CUI3tButton>();
+	m_pBtnUp = xr_new<CUI3tButton>();
+	m_pBtnDown = xr_new<CUI3tButton>();
 
 	m_pExtraContentFilter = xr_new<CExtraContentFilter>();
 
@@ -59,25 +60,29 @@ CUIMapList::CUIMapList(){
 	AttachChild(m_pBtnDown);
 }
 
-CUIMapList::~CUIMapList(){
+CUIMapList::~CUIMapList()
+{
 	delete_data(m_pExtraContentFilter);
 }
 
-void CUIMapList::StartDedicatedServer(){
-	strcpy					(g_sLaunchOnExit_app,"dedicated\\xrEngine.exe");
+void CUIMapList::StartDedicatedServer()
+{
+	strcpy(g_sLaunchOnExit_app, "dedicated\\xrEngine.exe");
 
-	strcpy					(g_sLaunchOnExit_params,"-i -nosound -");
-	strcat					(g_sLaunchOnExit_params,GetCommandLine(""));
-	Msg						("%s","-- Going to quit before starting dedicated server");
-	Msg						("%s %s",g_sLaunchOnExit_app, g_sLaunchOnExit_params);
-	Console->Execute		("quit");
+	strcpy(g_sLaunchOnExit_params, "-i -nosound -");
+	strcat(g_sLaunchOnExit_params, GetCommandLine(""));
+	Msg("%s", "-- Going to quit before starting dedicated server");
+	Msg("%s %s", g_sLaunchOnExit_app, g_sLaunchOnExit_params);
+	Console->Execute("quit");
 }
 
-void CUIMapList::Init(float x, float y, float width, float height){
-	CUIWindow::Init(x,y,width,height);	
+void CUIMapList::Init(float x, float y, float width, float height)
+{
+	CUIWindow::Init(x, y, width, height);
 }
 
-void CUIMapList::SendMessage(CUIWindow* pWnd, s16 msg, void* pData ){
+void CUIMapList::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+{
 	if (BUTTON_CLICKED == msg)
 	{
 		if (m_pBtnLeft == pWnd)
@@ -93,32 +98,30 @@ void CUIMapList::SendMessage(CUIWindow* pWnd, s16 msg, void* pData ){
 	}
 	else if (WINDOW_LBUTTON_DB_CLICK == msg)
 	{
-		if (m_pList1 ==pWnd)
+		if (m_pList1 == pWnd)
 			OnBtnRightClick();
-		else if (m_pList2 ==pWnd)
+		else if (m_pList2 == pWnd)
 			OnBtnLeftClick();
 	}
 	else if (LIST_ITEM_CLICKED == msg)
 	{
 		if (pWnd == m_pList1)
-            OnListItemClicked();
+			OnListItemClicked();
 	}
-
-		
 }
 
 void CUIMapList::OnListItemClicked()
 {
 	xr_string map_name = "intro\\intro_map_pic_";
-	
-	CUIListBoxItem* itm				= m_pList1->GetSelectedItem();
-	u32 _idx						= (u32)(__int64)(itm->GetData());
-	const shared_str& _map_name		= GetMapNameInt(GetCurGameType(), _idx);
 
-	map_name						+=	_map_name.c_str();
-	xr_string full_name				= map_name + ".dds";
+	CUIListBoxItem* itm = m_pList1->GetSelectedItem();
+	u32 _idx = (u32)(__int64)(itm->GetData());
+	const shared_str& _map_name = GetMapNameInt(GetCurGameType(), _idx);
 
-	if (FS.exist("$game_textures$",full_name.c_str()))
+	map_name += _map_name.c_str();
+	xr_string full_name = map_name + ".dds";
+
+	if (FS.exist("$game_textures$", full_name.c_str()))
 		m_pMapPic->InitTexture(map_name.c_str());
 	else
 		m_pMapPic->InitTexture("ui\\ui_noise");
@@ -133,20 +136,21 @@ void CUIMapList::OnModeChange()
 	UpdateMapList(GetCurGameType());
 }
 
-const char* CUIMapList::GetCLGameModeName(){
-	return get_token_name(game_types, GetCurGameType() );
+const char* CUIMapList::GetCLGameModeName()
+{
+	return get_token_name(game_types, GetCurGameType());
 }
 
 EGameTypes CUIMapList::GetCurGameType()
 {
 	LPCSTR text = m_pModeSelector->GetTokenText();
 
-	if (0 == xr_strcmp(text, get_token_name(g_GameModes,GAME_DEATHMATCH)) )
-		return	GAME_DEATHMATCH;
-	else if (0 == xr_strcmp(text, get_token_name(g_GameModes,GAME_TEAMDEATHMATCH)) )
-		return	GAME_TEAMDEATHMATCH;
-	else if (0 == xr_strcmp(text, get_token_name(g_GameModes,GAME_ARTEFACTHUNT)) )
-		return	GAME_ARTEFACTHUNT;
+	if (0 == xr_strcmp(text, get_token_name(g_GameModes, GAME_DEATHMATCH)))
+		return GAME_DEATHMATCH;
+	else if (0 == xr_strcmp(text, get_token_name(g_GameModes, GAME_TEAMDEATHMATCH)))
+		return GAME_TEAMDEATHMATCH;
+	else if (0 == xr_strcmp(text, get_token_name(g_GameModes, GAME_ARTEFACTHUNT)))
+		return GAME_ARTEFACTHUNT;
 	else
 		NODEFAULT;
 
@@ -155,15 +159,16 @@ EGameTypes CUIMapList::GetCurGameType()
 #endif
 }
 
-const char* CUIMapList::GetCommandLine(LPCSTR player_name){
-	string16		buf;
+const char* CUIMapList::GetCommandLine(LPCSTR player_name)
+{
+	string16 buf;
 
-	CUIListBoxItem* itm				= m_pList2->GetItemByIDX(0);
-	if (!itm)	
-		return						NULL;
+	CUIListBoxItem* itm = m_pList2->GetItemByIDX(0);
+	if (!itm)
+		return NULL;
 
-	u32 _idx						= (u32)(__int64)(itm->GetData());
-	const shared_str& _map_name		= GetMapNameInt	(GetCurGameType(), _idx);
+	u32 _idx = (u32)(__int64)(itm->GetData());
+	const shared_str& _map_name = GetMapNameInt(GetCurGameType(), _idx);
 
 	m_command.clear();
 	m_command = "start server(";
@@ -172,171 +177,184 @@ const char* CUIMapList::GetCommandLine(LPCSTR player_name){
 	m_command += GetCLGameModeName();
 	m_command += m_srv_params;
 	m_command += "/estime=";
-	
-	u32 id		= m_pWeatherSelector->GetListWnd()->GetSelectedItem()->GetTAG();
 
-	int estime  = m_mapWeather[id].weather_time;
-	m_command	+= itoa(estime/60,buf,10);
-	m_command	+= ":";
-	m_command	+= itoa(estime%60,buf,10);
-	m_command	+= ")";
+	u32 id = m_pWeatherSelector->GetListWnd()->GetSelectedItem()->GetTAG();
 
+	int estime = m_mapWeather[id].weather_time;
+	m_command += itoa(estime / 60, buf, 10);
+	m_command += ":";
+	m_command += itoa(estime % 60, buf, 10);
+	m_command += ")";
 
-	m_command +=" client(localhost/name=";
+	m_command += " client(localhost/name=";
 	if (player_name == NULL || 0 == xr_strlen(player_name))
 		m_command += Core.UserName;
 	else
-		m_command +=player_name;
-	m_command +=")";
+		m_command += player_name;
+	m_command += ")";
 
-    return m_command.c_str();
+	return m_command.c_str();
 }
 #include "../UIGameCustom.h"
 void CUIMapList::LoadMapList()
 {
 
 	GAME_WEATHERS game_weathers = gMapListHelper.GetGameWeathers();
-	GAME_WEATHERS_CIT it		= game_weathers.begin();
-	GAME_WEATHERS_CIT it_e		= game_weathers.end();
-	
-	u32 cnt=0;
-	for( ;it!=it_e; ++it, ++cnt)
+	GAME_WEATHERS_CIT it = game_weathers.begin();
+	GAME_WEATHERS_CIT it_e = game_weathers.end();
+
+	u32 cnt = 0;
+	for (; it != it_e; ++it, ++cnt)
 	{
-		AddWeather			( (*it).m_weather_name, (*it).m_start_time, cnt);
+		AddWeather((*it).m_weather_name, (*it).m_start_time, cnt);
 	}
-	if( game_weathers.size() )
+	if (game_weathers.size())
 		m_pWeatherSelector->SetItem(0);
 }
 
-void	CUIMapList::SaveMapList()
+void CUIMapList::SaveMapList()
 {
-	string_path					temp;
-	FS.update_path				(temp,"$app_data_root$", MAP_ROTATION_LIST);
+	string_path temp;
+	FS.update_path(temp, "$app_data_root$", MAP_ROTATION_LIST);
 
-	if(m_pList2->GetSize()<=1){
+	if (m_pList2->GetSize() <= 1)
+	{
 		FS.file_delete(temp);
 		return;
 	}
 
-	IWriter*	pW = FS.w_open	(temp);
-	if (!pW){
+	IWriter* pW = FS.w_open(temp);
+	if (!pW)
+	{
 		Msg("! Cant create map rotation file [%s]", temp);
 		return;
 	}
-	
-	string_path					map_name;
-	for(u32 idx=0; idx<m_pList2->GetSize(); ++idx)
+
+	string_path map_name;
+	for (u32 idx = 0; idx < m_pList2->GetSize(); ++idx)
 	{
-		CUIListBoxItem* itm				= m_pList2->GetItemByIDX(idx);
-		u32 _idx						= (u32)(__int64)(itm->GetData());
-		const shared_str& _map_name		= GetMapNameInt(GetCurGameType(), _idx);
+		CUIListBoxItem* itm = m_pList2->GetItemByIDX(idx);
+		u32 _idx = (u32)(__int64)(itm->GetData());
+		const shared_str& _map_name = GetMapNameInt(GetCurGameType(), _idx);
 
-		sprintf_s							(map_name, "sv_addmap %s", _map_name.c_str() );
+		sprintf_s(map_name, "sv_addmap %s", _map_name.c_str());
 
-		pW->w_string					(map_name);
+		pW->w_string(map_name);
 	}
 
-	FS.w_close							(pW);
+	FS.w_close(pW);
 }
 
-void CUIMapList::SetWeatherSelector(CUIComboBox* ws){
+void CUIMapList::SetWeatherSelector(CUIComboBox* ws)
+{
 	m_pWeatherSelector = ws;
 }
 
-void CUIMapList::SetModeSelector(CUISpinText* ms){
+void CUIMapList::SetModeSelector(CUISpinText* ms)
+{
 	m_pModeSelector = ms;
 }
 
-void CUIMapList::SetMapPic(CUIStatic* map_pic){
+void CUIMapList::SetMapPic(CUIStatic* map_pic)
+{
 	m_pMapPic = map_pic;
 }
 
-void CUIMapList::SetMapInfo(CUIMapInfo* map_info){
-	m_pMapInfo = map_info;	
+void CUIMapList::SetMapInfo(CUIMapInfo* map_info)
+{
+	m_pMapInfo = map_info;
 }
 
-void CUIMapList::SetServerParams(LPCSTR params){
+void CUIMapList::SetServerParams(LPCSTR params)
+{
 	m_srv_params = params;
 }
 
 #include "uilistboxitem.h"
 void CUIMapList::AddWeather(const shared_str& WeatherType, const shared_str& WeatherTime, u32 _id)
 {
-	R_ASSERT2					(m_pWeatherSelector, "m_pWeatherSelector == NULL");
-	m_pWeatherSelector->AddItem_	(*WeatherType, 0)->SetTAG(_id);
+	R_ASSERT2(m_pWeatherSelector, "m_pWeatherSelector == NULL");
+	m_pWeatherSelector->AddItem_(*WeatherType, 0)->SetTAG(_id);
 
-	int	w_time;
+	int w_time;
 	int hour = 0, min = 0;
 
 	sscanf(*WeatherTime, "%d:%d", &hour, &min);
-	w_time = hour*60+min;
-	
-	m_mapWeather.resize(m_mapWeather.size()+1);
+	w_time = hour * 60 + min;
+
+	m_mapWeather.resize(m_mapWeather.size() + 1);
 	m_mapWeather.back().weather_name = WeatherType;
 	m_mapWeather.back().weather_time = w_time;
 }
 
-void CUIMapList::InitFromXml(CUIXml& xml_doc, const char* path){
+void CUIMapList::InitFromXml(CUIXml& xml_doc, const char* path)
+{
 	CUIXmlInit::InitWindow(xml_doc, path, 0, this);
 	string256 buf;
-	CUIXmlInit::InitLabel		(xml_doc, strconcat(sizeof(buf),buf, path, ":header_1"),	0, m_pLbl1);
-	CUIXmlInit::InitLabel		(xml_doc, strconcat(sizeof(buf),buf, path, ":header_2"),	0, m_pLbl2);
-	CUIXmlInit::InitFrameWindow	(xml_doc, strconcat(sizeof(buf),buf, path, ":frame_1"),		0, m_pFrame1);
-	CUIXmlInit::InitFrameWindow	(xml_doc, strconcat(sizeof(buf),buf, path, ":frame_2"),		0, m_pFrame2);
-	CUIXmlInit::InitListBox		(xml_doc, strconcat(sizeof(buf),buf, path, ":list_1"),		0, m_pList1);
-	CUIXmlInit::InitListBox		(xml_doc, strconcat(sizeof(buf),buf, path, ":list_2"),		0, m_pList2);
-	CUIXmlInit::Init3tButton	(xml_doc, strconcat(sizeof(buf),buf, path, ":btn_left"),	0, m_pBtnLeft);
-	CUIXmlInit::Init3tButton	(xml_doc, strconcat(sizeof(buf),buf, path, ":btn_right"),	0, m_pBtnRight);
-	CUIXmlInit::Init3tButton	(xml_doc, strconcat(sizeof(buf),buf, path, ":btn_up"),		0, m_pBtnUp);
-	CUIXmlInit::Init3tButton	(xml_doc, strconcat(sizeof(buf),buf, path, ":btn_down"),	0, m_pBtnDown);
+	CUIXmlInit::InitLabel(xml_doc, strconcat(sizeof(buf), buf, path, ":header_1"), 0, m_pLbl1);
+	CUIXmlInit::InitLabel(xml_doc, strconcat(sizeof(buf), buf, path, ":header_2"), 0, m_pLbl2);
+	CUIXmlInit::InitFrameWindow(xml_doc, strconcat(sizeof(buf), buf, path, ":frame_1"), 0, m_pFrame1);
+	CUIXmlInit::InitFrameWindow(xml_doc, strconcat(sizeof(buf), buf, path, ":frame_2"), 0, m_pFrame2);
+	CUIXmlInit::InitListBox(xml_doc, strconcat(sizeof(buf), buf, path, ":list_1"), 0, m_pList1);
+	CUIXmlInit::InitListBox(xml_doc, strconcat(sizeof(buf), buf, path, ":list_2"), 0, m_pList2);
+	CUIXmlInit::Init3tButton(xml_doc, strconcat(sizeof(buf), buf, path, ":btn_left"), 0, m_pBtnLeft);
+	CUIXmlInit::Init3tButton(xml_doc, strconcat(sizeof(buf), buf, path, ":btn_right"), 0, m_pBtnRight);
+	CUIXmlInit::Init3tButton(xml_doc, strconcat(sizeof(buf), buf, path, ":btn_up"), 0, m_pBtnUp);
+	CUIXmlInit::Init3tButton(xml_doc, strconcat(sizeof(buf), buf, path, ":btn_down"), 0, m_pBtnDown);
 }
 
 void CUIMapList::UpdateMapList(EGameTypes GameType)
 {
-	m_pList1->Clear				();
-	m_pList2->Clear				();
+	m_pList1->Clear();
+	m_pList2->Clear();
 
-	const SGameTypeMaps& M		= gMapListHelper.GetMapListFor(GameType);
-	u32 cnt						= M.m_map_names.size();
-	for (u32 i=0; i<cnt; ++i)
+	const SGameTypeMaps& M = gMapListHelper.GetMapListFor(GameType);
+	u32 cnt = M.m_map_names.size();
+	for (u32 i = 0; i < cnt; ++i)
 	{
-		CUIListBoxItem* itm		= m_pList1->AddItem( CStringTable().translate(M.m_map_names[i]).c_str() );
-		itm->SetData			( (void*)(__int64)i );
+		CUIListBoxItem* itm = m_pList1->AddItem(CStringTable().translate(M.m_map_names[i]).c_str());
+		itm->SetData((void*)(__int64)i);
 		itm->Enable(m_pExtraContentFilter->IsDataEnabled(M.m_map_names[i].c_str()));
 	}
 }
 
-void CUIMapList::OnBtnLeftClick(){
+void CUIMapList::OnBtnLeftClick()
+{
 	m_pList2->RemoveWindow(m_pList2->GetSelected());
 }
 
-void CUIMapList::Update(){
+void CUIMapList::Update()
+{
 	CUIWindow::Update();
 }
 
 void CUIMapList::OnBtnRightClick()
 {
-	CUIListBoxItem* itm1			= m_pList1->GetSelectedItem();
-	if (!itm1) return;
-	CUIListBoxItem* itm2			= m_pList2->AddItem( itm1->GetText() );
-	itm2->SetData					(itm1->GetData());
+	CUIListBoxItem* itm1 = m_pList1->GetSelectedItem();
+	if (!itm1)
+		return;
+	CUIListBoxItem* itm2 = m_pList2->AddItem(itm1->GetText());
+	itm2->SetData(itm1->GetData());
 }
 
-void CUIMapList::OnBtnUpClick(){
+void CUIMapList::OnBtnUpClick()
+{
 	m_pList2->MoveSelectedUp();
 }
 
-void CUIMapList::OnBtnDownClick(){
+void CUIMapList::OnBtnDownClick()
+{
 	m_pList2->MoveSelectedDown();
 }
 
-bool CUIMapList::IsEmpty(){
+bool CUIMapList::IsEmpty()
+{
 	return 0 == m_pList2->GetSize();
 }
 
 const shared_str& CUIMapList::GetMapNameInt(EGameTypes _type, u32 idx)
 {
-	const SGameTypeMaps& M		= gMapListHelper.GetMapListFor(_type);
-	R_ASSERT					(M.m_map_names.size()>idx);
-	return						M.m_map_names[idx];
+	const SGameTypeMaps& M = gMapListHelper.GetMapListFor(_type);
+	R_ASSERT(M.m_map_names.size() > idx);
+	return M.m_map_names[idx];
 }

@@ -22,19 +22,18 @@
 #include "../xrEngine/motion.h"
 #include "artifact.h"
 #include "IKLimbsController.h"
-static const float y_spin0_factor		= 0.0f;
-static const float y_spin1_factor		= 0.4f;
-static const float y_shoulder_factor	= 0.4f;
-static const float y_head_factor		= 0.2f;
-static const float p_spin0_factor		= 0.0f;
-static const float p_spin1_factor		= 0.2f;
-static const float p_shoulder_factor	= 0.7f;
-static const float p_head_factor		= 0.1f;
-static const float r_spin0_factor		= 0.3f;
-static const float r_spin1_factor		= 0.3f;
-static const float r_shoulder_factor	= 0.2f;
-static const float r_head_factor		= 0.2f;
-
+static const float y_spin0_factor = 0.0f;
+static const float y_spin1_factor = 0.4f;
+static const float y_shoulder_factor = 0.4f;
+static const float y_head_factor = 0.2f;
+static const float p_spin0_factor = 0.0f;
+static const float p_spin1_factor = 0.2f;
+static const float p_shoulder_factor = 0.7f;
+static const float p_head_factor = 0.1f;
+static const float r_spin0_factor = 0.3f;
+static const float r_spin1_factor = 0.3f;
+static const float r_shoulder_factor = 0.2f;
+static const float r_head_factor = 0.2f;
 
 void CActor::Spin0Callback(CBoneInstance* B)
 {
@@ -141,14 +140,14 @@ void SActorState::CreateClimb(CKinematicsAnimated* K)
 	string128 buf, buf1;
 	string16 base;
 
-	//climb anims
+	// climb anims
 	strcpy(base, "cl");
 	legs_idle = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_idle_1"));
 	m_torso_idle = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_torso_0_aim_0"));
 	m_walk.Create(K, base, "_run");
 	m_run.Create(K, base, "_run");
 
-	//norm anims
+	// norm anims
 	strcpy(base, "norm");
 	legs_turn = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_turn"));
 	death = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_death_0"));
@@ -166,7 +165,7 @@ void SActorState::CreateClimb(CKinematicsAnimated* K)
 	m_torso[11].Create(K, base, "_12");
 	m_torso[12].Create(K, base, "_13");
 
-	m_head_idle.invalidate(); ///K->ID_Cycle("head_idle_0");
+	m_head_idle.invalidate(); /// K->ID_Cycle("head_idle_0");
 	jump_begin = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_jump_begin"));
 	jump_idle = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_jump_idle"));
 	landing[0] = K->ID_Cycle(strconcat(sizeof(buf), buf, base, "_jump_end"));
@@ -213,7 +212,7 @@ void SActorState::Create(CKinematicsAnimated* K, LPCSTR base)
 
 void SActorSprintState::Create(CKinematicsAnimated* K)
 {
-	//leg anims
+	// leg anims
 	legs_fwd = K->ID_Cycle("norm_escape_00");
 	legs_ls = K->ID_Cycle("norm_escape_ls_00");
 	legs_rs = K->ID_Cycle("norm_escape_rs_00");
@@ -225,7 +224,7 @@ void SActorMotions::Create(CKinematicsAnimated* V)
 
 	m_normal.Create(V, "norm");
 	m_crouch.Create(V, "cr");
-	//m_climb.Create	(V,"cr");
+	// m_climb.Create	(V,"cr");
 	m_climb.CreateClimb(V);
 	m_sprint.Create(V);
 }
@@ -367,7 +366,7 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 	MotionID M_torso;
 	MotionID M_head;
 
-	//если мы просто стоим на месте
+	// если мы просто стоим на месте
 	bool is_standing = false;
 
 	// Legs
@@ -375,8 +374,7 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 		M_legs = ST->landing[0];
 	else if (mstate_rl & mcLanding2)
 		M_legs = ST->landing[1];
-	else if ((mstate_rl & mcTurn) &&
-		!(mstate_rl & mcClimb))
+	else if ((mstate_rl & mcTurn) && !(mstate_rl & mcClimb))
 		M_legs = ST->legs_turn;
 	else if (mstate_rl & mcFall)
 		M_legs = ST->jump_idle;
@@ -607,15 +605,25 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 							}
 						}
 					}
-					else if (A) {
-						switch (A->GetState()) {
-						case CArtefact::eIdle: M_torso = TW->moving[moving_idx];	break;
-						case CArtefact::eShowing: M_torso = TW->draw;				break;
-						case CArtefact::eHiding: M_torso = TW->holster;				break;
-						case CArtefact::eActivating: M_torso = TW->zoom;			break;
-						default: M_torso = TW->moving[moving_idx];
+					else if (A)
+					{
+						switch (A->GetState())
+						{
+						case CArtefact::eIdle:
+							M_torso = TW->moving[moving_idx];
+							break;
+						case CArtefact::eShowing:
+							M_torso = TW->draw;
+							break;
+						case CArtefact::eHiding:
+							M_torso = TW->holster;
+							break;
+						case CArtefact::eActivating:
+							M_torso = TW->zoom;
+							break;
+						default:
+							M_torso = TW->moving[moving_idx];
 						}
-
 					}
 					else
 					{
@@ -633,10 +641,10 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 		}
 		else if (!m_bAnimTorsoPlayed)
 		{
-		if (moving_idx == STorsoWpn::eSprint)
-			M_torso = ST->m_torso[0].moving[moving_idx];
-		else
-			M_torso = ST->m_torso[4].moving[moving_idx]; //Alundaio: Fix torso anim no wpn
+			if (moving_idx == STorsoWpn::eSprint)
+				M_torso = ST->m_torso[0].moving[moving_idx];
+			else
+				M_torso = ST->m_torso[4].moving[moving_idx]; // Alundaio: Fix torso anim no wpn
 		}
 	}
 
@@ -663,7 +671,8 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 	if (m_current_torso != M_torso)
 	{
 		if (m_bAnimTorsoPlayed)
-			m_current_torso_blend = smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(M_torso, TRUE, AnimTorsoPlayCallBack, this);
+			m_current_torso_blend =
+				smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(M_torso, TRUE, AnimTorsoPlayCallBack, this);
 		else /**/
 			m_current_torso_blend = /**/ smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(M_torso);
 
@@ -680,8 +689,10 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 		float pos = 0.f;
 		VERIFY(!m_current_legs_blend || !fis_zero(m_current_legs_blend->timeTotal));
 		if ((mstate_real & mcAnyMove) && (mstate_old & mcAnyMove) && m_current_legs_blend)
-			pos = fmod(m_current_legs_blend->timeCurrent, m_current_legs_blend->timeTotal) / m_current_legs_blend->timeTotal;
-		m_current_legs_blend = smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(M_legs, TRUE, legs_play_callback, this);
+			pos = fmod(m_current_legs_blend->timeCurrent, m_current_legs_blend->timeTotal) /
+				  m_current_legs_blend->timeTotal;
+		m_current_legs_blend =
+			smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(M_legs, TRUE, legs_play_callback, this);
 		if ((!(mstate_old & mcAnyMove)) && (mstate_real & mcAnyMove))
 			pos = 0.5f * Random.randI(2);
 		if (m_current_legs_blend)
@@ -740,8 +751,9 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 		}
 		HUD().Font().pFontStat->OutNext	(buf);
 		HUD().Font().pFontStat->OutNext	("Accel     [%3.2f, %3.2f, %3.2f]",VPUSH(NET_SavedAccel));
-		HUD().Font().pFontStat->OutNext	("V         [%3.2f, %3.2f, %3.2f]",VPUSH(m_PhysicMovementControl->GetVelocity()));
-		HUD().Font().pFontStat->OutNext	("vertex ID   %d",ai_location().level_vertex_id());
+		HUD().Font().pFontStat->OutNext	("V         [%3.2f, %3.2f,
+		%3.2f]",VPUSH(m_PhysicMovementControl->GetVelocity())); HUD().Font().pFontStat->OutNext	("vertex ID
+		%d",ai_location().level_vertex_id());
 
 		Game().m_WeaponUsageStatistic->Draw();
 		*/
@@ -766,5 +778,6 @@ void CActor::g_SetAnimation(u32 mstate_rl)
 	if (!(motion1->flags & esmSyncPart))
 		return;
 
-	m_current_torso_blend->timeCurrent = m_current_legs_blend->timeCurrent / m_current_legs_blend->timeTotal * m_current_torso_blend->timeTotal;
+	m_current_torso_blend->timeCurrent =
+		m_current_legs_blend->timeCurrent / m_current_legs_blend->timeTotal * m_current_torso_blend->timeTotal;
 }

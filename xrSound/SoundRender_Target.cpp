@@ -23,7 +23,7 @@ BOOL CSoundRender_Target::_initialize()
 	return TRUE;
 }
 
-void CSoundRender_Target::start(CSoundRender_Emitter *E)
+void CSoundRender_Target::start(CSoundRender_Emitter* E)
 {
 	R_ASSERT(E);
 
@@ -33,7 +33,7 @@ void CSoundRender_Target::start(CSoundRender_Emitter *E)
 	// 5. Deferred-play-signal (emitter-exist, rendering-false)
 	pEmitter = E;
 	rendering = FALSE;
-	//attach		();
+	// attach		();
 }
 
 void CSoundRender_Target::render()
@@ -66,10 +66,10 @@ void CSoundRender_Target::fill_parameters()
 	//.	}
 }
 
-extern int ov_seek_func(void *datasource, s64 offset, int whence);
-extern size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource);
-extern int ov_close_func(void *datasource);
-extern long ov_tell_func(void *datasource);
+extern int ov_seek_func(void* datasource, s64 offset, int whence);
+extern size_t ov_read_func(void* ptr, size_t size, size_t nmemb, void* datasource);
+extern int ov_close_func(void* datasource);
+extern long ov_tell_func(void* datasource);
 
 void CSoundRender_Target::attach()
 {

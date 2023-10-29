@@ -16,39 +16,40 @@ class CSpaceRestrictionHolder;
 
 extern int g_restriction_checker;
 
-class CSpaceRestrictionComposition : public CSpaceRestrictionBase {
-public:
+class CSpaceRestrictionComposition : public CSpaceRestrictionBase
+{
+  public:
 	using CSpaceRestrictionBase::inside;
 
-protected:
+  protected:
 	typedef SpaceRestrictionHolder::CBaseRestrictionPtr CBaseRestrictionPtr;
 	typedef xr_vector<CBaseRestrictionPtr> RESTRICTIONS;
 
-protected:
-	RESTRICTIONS			m_restrictions;
-	shared_str				m_space_restrictors;
-	CSpaceRestrictionHolder	*m_space_restriction_holder;
-	Fsphere					m_sphere;
+  protected:
+	RESTRICTIONS m_restrictions;
+	shared_str m_space_restrictors;
+	CSpaceRestrictionHolder* m_space_restriction_holder;
+	Fsphere m_sphere;
 
 #ifdef DEBUG
-private:
-				void		check_restrictor_type			();
+  private:
+	void check_restrictor_type();
 #endif // DEBUG
 
-protected:
-	IC			void		merge							(CBaseRestrictionPtr restriction);
+  protected:
+	IC void merge(CBaseRestrictionPtr restriction);
 
-public:
-	IC						CSpaceRestrictionComposition	(CSpaceRestrictionHolder *space_restriction_holder, shared_str space_restrictors);
-		virtual				~CSpaceRestrictionComposition	();
-		virtual void		initialize						();
-		virtual bool		inside							(const Fsphere &sphere);
-	IC	virtual shared_str	name							() const;
-	IC	virtual bool		shape							() const;
-	IC	virtual bool		default_restrictor				() const;
-		virtual	Fsphere		sphere							() const;
+  public:
+	IC CSpaceRestrictionComposition(CSpaceRestrictionHolder* space_restriction_holder, shared_str space_restrictors);
+	virtual ~CSpaceRestrictionComposition();
+	virtual void initialize();
+	virtual bool inside(const Fsphere& sphere);
+	IC virtual shared_str name() const;
+	IC virtual bool shape() const;
+	IC virtual bool default_restrictor() const;
+	virtual Fsphere sphere() const;
 #ifdef DEBUG
-				void		test_correctness				();
+	void test_correctness();
 #endif
 };
 

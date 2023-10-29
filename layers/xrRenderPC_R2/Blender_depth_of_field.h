@@ -2,7 +2,7 @@
 
 class CBlender_depth_of_field : public IBlender
 {
-public:
+  public:
 	virtual LPCSTR getComment()
 	{
 		return "INTERNAL: Depth of field";

@@ -5,57 +5,62 @@
 #include "../anim_triple.h"
 #include "../../../script_export_space.h"
 
-#define FAKE_DEATH_TYPES_COUNT	4
+#define FAKE_DEATH_TYPES_COUNT 4
 
-class CZombie :	public CBaseMonster,
-				public CControlledEntity<CZombie> {
-	
-	typedef		CBaseMonster				inherited;
-	typedef		CControlledEntity<CZombie>	CControlled;
+class CZombie : public CBaseMonster, public CControlledEntity<CZombie>
+{
 
-	bonesManipulation	Bones;
+	typedef CBaseMonster inherited;
+	typedef CControlledEntity<CZombie> CControlled;
 
-public:
-					CZombie		();
-	virtual			~CZombie	();	
+	bonesManipulation Bones;
 
-	virtual void	Load				(LPCSTR section);
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	reinit				();
-	virtual	void	reload				(LPCSTR section);
-	
-	virtual	void	Hit					(SHit* pHDS);
+  public:
+	CZombie();
+	virtual ~CZombie();
 
-	virtual bool	ability_pitch_correction () {return false;}
+	virtual void Load(LPCSTR section);
+	virtual BOOL net_Spawn(CSE_Abstract* DC);
+	virtual void reinit();
+	virtual void reload(LPCSTR section);
 
-	virtual void	shedule_Update		(u32 dt);
-	
-	static	void 	BoneCallback		(CBoneInstance *B);
-			void	vfAssignBones		();
+	virtual void Hit(SHit* pHDS);
 
-	virtual bool	use_center_to_aim				() const {return true;}
+	virtual bool ability_pitch_correction()
+	{
+		return false;
+	}
 
-	CBoneInstance			*bone_spine;
-	CBoneInstance			*bone_head;
+	virtual void shedule_Update(u32 dt);
 
-	SAnimationTripleData	anim_triple_death[FAKE_DEATH_TYPES_COUNT];
-	u8				active_triple_idx;
-	
-	u32				time_dead_start;
-	u32				last_hit_frame;
-	u32				time_resurrect;
+	static void BoneCallback(CBoneInstance* B);
+	void vfAssignBones();
 
-	u8				fake_death_count;
-	float			health_death_threshold;
-	u8				fake_death_left;
+	virtual bool use_center_to_aim() const
+	{
+		return true;
+	}
 
-	bool			fake_death_fall_down	(); //return true if everything is ok
-	void			fake_death_stand_up		();
+	CBoneInstance* bone_spine;
+	CBoneInstance* bone_head;
+
+	SAnimationTripleData anim_triple_death[FAKE_DEATH_TYPES_COUNT];
+	u8 active_triple_idx;
+
+	u32 time_dead_start;
+	u32 last_hit_frame;
+	u32 time_resurrect;
+
+	u8 fake_death_count;
+	float health_death_threshold;
+	u8 fake_death_left;
+
+	bool fake_death_fall_down(); // return true if everything is ok
+	void fake_death_stand_up();
 
 #ifdef _DEBUG
-	virtual void	debug_on_key			(int key);
+	virtual void debug_on_key(int key);
 #endif
-
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

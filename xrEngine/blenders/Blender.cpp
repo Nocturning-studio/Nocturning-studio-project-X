@@ -18,11 +18,13 @@ void CBlender_DESC::Setup(LPCSTR N)
 	strcpy_s(cName, N);
 	strlwr(cName);
 
-	strcpy_s(cComputer, Core.CompName);			// Computer
+	strcpy_s(cComputer, Core.CompName); // Computer
 #ifndef _EDITOR
-	_tzset(); _time32((__time32_t*)&cTime);	// Time
+	_tzset();
+	_time32((__time32_t*)&cTime); // Time
 #else
-	_tzset(); time((long*)&cTime);			// Time
+	_tzset();
+	time((long*)&cTime); // Time
 #endif
 };
 
@@ -43,7 +45,7 @@ IBlender::~IBlender()
 {
 }
 
-void	IBlender::Save(IWriter& fs)
+void IBlender::Save(IWriter& fs)
 {
 	fs.w(&description, sizeof(description));
 	xrPWRITE_MARKER(fs, "General");
@@ -54,10 +56,10 @@ void	IBlender::Save(IWriter& fs)
 	xrPWRITE_PROP(fs, "Transform", xrPID_MATRIX, oT_xform);
 }
 
-void	IBlender::Load(IReader& fs, u16)
+void IBlender::Load(IReader& fs, u16)
 {
 	// Read desc and doesn't change version
-	u16	V = description.version;
+	u16 V = description.version;
 	fs.r(&description, sizeof(description));
 	description.version = V;
 
@@ -70,8 +72,10 @@ void	IBlender::Load(IReader& fs, u16)
 	xrPREAD_PROP(fs, xrPID_MATRIX, oT_xform);
 }
 
-void	IBlender::Compile(CBlender_Compile& C)
+void IBlender::Compile(CBlender_Compile& C)
 {
-	if (C.bEditor)	C.SetParams(oPriority.value, oStrictSorting.value ? true : false);
-	else			C.SetParams(oPriority.value, oStrictSorting.value ? true : false);
+	if (C.bEditor)
+		C.SetParams(oPriority.value, oStrictSorting.value ? true : false);
+	else
+		C.SetParams(oPriority.value, oStrictSorting.value ? true : false);
 }

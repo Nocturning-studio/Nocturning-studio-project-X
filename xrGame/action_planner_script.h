@@ -12,17 +12,17 @@
 
 class CScriptGameObject;
 
-template <typename _object_type>
-class CActionPlannerScript : public CScriptActionPlanner {
-protected:
+template <typename _object_type> class CActionPlannerScript : public CScriptActionPlanner
+{
+  protected:
 	typedef CScriptActionPlanner inherited;
 
-public:
-	_object_type			*m_object;
+  public:
+	_object_type* m_object;
 
-public:
-	IC						CActionPlannerScript	();
-	virtual	void			setup					(_object_type *object);
+  public:
+	IC CActionPlannerScript();
+	virtual void setup(_object_type* object);
 };
 
 #include "action_planner_script_inline.h"

@@ -12,7 +12,6 @@
 #include "xr_input.h"
 #include "xr_ioc_cmd.h"
 
-
 void CConsole::Register_callbacks()
 {
 	ec().assign_callback(DIK_PRIOR, text_editor::ks_free, Callback(this, &CConsole::Prev_log));
@@ -93,8 +92,8 @@ void CConsole::Find_cmd_back() // DIK_TAB+shift
 		--it;
 		IConsole_Command& cc = *(it->second);
 		LPCSTR name_cmd = cc.Name();
-		u32    name_cmd_size = xr_strlen(name_cmd);
-		PSTR   new_str = (PSTR)_alloca((offset + name_cmd_size + 2) * sizeof(char));
+		u32 name_cmd_size = xr_strlen(name_cmd);
+		PSTR new_str = (PSTR)_alloca((offset + name_cmd_size + 2) * sizeof(char));
 
 		strcpy_s(new_str, offset + name_cmd_size + 2, (b_ra) ? radmin_cmd_name : "");
 		strcat_s(new_str, offset + name_cmd_size + 2, name_cmd);
@@ -209,5 +208,4 @@ void CConsole::Hide_cmd_esc()
 
 void CConsole::GamePause()
 {
-
 }

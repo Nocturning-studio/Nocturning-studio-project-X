@@ -1,6 +1,7 @@
 #pragma once
 
-enum ECameraStyle {
+enum ECameraStyle
+{
 	csCamDebug,
 	csFirstEye,
 	csLookAt,
@@ -9,12 +10,14 @@ enum ECameraStyle {
 	cs_forcedword = u32(-1)
 };
 
-enum ECamEffectorType {
+enum ECamEffectorType
+{
 	cefDemo = 0,
 	cefNext
 };
 
-enum EEffectorPPType {
+enum EEffectorPPType
+{
 	ppeNext = 0,
 };
 

@@ -16,16 +16,15 @@
 using namespace ALife;
 
 /**/
-CALifeInteractionManager::CALifeInteractionManager	(xrServer*server, LPCSTR section) : 
-	CALifeCombatManager			(server,section),
-	CALifeCommunicationManager	(server,section),
-	CALifeSimulatorBase			(server,section)
+CALifeInteractionManager::CALifeInteractionManager(xrServer* server, LPCSTR section)
+	: CALifeCombatManager(server, section), CALifeCommunicationManager(server, section),
+	  CALifeSimulatorBase(server, section)
 {
-/**
-	m_inventory_slot_count		= pSettings->r_u32("inventory","slots");
-	m_temp_weapons.resize		(m_inventory_slot_count);
-	m_temp_marks.assign			(u16(-1),false);
-/**/
+	/**
+		m_inventory_slot_count		= pSettings->r_u32("inventory","slots");
+		m_temp_weapons.resize		(m_inventory_slot_count);
+		m_temp_marks.assign			(u16(-1),false);
+	/**/
 }
 
 /**
@@ -42,7 +41,7 @@ void CALifeInteractionManager::check_for_interaction(CSE_ALifeSchedulable *tpALi
 	R_ASSERT2					(l_tpALifeDynamicObject,"Unknown schedulable object class");
 	GameGraph::_GRAPH_ID		l_tGraphID = l_tpALifeDynamicObject->m_tGraphID;
 	check_for_interaction		(tpALifeSchedulable,l_tGraphID);
-	
+
 	CGameGraph::const_iterator	I, E;
 	ai().game_graph().begin		(l_tGraphID,I,E);
 	for ( ; I != E; ++I)
@@ -59,10 +58,8 @@ public:
 	mutable CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract;
 	mutable CSE_ALifeMonsterAbstract*l_tpALifeMonsterAbstract;
 
-	IC	CCheckForInteractionPredicate(CALifeInteractionManager *manager, CSE_ALifeSchedulable *tpALifeSchedulable, GameGraph::_GRAPH_ID tGraphID) :
-		manager(manager),
-		tpALifeSchedulable(tpALifeSchedulable),
-		tGraphID(tGraphID)
+	IC	CCheckForInteractionPredicate(CALifeInteractionManager *manager, CSE_ALifeSchedulable *tpALifeSchedulable,
+GameGraph::_GRAPH_ID tGraphID) : manager(manager), tpALifeSchedulable(tpALifeSchedulable), tGraphID(tGraphID)
 	{
 		l_tpALifeHumanAbstract	= smart_cast<CSE_ALifeHumanAbstract*>(tpALifeSchedulable);
 		l_tpALifeMonsterAbstract= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable);
@@ -94,11 +91,11 @@ public:
 
 		manager->vfFillCombatGroup		(l_tpALifeSchedulable,1);
 
-		switch (manager->m_tpaCombatObjects[l_iGroupIndex]->tfGetActionType(manager->m_tpaCombatObjects[l_iGroupIndex ^ 1],l_iGroupIndex,l_bMutualDetection)) {
-			case eMeetActionTypeAttack : {
-#ifdef DEBUG
-				if (psAI_Flags.test(aiALife)) {
-					Msg("[LSS] %s started combat versus %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+		switch (manager->m_tpaCombatObjects[l_iGroupIndex]->tfGetActionType(manager->m_tpaCombatObjects[l_iGroupIndex ^
+1],l_iGroupIndex,l_bMutualDetection)) { case eMeetActionTypeAttack : { #ifdef DEBUG if (psAI_Flags.test(aiALife)) {
+					Msg("[LSS] %s started combat versus
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 				}
 #endif
 				ECombatResult	l_tCombatResult = eCombatResultRetreat12;
@@ -107,7 +104,9 @@ public:
 					if (eCombatActionAttack == manager->choose_combat_action(l_iGroupIndex)) {
 #ifdef DEBUG
 						if (psAI_Flags.test(aiALife)) {
-							Msg("[LSS] %s choosed to attack %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+							Msg("[LSS] %s choosed to attack
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 						}
 #endif
 						manager->vfPerformAttackAction(l_iGroupIndex);
@@ -119,13 +118,17 @@ public:
 							break;
 #ifdef DEBUG
 						if (psAI_Flags.test(aiALife)) {
-							Msg("[LSS] %s choosed to retreat from %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+							Msg("[LSS] %s choosed to retreat from
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 						}
 #endif
 						if (manager->bfCheckIfRetreated(l_iGroupIndex)) {
 #ifdef DEBUG
 							if (psAI_Flags.test(aiALife)) {
-								Msg("[LSS] %s did retreat from %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+								Msg("[LSS] %s did retreat from
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 							}
 #endif
 							l_tCombatResult	= l_iGroupIndex ? eCombatResultRetreat2 : eCombatResultRetreat1;
@@ -134,7 +137,9 @@ public:
 						l_bDoNotContinue = true;
 #ifdef DEBUG
 						if (psAI_Flags.test(aiALife)) {
-							Msg("[LSS] %s didn't retreat from %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+							Msg("[LSS] %s didn't retreat from
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 						}
 #endif
 					}
@@ -162,11 +167,12 @@ public:
 			}
 			case eMeetActionTypeInteract : {
 				R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human objects ñannot communicate with each other");
-				CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract2 = smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeSchedulable);
-				R_ASSERT2				(l_tpALifeHumanAbstract2,"Non-human objects ñannot communicate with each other");
-#ifdef DEBUG
-				if (psAI_Flags.test(aiALife)) {
-					Msg					("[LSS] %s interacted with %s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^ 1]->base()->name_replace());
+				CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract2 =
+smart_cast<CSE_ALifeHumanAbstract*>(l_tpALifeSchedulable); R_ASSERT2				(l_tpALifeHumanAbstract2,"Non-human
+objects ñannot communicate with each other"); #ifdef DEBUG if (psAI_Flags.test(aiALife)) { Msg					("[LSS]
+%s interacted with
+%s",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace(),manager->m_tpaCombatObjects[l_iGroupIndex ^
+1]->base()->name_replace());
 				}
 #endif
 				manager->vfPerformCommunication	();
@@ -175,7 +181,8 @@ public:
 			case eMeetActionTypeIgnore : {
 #ifdef DEBUG
 				if (psAI_Flags.test(aiALife)) {
-					Msg					("[LSS] %s refused from combat",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace());
+					Msg					("[LSS] %s refused from
+combat",manager->m_tpaCombatObjects[l_iGroupIndex]->base()->name_replace());
 				}
 #endif
 				return;
@@ -192,7 +199,8 @@ public:
 	}
 };
 
-void CALifeInteractionManager::check_for_interaction(CSE_ALifeSchedulable *tpALifeSchedulable, GameGraph::_GRAPH_ID tGraphID)
+void CALifeInteractionManager::check_for_interaction(CSE_ALifeSchedulable *tpALifeSchedulable, GameGraph::_GRAPH_ID
+tGraphID)
 {
 	graph().iterate_objects(
 		tGraphID,

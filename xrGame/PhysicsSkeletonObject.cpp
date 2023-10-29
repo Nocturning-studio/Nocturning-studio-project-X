@@ -8,47 +8,43 @@
 
 CPhysicsSkeletonObject::CPhysicsSkeletonObject()
 {
-
 }
 
 CPhysicsSkeletonObject::~CPhysicsSkeletonObject()
 {
-
 }
-
 
 BOOL CPhysicsSkeletonObject::net_Spawn(CSE_Abstract* DC)
 {
-	CSE_Abstract			  *e	= (CSE_Abstract*)(DC);
+	CSE_Abstract* e = (CSE_Abstract*)(DC);
 
-	inherited::net_Spawn	(DC);
+	inherited::net_Spawn(DC);
 	xr_delete(collidable.model);
 	collidable.model = xr_new<CCF_Skeleton>(this);
 	CPHSkeleton::Spawn(e);
 	setVisible(TRUE);
 	setEnabled(TRUE);
-	if(!PPhysicsShell()->isBreakable())
-		SheduleUnregister		();
+	if (!PPhysicsShell()->isBreakable())
+		SheduleUnregister();
 	return TRUE;
 }
 
-void	CPhysicsSkeletonObject::SpawnInitPhysics	(CSE_Abstract	*D)
+void CPhysicsSkeletonObject::SpawnInitPhysics(CSE_Abstract* D)
 {
 	CreatePhysicsShell(D);
-	CKinematics* K=smart_cast<CKinematics*>	(Visual());
-	if(K)	
-	{	
+	CKinematics* K = smart_cast<CKinematics*>(Visual());
+	if (K)
+	{
 		K->CalculateBones_Invalidate();
-		K->CalculateBones	();
+		K->CalculateBones();
 	}
 }
 
 void CPhysicsSkeletonObject::net_Destroy()
 {
 
-	inherited::net_Destroy		();
-	CPHSkeleton::RespawnInit	();
-
+	inherited::net_Destroy();
+	CPHSkeleton::RespawnInit();
 }
 
 void CPhysicsSkeletonObject::Load(LPCSTR section)
@@ -59,13 +55,13 @@ void CPhysicsSkeletonObject::Load(LPCSTR section)
 
 void CPhysicsSkeletonObject::CreatePhysicsShell(CSE_Abstract* e)
 {
-	CSE_PHSkeleton	*po=smart_cast<CSE_PHSkeleton*>(e);
-	if(m_pPhysicsShell) return;
-	if (!Visual()) return;
-	m_pPhysicsShell=P_build_Shell(this,!po->_flags.test(CSE_PHSkeleton::flActive));
-
+	CSE_PHSkeleton* po = smart_cast<CSE_PHSkeleton*>(e);
+	if (m_pPhysicsShell)
+		return;
+	if (!Visual())
+		return;
+	m_pPhysicsShell = P_build_Shell(this, !po->_flags.test(CSE_PHSkeleton::flActive));
 }
-
 
 void CPhysicsSkeletonObject::shedule_Update(u32 dt)
 {
@@ -74,35 +70,32 @@ void CPhysicsSkeletonObject::shedule_Update(u32 dt)
 	CPHSkeleton::Update(dt);
 }
 
-void CPhysicsSkeletonObject::net_Save(NET_Packet &P)
+void CPhysicsSkeletonObject::net_Save(NET_Packet& P)
 {
 	inherited::net_Save(P);
-	CPHSkeleton::SaveNetState	   (P);
+	CPHSkeleton::SaveNetState(P);
 }
-
-
 
 BOOL CPhysicsSkeletonObject::net_SaveRelevant()
 {
-	return TRUE;//!m_flags.test(CSE_ALifeObjectPhysic::flSpawnCopy);
+	return TRUE; //! m_flags.test(CSE_ALifeObjectPhysic::flSpawnCopy);
 }
-
 
 BOOL CPhysicsSkeletonObject::UsedAI_Locations()
 {
-	return					(FALSE);
+	return (FALSE);
 }
 
 void CPhysicsSkeletonObject::UpdateCL()
 {
-	inherited::UpdateCL		();
-	PHObjectPositionUpdate	();
+	inherited::UpdateCL();
+	PHObjectPositionUpdate();
 }
 
-void CPhysicsSkeletonObject::	PHObjectPositionUpdate()
+void CPhysicsSkeletonObject::PHObjectPositionUpdate()
 {
-	if(m_pPhysicsShell)
+	if (m_pPhysicsShell)
 	{
-			m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
+		m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
 	}
 }

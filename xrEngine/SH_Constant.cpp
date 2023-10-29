@@ -23,17 +23,19 @@ BOOL	AAA_test		()
 }
 */
 
-void	CConstant::Calculate()
+void CConstant::Calculate()
 {
-	if (dwFrame == Device.dwFrame)	return;
+	if (dwFrame == Device.dwFrame)
+		return;
 	dwFrame = Device.dwFrame;
-	if (modeProgrammable == dwMode)	return;
+	if (modeProgrammable == dwMode)
+		return;
 
-	float	t = Device.fTimeGlobal;
+	float t = Device.fTimeGlobal;
 	set_float(_R.Calculate(t), _G.Calculate(t), _B.Calculate(t), _A.Calculate(t));
 }
 
-void	CConstant::Load(IReader* fs)
+void CConstant::Load(IReader* fs)
 {
 	dwMode = modeWaveForm;
 	fs->r(&_R, sizeof(WaveForm));
@@ -42,7 +44,7 @@ void	CConstant::Load(IReader* fs)
 	fs->r(&_A, sizeof(WaveForm));
 }
 
-void	CConstant::Save(IWriter* fs)
+void CConstant::Save(IWriter* fs)
 {
 	fs->w(&_R, sizeof(WaveForm));
 	fs->w(&_G, sizeof(WaveForm));

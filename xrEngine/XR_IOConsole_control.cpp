@@ -6,7 +6,6 @@
 #include "stdafx.h"
 #include "XR_IOConsole.h"
 
-
 void CConsole::add_cmd_history(shared_str const& str)
 {
 	if (str.size() == 0)

@@ -4,12 +4,13 @@
 #include "ETextureParams.h"
 
 // eye-params
-float					r__dtex_range = 50;
-class cl_dt_scaler : public R_constant_setup {
-public:
-	float				scale;
+float r__dtex_range = 50;
+class cl_dt_scaler : public R_constant_setup
+{
+  public:
+	float scale;
 
-	cl_dt_scaler(float s) : scale(s) {};
+	cl_dt_scaler(float s) : scale(s){};
 	virtual void setup(R_constant* C)
 	{
 		RCache.set_c(C, scale, scale, scale, 1 / r__dtex_range);
@@ -19,110 +20,109 @@ public:
 void fix_texture_thm_name(LPSTR fn)
 {
 	LPSTR _ext = strext(fn);
-	if (_ext &&
-		(0 == stricmp(_ext, ".tga") ||
-			0 == stricmp(_ext, ".thm") ||
-			0 == stricmp(_ext, ".dds") ||
-			0 == stricmp(_ext, ".bmp") ||
-			0 == stricmp(_ext, ".ogm")))
+	if (_ext && (0 == stricmp(_ext, ".tga") || 0 == stricmp(_ext, ".thm") || 0 == stricmp(_ext, ".dds") ||
+				 0 == stricmp(_ext, ".bmp") || 0 == stricmp(_ext, ".ogm")))
 		*_ext = 0;
 }
 void CTextureDescrMngr::LoadLTX()
 {
-	string_path				fname;		
-	FS.update_path			(fname,"$game_textures$","textures.ltx");
+	string_path fname;
+	FS.update_path(fname, "$game_textures$", "textures.ltx");
 
 	if (FS.exist(fname))
 	{
-		CInifile			ini(fname);
+		CInifile ini(fname);
 		if (ini.section_exist("association"))
 		{
-			CInifile::Sect& data	= ini.r_section("association");
-			CInifile::SectCIt I		= data.Data.begin();
-			CInifile::SectCIt E		= data.Data.end();
-			for ( ; I!=E; ++I)	
+			CInifile::Sect& data = ini.r_section("association");
+			CInifile::SectCIt I = data.Data.begin();
+			CInifile::SectCIt E = data.Data.end();
+			for (; I != E; ++I)
 			{
-				const CInifile::Item& item	= *I;
+				const CInifile::Item& item = *I;
 
-				texture_desc& desc		= m_texture_details[item.first];
-				desc.m_assoc			= xr_new<texture_assoc>();
+				texture_desc& desc = m_texture_details[item.first];
+				desc.m_assoc = xr_new<texture_assoc>();
 
-				string_path				T;
-				float					s;
+				string_path T;
+				float s;
 
-				int res = sscanf					(*item.second,"%[^,],%f",T,&s);
-				R_ASSERT(res==2);
+				int res = sscanf(*item.second, "%[^,],%f", T, &s);
+				R_ASSERT(res == 2);
 				desc.m_assoc->detail_name = T;
-				desc.m_assoc->cs		= xr_new<cl_dt_scaler>(s);
-				desc.m_assoc->usage		= 0;
-				if(strstr(item.second.c_str(),"usage[diffuse_or_bump]"))
-					desc.m_assoc->usage	= (1<<0)|(1<<1);
-				else
-				if(strstr(item.second.c_str(),"usage[bump]"))
-					desc.m_assoc->usage	= (1<<1);
-				else
-				if(strstr(item.second.c_str(),"usage[diffuse]"))
-					desc.m_assoc->usage	= (1<<0);
+				desc.m_assoc->cs = xr_new<cl_dt_scaler>(s);
+				desc.m_assoc->usage = 0;
+				if (strstr(item.second.c_str(), "usage[diffuse_or_bump]"))
+					desc.m_assoc->usage = (1 << 0) | (1 << 1);
+				else if (strstr(item.second.c_str(), "usage[bump]"))
+					desc.m_assoc->usage = (1 << 1);
+				else if (strstr(item.second.c_str(), "usage[diffuse]"))
+					desc.m_assoc->usage = (1 << 0);
 			}
-		}//"association"
+		} //"association"
 
 		if (ini.section_exist("specification"))
 		{
-			CInifile::Sect& 	sect = ini.r_section("specification");
-			for (CInifile::SectCIt I2=sect.Data.begin(); I2!=sect.Data.end(); ++I2)	
+			CInifile::Sect& sect = ini.r_section("specification");
+			for (CInifile::SectCIt I2 = sect.Data.begin(); I2 != sect.Data.end(); ++I2)
 			{
-				const CInifile::Item& item	= *I2;
+				const CInifile::Item& item = *I2;
 
-				texture_desc& desc		= m_texture_details[item.first];
-				desc.m_spec				= xr_new<texture_spec>();
+				texture_desc& desc = m_texture_details[item.first];
+				desc.m_spec = xr_new<texture_spec>();
 
-				string_path				bmode, bSteepParallax;
-				int res = sscanf		(item.second.c_str(),"bump_mode[%[^]]], material[%f], steep_parallax[%[^]]",bmode,&desc.m_spec->m_material,bSteepParallax);
-				R_ASSERT(res>=2);
-				if ((bmode[0]=='u')&&(bmode[1]=='s')&&(bmode[2]=='e')&&(bmode[3]==':'))
+				string_path bmode, bSteepParallax;
+				int res = sscanf(item.second.c_str(), "bump_mode[%[^]]], material[%f], steep_parallax[%[^]]", bmode,
+								 &desc.m_spec->m_material, bSteepParallax);
+				R_ASSERT(res >= 2);
+				if ((bmode[0] == 'u') && (bmode[1] == 's') && (bmode[2] == 'e') && (bmode[3] == ':'))
 				{
 					// bump-map specified
-					desc.m_spec->m_bump_name	=	bmode+4;
+					desc.m_spec->m_bump_name = bmode + 4;
 				}
 				if (res == 3)
 				{
-					if ((bSteepParallax[0]=='u')&&(bSteepParallax[1]=='s')&&(bSteepParallax[2]=='e'))
+					if ((bSteepParallax[0] == 'u') && (bSteepParallax[1] == 's') && (bSteepParallax[2] == 'e'))
 					{
 						// parallax
 						desc.m_spec->m_steep_parallax = TRUE;
-					} else {
+					}
+					else
+					{
 						desc.m_spec->m_steep_parallax = FALSE;
 					}
-				} else {
+				}
+				else
+				{
 					desc.m_spec->m_steep_parallax = FALSE;
 				}
 			}
-		}//"specification"
+		} //"specification"
 #ifdef _EDITOR
 		if (ini.section_exist("types"))
 		{
-			CInifile::Sect& 	data = ini.r_section("types");
-			for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++)	
+			CInifile::Sect& data = ini.r_section("types");
+			for (CInifile::SectCIt I = data.Data.begin(); I != data.Data.end(); I++)
 			{
-				CInifile::Item& item	= *I;
+				CInifile::Item& item = *I;
 
-				texture_desc& desc		= m_texture_details[item.first];
-				desc.m_type				= (u16)atoi(item.second.c_str());
+				texture_desc& desc = m_texture_details[item.first];
+				desc.m_type = (u16)atoi(item.second.c_str());
 			}
-		}//"types"
+		} //"types"
 #endif
-	}//file-exist
+	} // file-exist
 }
 
 void CTextureDescrMngr::LoadTHM()
 {
-	FS_FileSet				flist;
+	FS_FileSet flist;
 	FS.file_list(flist, "$game_textures$", FS_ListFiles, "*.thm");
 	Msg("count of .thm files=%d", flist.size());
 	FS_FileSetIt It = flist.begin();
 	FS_FileSetIt It_e = flist.end();
-	STextureParams			tp;
-	string_path				fn;
+	STextureParams tp;
+	string_path fn;
 	for (; It != It_e; ++It)
 	{
 		FS.update_path(fn, "$game_textures$", (*It).name.c_str());
@@ -139,8 +139,7 @@ void CTextureDescrMngr::LoadTHM()
 		texture_desc& desc = m_texture_details[fn];
 		desc.m_type = tp.type;
 #endif
-		if (STextureParams::ttImage == tp.fmt ||
-			STextureParams::ttTerrain == tp.fmt ||
+		if (STextureParams::ttImage == tp.fmt || STextureParams::ttTerrain == tp.fmt ||
 			STextureParams::ttNormalMap == tp.fmt)
 		{
 #ifndef _EDITOR
@@ -178,7 +177,7 @@ void CTextureDescrMngr::LoadTHM()
 
 void CTextureDescrMngr::Load()
 {
-	CTimer					TT;
+	CTimer TT;
 	TT.Start();
 
 	LoadLTX();

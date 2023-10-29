@@ -2,33 +2,43 @@
 #ifndef ParticleCustomH
 #define ParticleCustomH
 //---------------------------------------------------------------------------
-class ENGINE_API	IParticleCustom : public IRender_Visual
+class ENGINE_API IParticleCustom : public IRender_Visual
 {
-public:
+  public:
 	// geometry-format
-	ref_geom		geom;
-public:
-	virtual 		~IParticleCustom() { ; }
+	ref_geom geom;
 
-	virtual void 	OnDeviceCreate() = 0;
-	virtual void 	OnDeviceDestroy() = 0;
+  public:
+	virtual ~IParticleCustom()
+	{
+		;
+	}
 
-	virtual void	UpdateParent(const Fmatrix& m, const Fvector& velocity, BOOL bXFORM) = 0;
-	virtual void	OnFrame(u32 dt) = 0;
+	virtual void OnDeviceCreate() = 0;
+	virtual void OnDeviceDestroy() = 0;
 
-	virtual void	Play() = 0;
-	virtual void	Stop(BOOL bDefferedStop = TRUE) = 0;
-	virtual BOOL	IsPlaying() = 0;
+	virtual void UpdateParent(const Fmatrix& m, const Fvector& velocity, BOOL bXFORM) = 0;
+	virtual void OnFrame(u32 dt) = 0;
 
-	virtual u32		ParticlesCount() = 0;
+	virtual void Play() = 0;
+	virtual void Stop(BOOL bDefferedStop = TRUE) = 0;
+	virtual BOOL IsPlaying() = 0;
 
-	virtual float	GetTimeLimit() = 0;
-	virtual BOOL	IsLooped() { return GetTimeLimit() < 0.f; }
+	virtual u32 ParticlesCount() = 0;
 
-	virtual const shared_str	Name() = 0;
+	virtual float GetTimeLimit() = 0;
+	virtual BOOL IsLooped()
+	{
+		return GetTimeLimit() < 0.f;
+	}
 
-	virtual IParticleCustom* dcast_ParticleCustom() { return this; }
+	virtual const shared_str Name() = 0;
+
+	virtual IParticleCustom* dcast_ParticleCustom()
+	{
+		return this;
+	}
 };
 
 //---------------------------------------------------------------------------
-#endif //ParticleCustomH
+#endif // ParticleCustomH

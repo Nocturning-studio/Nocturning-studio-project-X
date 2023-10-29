@@ -37,7 +37,7 @@ void CActorFollowerMngr::AddFollower(u16 id)
 
 	m_followers.push_back(id);
 	m_uiPanel->AddFollower(id);
-	
+
 }
 
 void CActorFollowerMngr::RemoveFollower(u16 id)

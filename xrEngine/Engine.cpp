@@ -5,8 +5,8 @@
 #include "stdafx.h"
 #include "Engine.h"
 
-CEngine				Engine;
-xrDispatchTable		PSGP;
+CEngine Engine;
+xrDispatchTable PSGP;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -20,14 +20,15 @@ CEngine::~CEngine()
 {
 }
 
-extern	void msCreate(LPCSTR name);
+extern void msCreate(LPCSTR name);
 
 void CEngine::Initialize(void)
 {
 	// Bind PSGP
 	hPSGP = LoadLibrary("xrCPU_Pipe.dll");
 	R_ASSERT(hPSGP);
-	xrBinder* bindCPU = (xrBinder*)GetProcAddress(hPSGP, "xrBind_PSGP");	R_ASSERT(bindCPU);
+	xrBinder* bindCPU = (xrBinder*)GetProcAddress(hPSGP, "xrBind_PSGP");
+	R_ASSERT(bindCPU);
 	bindCPU(&PSGP, CPU::ID.feature & CPU::ID.os_support);
 
 	// Other stuff
@@ -42,8 +43,9 @@ void CEngine::Destroy()
 {
 	Engine.Sheduler.Destroy();
 #ifdef DEBUG_MEMORY_MANAGER
-	extern void	dbg_dump_leaks_prepare();
-	if (Memory.debug_mode)				dbg_dump_leaks_prepare();
+	extern void dbg_dump_leaks_prepare();
+	if (Memory.debug_mode)
+		dbg_dump_leaks_prepare();
 #endif // DEBUG_MEMORY_MANAGER
 	Engine.External.Destroy();
 

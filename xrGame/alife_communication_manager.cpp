@@ -44,7 +44,8 @@ using namespace ALifeCommunication;
 
 class CSortItemByValuePredicate {
 public:
-	IC bool							operator()							(const CSE_ALifeInventoryItem *tpALifeInventoryItem1, const CSE_ALifeInventoryItem *tpALifeInventoryItem2)  const
+	IC bool							operator()							(const CSE_ALifeInventoryItem
+*tpALifeInventoryItem1, const CSE_ALifeInventoryItem *tpALifeInventoryItem2)  const
 	{
 		return						(tpALifeInventoryItem1->m_dwCost < tpALifeInventoryItem2->m_dwCost);
 	};
@@ -53,13 +54,14 @@ public:
 class CSortByOwnerPredicate {
 public:
 	ALife::_OBJECT_ID				m_tParentID;
-	
+
 									CSortByOwnerPredicate	(ALife::_OBJECT_ID tParentID)
 	{
 		m_tParentID					= tParentID;
 	}
 
-	IC bool							operator()							(const CSE_ALifeInventoryItem *tpALifeInventoryItem1, const CSE_ALifeInventoryItem *tpALifeInventoryItem2) const
+	IC bool							operator()							(const CSE_ALifeInventoryItem
+*tpALifeInventoryItem1, const CSE_ALifeInventoryItem *tpALifeInventoryItem2) const
 	{
 		if (tpALifeInventoryItem1->m_dwCost == tpALifeInventoryItem2->m_dwCost)
 			if (tpALifeInventoryItem1->m_tPreviousParentID == m_tParentID)
@@ -78,17 +80,17 @@ public:
 };
 /**/
 
-CALifeCommunicationManager::CALifeCommunicationManager	(xrServer *server, LPCSTR section) :
-	CALifeSimulatorBase	(server,section)
+CALifeCommunicationManager::CALifeCommunicationManager(xrServer* server, LPCSTR section)
+	: CALifeSimulatorBase(server, section)
 {
-//	m_tpItems1.reserve			(MAX_STACK_DEPTH);
-//	m_tpItems2.reserve			(MAX_STACK_DEPTH);
-//	m_tpBlockedItems1.reserve	(MAX_STACK_DEPTH);
-//	m_tpBlockedItems2.reserve	(MAX_STACK_DEPTH);
-//	m_tpTrader1.reserve			(MAX_STACK_DEPTH);
-//	m_tpTrader1.reserve			(MAX_STACK_DEPTH);
-//	m_tpSums1.reserve			(MAX_STACK_DEPTH);
-//	m_tpSums2.reserve			(MAX_STACK_DEPTH);
+	//	m_tpItems1.reserve			(MAX_STACK_DEPTH);
+	//	m_tpItems2.reserve			(MAX_STACK_DEPTH);
+	//	m_tpBlockedItems1.reserve	(MAX_STACK_DEPTH);
+	//	m_tpBlockedItems2.reserve	(MAX_STACK_DEPTH);
+	//	m_tpTrader1.reserve			(MAX_STACK_DEPTH);
+	//	m_tpTrader1.reserve			(MAX_STACK_DEPTH);
+	//	m_tpSums1.reserve			(MAX_STACK_DEPTH);
+	//	m_tpSums2.reserve			(MAX_STACK_DEPTH);
 }
 
 /**
@@ -126,28 +128,27 @@ u32	 CALifeCommunicationManager::dwfComputeItemCost(ITEM_P_VECTOR &tpItemVector)
 	return				(l_dwItemCost);
 }
 
-void CALifeCommunicationManager::vfRunFunctionByIndex(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, OBJECT_VECTOR &tpBlockedItems, ITEM_P_VECTOR &tpItems, int i, int &j)
+void CALifeCommunicationManager::vfRunFunctionByIndex(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, OBJECT_VECTOR
+&tpBlockedItems, ITEM_P_VECTOR &tpItems, int i, int &j)
 {
-	sort				(m_temp_item_vector.begin(),m_temp_item_vector.end(),CSortByOwnerPredicate(tpALifeHumanAbstract->ID));
-	switch (i) {
-		case 0 : {
-			j	= tpALifeHumanAbstract->brain().objects().choose_food		(&tpBlockedItems);
-			break;
+	sort
+(m_temp_item_vector.begin(),m_temp_item_vector.end(),CSortByOwnerPredicate(tpALifeHumanAbstract->ID)); switch (i) { case
+0 : { j	= tpALifeHumanAbstract->brain().objects().choose_food		(&tpBlockedItems); break;
 		}
 		case 1 : {
 			j	= tpALifeHumanAbstract->brain().objects().choose_weapon		(eWeaponPriorityTypeKnife,&tpBlockedItems);
 			break;
 		}
 		case 2 : {
-			j	= tpALifeHumanAbstract->brain().objects().choose_weapon		(eWeaponPriorityTypeSecondary,&tpBlockedItems);
-			break;
+			j	= tpALifeHumanAbstract->brain().objects().choose_weapon
+(eWeaponPriorityTypeSecondary,&tpBlockedItems); break;
 		}
 		case 3 : {
-			j	= tpALifeHumanAbstract->brain().objects().choose_weapon		(eWeaponPriorityTypePrimary,&tpBlockedItems);
+			j	= tpALifeHumanAbstract->brain().objects().choose_weapon (eWeaponPriorityTypePrimary,&tpBlockedItems);
 			break;
 		}
 		case 4 : {
-			j	= tpALifeHumanAbstract->brain().objects().choose_weapon		(eWeaponPriorityTypeGrenade,&tpBlockedItems);
+			j	= tpALifeHumanAbstract->brain().objects().choose_weapon (eWeaponPriorityTypeGrenade,&tpBlockedItems);
 			break;
 		}
 		case 5 : {
@@ -169,7 +170,8 @@ void CALifeCommunicationManager::vfRunFunctionByIndex(CSE_ALifeHumanAbstract *tp
 void CALifeCommunicationManager::vfAssignItemParents(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, int iItemCount)
 {
 	ALife::_OBJECT_ID		*temp_children = (ALife::_OBJECT_ID*)alloca(sizeof(ALife::_OBJECT_ID)*iItemCount);
-	std::copy				(tpALifeHumanAbstract->children.begin() + tpALifeHumanAbstract->children.size() - iItemCount,tpALifeHumanAbstract->children.end(),temp_children);
+	std::copy				(tpALifeHumanAbstract->children.begin() + tpALifeHumanAbstract->children.size() -
+iItemCount,tpALifeHumanAbstract->children.end(),temp_children);
 	tpALifeHumanAbstract->children.resize(tpALifeHumanAbstract->children.size() - iItemCount);
 	ALife::_OBJECT_ID		*I = temp_children;
 	ALife::_OBJECT_ID		*E = temp_children + iItemCount;
@@ -181,17 +183,19 @@ void CALifeCommunicationManager::vfAssignItemParents(CSE_ALifeHumanAbstract *tpA
 	}
 }
 
-void CALifeCommunicationManager::vfAttachOwnerItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR &tpItemVector, ITEM_P_VECTOR &tpOwnItems)
+void CALifeCommunicationManager::vfAttachOwnerItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR
+&tpItemVector, ITEM_P_VECTOR &tpOwnItems)
 {
 	ITEM_P_IT				I = tpItemVector.begin();
 	ITEM_P_IT				E = tpItemVector.end();
 	for ( ; I != E; ++I)
-//		if ((std::find(tpOwnItems.begin(),tpOwnItems.end(),*I) != tpOwnItems.end()) && tpALifeHumanAbstract->bfCanGetItem(*I))
-		if (std::binary_search(tpOwnItems.begin(),tpOwnItems.end(),*I))
+//		if ((std::find(tpOwnItems.begin(),tpOwnItems.end(),*I) != tpOwnItems.end()) &&
+tpALifeHumanAbstract->bfCanGetItem(*I)) if (std::binary_search(tpOwnItems.begin(),tpOwnItems.end(),*I))
 			tpALifeHumanAbstract->attach(*I,true);
 }
 
-int  CALifeCommunicationManager::ifComputeBalance(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR &tpItemVector)
+int  CALifeCommunicationManager::ifComputeBalance(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR
+&tpItemVector)
 {
 	int				l_iDebt = 0;
 	OBJECT_VECTOR	&l_tpChildren = tpALifeHumanAbstract->children;
@@ -203,7 +207,8 @@ int  CALifeCommunicationManager::ifComputeBalance(CSE_ALifeHumanAbstract *tpALif
 	return(l_iDebt);
 }
 
-void CALifeCommunicationManager::vfRestoreItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR &tpItemVector)
+void CALifeCommunicationManager::vfRestoreItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, ITEM_P_VECTOR
+&tpItemVector)
 {
 #ifndef FAST_OWNERSHIP
 	tpALifeHumanAbstract->vfInitInventory();
@@ -227,10 +232,10 @@ void CALifeCommunicationManager::vfRestoreItems(CSE_ALifeHumanAbstract *tpALifeH
 }
 
 #ifdef FAST_OWNERSHIP
-void CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *tpALifeTraderAbstract1, CSE_ALifeTraderAbstract *tpALifeTraderAbstract2, OBJECT_VECTOR &tpObjectVector)
-#else
-void CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *tpALifeTraderAbstract1, OBJECT_VECTOR &tpObjectVector)
-#endif
+void CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *tpALifeTraderAbstract1,
+CSE_ALifeTraderAbstract *tpALifeTraderAbstract2, OBJECT_VECTOR &tpObjectVector) #else void
+CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *tpALifeTraderAbstract1, OBJECT_VECTOR
+&tpObjectVector) #endif
 {
 	tpObjectVector.clear();
 	tpObjectVector.insert(tpObjectVector.end(),tpALifeTraderAbstract1->base()->children.begin(),tpALifeTraderAbstract1->base()->children.end());
@@ -242,11 +247,13 @@ void CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *
 #ifndef FAST_OWNERSHIP
 		CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = objects().object(*I);
 		l_tpALifeDynamicObject->ID_Parent = 0xffff;
-		graph().attach	(*tpALifeTraderAbstract1->base(),smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeDynamicObject),l_tpALifeDynamicObject->m_tGraphID);
+		graph().attach
+(*tpALifeTraderAbstract1->base(),smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeDynamicObject),l_tpALifeDynamicObject->m_tGraphID);
 #else
 		CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I));
 		if (l_tpALifeInventoryItem->m_tPreviousParentID != tpALifeTraderAbstract1->base()->ID) {
-			R_ASSERT							(l_tpALifeInventoryItem->m_tPreviousParentID == tpALifeTraderAbstract2->base()->ID);
+			R_ASSERT							(l_tpALifeInventoryItem->m_tPreviousParentID ==
+tpALifeTraderAbstract2->base()->ID);
 //			tpALifeTraderAbstract2->detach		(l_tpALifeInventoryItem,0,false);
 		}
 		tpALifeTraderAbstract1->attach			(l_tpALifeInventoryItem,true);
@@ -254,7 +261,8 @@ void CALifeCommunicationManager::vfAttachGatheredItems(CSE_ALifeTraderAbstract *
 	}
 }
 
-void CALifeCommunicationManager::vfFillTraderVector(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, int iItemCount, ITEM_P_VECTOR &tpItemVector)
+void CALifeCommunicationManager::vfFillTraderVector(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, int iItemCount,
+ITEM_P_VECTOR &tpItemVector)
 {
 	tpItemVector.clear	();
 	OBJECT_IT			I = tpALifeHumanAbstract->children.end() - iItemCount;
@@ -307,7 +315,8 @@ void CALifeCommunicationManager::vfGenerateSums	(ITEM_P_VECTOR &tpTrader, INT_VE
 #endif
 }
 
-bool CALifeCommunicationManager::bfGetItemIndexes	(ITEM_P_VECTOR &tpTrader, int iSum1, INT_VECTOR &tpIndexes, SSumStackCell *tpStack, int iStartI, int iStackPointer)
+bool CALifeCommunicationManager::bfGetItemIndexes	(ITEM_P_VECTOR &tpTrader, int iSum1, INT_VECTOR &tpIndexes,
+SSumStackCell *tpStack, int iStartI, int iStackPointer)
 {
 	for (int j=iStartI, n=tpTrader.size(); j<n; ++j) {
 
@@ -339,7 +348,9 @@ bool CALifeCommunicationManager::bfGetItemIndexes	(ITEM_P_VECTOR &tpTrader, int 
 	return					(false);
 }
 
-bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, ITEM_P_VECTOR &tpTrader1, INT_VECTOR &tpIndexes1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR &tpTrader2, INT_VECTOR &tpIndexes2)
+bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1,
+ITEM_P_VECTOR &tpTrader1, INT_VECTOR &tpIndexes1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR
+&tpTrader2, INT_VECTOR &tpIndexes2)
 {
 	{
 		INT_IT				I = tpIndexes2.begin();
@@ -358,7 +369,8 @@ bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstr
 		}
 	}
 
-	bool					l_bResult = tpALifeHumanAbstract1->brain().objects().can_take_item(0) && tpALifeHumanAbstract2->brain().objects().can_take_item(0);
+	bool					l_bResult = tpALifeHumanAbstract1->brain().objects().can_take_item(0) &&
+tpALifeHumanAbstract2->brain().objects().can_take_item(0);
 
 	if (!l_bResult) {
 		{
@@ -379,32 +391,35 @@ bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstr
 		return				(true);
 }
 
-bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, ITEM_P_VECTOR &tpTrader1, int iSum1, int iMoney1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR &tpTrader2, int iSum2, int iMoney2, int iBalance)
+bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1,
+ITEM_P_VECTOR &tpTrader1, int iSum1, int iMoney1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR
+&tpTrader2, int iSum2, int iMoney2, int iBalance)
 {
 	INT_VECTOR				l_tpIndexes1, l_tpIndexes2;
 	int						l_iStartI1 = 0, l_iStackPointer1 = 0, l_iStartI2 = 0, l_iStackPointer2 = 0;
 	for (;;) {
 		l_tpIndexes1.clear	();
-		
+
 		if (iSum1)
 			if (!bfGetItemIndexes(tpTrader1,iSum1,l_tpIndexes1,m_tpStack1,l_iStartI1,l_iStackPointer1))
 				return		(false);
 
 		for (;;) {
 			l_tpIndexes2.clear();
-			
+
 			if (iSum2 && !bfGetItemIndexes(tpTrader2,iSum2,l_tpIndexes2,m_tpStack2,l_iStartI2,l_iStackPointer2))
 				return	(false);
-			
-			if (!bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,l_tpIndexes1,tpALifeHumanAbstract2,tpTrader2,l_tpIndexes2))
+
+			if
+(!bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,l_tpIndexes1,tpALifeHumanAbstract2,tpTrader2,l_tpIndexes2))
 				continue;
 
 #ifdef DEBUG
 			string4096		S;
-			char			*S1 = S;	
+			char			*S1 = S;
 			if (psAI_Flags.test(aiALife)) {
 				S1				+= sprintf_s(S1,"%s -> ",tpALifeHumanAbstract1->name_replace());
-				
+
 				if (iSum1) {
 					for (int i=0, n=l_tpIndexes1.size(); i<n ;++i)
 						S1		+= sprintf_s(S1,"%3d",l_tpIndexes1[i]);
@@ -421,18 +436,18 @@ bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstr
 				tpALifeHumanAbstract1->m_dwMoney -= iBalance + iSum2 - iSum1;
 				tpALifeHumanAbstract2->m_dwMoney += iBalance + iSum2 - iSum1;
 			}
-			
+
 #ifdef DEBUG
 			if (psAI_Flags.test(aiALife)) {
 				S1				+= sprintf_s(S1,"\n%s -> ",tpALifeHumanAbstract2->name_replace());
-				
+
 				if (iSum2) {
 					for (int i=0, n=l_tpIndexes2.size(); i<n ;++i)
 						S1		+= sprintf_s(S1,"%3d",l_tpIndexes2[i]);
 				}
 			}
 #endif
-			
+
 			if (iSum1 > iBalance + iSum2) {
 #ifdef DEBUG
 				if (psAI_Flags.test(aiALife)) {
@@ -454,7 +469,9 @@ bool CALifeCommunicationManager::bfCheckForInventoryCapacity(CSE_ALifeHumanAbstr
 	}
 }
 
-bool CALifeCommunicationManager::bfCheckForTrade	(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, ITEM_P_VECTOR &tpTrader1, INT_VECTOR &tpSums1, int iMoney1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR &tpTrader2, INT_VECTOR &tpSums2, int iMoney2, int iBalance)
+bool CALifeCommunicationManager::bfCheckForTrade	(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, ITEM_P_VECTOR
+&tpTrader1, INT_VECTOR &tpSums1, int iMoney1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, ITEM_P_VECTOR &tpTrader2,
+INT_VECTOR &tpSums2, int iMoney2, int iBalance)
 {
 	INT_IT					I	= tpSums1.begin();
 	INT_IT					E	= tpSums1.end();
@@ -466,7 +483,8 @@ bool CALifeCommunicationManager::bfCheckForTrade	(CSE_ALifeHumanAbstract *tpALif
 			continue;
 
 		if (*I < iBalance) {
-			if (bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,0,iMoney2,iBalance))
+			if
+(bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,0,iMoney2,iBalance))
 				break;
 		}
 		else {
@@ -475,18 +493,18 @@ bool CALifeCommunicationManager::bfCheckForTrade	(CSE_ALifeHumanAbstract *tpALif
 			for ( ; II != EE; ++II)
 				if (*I >= *II + iBalance)
 					if (*I - *II - iBalance <= iMoney2) {
-						if (bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,*II,iMoney2,iBalance)) {
-							l_bOk = true;
-							break;
+						if
+(bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,*II,iMoney2,iBalance))
+{ l_bOk = true; break;
 						}
 					}
 					else
 						continue;
 				else
 					if (*I + iMoney1 >= *II + iBalance) {
-						if (bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,*II,iMoney2,iBalance)) {
-							l_bOk = true;
-							break;
+						if
+(bfCheckForInventoryCapacity(tpALifeHumanAbstract1,tpTrader1,*I,iMoney1,tpALifeHumanAbstract2,tpTrader2,*II,iMoney2,iBalance))
+{ l_bOk = true; break;
 						}
 					}
 					else
@@ -508,7 +526,8 @@ bool CALifeCommunicationManager::bfCheckForTrade	(CSE_ALifeHumanAbstract *tpALif
 		return				(true);
 }
 
-bool CALifeCommunicationManager::bfCheckIfCanNullTradersBalance(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, int iItemCount1, int iItemCount2, int iBalance)
+bool CALifeCommunicationManager::bfCheckIfCanNullTradersBalance(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1,
+CSE_ALifeHumanAbstract *tpALifeHumanAbstract2, int iItemCount1, int iItemCount2, int iBalance)
 {
 	if (!iBalance) {
 #ifdef DEBUG
@@ -554,16 +573,16 @@ bool CALifeCommunicationManager::bfCheckIfCanNullTradersBalance(CSE_ALifeHumanAb
 			{
 				string4096		S;
 				char			*S1 = S;
-				S1				+= sprintf_s(S1,"%s [%5d]: ",tpALifeHumanAbstract1->name_replace(),tpALifeHumanAbstract1->m_dwMoney);
-				for (int i=0, n=m_tpTrader1.size(); i<n; ++i)
+				S1				+= sprintf_s(S1,"%s [%5d]:
+",tpALifeHumanAbstract1->name_replace(),tpALifeHumanAbstract1->m_dwMoney); for (int i=0, n=m_tpTrader1.size(); i<n; ++i)
 					S1			+= sprintf_s(S1,"%6d",m_tpTrader1[i]->m_dwCost);
 				Msg				("%s",S);
 			}
 			{
 				string4096		S;
 				char			*S1 = S;
-				S1				+= sprintf_s(S1,"%s [%5d]: ",tpALifeHumanAbstract2->name_replace(),tpALifeHumanAbstract2->m_dwMoney);
-				for (int i=0, n=m_tpTrader2.size(); i<n; ++i)
+				S1				+= sprintf_s(S1,"%s [%5d]:
+",tpALifeHumanAbstract2->name_replace(),tpALifeHumanAbstract2->m_dwMoney); for (int i=0, n=m_tpTrader2.size(); i<n; ++i)
 					S1			+= sprintf_s(S1,"%6d",m_tpTrader2[i]->m_dwCost);
 				Msg				("%s",S);
 			}
@@ -576,7 +595,7 @@ bool CALifeCommunicationManager::bfCheckIfCanNullTradersBalance(CSE_ALifeHumanAb
 
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
-			{	
+			{
 				string4096		S;
 				char			*S1 = S;
 				S1				+= sprintf_s(S1,"%s : ",tpALifeHumanAbstract1->name_replace());
@@ -600,12 +619,15 @@ bool CALifeCommunicationManager::bfCheckIfCanNullTradersBalance(CSE_ALifeHumanAb
 #endif
 
 		if (iBalance < 0)
-			return			(bfCheckForTrade(tpALifeHumanAbstract1, m_tpTrader1, m_tpSums1, tpALifeHumanAbstract1->m_dwMoney, tpALifeHumanAbstract2, m_tpTrader2, m_tpSums2, tpALifeHumanAbstract2->m_dwMoney, _abs(iBalance)));
-		else
-			return			(bfCheckForTrade(tpALifeHumanAbstract2, m_tpTrader2, m_tpSums2, tpALifeHumanAbstract2->m_dwMoney, tpALifeHumanAbstract1, m_tpTrader1, m_tpSums1, tpALifeHumanAbstract1->m_dwMoney, iBalance));
+			return			(bfCheckForTrade(tpALifeHumanAbstract1, m_tpTrader1, m_tpSums1,
+tpALifeHumanAbstract1->m_dwMoney, tpALifeHumanAbstract2, m_tpTrader2, m_tpSums2, tpALifeHumanAbstract2->m_dwMoney,
+_abs(iBalance))); else return			(bfCheckForTrade(tpALifeHumanAbstract2, m_tpTrader2, m_tpSums2,
+tpALifeHumanAbstract2->m_dwMoney, tpALifeHumanAbstract1, m_tpTrader1, m_tpSums1, tpALifeHumanAbstract1->m_dwMoney,
+iBalance));
 }
 
-void CALifeCommunicationManager::vfAppendBlockedItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, OBJECT_VECTOR &tpObjectVector1, OBJECT_VECTOR &tpObjectVector2, int l_iItemCount1)
+void CALifeCommunicationManager::vfAppendBlockedItems(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, OBJECT_VECTOR
+&tpObjectVector1, OBJECT_VECTOR &tpObjectVector2, int l_iItemCount1)
 {
 	OBJECT_IT			I = tpALifeHumanAbstract->children.end() - l_iItemCount1;
 	OBJECT_IT			E = tpALifeHumanAbstract->children.end();
@@ -614,7 +636,8 @@ void CALifeCommunicationManager::vfAppendBlockedItems(CSE_ALifeHumanAbstract *tp
 			tpObjectVector1.push_back(*I);
 }
 
-void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, CSE_ALifeHumanAbstract *tpALifeHumanAbstract2)
+void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALifeHumanAbstract1, CSE_ALifeHumanAbstract
+*tpALifeHumanAbstract2)
 {
 //	VERIFY					(tpALifeHumanAbstract1->check_inventory_consistency());
 //	VERIFY					(tpALifeHumanAbstract2->check_inventory_consistency());
@@ -644,10 +667,10 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 #endif
 		return;
 	}
-	
+
 	m_temp_item_vector		= m_tpItems1;
 	m_temp_item_vector.insert(m_temp_item_vector.end(),m_tpItems2.begin(),m_tpItems2.end());
-	
+
 	sort				(m_tpItems1.begin(),m_tpItems1.end());
 	sort				(m_tpItems2.begin(),m_tpItems2.end());
 
@@ -659,12 +682,9 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 	tpALifeHumanAbstract2->vfDetachAll();
 #endif
 	for (int j=0, k=0; j<8; ++j) {
-		if (m_temp_item_vector.empty() || !(tpALifeHumanAbstract1->brain().m_dwTotalMoney + tpALifeHumanAbstract2->brain().m_dwTotalMoney))
-			break;
-		int				l_iItemCount1 = 0, l_iItemCount2 = 0;
-		switch (k) {
-			case 0 : {
-				vfRunFunctionByIndex(tpALifeHumanAbstract1,m_tpBlockedItems1,m_tpItems1,j,l_iItemCount1);
+		if (m_temp_item_vector.empty() || !(tpALifeHumanAbstract1->brain().m_dwTotalMoney +
+tpALifeHumanAbstract2->brain().m_dwTotalMoney)) break; int				l_iItemCount1 = 0, l_iItemCount2 = 0; switch (k)
+{ case 0 : { vfRunFunctionByIndex(tpALifeHumanAbstract1,m_tpBlockedItems1,m_tpItems1,j,l_iItemCount1);
 				vfRunFunctionByIndex(tpALifeHumanAbstract2,m_tpBlockedItems2,m_tpItems2,j,l_iItemCount2);
 				break;
 			}
@@ -678,36 +698,38 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 			}
 			case 3 : {
 				vfRunFunctionByIndex(tpALifeHumanAbstract1,m_tpBlockedItems1,m_tpItems1,j,l_iItemCount1);
-				
+
 				m_tpBlockedItems2.clear();
-				m_tpBlockedItems2.insert(m_tpBlockedItems2.end(),tpALifeHumanAbstract1->children.end() - l_iItemCount1,tpALifeHumanAbstract1->children.end());
+				m_tpBlockedItems2.insert(m_tpBlockedItems2.end(),tpALifeHumanAbstract1->children.end() -
+l_iItemCount1,tpALifeHumanAbstract1->children.end());
 
 				vfRunFunctionByIndex(tpALifeHumanAbstract2,m_tpBlockedItems2,m_tpItems2,j,l_iItemCount2);
-				
+
 				m_tpBlockedItems1.clear();
-				m_tpBlockedItems1.insert(m_tpBlockedItems1.end(),tpALifeHumanAbstract2->children.end() - l_iItemCount2,tpALifeHumanAbstract2->children.end());
-				
+				m_tpBlockedItems1.insert(m_tpBlockedItems1.end(),tpALifeHumanAbstract2->children.end() -
+l_iItemCount2,tpALifeHumanAbstract2->children.end());
+
 				tpALifeHumanAbstract1->children.resize(tpALifeHumanAbstract1->children.size() - l_iItemCount1);
-				
+
 				vfRunFunctionByIndex(tpALifeHumanAbstract1,m_tpBlockedItems1,m_tpItems1,j,l_iItemCount1);
 				break;
 			}
 		}
-		
+
 		m_tpBlockedItems1.clear();
 		m_tpBlockedItems2.clear();
-			
+
 		if (l_iItemCount1*l_iItemCount2) {
 			OBJECT_IT			I = tpALifeHumanAbstract1->children.end() - l_iItemCount1, J;
 			OBJECT_IT			E = tpALifeHumanAbstract1->children.end();
 			for ( ; I != E; ++I) {
-				J				= std::find(tpALifeHumanAbstract2->children.end() - l_iItemCount2,tpALifeHumanAbstract2->children.end(),*I);
-				if (tpALifeHumanAbstract2->children.end() != J) {
-					if (std::binary_search(m_tpItems1.begin(),m_tpItems1.end(),smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I))))
+				J				= std::find(tpALifeHumanAbstract2->children.end() -
+l_iItemCount2,tpALifeHumanAbstract2->children.end(),*I); if (tpALifeHumanAbstract2->children.end() != J) { if
+(std::binary_search(m_tpItems1.begin(),m_tpItems1.end(),smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I))))
 						m_tpBlockedItems2.push_back(*I);
 					else {
-						R_ASSERT2(std::binary_search(m_tpItems2.begin(),m_tpItems2.end(),smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I))),"Unknown item parent");
-						m_tpBlockedItems1.push_back(*I);
+						R_ASSERT2(std::binary_search(m_tpItems2.begin(),m_tpItems2.end(),smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I))),"Unknown
+item parent"); m_tpBlockedItems1.push_back(*I);
 					}
 				}
 			}
@@ -719,7 +741,8 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 			if (l_iItemCount2)
 				vfAssignItemParents	(tpALifeHumanAbstract2,l_iItemCount2);
 			if (l_iItemCount1 + l_iItemCount2) {
-				ITEM_P_IT			I = remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
+				ITEM_P_IT			I =
+remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
 				m_temp_item_vector.erase(I,m_temp_item_vector.end());
 			}
 			k					= 0;
@@ -736,7 +759,8 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 				else {
 					tpALifeHumanAbstract1->children.resize(tpALifeHumanAbstract1->children.size() - l_iItemCount1);
 					vfAssignItemParents	(tpALifeHumanAbstract2,l_iItemCount2);
-					ITEM_P_IT			I = remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
+					ITEM_P_IT			I =
+remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
 					m_temp_item_vector.erase(I,m_temp_item_vector.end());
 					k = 1;
 				}
@@ -744,7 +768,8 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 				tpALifeHumanAbstract2->children.resize(tpALifeHumanAbstract2->children.size() - l_iItemCount2);
 				k = 2;
 				vfAssignItemParents	(tpALifeHumanAbstract1,l_iItemCount1);
-				ITEM_P_IT			I = remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
+				ITEM_P_IT			I =
+remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
 				m_temp_item_vector.erase(I,m_temp_item_vector.end());
 			}
 			--j;
@@ -759,9 +784,11 @@ void CALifeCommunicationManager::vfPerformTrading(CSE_ALifeHumanAbstract *tpALif
 
 	vfAttachOwnerItems	(tpALifeHumanAbstract1,m_temp_item_vector,m_tpItems1);
 	vfAttachOwnerItems	(tpALifeHumanAbstract2,m_temp_item_vector,m_tpItems2);
-	
-	if (!bfCheckIfCanNullTradersBalance(tpALifeHumanAbstract1,tpALifeHumanAbstract2,tpALifeHumanAbstract1->children.size() - l_iItemCount1,tpALifeHumanAbstract2->children.size() - l_iItemCount2,ifComputeBalance(tpALifeHumanAbstract1,m_tpItems2) - ifComputeBalance(tpALifeHumanAbstract2,m_tpItems1))) {
-		vfRestoreItems	(tpALifeHumanAbstract1,m_tpItems1);
+
+	if
+(!bfCheckIfCanNullTradersBalance(tpALifeHumanAbstract1,tpALifeHumanAbstract2,tpALifeHumanAbstract1->children.size() -
+l_iItemCount1,tpALifeHumanAbstract2->children.size() - l_iItemCount2,ifComputeBalance(tpALifeHumanAbstract1,m_tpItems2)
+- ifComputeBalance(tpALifeHumanAbstract2,m_tpItems1))) { vfRestoreItems	(tpALifeHumanAbstract1,m_tpItems1);
 		vfRestoreItems	(tpALifeHumanAbstract2,m_tpItems2);
 	}
 
@@ -810,18 +837,17 @@ void CALifeCommunicationManager::vfPerformCommunication()
 	}
 }
 
-void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, CSE_ALifeTrader *tpALifeTrader)
+void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstract *tpALifeHumanAbstract, CSE_ALifeTrader
+*tpALifeTrader)
 {
 	// process group of stalkers
-	CSE_ALifeGroupAbstract					*l_tpALifeAbstractGroup = smart_cast<CSE_ALifeGroupAbstract*>(tpALifeHumanAbstract);
-	if (l_tpALifeAbstractGroup) {
-		OBJECT_IT							I = l_tpALifeAbstractGroup->m_tpMembers.begin();
-		OBJECT_IT							E = l_tpALifeAbstractGroup->m_tpMembers.end();
-		for ( ; I != E; ++I)
-			communicate_with_customer		(smart_cast<CSE_ALifeHumanAbstract*>(objects().object(*I)),tpALifeTrader);
-		return;
+	CSE_ALifeGroupAbstract					*l_tpALifeAbstractGroup =
+smart_cast<CSE_ALifeGroupAbstract*>(tpALifeHumanAbstract); if (l_tpALifeAbstractGroup) { OBJECT_IT
+I = l_tpALifeAbstractGroup->m_tpMembers.begin(); OBJECT_IT							E =
+l_tpALifeAbstractGroup->m_tpMembers.end(); for ( ; I != E; ++I) communicate_with_customer
+(smart_cast<CSE_ALifeHumanAbstract*>(objects().object(*I)),tpALifeTrader); return;
 	}
-	
+
 	// trade items
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {
@@ -834,9 +860,9 @@ void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstrac
 		OBJECT_IT							I = tpALifeHumanAbstract->children.begin();
 		OBJECT_IT							E = tpALifeHumanAbstract->children.end();
 		for ( ; I != E; ++I) {
-			CSE_ALifeInventoryItem			*l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I));
-			CSE_ALifeItemPDA				*pda = smart_cast<CSE_ALifeItemPDA*>(l_tpALifeInventoryItem);
-			if (pda && (pda->m_original_owner == tpALifeHumanAbstract->ID)) {
+			CSE_ALifeInventoryItem			*l_tpALifeInventoryItem =
+smart_cast<CSE_ALifeInventoryItem*>(objects().object(*I)); CSE_ALifeItemPDA				*pda =
+smart_cast<CSE_ALifeItemPDA*>(l_tpALifeInventoryItem); if (pda && (pda->m_original_owner == tpALifeHumanAbstract->ID)) {
 				VERIFY						(!original_pda);
 				original_pda				= pda;
 			}
@@ -848,11 +874,11 @@ void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstrac
 		}
 		tpALifeHumanAbstract->children.clear();
 	}
-	
+
 	sort									(tpALifeTrader->children.begin(),tpALifeTrader->children.end());
 
 	tpALifeHumanAbstract->m_dwMoney			= tpALifeHumanAbstract->brain().m_dwTotalMoney;
-	
+
 	m_temp_item_vector.clear				();
 	append_item_vector						(tpALifeTrader->children,m_temp_item_vector);
 
@@ -867,20 +893,23 @@ void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstrac
 			for ( ; I != E; ++I) {
 				if (!(*I)->attached())
 					continue;
-				OBJECT_IT					J = std::lower_bound(tpALifeTrader->children.begin(),tpALifeTrader->children.end(),(*I)->base()->ID);
-				R_ASSERT					((tpALifeTrader->children.end() != J) && (*J == (*I)->base()->ID) && (((J+1) == tpALifeTrader->children.end()) || (*(J + 1) != (*I)->base()->ID)));
-				tpALifeTrader->children.erase(J);
+				OBJECT_IT					J =
+std::lower_bound(tpALifeTrader->children.begin(),tpALifeTrader->children.end(),(*I)->base()->ID); R_ASSERT
+((tpALifeTrader->children.end() != J) && (*J == (*I)->base()->ID) && (((J+1) == tpALifeTrader->children.end()) || (*(J +
+1) != (*I)->base()->ID))); tpALifeTrader->children.erase(J);
 			}
-			I								= remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate());
-			m_temp_item_vector.erase		(I,m_temp_item_vector.end());
+			I								=
+remove_if(m_temp_item_vector.begin(),m_temp_item_vector.end(),CRemoveAttachedItemsPredicate()); m_temp_item_vector.erase
+(I,m_temp_item_vector.end());
 		}
 	}
 
-	tpALifeTrader->m_dwMoney				+= tpALifeHumanAbstract->m_dwMoney - tpALifeHumanAbstract->brain().m_dwTotalMoney;
-	tpALifeHumanAbstract->m_dwMoney			= tpALifeHumanAbstract->brain().m_dwTotalMoney;
-	tpALifeHumanAbstract->brain().m_dwTotalMoney	= u32(-1);
+	tpALifeTrader->m_dwMoney				+= tpALifeHumanAbstract->m_dwMoney -
+tpALifeHumanAbstract->brain().m_dwTotalMoney; tpALifeHumanAbstract->m_dwMoney			=
+tpALifeHumanAbstract->brain().m_dwTotalMoney; tpALifeHumanAbstract->brain().m_dwTotalMoney	= u32(-1);
 
-	R_ASSERT2								(int(tpALifeTrader->m_dwMoney) >= 0,"Trader must have enough money to pay for the artefacts!");
+	R_ASSERT2								(int(tpALifeTrader->m_dwMoney) >= 0,"Trader must have enough money to pay
+for the artefacts!");
 
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {
@@ -896,10 +925,10 @@ void CALifeCommunicationManager::communicate_with_customer(CSE_ALifeHumanAbstrac
 #endif
 
 	{
-		OBJECT_IT							I = std::find(tpALifeTrader->children.begin(),tpALifeTrader->children.end(),original_pda->ID);
-		VERIFY								(I != tpALifeTrader->children.end());
-		tpALifeTrader->detach				(original_pda);
-		tpALifeHumanAbstract->attach		(original_pda,true);
+		OBJECT_IT							I =
+std::find(tpALifeTrader->children.begin(),tpALifeTrader->children.end(),original_pda->ID); VERIFY
+(I != tpALifeTrader->children.end()); tpALifeTrader->detach				(original_pda); tpALifeHumanAbstract->attach
+(original_pda,true);
 	}
 }
 /**/

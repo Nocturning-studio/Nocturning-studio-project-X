@@ -8,15 +8,17 @@
 
 #pragma once
 
-namespace ScriptStorage {
-	enum ELuaMessageType {
-		eLuaMessageTypeInfo = u32(0),
-		eLuaMessageTypeError,
-		eLuaMessageTypeMessage,
-		eLuaMessageTypeHookCall,
-		eLuaMessageTypeHookReturn,
-		eLuaMessageTypeHookLine,
-		eLuaMessageTypeHookCount,
-		eLuaMessageTypeHookTailReturn = u32(-1),
-	};
-}
+namespace ScriptStorage
+{
+enum ELuaMessageType
+{
+	eLuaMessageTypeInfo = u32(0),
+	eLuaMessageTypeError,
+	eLuaMessageTypeMessage,
+	eLuaMessageTypeHookCall,
+	eLuaMessageTypeHookReturn,
+	eLuaMessageTypeHookLine,
+	eLuaMessageTypeHookCount,
+	eLuaMessageTypeHookTailReturn = u32(-1),
+};
+} // namespace ScriptStorage

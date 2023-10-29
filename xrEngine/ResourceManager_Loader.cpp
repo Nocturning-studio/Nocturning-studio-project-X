@@ -4,14 +4,16 @@
 #include "ResourceManager.h"
 #include "blenders\blender.h"
 
-void	CResourceManager::OnDeviceDestroy(BOOL)
+void CResourceManager::OnDeviceDestroy(BOOL)
 {
-	if (Device.b_is_Ready)				return;
+	if (Device.b_is_Ready)
+		return;
 	m_textures_description.UnLoad();
 	//.	xr_delete			(m_description);
 
-		// Matrices
-	for (map_Matrix::iterator m = m_matrices.begin(); m != m_matrices.end(); m++) {
+	// Matrices
+	for (map_Matrix::iterator m = m_matrices.begin(); m != m_matrices.end(); m++)
+	{
 		R_ASSERT(1 == m->second->dwReference);
 		xr_delete(m->second);
 	}
@@ -48,11 +50,12 @@ void	CResourceManager::OnDeviceDestroy(BOOL)
 #endif
 }
 
-void	CResourceManager::OnDeviceCreate(IReader* F)
+void CResourceManager::OnDeviceCreate(IReader* F)
 {
-	if (!Device.b_is_Ready) return;
+	if (!Device.b_is_Ready)
+		return;
 
-	string256	name;
+	string256 name;
 
 #ifndef _EDITOR
 	// scripting
@@ -61,8 +64,10 @@ void	CResourceManager::OnDeviceCreate(IReader* F)
 	IReader* fs = 0;
 	// Load constants
 	fs = F->open_chunk(0);
-	if (fs) {
-		while (!fs->eof()) {
+	if (fs)
+	{
+		while (!fs->eof())
+		{
 			fs->r_stringZ(name, sizeof(name));
 			CConstant* C = _CreateConstant(name);
 			C->Load(fs);
@@ -72,8 +77,10 @@ void	CResourceManager::OnDeviceCreate(IReader* F)
 
 	// Load matrices
 	fs = F->open_chunk(1);
-	if (fs) {
-		while (!fs->eof()) {
+	if (fs)
+	{
+		while (!fs->eof())
+		{
 			fs->r_stringZ(name, sizeof(name));
 			CMatrix* M = _CreateMatrix(name);
 			M->Load(fs);
@@ -83,12 +90,14 @@ void	CResourceManager::OnDeviceCreate(IReader* F)
 
 	// Load blenders
 	fs = F->open_chunk(2);
-	if (fs) {
+	if (fs)
+	{
 		IReader* chunk = NULL;
-		int			chunk_id = 0;
+		int chunk_id = 0;
 
-		while ((chunk = fs->open_chunk(chunk_id)) != NULL) {
-			CBlender_DESC	desc;
+		while ((chunk = fs->open_chunk(chunk_id)) != NULL)
+		{
+			CBlender_DESC desc;
 			chunk->r(&desc, sizeof(desc));
 			IBlender* B = IBlender::Create(desc.CLS);
 			if (0 == B)
@@ -152,15 +161,16 @@ void	CResourceManager::OnDeviceCreate(IReader* F)
 	*/
 }
 
-void	CResourceManager::OnDeviceCreate(LPCSTR shName)
+void CResourceManager::OnDeviceCreate(LPCSTR shName)
 {
 #ifdef _EDITOR
-	if (!FS.exist(shName)) return;
+	if (!FS.exist(shName))
+		return;
 #endif
 
 	// Check if file is compressed already
-	string32	ID = "shENGINE";
-	string32	id;
+	string32 ID = "shENGINE";
+	string32 id;
 	IReader* F = FS.r_open(shName);
 	R_ASSERT2(F, shName);
 	F->r(&id, 8);
@@ -183,13 +193,14 @@ void CResourceManager::StoreNecessaryTextures()
 	for (; it != it_e; ++it)
 	{
 		LPCSTR texture_name = it->first;
-		if (strstr(texture_name, "\\levels\\"))	continue;
-		if (!strchr(texture_name, '\\'))		continue;
+		if (strstr(texture_name, "\\levels\\"))
+			continue;
+		if (!strchr(texture_name, '\\'))
+			continue;
 
-		ref_texture				T;
+		ref_texture T;
 		T.create(texture_name);
 		m_necessary.push_back(T);
-
 	}
 }
 

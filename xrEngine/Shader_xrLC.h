@@ -4,8 +4,9 @@
 
 struct Shader_xrLC
 {
-public:
-	enum {
+  public:
+	enum
+	{
 		flCollision = 1 << 0,
 		flRendering = 1 << 1,
 		flOptimizeUV = 1 << 2,
@@ -13,7 +14,8 @@ public:
 		flLIGHT_CastShadow = 1 << 4,
 		flLIGHT_Sharp = 1 << 5,
 	};
-	struct Flags {
+	struct Flags
+	{
 		u32 bCollision : 1;
 		u32 bRendering : 1;
 		u32 bOptimizeUV : 1;
@@ -21,17 +23,19 @@ public:
 		u32 bLIGHT_CastShadow : 1;
 		u32 bLIGHT_Sharp : 1;
 	};
-public:
-	char		Name[128];
-	union {
-		Flags32	m_Flags;
-		Flags	flags;
-	};
-	float		vert_translucency;
-	float		vert_ambient;
-	float		lm_density;
 
-	Shader_xrLC() {
+  public:
+	char Name[128];
+	union {
+		Flags32 m_Flags;
+		Flags flags;
+	};
+	float vert_translucency;
+	float vert_ambient;
+	float lm_density;
+
+	Shader_xrLC()
+	{
 		strcpy_s(Name, "unknown");
 		m_Flags.assign(0);
 		flags.bCollision = TRUE;
@@ -49,14 +53,16 @@ public:
 DEFINE_VECTOR(Shader_xrLC, Shader_xrLCVec, Shader_xrLCIt);
 class Shader_xrLC_LIB
 {
-	Shader_xrLCVec			library;
-public:
-	void					Load(LPCSTR name)
+	Shader_xrLCVec library;
+
+  public:
+	void Load(LPCSTR name)
 	{
 		IReader* fs = FS.r_open(name);
-		if (NULL == fs) {
-			string256		inf;
-			extern HWND		logWindow;
+		if (NULL == fs)
+		{
+			string256 inf;
+			extern HWND logWindow;
 			sprintf_s(inf, sizeof(inf), "Build failed!\nCan't load shaders library: '%s'", name);
 			//			clMsg			(inf);
 			//			MessageBox		(logWindow,inf,"Error!",MB_OK|MB_ICONERROR);
@@ -70,32 +76,36 @@ public:
 		fs->r(&*library.begin(), fs->length());
 		FS.r_close(fs);
 	}
-	bool					Save(LPCSTR name)
+	bool Save(LPCSTR name)
 	{
 		IWriter* F = FS.w_open(name);
-		if (F) {
+		if (F)
+		{
 			F->w(&*library.begin(), (u32)library.size() * sizeof(Shader_xrLC));
 			FS.w_close(F);
-			return 			true;
+			return true;
 		}
-		else {
-			return 			false;
+		else
+		{
+			return false;
 		}
 	}
-	void					Unload()
+	void Unload()
 	{
 		library.clear();
 	}
-	u32						GetID(LPCSTR name)
+	u32 GetID(LPCSTR name)
 	{
 		for (Shader_xrLCIt it = library.begin(); it != library.end(); it++)
-			if (0 == stricmp(name, it->Name)) return u32(it - library.begin());
+			if (0 == stricmp(name, it->Name))
+				return u32(it - library.begin());
 		return u32(-1);
 	}
 	Shader_xrLC* Get(LPCSTR name)
 	{
 		for (Shader_xrLCIt it = library.begin(); it != library.end(); it++)
-			if (0 == stricmp(name, it->Name)) return &(*it);
+			if (0 == stricmp(name, it->Name))
+				return &(*it);
 		return NULL;
 	}
 	Shader_xrLC* Get(int id)
@@ -107,18 +117,22 @@ public:
 		library.push_back(parent ? Shader_xrLC(*parent) : Shader_xrLC());
 		return &library.back();
 	}
-	void					Remove(LPCSTR name)
+	void Remove(LPCSTR name)
 	{
 		for (Shader_xrLCIt it = library.begin(); it != library.end(); it++)
-			if (0 == stricmp(name, it->Name)) {
+			if (0 == stricmp(name, it->Name))
+			{
 				library.erase(it);
 				break;
 			}
 	}
-	void					Remove(int id)
+	void Remove(int id)
 	{
 		library.erase(library.begin() + id);
 	}
-	Shader_xrLCVec& Library() { return library; }
+	Shader_xrLCVec& Library()
+	{
+		return library;
+	}
 };
 #endif

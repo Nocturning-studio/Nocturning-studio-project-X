@@ -1,371 +1,259 @@
 ///////////////////////////////////////////////////////////////////////////////////
-#include	"stdafx.h"
-#pragma		hdrstop
+#include "stdafx.h"
+#pragma hdrstop
 ///////////////////////////////////////////////////////////////////////////////////
-#include	"xrRender_console.h"
+#include "xrRender_console.h"
 ///////////////////////////////////////////////////////////////////////////////////
 /*-------------------------------------------------------------------------------*/
 // Render common tokens
 /*-------------------------------------------------------------------------------*/
-u32	ps_Preset = 3;
-xr_token							qpreset_token[] = {
-	{ "Minimum",					0											},
-	{ "Low",						1											},
-	{ "Default",					2											},
-	{ "High",						3											},
-	{ "Maximum",					4											},
-	{ "Extreme",					5											},
-	{ "Ultra",						6											},
-	{ 0,							0											}
-};
+u32 ps_Preset = 3;
+xr_token qpreset_token[] = {{"Minimum", 0}, {"Low", 1},		{"Default", 2}, {"High", 3},
+							{"Maximum", 4}, {"Extreme", 5}, {"Ultra", 6},	{0, 0}};
 
-u32	ps_EffPreset = 2;
-xr_token							qeffpreset_token[] = {
-	{ "st_opt_eff_disabled",		0											},
-	{ "st_opt_eff_default",			1											},
-	{ "st_opt_eff_cinematic",		2											},
-	{ 0,							0											}
-};
+u32 ps_EffPreset = 2;
+xr_token qeffpreset_token[] = {
+	{"st_opt_eff_disabled", 0}, {"st_opt_eff_default", 1}, {"st_opt_eff_cinematic", 2}, {0, 0}};
 
-u32	ps_vignette_mode = 2;
-xr_token vignette_mode_token[] = {
-	{ "st_opt_disabled",			0											},
-	{ "st_opt_static",				1											},
-	{ "st_opt_dynamic",				2											},
-	{ 0,							0											}
-};
+u32 ps_vignette_mode = 2;
+xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, {"st_opt_dynamic", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32	ps_r2_aa = 1;
-xr_token							aa_token[] = {
-	{ "st_opt_disabled",			0											},
-	{ "st_opt_dlaa",				1											},
-	{ "st_opt_dlaa_force_edge_detect", 2										},
-	{ "st_opt_fxaa",				3											},
-	{ "st_opt_fxaa_2x",				4											},
-	{ 0,							0											} 
-};
+u32 ps_r2_aa = 1;
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_dlaa", 1},	  {"st_opt_dlaa_force_edge_detect", 2},
+					   {"st_opt_fxaa", 3},	   {"st_opt_fxaa_2x", 4}, {0, 0}};
 
-u32	ps_r2_aa_quality = 2;
+u32 ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											} 
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_ao = 2;
-xr_token ao_token[] = {
-	{ "st_opt_off",					0											},
-	{ "st_opt_ssao",				1											},
-	{ "st_opt_hdao",				2											},
-	{ "st_opt_hbao",				3											},
-	{ 0,							0											} 
-};
+u32 ps_r2_ao = 2;
+xr_token ao_token[] = {{"st_opt_off", 0}, {"st_opt_ssao", 1}, {"st_opt_hdao", 2}, {"st_opt_hbao", 3}, {0, 0}};
 
-u32	ps_r2_ao_quality = 2;
+u32 ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											} 
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_sun_quality = 1;
-xr_token sun_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_extreme",				4											},
-	{ "st_opt_ultra",				5											},
-	{ 0,							0											} 
-};
+u32 ps_r2_sun_quality = 1;
+xr_token sun_quality_token[] = {{"st_opt_low", 1},	   {"st_opt_medium", 2}, {"st_opt_high", 3},
+								{"st_opt_extreme", 4}, {"st_opt_ultra", 5},	 {0, 0}};
 
-u32	ps_r2_shadow_filtering = 1;
+u32 ps_r2_shadow_filtering = 1;
 xr_token shadow_filter_token[] = {
-	{ "st_opt_disable",				0											},
-	{ "st_opt_min",					1											},
-	{ "st_opt_mid",					2											},
-	{ "st_opt_max",					3											},
-	{ 0,							0											} 
-};
+	{"st_opt_disable", 0}, {"st_opt_min", 1}, {"st_opt_mid", 2}, {"st_opt_max", 3}, {0, 0}};
 
-u32	ps_r2_sun_shafts = 2;
-xr_token							qsun_shafts_token[] = {
-	{ "st_opt_off",					0												},
-	{ "st_opt_low",					1												},
-	{ "st_opt_medium",				2												},
-	{ "st_opt_high",				3												},
-	{ 0,							0												}
-};
+u32 ps_r2_sun_shafts = 2;
+xr_token qsun_shafts_token[] = {{"st_opt_off", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
 
-u32	ps_r2_bump_mode = 2;
+u32 ps_r2_bump_mode = 2;
 xr_token bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
-	{ 0,							0											}
-};
+	{"st_opt_normal_mapping", 1}, {"st_opt_parallax_mapping", 2}, {"st_opt_steep_parallax_mapping", 3}, {0, 0}};
 
-u32	ps_r2_terrain_bump_mode = 2;
+u32 ps_r2_terrain_bump_mode = 2;
 xr_token terrain_bump_mode_token[] = {
-	{ "st_opt_normal_mapping",		1											},
-	{ "st_opt_parallax_mapping",	2											},
-	{ "st_opt_steep_parallax_mapping",3											},
-	{ 0,							0											}
-};
+	{"st_opt_normal_mapping", 1}, {"st_opt_parallax_mapping", 2}, {"st_opt_steep_parallax_mapping", 3}, {0, 0}};
 
-u32	ps_r2_bump_quality = 1;
+u32 ps_r2_bump_quality = 1;
 xr_token bump_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_dof_quality = 2;
+u32 ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_mblur_quality = 2;
+u32 ps_r2_mblur_quality = 2;
 xr_token mblur_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_fog_quality = 2;
+u32 ps_r2_fog_quality = 2;
 xr_token fog_quality_token[] = {
-	{ "st_opt_low",					1											},
-	{ "st_opt_medium",				2											},
-	{ "st_opt_high",				3											},
-	{ "st_opt_ultra",				4											},
-	{ 0,							0											}
-};
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32	ps_r2_debug_frame_layers = 0;
-xr_token debug_frame_layers_token[] = {
-	{ "full_frame",					0											},
-	{ "gbuffer_color",				1											},
-	{ "gbuffer_position",			2											},
-	{ "gbuffer_normal",				3											},
-	{ "gbuffer_gloss",				4											},
-	{ "gbuffer_lightmap_ao",		5											},
-	{ "gbuffer_material",			6											},
-	{ "gbuffer_split",				7											},
-	{ "light_diffuse",				8											},
-	{ "light_specular",				9											},
-	{ "real_time_ao",				10											},
-	{ "real_time_ao_with_lightmap_ao",		11											},
-	{ "split_ao_blur_stages",		12											},
-	{ "full_light",					13											},
-	{ 0,							0											}
-};
+u32 ps_r2_debug_frame_layers = 0;
+xr_token debug_frame_layers_token[] = {{"full_frame", 0},
+									   {"gbuffer_color", 1},
+									   {"gbuffer_position", 2},
+									   {"gbuffer_normal", 3},
+									   {"gbuffer_gloss", 4},
+									   {"gbuffer_lightmap_ao", 5},
+									   {"gbuffer_material", 6},
+									   {"gbuffer_split", 7},
+									   {"light_diffuse", 8},
+									   {"light_specular", 9},
+									   {"real_time_ao", 10},
+									   {"real_time_ao_with_lightmap_ao", 11},
+									   {"split_ao_blur_stages", 12},
+									   {"full_light", 13},
+									   {0, 0}};
 
-u32	ps_r2_debug_textures = 0;
-xr_token ps_debug_textures_token[] = {
-	{ "disabled",					0											},
-	{ "uv_checker",					1											},
-	{ "white",						2											},
-	{ 0,							0											}
-};
+u32 ps_r2_debug_textures = 0;
+xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
-int			ps_r__Supersample = 1;
-int			ps_r__LightSleepFrames = 10;
+int ps_r__Supersample = 1;
+int ps_r__LightSleepFrames = 10;
 
-float		ps_r__Detail_l_ambient = 0.9f;
-float		ps_r__Detail_l_aniso = 0.25f;
-float		ps_r__Detail_density = 0.3f;
-float		ps_r__Detail_rainbow_hemi = 0.75f;
+float ps_r__Detail_l_ambient = 0.9f;
+float ps_r__Detail_l_aniso = 0.25f;
+float ps_r__Detail_density = 0.3f;
+float ps_r__Detail_rainbow_hemi = 0.75f;
 
-float		ps_r__Tree_w_rot = 10.0f;
-float		ps_r__Tree_w_speed = 1.00f;
-float		ps_r__Tree_w_amp = 0.005f;
-Fvector		ps_r__Tree_Wave = { .1f, .01f, .11f };
-float		ps_r__Tree_SBC = 1.5f;	// scale bias correct
+float ps_r__Tree_w_rot = 10.0f;
+float ps_r__Tree_w_speed = 1.00f;
+float ps_r__Tree_w_amp = 0.005f;
+Fvector ps_r__Tree_Wave = {.1f, .01f, .11f};
+float ps_r__Tree_SBC = 1.5f; // scale bias correct
 
-float		ps_r__WallmarkTTL = 300.f;
-float		ps_r__WallmarkSHIFT = 0.0001f;
-float		ps_r__WallmarkSHIFT_V = 0.0001f;
+float ps_r__WallmarkTTL = 300.f;
+float ps_r__WallmarkSHIFT = 0.0001f;
+float ps_r__WallmarkSHIFT_V = 0.0001f;
 
-float		ps_r__GLOD_ssa_start = 256.f;
-float		ps_r__GLOD_ssa_end = 64.f;
-float		ps_r__LOD = 1.f;
-float		ps_r__ssaDISCARD = 3.5f;
-float		ps_r__ssaDONTSORT = 32.f;
-float		ps_r__ssaHZBvsTEX = 96.f;
+float ps_r__GLOD_ssa_start = 256.f;
+float ps_r__GLOD_ssa_end = 64.f;
+float ps_r__LOD = 1.f;
+float ps_r__ssaDISCARD = 3.5f;
+float ps_r__ssaDONTSORT = 32.f;
+float ps_r__ssaHZBvsTEX = 96.f;
 
-int			ps_r__tf_Anisotropic = 4;
+int ps_r__tf_Anisotropic = 4;
 
-//Render common flags
-Flags32		ps_render_flags =
-{
-	RFLAG_LENS_FLARES
-};
+// Render common flags
+Flags32 ps_render_flags = {RFLAG_LENS_FLARES};
 
 /*-------------------------------------------------------------------------------*/
 // R1-specific values
 /*-------------------------------------------------------------------------------*/
-float		ps_r1_ssaLOD_A = 64.f;
-float		ps_r1_ssaLOD_B = 48.f;
-float		ps_r1_tf_Mipbias = 0.0f;
-float		ps_r1_lmodel_lerp = 0.1f;
-float		ps_r1_dlights_clip = 30.f;
-float		ps_r1_pps_u = 0.f;
-float		ps_r1_pps_v = 0.f;
-int			ps_r1_GlowsPerFrame = 16;
+float ps_r1_ssaLOD_A = 64.f;
+float ps_r1_ssaLOD_B = 48.f;
+float ps_r1_tf_Mipbias = 0.0f;
+float ps_r1_lmodel_lerp = 0.1f;
+float ps_r1_dlights_clip = 30.f;
+float ps_r1_pps_u = 0.f;
+float ps_r1_pps_v = 0.f;
+int ps_r1_GlowsPerFrame = 16;
 
 // R1-specific flags
-Flags32		ps_r1_flags = 
-{ 
-	R1FLAG_DLIGHTS 
-};
+Flags32 ps_r1_flags = {R1FLAG_DLIGHTS};
 
 /*-------------------------------------------------------------------------------*/
 // R2/R2a/R2.5-specific values
 /*-------------------------------------------------------------------------------*/
-float		ps_r2_ssaLOD_A = 48.f;
-float		ps_r2_ssaLOD_B = 32.f;
-float		ps_r2_detalization_distance = 75.f;
+float ps_r2_ssaLOD_A = 48.f;
+float ps_r2_ssaLOD_B = 32.f;
+float ps_r2_detalization_distance = 75.f;
 
-float		ps_r2_tf_Mipbias = 0.0f;
+float ps_r2_tf_Mipbias = 0.0f;
 
-float		ps_r2_df_parallax_h = 0.02f;
+float ps_r2_df_parallax_h = 0.02f;
 
-float		ps_r2_autoexposure_middlegray = 1.f;			
-float		ps_r2_autoexposure_adaptation = 1.f;
-float		ps_r2_autoexposure_low_lum = 0.0001f;
-float		ps_r2_autoexposure_amount = 0.5f;
+float ps_r2_autoexposure_middlegray = 1.f;
+float ps_r2_autoexposure_adaptation = 1.f;
+float ps_r2_autoexposure_low_lum = 0.0001f;
+float ps_r2_autoexposure_amount = 0.5f;
 
-float		ps_r2_ls_bloom_kernel_g = 3.0f;				
-float		ps_r2_ls_bloom_kernel_b = .7f;				
-float		ps_r2_ls_bloom_speed = 100.f;				
-float		ps_r2_ls_bloom_kernel_scale = 0.8f;		// gauss
-float		ps_r2_ls_bloom_threshold = .2f;
+float ps_r2_ls_bloom_kernel_g = 3.0f;
+float ps_r2_ls_bloom_kernel_b = .7f;
+float ps_r2_ls_bloom_speed = 100.f;
+float ps_r2_ls_bloom_kernel_scale = 0.8f; // gauss
+float ps_r2_ls_bloom_threshold = .2f;
 
-float		ps_r2_ls_dsm_kernel = .7f;				
-float		ps_r2_ls_psm_kernel = .7f;				
-float		ps_r2_ls_ssm_kernel = .7f;
-			
-Fvector		ps_r2_aa_barier = { .8f, .1f, 0 };	
-Fvector		ps_r2_aa_weight = { .25f,.25f,0 };	
-float		ps_r2_aa_kernel = .5f;				
+float ps_r2_ls_dsm_kernel = .7f;
+float ps_r2_ls_psm_kernel = .7f;
+float ps_r2_ls_ssm_kernel = .7f;
 
-float		ps_r2_mblur = .5f;
+Fvector ps_r2_aa_barier = {.8f, .1f, 0};
+Fvector ps_r2_aa_weight = {.25f, .25f, 0};
+float ps_r2_aa_kernel = .5f;
 
-Fvector3	ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f); //	x - min (0), y - focus (1.4), z - max (100)
-float		ps_r2_dof_sky = 300;					//	distance to sky
-float		ps_r2_dof_kernel_size = 5.0f;
+float ps_r2_mblur = .5f;
 
-int			ps_r2_GI_depth = 1;						// 1..5
-int			ps_r2_GI_photons = 16;					// 8..64
-float		ps_r2_GI_clip = EPS_L;					// EPS
-float		ps_r2_GI_refl = .9f;
+Fvector3 ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f); //	x - min (0), y - focus (1.4), z - max (100)
+float ps_r2_dof_sky = 300;								  //	distance to sky
+float ps_r2_dof_kernel_size = 5.0f;
 
-float		ps_r2_ls_depth_scale = 1.00001f;
-float		ps_r2_ls_depth_bias = -0.0001f;
-float		ps_r2_ls_squality = 1.0f;
+int ps_r2_GI_depth = 1;		 // 1..5
+int ps_r2_GI_photons = 16;	 // 8..64
+float ps_r2_GI_clip = EPS_L; // EPS
+float ps_r2_GI_refl = .9f;
 
-float		ps_r2_sun_tsm_projection = 0.18f;
-float		ps_r2_sun_tsm_bias = -0.05f;
-float		ps_r2_sun_near = 12.f;
-float		ps_r2_sun_far = 150.f;
-float		ps_r2_sun_near_border = 1.0f;
-float		ps_r2_sun_depth_far_scale = 1.00000f;
-float		ps_r2_sun_depth_far_bias = 0.00000f;
-float		ps_r2_sun_depth_near_scale = 1.00001f;
-float		ps_r2_sun_depth_near_bias = -0.00004f;
-float		ps_r2_sun_lumscale = 1.0f;
-float		ps_r2_sun_lumscale_hemi = 1.0f;
-float		ps_r2_sun_lumscale_amb = 1.0f;
+float ps_r2_ls_depth_scale = 1.00001f;
+float ps_r2_ls_depth_bias = -0.0001f;
+float ps_r2_ls_squality = 1.0f;
 
-float		ps_r2_gmaterial = 0.f;
+float ps_r2_sun_tsm_projection = 0.18f;
+float ps_r2_sun_tsm_bias = -0.05f;
+float ps_r2_sun_near = 12.f;
+float ps_r2_sun_far = 150.f;
+float ps_r2_sun_near_border = 1.0f;
+float ps_r2_sun_depth_far_scale = 1.00000f;
+float ps_r2_sun_depth_far_bias = 0.00000f;
+float ps_r2_sun_depth_near_scale = 1.00001f;
+float ps_r2_sun_depth_near_bias = -0.00004f;
+float ps_r2_sun_lumscale = 1.0f;
+float ps_r2_sun_lumscale_hemi = 1.0f;
+float ps_r2_sun_lumscale_amb = 1.0f;
 
-float		ps_r2_zfill = 0.1f;
+float ps_r2_gmaterial = 0.f;
 
-float		ps_r2_dhemi_sky_scale = 0.08f;
-float		ps_r2_dhemi_light_scale = 0.2f;
-float		ps_r2_dhemi_light_flow = 0.1f;
-float		ps_r2_dhemi_scale = 1.f;
-int			ps_r2_dhemi_count = 5;
+float ps_r2_zfill = 0.1f;
 
-int			ps_r2_wait_sleep = 0;
+float ps_r2_dhemi_sky_scale = 0.08f;
+float ps_r2_dhemi_light_scale = 0.2f;
+float ps_r2_dhemi_light_flow = 0.1f;
+float ps_r2_dhemi_scale = 1.f;
+int ps_r2_dhemi_count = 5;
 
-float		ps_r2_lt_smooth = 1.f;
+int ps_r2_wait_sleep = 0;
 
-float		ps_r2_slight_fade = 1.f;
+float ps_r2_lt_smooth = 1.f;
 
-float		ps_r2_gloss_factor = 1.0f;
+float ps_r2_slight_fade = 1.f;
+
+float ps_r2_gloss_factor = 1.0f;
 
 // R2-specific flags
-Flags32 ps_r2_lighting_flags =
-{
-	R2FLAG_SUN |
-	R2FLAG_SUN_IGNORE_PORTALS |
-	R2FLAG_EXP_DONT_TEST_UNSHADOWED |
-	R2FLAG_SUN_FOCUS |
-	R2FLAG_SUN_TSM
-};
+Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_SUN_IGNORE_PORTALS | R2FLAG_EXP_DONT_TEST_UNSHADOWED |
+								R2FLAG_SUN_FOCUS | R2FLAG_SUN_TSM};
 
-Flags32 ps_r2_postprocess_flags =
-{
-	R2FLAG_AUTOEXPOSURE |
-	R2FLAG_DOF |
-	R2FLAG_MBLUR |
-	R2FLAG_HDR
-};
+Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR | R2FLAG_HDR};
 
-Flags32 ps_r2_overlay_flags =
-{
+Flags32 ps_r2_overlay_flags = {
 	0,
 };
 
-Flags32 ps_r2_ls_flags =
-{
-	R2FLAG_USE_NVSTENCIL			|
-	R2FLAG_EXP_SPLIT_SCENE			|
-	R2FLAG_EXP_MT_CALC
-};
+Flags32 ps_r2_ls_flags = {R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE | R2FLAG_EXP_MT_CALC};
 
 /*-------------------------------------------------------------------------------*/
 // Methods
 /*-------------------------------------------------------------------------------*/
 #ifndef _EDITOR
 ///////////////////////////////////////////////////////////////////////////////////
-#include	"..\xrEngine\xr_ioconsole.h"
-#include	"..\xrEngine\xr_ioc_cmd.h"
+#include "..\xrEngine\xr_ioconsole.h"
+#include "..\xrEngine\xr_ioc_cmd.h"
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_tf_Aniso : public CCC_Integer
 {
-public:
-	void	apply() {
-		if (0 == HW.pDevice)	return;
-		int	val = *value;	clamp(val, 1, 16);
+  public:
+	void apply()
+	{
+		if (0 == HW.pDevice)
+			return;
+		int val = *value;
+		clamp(val, 1, 16);
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, val));
 	}
-	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 1, 16) { };
+	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 1, 16){};
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Integer::Execute(args);
 		apply();
 	}
-	virtual void	Status(TStatus& S)
+	virtual void Status(TStatus& S)
 	{
 		CCC_Integer::Status(S);
 		apply();
@@ -374,20 +262,22 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_tf_MipBias : public CCC_Float
 {
-public:
-	void	apply() {
-		if (0 == HW.pDevice)	return;
+  public:
+	void apply()
+	{
+		if (0 == HW.pDevice)
+			return;
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)value)));
 	}
 
-	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -0.5f, +0.5f) { };
+	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -0.5f, +0.5f){};
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Float::Execute(args);
 		apply();
 	}
-	virtual void	Status(TStatus& S)
+	virtual void Status(TStatus& S)
 	{
 		CCC_Float::Status(S);
 		apply();
@@ -396,24 +286,31 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_R2GM : public CCC_Float
 {
-public:
-	CCC_R2GM(LPCSTR N, float* v) : CCC_Float(N, v, 0.f, 4.f) { *v = 0; };
-	virtual void	Execute(LPCSTR args)
+  public:
+	CCC_R2GM(LPCSTR N, float* v) : CCC_Float(N, v, 0.f, 4.f)
 	{
-		if (0 == xr_strcmp(args, "on")) {
+		*v = 0;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		if (0 == xr_strcmp(args, "on"))
+		{
 			ps_r2_ls_flags.set(R2FLAG_GLOBALMATERIAL, TRUE);
 		}
-		else if (0 == xr_strcmp(args, "off")) {
+		else if (0 == xr_strcmp(args, "off"))
+		{
 			ps_r2_ls_flags.set(R2FLAG_GLOBALMATERIAL, FALSE);
 		}
-		else {
+		else
+		{
 			CCC_Float::Execute(args);
-			if (ps_r2_ls_flags.test(R2FLAG_GLOBALMATERIAL)) {
-				static LPCSTR	name[4] = { "oren", "blin", "phong", "metal" };
-				float	mid = *value;
-				int		m0 = iFloor(mid) % 4;
-				int		m1 = (m0 + 1) % 4;
-				float	frc = mid - float(iFloor(mid));
+			if (ps_r2_ls_flags.test(R2FLAG_GLOBALMATERIAL))
+			{
+				static LPCSTR name[4] = {"oren", "blin", "phong", "metal"};
+				float mid = *value;
+				int m0 = iFloor(mid) % 4;
+				int m1 = (m0 + 1) % 4;
+				float frc = mid - float(iFloor(mid));
 				Msg("* material set to [%s]-[%s], with lerp of [%f]", name[m0], name[m1], frc);
 			}
 		}
@@ -422,43 +319,65 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_Screenshot : public IConsole_Command
 {
-public:
-	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR args) {
-		string_path	name;	name[0] = 0;
+  public:
+	CCC_Screenshot(LPCSTR N) : IConsole_Command(N){};
+	virtual void Execute(LPCSTR args)
+	{
+		string_path name;
+		name[0] = 0;
 		sscanf(args, "%s", name);
-		LPCSTR		image = xr_strlen(name) ? name : 0;
+		LPCSTR image = xr_strlen(name) ? name : 0;
 		::Render->Screenshot(IRender_interface::SM_NORMAL, image);
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_ModelPoolStat : public IConsole_Command
 {
-public:
-	CCC_ModelPoolStat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
+  public:
+	CCC_ModelPoolStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
 		RImplementation.Models->dump();
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
-class	CCC_Preset : public CCC_Token
+class CCC_Preset : public CCC_Token
 {
-public:
-	CCC_Preset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
+  public:
+	CCC_Preset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T){};
 
-	virtual void	Execute(LPCSTR args) {
+	virtual void Execute(LPCSTR args)
+	{
 		CCC_Token::Execute(args);
-		string_path		_cfg;
-		string_path		cmd;
+		string_path _cfg;
+		string_path cmd;
 
-		switch (*value) {
-		case 0:		strcpy(_cfg, "rspec_minimum.ltx");	break;
-		case 1:		strcpy(_cfg, "rspec_low.ltx");		break;
-		case 2:		strcpy(_cfg, "rspec_default.ltx");	break;
-		case 3:		strcpy(_cfg, "rspec_high.ltx");		break;
-		case 4:		strcpy(_cfg, "rspec_maximum.ltx");	break;
-		case 5:		strcpy(_cfg, "rspec_extreme.ltx");	break;
-		case 6:		strcpy(_cfg, "rspec_ultra.ltx");	break;
+		switch (*value)
+		{
+		case 0:
+			strcpy(_cfg, "rspec_minimum.ltx");
+			break;
+		case 1:
+			strcpy(_cfg, "rspec_low.ltx");
+			break;
+		case 2:
+			strcpy(_cfg, "rspec_default.ltx");
+			break;
+		case 3:
+			strcpy(_cfg, "rspec_high.ltx");
+			break;
+		case 4:
+			strcpy(_cfg, "rspec_maximum.ltx");
+			break;
+		case 5:
+			strcpy(_cfg, "rspec_extreme.ltx");
+			break;
+		case 6:
+			strcpy(_cfg, "rspec_ultra.ltx");
+			break;
 		}
 		FS.update_path(_cfg, "$game_config$", _cfg);
 		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
@@ -466,20 +385,28 @@ public:
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
-class	CCC_EffPreset : public CCC_Token
+class CCC_EffPreset : public CCC_Token
 {
-public:
-	CCC_EffPreset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
+  public:
+	CCC_EffPreset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T){};
 
-	virtual void	Execute(LPCSTR args) {
+	virtual void Execute(LPCSTR args)
+	{
 		CCC_Token::Execute(args);
-		string_path		_cfg;
-		string_path		cmd;
+		string_path _cfg;
+		string_path cmd;
 
-		switch (*value) {
-		case 0:		strcpy(_cfg, "eff_disabled.ltx");	break;
-		case 1:		strcpy(_cfg, "eff_default.ltx");		break;
-		case 2:		strcpy(_cfg, "eff_cinematic.ltx");	break;
+		switch (*value)
+		{
+		case 0:
+			strcpy(_cfg, "eff_disabled.ltx");
+			break;
+		case 1:
+			strcpy(_cfg, "eff_default.ltx");
+			break;
+		case 2:
+			strcpy(_cfg, "eff_cinematic.ltx");
+			break;
 		}
 		FS.update_path(_cfg, "$game_config$", _cfg);
 		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
@@ -487,27 +414,32 @@ public:
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
-#if RENDER==R_R2
+#if RENDER == R_R2
 ///////////////////////////////////////////////////////////////////////////////////
 #include "r__pixel_calculator.h"
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_BuildSSA : public IConsole_Command
 {
-public:
-	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		r_pixel_calculator	c;
+  public:
+	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = TRUE;
+	};
+	virtual void Execute(LPCSTR args)
+	{
+		r_pixel_calculator c;
 		c.run();
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
-#endif //RENDER==R_R2
+#endif // RENDER==R_R2
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofFar : public CCC_Float
 {
-public:
-	CCC_DofFar(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f)
-		: CCC_Float(N, V, _min, _max) {}
+  public:
+	CCC_DofFar(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f) : CCC_Float(N, V, _min, _max)
+	{
+	}
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -515,7 +447,7 @@ public:
 
 		if (v < ps_r2_dof.y + 0.1f)
 		{
-			char	pBuf[256];
+			char pBuf[256];
 			_snprintf(pBuf, sizeof(pBuf) / sizeof(pBuf[0]), "float value greater or equal to r2_dof_focus+0.1");
 			Msg("~ Invalid syntax in call to '%s'", cName);
 			Msg("~ Valid arguments: %s", pBuf);
@@ -530,14 +462,18 @@ public:
 	}
 
 	//	CCC_Dof should save all data as well as load from config
-	virtual void	Save(IWriter* F) { ; }
+	virtual void Save(IWriter* F)
+	{
+		;
+	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofNear : public CCC_Float
 {
-public:
-	CCC_DofNear(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f)
-		: CCC_Float(N, V, _min, _max) {}
+  public:
+	CCC_DofNear(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f) : CCC_Float(N, V, _min, _max)
+	{
+	}
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -545,7 +481,7 @@ public:
 
 		if (v > ps_r2_dof.y - 0.1f)
 		{
-			char	pBuf[256];
+			char pBuf[256];
 			_snprintf(pBuf, sizeof(pBuf) / sizeof(pBuf[0]), "float value less or equal to r2_dof_focus-0.1");
 			Msg("~ Invalid syntax in call to '%s'", cName);
 			Msg("~ Valid arguments: %s", pBuf);
@@ -560,14 +496,18 @@ public:
 	}
 
 	//	CCC_Dof should save all data as well as load from config
-	virtual void	Save(IWriter* F) { ; }
+	virtual void Save(IWriter* F)
+	{
+		;
+	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_DofFocus : public CCC_Float
 {
-public:
-	CCC_DofFocus(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f)
-		: CCC_Float(N, V, _min, _max) {}
+  public:
+	CCC_DofFocus(LPCSTR N, float* V, float _min = 0.0f, float _max = 10000.0f) : CCC_Float(N, V, _min, _max)
+	{
+	}
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -575,7 +515,7 @@ public:
 
 		if (v > ps_r2_dof.z - 0.1f)
 		{
-			char	pBuf[256];
+			char pBuf[256];
 			_snprintf(pBuf, sizeof(pBuf) / sizeof(pBuf[0]), "float value less or equal to r2_dof_far-0.1");
 			Msg("~ Invalid syntax in call to '%s'", cName);
 			Msg("~ Valid arguments: %s", pBuf);
@@ -583,13 +523,14 @@ public:
 		}
 		else if (v < ps_r2_dof.x + 0.1f)
 		{
-			char	pBuf[256];
+			char pBuf[256];
 			_snprintf(pBuf, sizeof(pBuf) / sizeof(pBuf[0]), "float value greater or equal to r2_dof_far-0.1");
 			Msg("~ Invalid syntax in call to '%s'", cName);
 			Msg("~ Valid arguments: %s", pBuf);
 			Console->Execute("r2_dof_near");
 		}
-		else {
+		else
+		{
 			CCC_Float::Execute(args);
 			if (g_pGamePersistent)
 				g_pGamePersistent->SetBaseDof(ps_r2_dof);
@@ -597,18 +538,21 @@ public:
 	}
 
 	//	CCC_Dof should save all data as well as load from config
-	virtual void	Save(IWriter* F) { ; }
+	virtual void Save(IWriter* F)
+	{
+		;
+	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_Dof : public CCC_Vector3
 {
-public:
-	CCC_Dof(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) :
-		CCC_Vector3(N, V, _min, _max) {
+  public:
+	CCC_Dof(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) : CCC_Vector3(N, V, _min, _max)
+	{
 		;
 	}
 
-	virtual void	Execute(LPCSTR args)
+	virtual void Execute(LPCSTR args)
 	{
 		Fvector v;
 		if (3 != sscanf(args, "%f,%f,%f", &v.x, &v.y, &v.z))
@@ -626,21 +570,21 @@ public:
 				g_pGamePersistent->SetBaseDof(ps_r2_dof);
 		}
 	}
-	virtual void	Status(TStatus& S)
+	virtual void Status(TStatus& S)
 	{
 		sprintf(S, "%f,%f,%f", value->x, value->y, value->z);
 	}
-	virtual void	Info(TInfo& I)
+	virtual void Info(TInfo& I)
 	{
 		sprintf(I, "vector3 in range [%f,%f,%f]-[%f,%f,%f]", min.x, min.y, min.z, max.x, max.y, max.z);
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
-void		xrRender_initconsole()
+void xrRender_initconsole()
 {
-	Fvector	tw_min, tw_max;
+	Fvector tw_min, tw_max;
 
-	//Render common commands
+	// Render common commands
 	CMD3(CCC_Preset, "_preset", &ps_Preset, qpreset_token);
 	CMD3(CCC_EffPreset, "eff_preset", &ps_EffPreset, qeffpreset_token);
 
@@ -675,11 +619,11 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r__lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
 
-	//R1-specific commands
+	// R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r1_ssa_lod_b", &ps_r1_ssaLOD_B, 16, 64);
 	CMD4(CCC_Float, "r1_lmodel_lerp", &ps_r1_lmodel_lerp, 0, 0.333f);
-	CMD2(CCC_tf_MipBias, "r1_tf_mipbias", &ps_r1_tf_Mipbias);//	{-3 +3}
+	CMD2(CCC_tf_MipBias, "r1_tf_mipbias", &ps_r1_tf_Mipbias); //	{-3 +3}
 	CMD3(CCC_Mask, "r1_dlights", &ps_r1_flags, R1FLAG_DLIGHTS);
 	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
 	CMD4(CCC_Float, "r1_pps_u", &ps_r1_pps_u, -1.f, +1.f);
@@ -687,7 +631,7 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
 	CMD4(CCC_Integer, "r1_glows_per_frame", &ps_r1_GlowsPerFrame, 2, 32);
 
-	//R2/R2a/R2.5-specific commands
+	// R2/R2a/R2.5-specific commands
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_postprocess_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
@@ -695,10 +639,10 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
 	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
-	tw_min.set(0, 0, 0);	
+	tw_min.set(0, 0, 0);
 	tw_max.set(1, 1, 1);
 	CMD4(CCC_Vector3, "r2_aa_break", &ps_r2_aa_barier, tw_min, tw_max);
-	tw_min.set(0, 0, 0);	
+	tw_min.set(0, 0, 0);
 	tw_max.set(1, 1, 1);
 	CMD4(CCC_Vector3, "r2_aa_weight", &ps_r2_aa_weight, tw_min, tw_max);
 
@@ -709,7 +653,6 @@ void		xrRender_initconsole()
 	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
 	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_postprocess_flags, R2FLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r2_hdr", &ps_r2_postprocess_flags, R2FLAG_HDR);
-
 
 	CMD3(CCC_Mask, "r2_autoexposure", &ps_r2_postprocess_flags, R2FLAG_AUTOEXPOSURE);
 	CMD4(CCC_Float, "r2_autoexposure_middlegray", &ps_r2_autoexposure_middlegray, 0.0f, 2.0f);
@@ -729,16 +672,16 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_mblur_power", &ps_r2_mblur, 0.0f, 1.0f);
 	CMD3(CCC_Token, "r2_mblur_quality", &ps_r2_mblur_quality, mblur_quality_token);
 
-	tw_min.set(-10000, -10000, 0);	
+	tw_min.set(-10000, -10000, 0);
 	tw_max.set(10000, 10000, 10000);
-	CMD4(CCC_Dof,		"r2_dof",			&ps_r2_dof,		tw_min,		tw_max);
-	CMD4(CCC_DofNear,	"r2_dof_near",		&ps_r2_dof.x,	tw_min.x,	tw_max.x);
-	CMD4(CCC_DofFocus,	"r2_dof_focus",		&ps_r2_dof.y,	tw_min.y,	tw_max.y);
-	CMD4(CCC_DofFar,	"r2_dof_far",		&ps_r2_dof.z,	tw_min.z,	tw_max.z);
-	CMD4(CCC_Float,		"r2_dof_kernel",	&ps_r2_dof_kernel_size,		.0f, 10.f);
-	CMD4(CCC_Float,		"r2_dof_sky",		&ps_r2_dof_sky, -10000.f, 10000.f);
-	CMD3(CCC_Mask,		"r2_dof_enabled",	&ps_r2_postprocess_flags, R2FLAG_DOF);
-	CMD3(CCC_Token,		"r2_dof_quality",	&ps_r2_dof_quality, dof_quality_token);
+	CMD4(CCC_Dof, "r2_dof", &ps_r2_dof, tw_min, tw_max);
+	CMD4(CCC_DofNear, "r2_dof_near", &ps_r2_dof.x, tw_min.x, tw_max.x);
+	CMD4(CCC_DofFocus, "r2_dof_focus", &ps_r2_dof.y, tw_min.y, tw_max.y);
+	CMD4(CCC_DofFar, "r2_dof_far", &ps_r2_dof.z, tw_min.z, tw_max.z);
+	CMD4(CCC_Float, "r2_dof_kernel", &ps_r2_dof_kernel_size, .0f, 10.f);
+	CMD4(CCC_Float, "r2_dof_sky", &ps_r2_dof_sky, -10000.f, 10000.f);
+	CMD3(CCC_Mask, "r2_dof_enabled", &ps_r2_postprocess_flags, R2FLAG_DOF);
+	CMD3(CCC_Token, "r2_dof_quality", &ps_r2_dof_quality, dof_quality_token);
 
 	CMD3(CCC_Mask, "r2_sharpen", &ps_r2_postprocess_flags, R2FLAG_SHARPEN);
 
@@ -794,7 +737,7 @@ void		xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r2_hard_optimization", &ps_r2_ls_flags, R2FLAG_HARD_OPTIMIZATION);
 
-#if RENDER==R_R2
+#if RENDER == R_R2
 	CMD1(CCC_BuildSSA, "build_ssa");
 #endif
 
@@ -825,15 +768,15 @@ void		xrRender_initconsole()
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void	xrRender_apply_tf()
+void xrRender_apply_tf()
 {
 	Console->Execute("r__tf_aniso");
-#if RENDER==R_R1
+#if RENDER == R_R1
 	Console->Execute("r1_tf_mipbias");
 #else
 	Console->Execute("r2_tf_mipbias");
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////////////
-#endif //#ifndef _EDITOR
+#endif // #ifndef _EDITOR
 ///////////////////////////////////////////////////////////////////////////////////

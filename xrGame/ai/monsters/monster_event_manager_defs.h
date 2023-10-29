@@ -1,6 +1,7 @@
 #pragma once
 
-enum EEventType {
+enum EEventType
+{
 	eventAnimationStart = u32(0),
 	eventAnimationEnd,
 	eventSoundStart,
@@ -12,6 +13,8 @@ enum EEventType {
 	eventVelocityBounce,
 };
 
-class IEventData {};
+class IEventData
+{
+};
 
-#define DEFINE_DELEGATE	void __stdcall
+#define DEFINE_DELEGATE void __stdcall

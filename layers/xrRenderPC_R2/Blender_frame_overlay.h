@@ -2,7 +2,7 @@
 
 class CBlender_frame_overlay : public IBlender
 {
-public:
+  public:
 	virtual LPCSTR getComment()
 	{
 		return "INTERNAL: Frame overlay";

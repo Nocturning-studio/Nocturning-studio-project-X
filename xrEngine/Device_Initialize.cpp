@@ -16,11 +16,16 @@ void CRenderDevice::Initialize()
 
 		// Register the windows class
 		HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(0);
-		WNDCLASS wndClass = { 0, WndProc, 0, 0, hInstance,
-							  LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1)),
-							  LoadCursor(NULL, IDC_ARROW),
-							  (HBRUSH)GetStockObject(BLACK_BRUSH),
-							  NULL, wndclass };
+		WNDCLASS wndClass = {0,
+							 WndProc,
+							 0,
+							 0,
+							 hInstance,
+							 LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1)),
+							 LoadCursor(NULL, IDC_ARROW),
+							 (HBRUSH)GetStockObject(BLACK_BRUSH),
+							 NULL,
+							 wndclass};
 		RegisterClass(&wndClass);
 
 		// Set the window's initial style
@@ -33,9 +38,8 @@ void CRenderDevice::Initialize()
 
 		// Create the render window
 		m_hWnd = CreateWindow(wndclass, "S.T.A.L.K.E.R.: Shadow Of Chernobyl", m_dwWindowStyle,
-			/*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
-			(rc.right - rc.left), (rc.bottom - rc.top), 0L,
-			0, hInstance, 0L);
+							  /*rc.left, rc.top, */ CW_USEDEFAULT, CW_USEDEFAULT, (rc.right - rc.left),
+							  (rc.bottom - rc.top), 0L, 0, hInstance, 0L);
 	}
 
 	// Save window properties
@@ -45,10 +49,16 @@ void CRenderDevice::Initialize()
 
 	// Command line
 	char* lpCmdLine = Core.Params;
-	if (strstr(lpCmdLine, "-gpu_sw") != NULL)		HW.Caps.bForceGPU_SW = TRUE;
-	else										HW.Caps.bForceGPU_SW = FALSE;
-	if (strstr(lpCmdLine, "-gpu_nopure") != NULL)	HW.Caps.bForceGPU_NonPure = TRUE;
-	else										HW.Caps.bForceGPU_NonPure = FALSE;
-	if (strstr(lpCmdLine, "-gpu_ref") != NULL)		HW.Caps.bForceGPU_REF = TRUE;
-	else										HW.Caps.bForceGPU_REF = FALSE;
+	if (strstr(lpCmdLine, "-gpu_sw") != NULL)
+		HW.Caps.bForceGPU_SW = TRUE;
+	else
+		HW.Caps.bForceGPU_SW = FALSE;
+	if (strstr(lpCmdLine, "-gpu_nopure") != NULL)
+		HW.Caps.bForceGPU_NonPure = TRUE;
+	else
+		HW.Caps.bForceGPU_NonPure = FALSE;
+	if (strstr(lpCmdLine, "-gpu_ref") != NULL)
+		HW.Caps.bForceGPU_REF = TRUE;
+	else
+		HW.Caps.bForceGPU_REF = FALSE;
 }

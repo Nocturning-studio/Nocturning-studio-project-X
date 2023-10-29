@@ -5,22 +5,25 @@
 
 struct Weapon_Statistic;
 
-class CUIDMStatisticWnd:public CUIStatsWnd
+class CUIDMStatisticWnd : public CUIStatsWnd
 {
 	typedef CUIStatsWnd inherited;
 
-protected:
-	bool					SetItemData		(Weapon_Statistic* pWS, CUIStatsListItem *pItem);
-	virtual u32				GetItemCount	()	{return UIStatsList.GetItemsCount();};
-	virtual	CUIStatsListItem*		GetItem			(int index)
+  protected:
+	bool SetItemData(Weapon_Statistic* pWS, CUIStatsListItem* pItem);
+	virtual u32 GetItemCount()
 	{
-		return (smart_cast<CUIStatsListItem*> (UIStatsList.GetItem(index)));
+		return UIStatsList.GetItemsCount();
 	};
-public:
-	CUIDMStatisticWnd					();
-	~CUIDMStatisticWnd					();
+	virtual CUIStatsListItem* GetItem(int index)
+	{
+		return (smart_cast<CUIStatsListItem*>(UIStatsList.GetItem(index)));
+	};
 
-	virtual void Update				();
+  public:
+	CUIDMStatisticWnd();
+	~CUIDMStatisticWnd();
+
+	virtual void Update();
 	virtual void Draw();
-
 };

@@ -4,7 +4,7 @@
 #include "SoundRender_CoreA.h"
 
 XRSOUND_API xr_token* snd_devices_token = NULL;
-XRSOUND_API u32		  snd_device_id = u32(-1);
+XRSOUND_API u32 snd_device_id = u32(-1);
 
 void CSound_manager_interface::_create(u64 window)
 {
@@ -18,8 +18,8 @@ void CSound_manager_interface::_create(u64 window)
 		psSoundVFactor = 0.0f;
 		psSoundVMaster = 0.0f;
 		psSoundVMusic = 0.0f;
-		//SoundRender->bPresent = FALSE;
-		//return;
+		// SoundRender->bPresent = FALSE;
+		// return;
 	}
 	Sound->_initialize(window);
 }

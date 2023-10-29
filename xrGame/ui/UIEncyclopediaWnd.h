@@ -21,49 +21,54 @@ class CUIEncyclopediaCore;
 class CUIScrollView;
 class CUITreeViewItem;
 
-class CUIEncyclopediaWnd: public CUIWindow
+class CUIEncyclopediaWnd : public CUIWindow
 {
-private:
+  private:
 	typedef CUIWindow inherited;
-	enum {eNeedReload=(1<<0),};
-	Flags16				m_flags;
-public:
-						CUIEncyclopediaWnd			();
-	virtual				~CUIEncyclopediaWnd			();
+	enum
+	{
+		eNeedReload = (1 << 0),
+	};
+	Flags16 m_flags;
 
-	virtual void		Init						();
-	virtual void		Show						(bool status);
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = NULL);
-	virtual void		Draw						();
+  public:
+	CUIEncyclopediaWnd();
+	virtual ~CUIEncyclopediaWnd();
 
-	void				AddArticle					(shared_str, bool bReaded);
-	void				DeleteArticles				();
-	bool				HasArticle					(shared_str);
+	virtual void Init();
+	virtual void Show(bool status);
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void Draw();
 
-	void				ReloadArticles				();
-	virtual void		Reset						();
-protected:
-	u32					prevArticlesCount;
+	void AddArticle(shared_str, bool bReaded);
+	void DeleteArticles();
+	bool HasArticle(shared_str);
+
+	void ReloadArticles();
+	virtual void Reset();
+
+  protected:
+	u32 prevArticlesCount;
 	// Элементы графического оформления
-	CUIFrameWindow*		UIEncyclopediaIdxBkg;
-	CUIFrameWindow*		UIEncyclopediaInfoBkg;
-	CUIFrameLineWnd*	UIEncyclopediaIdxHeader;
-	CUIFrameLineWnd*	UIEncyclopediaInfoHeader;
-	CUIAnimatedStatic*	UIAnimation;
-	CUIStatic*			UIArticleHeader;
+	CUIFrameWindow* UIEncyclopediaIdxBkg;
+	CUIFrameWindow* UIEncyclopediaInfoBkg;
+	CUIFrameLineWnd* UIEncyclopediaIdxHeader;
+	CUIFrameLineWnd* UIEncyclopediaInfoHeader;
+	CUIAnimatedStatic* UIAnimation;
+	CUIStatic* UIArticleHeader;
 
 	// Хранилище статей
-	typedef xr_vector<CEncyclopediaArticle*>			ArticlesDB;
-	typedef ArticlesDB::iterator						ArticlesDB_it;
+	typedef xr_vector<CEncyclopediaArticle*> ArticlesDB;
+	typedef ArticlesDB::iterator ArticlesDB_it;
 
-	ArticlesDB				m_ArticlesDB;
-	CGameFont*				m_pTreeRootFont;
-	u32						m_uTreeRootColor;
-	CGameFont*				m_pTreeItemFont;
-	u32						m_uTreeItemColor;
+	ArticlesDB m_ArticlesDB;
+	CGameFont* m_pTreeRootFont;
+	u32 m_uTreeRootColor;
+	CGameFont* m_pTreeItemFont;
+	u32 m_uTreeItemColor;
 
-	CUIListWnd*				UIIdxList;
-	CUIScrollView*			UIInfoList;
+	CUIListWnd* UIIdxList;
+	CUIScrollView* UIInfoList;
 
-	void				SetCurrentArtice(CUITreeViewItem *pTVItem);
+	void SetCurrentArtice(CUITreeViewItem* pTVItem);
 };

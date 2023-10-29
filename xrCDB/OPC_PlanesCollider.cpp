@@ -27,30 +27,30 @@ using namespace Opcode;
 
 //! Planes-triangle test
 #ifdef OPC_USE_CALLBACKS
-	#define PLANES_PRIM(primindex)						\
-		/* Request vertices from the app */				\
-		(mObjCallback)(primindex, mVP, mUserData);		\
-		/* Perform triangle-box overlap test */			\
-		if(PlanesTriOverlap(clipmask))					\
-		{												\
-			/* Set contact status */					\
-			mFlags |= OPC_CONTACT;						\
-			mTouchedPrimitives->Add(primindex);			\
-		}
+#define PLANES_PRIM(primindex)                                                                                         \
+	/* Request vertices from the app */                                                                                \
+	(mObjCallback)(primindex, mVP, mUserData);                                                                         \
+	/* Perform triangle-box overlap test */                                                                            \
+	if (PlanesTriOverlap(clipmask))                                                                                    \
+	{                                                                                                                  \
+		/* Set contact status */                                                                                       \
+		mFlags |= OPC_CONTACT;                                                                                         \
+		mTouchedPrimitives->Add(primindex);                                                                            \
+	}
 #else
-	#define PLANES_PRIM(primindex)						\
-		/* Direct access to vertices */					\
-		const IndexedTriangle* T = &mFaces[primindex];	\
-		mVP.Vertex[0] = &mVerts[T->mVRef[0]];			\
-		mVP.Vertex[1] = &mVerts[T->mVRef[1]];			\
-		mVP.Vertex[2] = &mVerts[T->mVRef[2]];			\
-		/* Perform triangle-box overlap test */			\
-		if(PlanesTriOverlap(clipmask))					\
-		{												\
-			/* Set contact status */					\
-			mFlags |= OPC_CONTACT;						\
-			mTouchedPrimitives->Add(primindex);			\
-		}
+#define PLANES_PRIM(primindex)                                                                                         \
+	/* Direct access to vertices */                                                                                    \
+	const IndexedTriangle* T = &mFaces[primindex];                                                                     \
+	mVP.Vertex[0] = &mVerts[T->mVRef[0]];                                                                              \
+	mVP.Vertex[1] = &mVerts[T->mVRef[1]];                                                                              \
+	mVP.Vertex[2] = &mVerts[T->mVRef[2]];                                                                              \
+	/* Perform triangle-box overlap test */                                                                            \
+	if (PlanesTriOverlap(clipmask))                                                                                    \
+	{                                                                                                                  \
+		/* Set contact status */                                                                                       \
+		mFlags |= OPC_CONTACT;                                                                                         \
+		mTouchedPrimitives->Add(primindex);                                                                            \
+	}
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,9 +58,7 @@ using namespace Opcode;
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PlanesCollider::PlanesCollider() :
-	mPlanes		(null),
-	mNbPlanes	(0)
+PlanesCollider::PlanesCollider() : mPlanes(null), mNbPlanes(0)
 {
 }
 
@@ -82,7 +80,10 @@ PlanesCollider::~PlanesCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* PlanesCollider::ValidateSettings()
 {
-	if(TemporalCoherenceEnabled() && !FirstContactEnabled())	return "Temporal coherence only works with ""First contact"" mode!";
+	if (TemporalCoherenceEnabled() && !FirstContactEnabled())
+		return "Temporal coherence only works with "
+			   "First contact"
+			   " mode!";
 
 	return VolumeCollider::ValidateSettings();
 }
@@ -103,21 +104,27 @@ const char* PlanesCollider::ValidateSettings()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, OPCODE_Model* model, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, OPCODE_Model* model,
+							 const Matrix4x4* worldm)
 {
 	// Checkings
-	if(!planes || !model)	return false;
+	if (!planes || !model)
+		return false;
 
 	// Simple double-dispatch
-	if(!model->HasLeafNodes())
+	if (!model->HasLeafNodes())
 	{
-		if(model->IsQuantized())	return Collide(cache, planes, nb_planes, (const AABBQuantizedNoLeafTree*)model->GetTree(), worldm);
-		else						return Collide(cache, planes, nb_planes, (const AABBNoLeafTree*)model->GetTree(), worldm);
+		if (model->IsQuantized())
+			return Collide(cache, planes, nb_planes, (const AABBQuantizedNoLeafTree*)model->GetTree(), worldm);
+		else
+			return Collide(cache, planes, nb_planes, (const AABBNoLeafTree*)model->GetTree(), worldm);
 	}
 	else
 	{
-		if(model->IsQuantized())	return Collide(cache, planes, nb_planes, (const AABBQuantizedTree*)model->GetTree(), worldm);
-		else						return Collide(cache, planes, nb_planes, (const AABBCollisionTree*)model->GetTree(), worldm);
+		if (model->IsQuantized())
+			return Collide(cache, planes, nb_planes, (const AABBQuantizedTree*)model->GetTree(), worldm);
+		else
+			return Collide(cache, planes, nb_planes, (const AABBCollisionTree*)model->GetTree(), worldm);
 	}
 }
 
@@ -142,35 +149,37 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword n
 	VolumeCollider::InitQueryEx();
 
 	// 2) Compute planes in model space
-	if(nb_planes>mNbPlanes)
+	if (nb_planes > mNbPlanes)
 	{
 		xr_free(mPlanes);
-		mPlanes = xr_alloc<Plane>	(nb_planes);
+		mPlanes = xr_alloc<Plane>(nb_planes);
 	}
 	mNbPlanes = nb_planes;
 
-	if(worldm)
+	if (worldm)
 	{
 		Matrix4x4 InvWorldM;
 		InvertPRMatrix(InvWorldM, *worldm);
 
-//		for(udword i=0;i<nb_planes;i++)	mPlanes[i] = planes[i] * InvWorldM;
-		for(udword i=0;i<nb_planes;i++)	TransformPlane(mPlanes[i], planes[i], InvWorldM);
+		//		for(udword i=0;i<nb_planes;i++)	mPlanes[i] = planes[i] * InvWorldM;
+		for (udword i = 0; i < nb_planes; i++)
+			TransformPlane(mPlanes[i], planes[i], InvWorldM);
 	}
-	else CopyMemory(mPlanes, planes, nb_planes*sizeof(Plane));
+	else
+		CopyMemory(mPlanes, planes, nb_planes * sizeof(Plane));
 
 	// 3) Setup destination pointer
 	mTouchedPrimitives = &cache.TouchedPrimitives;
 
 	// 4) Check temporal coherence:
-	if(TemporalCoherenceEnabled())
+	if (TemporalCoherenceEnabled())
 	{
 		// Here we use temporal coherence
 		// => check results from previous frame before performing the collision query
-		if(FirstContactEnabled())
+		if (FirstContactEnabled())
 		{
 			// We're only interested in the first contact found => test the unique previously touched face
-			if(mTouchedPrimitives->GetNbEntries())
+			if (mTouchedPrimitives->GetNbEntries())
 			{
 				// Get index of previously touched face = the first entry in the array
 				udword PreviouslyTouchedFace = mTouchedPrimitives->GetEntry(0);
@@ -181,14 +190,15 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword n
 				mTouchedPrimitives->Reset();
 
 				// Perform overlap test between the cached triangle and the planes (and set contact status if needed)
-				udword clipmask = (1<<mNbPlanes)-1;
+				udword clipmask = (1 << mNbPlanes) - 1;
 
 				PLANES_PRIM(PreviouslyTouchedFace)
 			}
 			// else no face has been touched during previous query
 			// => we'll have to perform a normal query
 		}
-		else mTouchedPrimitives->Reset();
+		else
+			mTouchedPrimitives->Reset();
 	}
 	else
 	{
@@ -211,21 +221,26 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword n
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBCollisionTree* tree, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBCollisionTree* tree,
+							 const Matrix4x4* worldm)
 {
 	// Checkings
-	if(!tree || !planes || !nb_planes)	return false;
+	if (!tree || !planes || !nb_planes)
+		return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)					return false;
+	if (!mObjCallback)
+		return false;
 #else
-	if(!mFaces || !mVerts)				return false;
+	if (!mFaces || !mVerts)
+		return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, planes, nb_planes, worldm))	return true;
+	if (InitQuery(cache, planes, nb_planes, worldm))
+		return true;
 
 	// Perform collision query
-	_Collide(tree->GetNodes(), (1<<nb_planes)-1);
+	_Collide(tree->GetNodes(), (1 << nb_planes) - 1);
 
 	return true;
 }
@@ -242,21 +257,26 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBNoLeafTree* tree, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBNoLeafTree* tree,
+							 const Matrix4x4* worldm)
 {
 	// Checkings
-	if(!tree || !planes || !nb_planes)	return false;
+	if (!tree || !planes || !nb_planes)
+		return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)					return false;
+	if (!mObjCallback)
+		return false;
 #else
-	if(!mFaces || !mVerts)				return false;
+	if (!mFaces || !mVerts)
+		return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, planes, nb_planes, worldm))	return true;
+	if (InitQuery(cache, planes, nb_planes, worldm))
+		return true;
 
 	// Perform collision query
-	_Collide(tree->GetNodes(), (1<<nb_planes)-1);
+	_Collide(tree->GetNodes(), (1 << nb_planes) - 1);
 
 	return true;
 }
@@ -273,25 +293,30 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedTree* tree, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedTree* tree,
+							 const Matrix4x4* worldm)
 {
 	// Checkings
-	if(!tree || !planes || !nb_planes)	return false;
+	if (!tree || !planes || !nb_planes)
+		return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)					return false;
+	if (!mObjCallback)
+		return false;
 #else
-	if(!mFaces || !mVerts)				return false;
+	if (!mFaces || !mVerts)
+		return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, planes, nb_planes, worldm))	return true;
+	if (InitQuery(cache, planes, nb_planes, worldm))
+		return true;
 
 	// Setup dequantization coeffs
-	mCenterCoeff	= tree->mCenterCoeff;
-	mExtentsCoeff	= tree->mExtentsCoeff;
+	mCenterCoeff = tree->mCenterCoeff;
+	mExtentsCoeff = tree->mExtentsCoeff;
 
 	// Perform collision query
-	_Collide(tree->GetNodes(), (1<<nb_planes)-1);
+	_Collide(tree->GetNodes(), (1 << nb_planes) - 1);
 
 	return true;
 }
@@ -308,25 +333,30 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedNoLeafTree* tree, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_planes,
+							 const AABBQuantizedNoLeafTree* tree, const Matrix4x4* worldm)
 {
 	// Checkings
-	if(!tree || !planes || !nb_planes)	return false;
+	if (!tree || !planes || !nb_planes)
+		return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)					return false;
+	if (!mObjCallback)
+		return false;
 #else
-	if(!mFaces || !mVerts)				return false;
+	if (!mFaces || !mVerts)
+		return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, planes, nb_planes, worldm))	return true;
+	if (InitQuery(cache, planes, nb_planes, worldm))
+		return true;
 
 	// Setup dequantization coeffs
-	mCenterCoeff	= tree->mCenterCoeff;
-	mExtentsCoeff	= tree->mExtentsCoeff;
+	mCenterCoeff = tree->mCenterCoeff;
+	mExtentsCoeff = tree->mExtentsCoeff;
 
 	// Perform collision query
-	_Collide(tree->GetNodes(), (1<<nb_planes)-1);
+	_Collide(tree->GetNodes(), (1 << nb_planes) - 1);
 
 	return true;
 }
@@ -341,11 +371,12 @@ void PlanesCollider::_Collide(const AABBCollisionNode* node, udword clipmask)
 {
 	// Test the box against the planes. If the box is completely culled, so are its children, hence we exit.
 	udword OutClipMask;
-	if(!PlanesAABBOverlap(node->mAABB.mCenter, node->mAABB.mExtents, OutClipMask, clipmask))	return;
+	if (!PlanesAABBOverlap(node->mAABB.mCenter, node->mAABB.mExtents, OutClipMask, clipmask))
+		return;
 
 	// If the box is completely included, so are its children. We don't need to do extra tests, we
 	// can immediately output a list of visible children. Those ones won't need to be clipped.
-	if(!OutClipMask)
+	if (!OutClipMask)
 	{
 		// Set contact status
 		mFlags |= OPC_CONTACT;
@@ -355,7 +386,7 @@ void PlanesCollider::_Collide(const AABBCollisionNode* node, udword clipmask)
 
 	// Else the box straddles one or several planes, so we need to recurse down the tree.
 
-	if(node->IsLeaf())
+	if (node->IsLeaf())
 	{
 		PLANES_PRIM(node->GetPrimitive())
 	}
@@ -363,7 +394,8 @@ void PlanesCollider::_Collide(const AABBCollisionNode* node, udword clipmask)
 	{
 		_Collide(node->GetPos(), OutClipMask);
 
-		if(ContactFound()) return;
+		if (ContactFound())
+			return;
 
 		_Collide(node->GetNeg(), OutClipMask);
 	}
@@ -379,16 +411,19 @@ void PlanesCollider::_Collide(const AABBQuantizedNode* node, udword clipmask)
 {
 	// Dequantize box
 	const QuantizedAABB* Box = &node->mAABB;
-	const Point Center(float(Box->mCenter[0]) * mCenterCoeff.x, float(Box->mCenter[1]) * mCenterCoeff.y, float(Box->mCenter[2]) * mCenterCoeff.z);
-	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y, float(Box->mExtents[2]) * mExtentsCoeff.z);
+	const Point Center(float(Box->mCenter[0]) * mCenterCoeff.x, float(Box->mCenter[1]) * mCenterCoeff.y,
+					   float(Box->mCenter[2]) * mCenterCoeff.z);
+	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y,
+						float(Box->mExtents[2]) * mExtentsCoeff.z);
 
 	// Test the box against the planes. If the box is completely culled, so are its children, hence we exit.
 	udword OutClipMask;
-	if(!PlanesAABBOverlap(Center, Extents, OutClipMask, clipmask))	return;
+	if (!PlanesAABBOverlap(Center, Extents, OutClipMask, clipmask))
+		return;
 
 	// If the box is completely included, so are its children. We don't need to do extra tests, we
 	// can immediately output a list of visible children. Those ones won't need to be clipped.
-	if(!OutClipMask)
+	if (!OutClipMask)
 	{
 		// Set contact status
 		mFlags |= OPC_CONTACT;
@@ -398,7 +433,7 @@ void PlanesCollider::_Collide(const AABBQuantizedNode* node, udword clipmask)
 
 	// Else the box straddles one or several planes, so we need to recurse down the tree.
 
-	if(node->IsLeaf())
+	if (node->IsLeaf())
 	{
 		PLANES_PRIM(node->GetPrimitive())
 	}
@@ -406,7 +441,8 @@ void PlanesCollider::_Collide(const AABBQuantizedNode* node, udword clipmask)
 	{
 		_Collide(node->GetPos(), OutClipMask);
 
-		if(ContactFound()) return;
+		if (ContactFound())
+			return;
 
 		_Collide(node->GetNeg(), OutClipMask);
 	}
@@ -422,11 +458,12 @@ void PlanesCollider::_Collide(const AABBNoLeafNode* node, udword clipmask)
 {
 	// Test the box against the planes. If the box is completely culled, so are its children, hence we exit.
 	udword OutClipMask;
-	if(!PlanesAABBOverlap(node->mAABB.mCenter, node->mAABB.mExtents, OutClipMask, clipmask))	return;
+	if (!PlanesAABBOverlap(node->mAABB.mCenter, node->mAABB.mExtents, OutClipMask, clipmask))
+		return;
 
 	// If the box is completely included, so are its children. We don't need to do extra tests, we
 	// can immediately output a list of visible children. Those ones won't need to be clipped.
-	if(!OutClipMask)
+	if (!OutClipMask)
 	{
 		// Set contact status
 		mFlags |= OPC_CONTACT;
@@ -436,13 +473,22 @@ void PlanesCollider::_Collide(const AABBNoLeafNode* node, udword clipmask)
 
 	// Else the box straddles one or several planes, so we need to recurse down the tree.
 
-	if(node->HasLeaf())		{ PLANES_PRIM(node->GetPrimitive()) }
-	else					_Collide(node->GetPos(), OutClipMask);
+	if (node->HasLeaf())
+	{
+		PLANES_PRIM(node->GetPrimitive())
+	}
+	else
+		_Collide(node->GetPos(), OutClipMask);
 
-	if(ContactFound()) return;
+	if (ContactFound())
+		return;
 
-	if(node->HasLeaf2())	{ PLANES_PRIM(node->GetPrimitive2()) }
-	else					_Collide(node->GetNeg(), OutClipMask);
+	if (node->HasLeaf2())
+	{
+		PLANES_PRIM(node->GetPrimitive2())
+	}
+	else
+		_Collide(node->GetNeg(), OutClipMask);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -455,16 +501,19 @@ void PlanesCollider::_Collide(const AABBQuantizedNoLeafNode* node, udword clipma
 {
 	// Dequantize box
 	const QuantizedAABB* Box = &node->mAABB;
-	const Point Center(float(Box->mCenter[0]) * mCenterCoeff.x, float(Box->mCenter[1]) * mCenterCoeff.y, float(Box->mCenter[2]) * mCenterCoeff.z);
-	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y, float(Box->mExtents[2]) * mExtentsCoeff.z);
+	const Point Center(float(Box->mCenter[0]) * mCenterCoeff.x, float(Box->mCenter[1]) * mCenterCoeff.y,
+					   float(Box->mCenter[2]) * mCenterCoeff.z);
+	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y,
+						float(Box->mExtents[2]) * mExtentsCoeff.z);
 
 	// Test the box against the planes. If the box is completely culled, so are its children, hence we exit.
 	udword OutClipMask;
-	if(!PlanesAABBOverlap(Center, Extents, OutClipMask, clipmask))	return;
+	if (!PlanesAABBOverlap(Center, Extents, OutClipMask, clipmask))
+		return;
 
 	// If the box is completely included, so are its children. We don't need to do extra tests, we
 	// can immediately output a list of visible children. Those ones won't need to be clipped.
-	if(!OutClipMask)
+	if (!OutClipMask)
 	{
 		// Set contact status
 		mFlags |= OPC_CONTACT;
@@ -474,11 +523,20 @@ void PlanesCollider::_Collide(const AABBQuantizedNoLeafNode* node, udword clipma
 
 	// Else the box straddles one or several planes, so we need to recurse down the tree.
 
-	if(node->HasLeaf())		{ PLANES_PRIM(node->GetPrimitive()) }
-	else					_Collide(node->GetPos(), OutClipMask);
+	if (node->HasLeaf())
+	{
+		PLANES_PRIM(node->GetPrimitive())
+	}
+	else
+		_Collide(node->GetPos(), OutClipMask);
 
-	if(ContactFound()) return;
+	if (ContactFound())
+		return;
 
-	if(node->HasLeaf2())	{ PLANES_PRIM(node->GetPrimitive2()) }
-	else					_Collide(node->GetNeg(), OutClipMask);
+	if (node->HasLeaf2())
+	{
+		PLANES_PRIM(node->GetPrimitive2())
+	}
+	else
+		_Collide(node->GetNeg(), OutClipMask);
 }

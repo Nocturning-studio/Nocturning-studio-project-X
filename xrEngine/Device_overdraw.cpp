@@ -16,11 +16,11 @@ void CRenderDevice::overdrawBegin()
 	if (1 == HW.Caps.SceneMode)
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP));
-	}	// Overdraw
+	} // Overdraw
 	else
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT));
-	}	// ZB access
+	} // ZB access
 }
 
 void CRenderDevice::overdrawEnd()
@@ -42,10 +42,10 @@ void CRenderDevice::overdrawEnd()
 	// Render gradients
 	for (int I = 0; I < 12; I++)
 	{
-		u32	_c = I * 256 / 13;
-		u32	c = D3DCOLOR_XRGB(_c, _c, _c);
+		u32 _c = I * 256 / 13;
+		u32 c = D3DCOLOR_XRGB(_c, _c, _c);
 
-		FVF::TL	pv[4];
+		FVF::TL pv[4];
 		pv[0].set(float(0), float(dwHeight), c, 0, 0);
 		pv[1].set(float(0), float(0), c, 0, 0);
 		pv[2].set(float(dwWidth), float(dwHeight), c, 0, 0);

@@ -36,7 +36,7 @@ void IRender_Visual::Release()
 {
 }
 
-CStatTimer						tscreate;
+CStatTimer tscreate;
 
 void IRender_Visual::Load(const char* N, IReader* data, u32)
 {
@@ -46,22 +46,25 @@ void IRender_Visual::Load(const char* N, IReader* data, u32)
 
 	// header
 	VERIFY(data);
-	ogf_header	hdr;
+	ogf_header hdr;
 	if (data->r_chunk_safe(OGF_HEADER, &hdr, sizeof(hdr)))
 	{
 		R_ASSERT2(hdr.format_version == xrOGF_FormatVersion, "Invalid visual version");
 		Type = hdr.type;
-		if (hdr.shader_id)	shader = ::Render->getShader(hdr.shader_id);
+		if (hdr.shader_id)
+			shader = ::Render->getShader(hdr.shader_id);
 		vis.box.set(hdr.bb.min, hdr.bb.max);
 		vis.sphere.set(hdr.bs.c, hdr.bs.r);
 	}
-	else {
+	else
+	{
 		FATAL("Invalid visual");
 	}
 
 	// Shader
-	if (data->find_chunk(OGF_TEXTURE)) {
-		string256		fnT, fnS;
+	if (data->find_chunk(OGF_TEXTURE))
+	{
+		string256 fnT, fnS;
 		data->r_stringZ(fnT, sizeof(fnT));
 		data->r_stringZ(fnS, sizeof(fnS));
 		shader.create(fnS, fnT);
@@ -74,8 +77,8 @@ void IRender_Visual::Load(const char* N, IReader* data, u32)
 #endif
 }
 
-#define PCOPY(a)	a = pFrom->a
-void	IRender_Visual::Copy(IRender_Visual* pFrom)
+#define PCOPY(a) a = pFrom->a
+void IRender_Visual::Copy(IRender_Visual* pFrom)
 {
 	PCOPY(Type);
 	PCOPY(shader);

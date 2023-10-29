@@ -74,7 +74,7 @@ void CSoundRender_Emitter::Event_ReleaseOwner()
 void CSoundRender_Emitter::Event_Propagade()
 {
 	fTimeToPropagade += ::Random.randF(s_f_def_event_pulse - 0.030f, s_f_def_event_pulse + 0.030f);
-	
+
 	if (!(owner_data))
 		return;
 	if (0 == owner_data->g_type)
@@ -108,9 +108,7 @@ void CSoundRender_Emitter::switch_to_3D()
 
 u32 CSoundRender_Emitter::play_time()
 {
-	if (m_current_state == stPlaying ||
-		m_current_state == stPlayingLooped ||
-		m_current_state == stSimulating ||
+	if (m_current_state == stPlaying || m_current_state == stPlayingLooped || m_current_state == stSimulating ||
 		m_current_state == stSimulatingLooped)
 		return iFloor((SoundRender->fTimer_Value - fTimeStarted) * 1000.0f);
 	else
@@ -142,7 +140,7 @@ void CSoundRender_Emitter::set_cursor(u32 p)
 u32 CSoundRender_Emitter::get_cursor(bool b_absolute) const
 {
 	if (b_absolute)
-		return 	m_stream_cursor;
+		return m_stream_cursor;
 	else
 	{
 		VERIFY(m_stream_cursor - m_cur_handle_cursor >= 0);

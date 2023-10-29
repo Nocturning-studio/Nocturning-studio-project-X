@@ -7,20 +7,20 @@
 #include "perlin.h"
 
 #define PERLIN_B SAMPLE_SIZE
-#define PERLIN_BM (SAMPLE_SIZE-1)
+#define PERLIN_BM (SAMPLE_SIZE - 1)
 
 #define PERLIN_N 0x1000
-#define PERLIN_NP 12   /* 2^PERLIN_N */
+#define PERLIN_NP 12 /* 2^PERLIN_N */
 #define PERLIN_NM 0xfff
 
-#define PERLIN_S_CURVE(t) ( t * t * (3.0f - 2.0f * t) )
-#define PERLIN_LERP(t, a, b) ( a + t * (b - a) )
+#define PERLIN_S_CURVE(t) (t * t * (3.0f - 2.0f * t))
+#define PERLIN_LERP(t, a, b) (a + t * (b - a))
 
-#define PERLIN_SETUP(i,b0,b1,r0,r1)\
-	t = vec[i] + PERLIN_N;\
-	b0 = ((int)t) & PERLIN_BM;\
-	b1 = (b0+1) & PERLIN_BM;\
-	r0 = t - (int)t;\
+#define PERLIN_SETUP(i, b0, b1, r0, r1)                                                                                \
+	t = vec[i] + PERLIN_N;                                                                                             \
+	b0 = ((int)t) & PERLIN_BM;                                                                                         \
+	b1 = (b0 + 1) & PERLIN_BM;                                                                                         \
+	r0 = t - (int)t;                                                                                                   \
 	r1 = r0 - 1.0f;
 
 //-------------------------------------------------------------------------------------------------
@@ -57,7 +57,8 @@ float CPerlinNoise1D::noise(float arg)
 
 	vec[0] = arg;
 
-	if (!mReady) {
+	if (!mReady)
+	{
 		srand(mSeed);
 		mReady = true;
 		init();
@@ -78,7 +79,8 @@ float CPerlinNoise1D::Get(float v)
 	float result = 0.0f;
 	float amp = mAmplitude;
 	v *= mFrequency;
-	for (int i = 0; i < mOctaves; i++) {
+	for (int i = 0; i < mOctaves; i++)
+	{
 		result += noise(v) * amp;
 		v *= 2.0f;
 		amp *= 0.5f;
@@ -97,8 +99,9 @@ float CPerlinNoise1D::GetContinious(float v)
 	float result = 0.0f;
 	float amp = mAmplitude;
 	v *= mFrequency;
-	for (int i = 0; i < mOctaves; i++) {
-		float		octave_time = mTimes[i];
+	for (int i = 0; i < mOctaves; i++)
+	{
+		float octave_time = mTimes[i];
 		mTimes[i] = octave_time + v;
 		result += noise(octave_time + v) * amp;
 		v *= 2.0f;
@@ -140,10 +143,11 @@ void CPerlinNoise2D::init()
 float CPerlinNoise2D::noise(const Fvector2& vec)
 {
 	int bx0, bx1, by0, by1, b00, b10, b01, b11;
-	float rx0, rx1, ry0, ry1, * q, sx, sy, a, b, t, u, v;
+	float rx0, rx1, ry0, ry1, *q, sx, sy, a, b, t, u, v;
 	int i, j;
 
-	if (!mReady) {
+	if (!mReady)
+	{
 		srand(mSeed);
 		mReady = true;
 		init();
@@ -163,7 +167,7 @@ float CPerlinNoise2D::noise(const Fvector2& vec)
 	sx = PERLIN_S_CURVE(rx0);
 	sy = PERLIN_S_CURVE(ry0);
 
-#define at2(rx,ry) ( rx * q[0] + ry * q[1] )
+#define at2(rx, ry) (rx * q[0] + ry * q[1])
 
 	q = g2[b00];
 	u = at2(rx0, ry0);
@@ -192,12 +196,13 @@ void CPerlinNoise2D::normalize(float v[2])
 
 float CPerlinNoise2D::Get(float x, float y)
 {
-	Fvector2 vec = { x,y };
+	Fvector2 vec = {x, y};
 	float result = 0.0f;
 	float amp = mAmplitude;
 	vec[0] *= mFrequency;
 	vec[1] *= mFrequency;
-	for (int i = 0; i < mOctaves; i++) {
+	for (int i = 0; i < mOctaves; i++)
+	{
 		result += noise(vec) * amp;
 		vec[0] *= 2.0f;
 		vec[1] *= 2.0f;
@@ -239,10 +244,11 @@ void CPerlinNoise3D::init()
 float CPerlinNoise3D::noise(const Fvector3& vec)
 {
 	int bx0, bx1, by0, by1, bz0, bz1, b00, b10, b01, b11;
-	float rx0, rx1, ry0, ry1, rz0, rz1, * q, sy, sz, a, b, c, d, t, u, v;
+	float rx0, rx1, ry0, ry1, rz0, rz1, *q, sy, sz, a, b, c, d, t, u, v;
 	int i, j;
 
-	if (!mReady) {
+	if (!mReady)
+	{
 		srand(mSeed);
 		mReady = true;
 		init();
@@ -264,24 +270,32 @@ float CPerlinNoise3D::noise(const Fvector3& vec)
 	sy = PERLIN_S_CURVE(ry0);
 	sz = PERLIN_S_CURVE(rz0);
 
-#define at3(rx,ry,rz) ( rx * q[0] + ry * q[1] + rz * q[2] )
+#define at3(rx, ry, rz) (rx * q[0] + ry * q[1] + rz * q[2])
 
-	q = g3[b00 + bz0]; u = at3(rx0, ry0, rz0);
-	q = g3[b10 + bz0]; v = at3(rx1, ry0, rz0);
+	q = g3[b00 + bz0];
+	u = at3(rx0, ry0, rz0);
+	q = g3[b10 + bz0];
+	v = at3(rx1, ry0, rz0);
 	a = PERLIN_LERP(t, u, v);
 
-	q = g3[b01 + bz0]; u = at3(rx0, ry1, rz0);
-	q = g3[b11 + bz0]; v = at3(rx1, ry1, rz0);
+	q = g3[b01 + bz0];
+	u = at3(rx0, ry1, rz0);
+	q = g3[b11 + bz0];
+	v = at3(rx1, ry1, rz0);
 	b = PERLIN_LERP(t, u, v);
 
 	c = PERLIN_LERP(sy, a, b);
 
-	q = g3[b00 + bz1]; u = at3(rx0, ry0, rz1);
-	q = g3[b10 + bz1]; v = at3(rx1, ry0, rz1);
+	q = g3[b00 + bz1];
+	u = at3(rx0, ry0, rz1);
+	q = g3[b10 + bz1];
+	v = at3(rx1, ry0, rz1);
 	a = PERLIN_LERP(t, u, v);
 
-	q = g3[b01 + bz1]; u = at3(rx0, ry1, rz1);
-	q = g3[b11 + bz1]; v = at3(rx1, ry1, rz1);
+	q = g3[b01 + bz1];
+	u = at3(rx0, ry1, rz1);
+	q = g3[b11 + bz1];
+	v = at3(rx1, ry1, rz1);
 	b = PERLIN_LERP(t, u, v);
 
 	d = PERLIN_LERP(sy, a, b);
@@ -303,13 +317,14 @@ void CPerlinNoise3D::normalize(float v[3])
 
 float CPerlinNoise3D::Get(float x, float y, float z)
 {
-	Fvector3 vec = { x,y,z };
+	Fvector3 vec = {x, y, z};
 	float result = 0.0f;
 	float amp = mAmplitude;
 	vec[0] *= mFrequency;
 	vec[1] *= mFrequency;
 	vec[2] *= mFrequency;
-	for (int i = 0; i < mOctaves; i++) {
+	for (int i = 0; i < mOctaves; i++)
+	{
 		result += noise(vec) * amp;
 		vec[0] *= 2.0f;
 		vec[1] *= 2.0f;

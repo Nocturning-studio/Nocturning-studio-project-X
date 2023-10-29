@@ -35,16 +35,17 @@
 // 3  camera
 // 4  inventory_active_slot,body_state_flags,health,radiation,physics_state_enabled
 
-void CActorMP::fill_state	(actor_mp_state &state)
+void CActorMP::fill_state(actor_mp_state& state)
 {
 	if (OnClient())
 	{
-		R_ASSERT						(g_Alive());
-		R_ASSERT2						(PHGetSyncItemsNumber() == 1,make_string("PHGetSyncItemsNumber() returned %d, health = %.2f",PHGetSyncItemsNumber(),GetfHealth()));
+		R_ASSERT(g_Alive());
+		R_ASSERT2(PHGetSyncItemsNumber() == 1, make_string("PHGetSyncItemsNumber() returned %d, health = %.2f",
+														   PHGetSyncItemsNumber(), GetfHealth()));
 	}
 
-	SPHNetState						State;
-	PHGetSyncItem(0)->get_State		(State);
+	SPHNetState State;
+	PHGetSyncItem(0)->get_State(State);
 
 //	static test = false;
 //	if (test) {
@@ -63,56 +64,56 @@ void CActorMP::fill_state	(actor_mp_state &state)
 //	}
 #endif // 0
 
-	state.physics_quaternion		= State.quaternion;
-	state.physics_angular_velocity	= State.angular_vel;
-	state.physics_linear_velocity	= State.linear_vel;
-	state.physics_force				= State.force;
-	state.physics_torque			= State.torque;
-	state.physics_position			= State.position;
+	state.physics_quaternion = State.quaternion;
+	state.physics_angular_velocity = State.angular_vel;
+	state.physics_linear_velocity = State.linear_vel;
+	state.physics_force = State.force;
+	state.physics_torque = State.torque;
+	state.physics_position = State.position;
 
-	state.position					= Position();
+	state.position = Position();
 
-	state.logic_acceleration		= NET_SavedAccel;
+	state.logic_acceleration = NET_SavedAccel;
 
-	state.model_yaw					= angle_normalize(r_model_yaw);
-	state.camera_yaw				= angle_normalize(unaffected_r_torso.yaw);
-	state.camera_pitch				= angle_normalize(unaffected_r_torso.pitch);
-	state.camera_roll				= angle_normalize(unaffected_r_torso.roll);
+	state.model_yaw = angle_normalize(r_model_yaw);
+	state.camera_yaw = angle_normalize(unaffected_r_torso.yaw);
+	state.camera_pitch = angle_normalize(unaffected_r_torso.pitch);
+	state.camera_roll = angle_normalize(unaffected_r_torso.roll);
 
-	state.time						= Level().timeServer();
+	state.time = Level().timeServer();
 
-	state.inventory_active_slot		= inventory().GetActiveSlot();
-	state.body_state_flags			= mstate_real & 0x0000ffff;
-	state.health					= GetfHealth();
-	state.radiation					= g_Radiation()/100.0f;
-	state.physics_state_enabled		= State.enabled ? 1 : 0;
+	state.inventory_active_slot = inventory().GetActiveSlot();
+	state.body_state_flags = mstate_real & 0x0000ffff;
+	state.health = GetfHealth();
+	state.radiation = g_Radiation() / 100.0f;
+	state.physics_state_enabled = State.enabled ? 1 : 0;
 }
 
-BOOL CActorMP::net_Relevant	()
+BOOL CActorMP::net_Relevant()
 {
 	if (OnClient())
 	{
 		if (!g_Alive())
-			return						(false);
+			return (false);
 
 		if (m_i_am_dead)
-			return						(false);
+			return (false);
 	}
 
 	if (character_physics_support()->IsRemoved())
-		return							(false);
+		return (false);
 
-	actor_mp_state					state;
-	fill_state						(state);
-	return							(m_state_holder.relevant(state));
+	actor_mp_state state;
+	fill_state(state);
+	return (m_state_holder.relevant(state));
 }
 
-void CActorMP::net_Export	(NET_Packet &packet)
+void CActorMP::net_Export(NET_Packet& packet)
 {
 	if (OnClient())
 	{
-		R_ASSERT						(g_Alive());
-		R_ASSERT						(PHGetSyncItemsNumber() == 1);
+		R_ASSERT(g_Alive());
+		R_ASSERT(PHGetSyncItemsNumber() == 1);
 	}
-	m_state_holder.write			(packet);
+	m_state_holder.write(packet);
 }

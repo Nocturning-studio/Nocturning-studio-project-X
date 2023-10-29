@@ -6,7 +6,7 @@
 #include "SoundRender_Emitter.h"
 #include "SoundRender_Target.h"
 
-void CSoundRender_Emitter::fill_data(u8 *_dest, u32 offset, u32 size)
+void CSoundRender_Emitter::fill_data(u8* _dest, u32 offset, u32 size)
 {
 	u32 line_size = SoundRender->cache.get_linesize();
 	u32 line = offset / line_size;
@@ -23,7 +23,7 @@ void CSoundRender_Emitter::fill_data(u8 *_dest, u32 offset, u32 size)
 
 		// fill block
 		u32 blk_size = _min(size, line_amount);
-		u8 *ptr = (u8 *)SoundRender->cache.get_dataptr(source()->CAT, line);
+		u8* ptr = (u8*)SoundRender->cache.get_dataptr(source()->CAT, line);
 		CopyMemory(_dest, ptr + line_offs, blk_size);
 
 		// advance
@@ -36,9 +36,9 @@ void CSoundRender_Emitter::fill_data(u8 *_dest, u32 offset, u32 size)
 	}
 }
 
-void CSoundRender_Emitter::fill_block(void *ptr, u32 size)
+void CSoundRender_Emitter::fill_block(void* ptr, u32 size)
 {
-	//Msg			("stream: %10s - [%X]:%d, p=%d, t=%d",*source->fname,ptr,size,position,source->dwBytesTotal);
+	// Msg			("stream: %10s - [%X]:%d, p=%d, t=%d",*source->fname,ptr,size,position,source->dwBytesTotal);
 	LPBYTE dest = LPBYTE(ptr);
 	u32 dwBytesTotal = get_bytes_total();
 
@@ -47,8 +47,7 @@ void CSoundRender_Emitter::fill_block(void *ptr, u32 size)
 		// We are reaching the end of data, what to do?
 		switch (m_current_state)
 		{
-		case stPlaying:
-		{
+		case stPlaying: {
 			// Fill as much data as we can, zeroing remainder
 			if (get_cursor(true) >= dwBytesTotal)
 			{
@@ -59,7 +58,7 @@ void CSoundRender_Emitter::fill_block(void *ptr, u32 size)
 			else
 			{
 				// Calculate remainder
-				u32	sz_data = dwBytesTotal - get_cursor(true);
+				u32 sz_data = dwBytesTotal - get_cursor(true);
 				u32 sz_zero = (get_cursor(true) + size) - dwBytesTotal;
 				VERIFY(size == (sz_data + sz_zero));
 				fill_data(dest, get_cursor(false), sz_data);
@@ -70,12 +69,11 @@ void CSoundRender_Emitter::fill_block(void *ptr, u32 size)
 		}
 		break;
 
-		case stPlayingLooped:
-		{
+		case stPlayingLooped: {
 			u32 hw_position = 0;
 			do
 			{
-				u32	sz_data = dwBytesTotal - get_cursor(true);
+				u32 sz_data = dwBytesTotal - get_cursor(true);
 				u32 sz_write = _min(size - hw_position, sz_data);
 				fill_data(dest + hw_position, get_cursor(true), sz_write);
 				hw_position += sz_write;
@@ -121,11 +119,11 @@ void CSoundRender_Emitter::fill_block(void *ptr, u32 size)
 			// Everything OK, just stream
 			fill_data(dest, get_cursor(false), size);
 			move_cursor(size);
-		}	
+		}
 	}
 }
 
-u32	CSoundRender_Emitter::get_bytes_total()	const
+u32 CSoundRender_Emitter::get_bytes_total() const
 {
 	u32 res = owner_data->dwBytesTotal;
 	return res;

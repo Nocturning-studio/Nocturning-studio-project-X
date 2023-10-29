@@ -21,46 +21,49 @@
 // CAgentManagerPropertyEvaluatorGlobal
 //////////////////////////////////////////////////////////////////////////
 
-CAgentManagerPropertyEvaluatorItem::_value_type CAgentManagerPropertyEvaluatorItem::evaluate	()
+CAgentManagerPropertyEvaluatorItem::_value_type CAgentManagerPropertyEvaluatorItem::evaluate()
 {
-	CAgentMemberManager::iterator	I = m_object->member().members().begin();
-	CAgentMemberManager::iterator	E = m_object->member().members().end();
-	for ( ; I != E; ++I) {
-		VERIFY				(*I);
+	CAgentMemberManager::iterator I = m_object->member().members().begin();
+	CAgentMemberManager::iterator E = m_object->member().members().end();
+	for (; I != E; ++I)
+	{
+		VERIFY(*I);
 		if ((*I)->object().memory().item().selected())
-			return			(true);
+			return (true);
 	}
-	return					(false);
+	return (false);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // CAgentManagerPropertyEvaluatorEnemy
 //////////////////////////////////////////////////////////////////////////
 
-CAgentManagerPropertyEvaluatorEnemy::_value_type CAgentManagerPropertyEvaluatorEnemy::evaluate	()
+CAgentManagerPropertyEvaluatorEnemy::_value_type CAgentManagerPropertyEvaluatorEnemy::evaluate()
 {
-	CAgentMemberManager::iterator	I = m_object->member().combat_members().begin();
-	CAgentMemberManager::iterator	E = m_object->member().combat_members().end();
-	for ( ; I != E; ++I) {
-		VERIFY				(*I);
+	CAgentMemberManager::iterator I = m_object->member().combat_members().begin();
+	CAgentMemberManager::iterator E = m_object->member().combat_members().end();
+	for (; I != E; ++I)
+	{
+		VERIFY(*I);
 		if ((*I)->object().memory().enemy().selected())
-			return			(true);
+			return (true);
 	}
-	return					(false);
+	return (false);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // CAgentManagerPropertyEvaluatorDanger
 //////////////////////////////////////////////////////////////////////////
 
-CAgentManagerPropertyEvaluatorDanger::_value_type CAgentManagerPropertyEvaluatorDanger::evaluate	()
+CAgentManagerPropertyEvaluatorDanger::_value_type CAgentManagerPropertyEvaluatorDanger::evaluate()
 {
-	CAgentMemberManager::iterator	I = m_object->member().members().begin();
-	CAgentMemberManager::iterator	E = m_object->member().members().end();
-	for ( ; I != E; ++I) {
-		VERIFY				(*I);
+	CAgentMemberManager::iterator I = m_object->member().members().begin();
+	CAgentMemberManager::iterator E = m_object->member().members().end();
+	for (; I != E; ++I)
+	{
+		VERIFY(*I);
 		if ((*I)->object().memory().danger().selected())
-			return			(true);
+			return (true);
 	}
-	return					(false);
+	return (false);
 }

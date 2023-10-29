@@ -2,7 +2,7 @@
 
 class CBlender_ao_build : public IBlender
 {
-public:
+  public:
 	virtual LPCSTR getComment()
 	{
 		return "INTERNAL: Ambient occlusion";

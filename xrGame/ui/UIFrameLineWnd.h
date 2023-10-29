@@ -4,10 +4,11 @@
 #include "UIWindow.h"
 #include "UIStatic.h"
 
-class CUIFrameLineWnd: public CUIWindow
+class CUIFrameLineWnd : public CUIWindow
 {
 	typedef CUIWindow inherited;
-public:
+
+  public:
 	CUIFrameLineWnd();
 	virtual void Init(float x, float y, float width, float height);
 	virtual void Init(LPCSTR base_name, float x, float y, float width, float height, bool horizontal = true);
@@ -16,15 +17,18 @@ public:
 	virtual void SetWidth(float width);
 	virtual void SetHeight(float height);
 	virtual void SetOrientation(bool horizontal);
-			float GetTextureHeight();
+	float GetTextureHeight();
 	void SetColor(u32 cl);
 
 	// Also we can display textual caption on the frame
-	CUIStatic		UITitleText;
-	CUIStatic*		GetTitleStatic(){return &UITitleText;};
+	CUIStatic UITitleText;
+	CUIStatic* GetTitleStatic()
+	{
+		return &UITitleText;
+	};
 
-protected:
-	bool			bHorizontal;
-	bool			m_bTextureAvailable;
-	CUIFrameLine	UIFrameLine;	
+  protected:
+	bool bHorizontal;
+	bool m_bTextureAvailable;
+	CUIFrameLine UIFrameLine;
 };

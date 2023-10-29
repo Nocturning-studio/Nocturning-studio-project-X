@@ -1,10 +1,10 @@
 //---------------------------------------------------------------------------
-#include 	"stdafx.h"
+#include "stdafx.h"
 #pragma hdrstop
 
-#include 	"SkeletonCustom.h"
+#include "SkeletonCustom.h"
 
-extern int	psSkeletonUpdate;
+extern int psSkeletonUpdate;
 
 #ifdef DEBUG
 void check_kinematics(CKinematics* _k, LPCSTR s);
@@ -15,11 +15,14 @@ void CKinematics::CalculateBones(BOOL bForceExact)
 	// early out.
 	// check if the info is still relevant
 	// skip all the computations - assume nothing changes in a small period of time :)
-	if (Device.dwTimeGlobal == UCalc_Time)										return;	// early out for "fast" update
-	UCalc_mtlock	lock;
+	if (Device.dwTimeGlobal == UCalc_Time)
+		return; // early out for "fast" update
+	UCalc_mtlock lock;
 	OnCalculateBones();
-	if (!bForceExact && (Device.dwTimeGlobal < (UCalc_Time + UCalc_Interval)))	return;	// early out for "slow" update
-	if (Update_Visibility)									Visibility_Update();
+	if (!bForceExact && (Device.dwTimeGlobal < (UCalc_Time + UCalc_Interval)))
+		return; // early out for "slow" update
+	if (Update_Visibility)
+		Visibility_Update();
 
 	_DBG_SINGLE_USE_MARKER;
 	// here we have either:
@@ -47,25 +50,45 @@ void CKinematics::CalculateBones(BOOL bForceExact)
 		UCalc_Visibox = -(::Random.randI(psSkeletonUpdate - 1));
 
 		// the update itself
-		Fbox	Box; Box.invalidate();
+		Fbox Box;
+		Box.invalidate();
 		for (u32 b = 0; b < bones->size(); b++)
 		{
-			if (!LL_GetBoneVisible(u16(b)))		continue;
+			if (!LL_GetBoneVisible(u16(b)))
+				continue;
 			Fobb& obb = (*bones)[b]->obb;
 			Fmatrix& Mbone = bone_instances[b].mTransform;
-			Fmatrix		Mbox;	obb.xform_get(Mbox);
-			Fmatrix		X;		X.mul_43(Mbone, Mbox);
+			Fmatrix Mbox;
+			obb.xform_get(Mbox);
+			Fmatrix X;
+			X.mul_43(Mbone, Mbox);
 			Fvector& S = obb.m_halfsize;
 
-			Fvector			P, A;
-			A.set(-S.x, -S.y, -S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(-S.x, -S.y, S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(S.x, -S.y, S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(S.x, -S.y, -S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(-S.x, S.y, -S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(-S.x, S.y, S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(S.x, S.y, S.z); X.transform_tiny(P, A); Box.modify(P);
-			A.set(S.x, S.y, -S.z); X.transform_tiny(P, A); Box.modify(P);
+			Fvector P, A;
+			A.set(-S.x, -S.y, -S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(-S.x, -S.y, S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(S.x, -S.y, S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(S.x, -S.y, -S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(-S.x, S.y, -S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(-S.x, S.y, S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(S.x, S.y, S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
+			A.set(S.x, S.y, -S.z);
+			X.transform_tiny(P, A);
+			Box.modify(P);
 		}
 		if (bones->size())
 		{
@@ -79,7 +102,8 @@ void CKinematics::CalculateBones(BOOL bForceExact)
 		VERIFY3(_valid(vis.box.min) && _valid(vis.box.max), "Invalid bones-xform in model", dbg_name.c_str());
 		if (vis.sphere.R > 1000.f)
 		{
-			for (u16 ii = 0; ii < LL_BoneCount(); ++ii) {
+			for (u16 ii = 0; ii < LL_BoneCount(); ++ii)
+			{
 				Fmatrix tr;
 
 				tr = LL_GetTransform(ii);
@@ -93,7 +117,8 @@ void CKinematics::CalculateBones(BOOL bForceExact)
 	}
 
 	//
-	if (Update_Callback)	Update_Callback(this);
+	if (Update_Callback)
+		Update_Callback(this);
 }
 
 #ifdef DEBUG
@@ -105,7 +130,8 @@ void check_kinematics(CKinematics* _k, LPCSTR s)
 	{
 		Msg("all bones transform:--------[%s]", s);
 
-		for (u16 ii = 0; ii < K->LL_BoneCount(); ++ii) {
+		for (u16 ii = 0; ii < K->LL_BoneCount(); ++ii)
+		{
 			Fmatrix tr;
 
 			tr = K->LL_GetTransform(ii);
@@ -121,15 +147,20 @@ void check_kinematics(CKinematics* _k, LPCSTR s)
 void CKinematics::Bone_Calculate(CBoneData* bd, Fmatrix* parent)
 {
 	u16 SelfID = bd->GetSelfID();
-	if (LL_GetBoneVisible(SelfID)) {
+	if (LL_GetBoneVisible(SelfID))
+	{
 		CBoneInstance& INST = LL_GetBoneInstance(SelfID);
-		if (INST.Callback_overwrite) {
-			if (INST.Callback)		INST.Callback(&INST);
+		if (INST.Callback_overwrite)
+		{
+			if (INST.Callback)
+				INST.Callback(&INST);
 		}
-		else {
+		else
+		{
 			// Build matrix
 			INST.mTransform.mul_43(*parent, bd->bind_transform);
-			if (INST.Callback)		INST.Callback(&INST);
+			if (INST.Callback)
+				INST.Callback(&INST);
 		}
 		INST.mRenderTransform.mul_43(INST.mTransform, bd->m2b_transform);
 

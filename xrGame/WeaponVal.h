@@ -3,11 +3,11 @@
 #include "weaponmagazined.h"
 #include "script_export_space.h"
 
-class CWeaponVal :
-	public CWeaponMagazined
+class CWeaponVal : public CWeaponMagazined
 {
 	typedef CWeaponMagazined inherited;
-public:
+
+  public:
 	CWeaponVal(void);
 	virtual ~CWeaponVal(void);
 

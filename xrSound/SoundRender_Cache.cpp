@@ -18,7 +18,7 @@ CSoundRender_Cache::~CSoundRender_Cache()
 {
 }
 
-void CSoundRender_Cache::move2top(cache_line *line)
+void CSoundRender_Cache::move2top(cache_line* line)
 {
 	VERIFY(line);
 	if (line == c_begin)
@@ -29,8 +29,8 @@ void CSoundRender_Cache::move2top(cache_line *line)
 		c_end = c_end->prev;
 
 	// cut
-	cache_line *prev = line->prev;
-	cache_line *next = line->next;
+	cache_line* prev = line->prev;
+	cache_line* next = line->next;
 	if (prev)
 		prev->next = next;
 	if (next)
@@ -49,17 +49,17 @@ void CSoundRender_Cache::move2top(cache_line *line)
 	VERIFY(c_end->next == NULL);
 }
 
-BOOL CSoundRender_Cache::request(cache_cat &cat, u32 id)
+BOOL CSoundRender_Cache::request(cache_cat& cat, u32 id)
 {
 	// 1. check if cached version available
 	id %= cat.size;
 	//.	R_ASSERT		(id<cat.size);
-	u16 &cptr = cat.table[id];
+	u16& cptr = cat.table[id];
 	if (CAT_FREE != cptr)
 	{
 		// cache line exists - change it's priority and return
 		_stat_hit++;
-		cache_line *L = c_storage + cptr;
+		cache_line* L = c_storage + cptr;
 		move2top(L);
 		return FALSE;
 	}
@@ -106,7 +106,7 @@ void CSoundRender_Cache::disconnect()
 	// disconnect from CATs
 	for (u32 it = 0; it < _count; it++)
 	{
-		cache_line *L = c_storage + it;
+		cache_line* L = c_storage + it;
 		if (L->loopback)
 		{
 			*L->loopback = CAT_FREE;
@@ -120,7 +120,7 @@ void CSoundRender_Cache::format()
 	// format structs
 	for (u32 it = 0; it < _count; it++)
 	{
-		cache_line *L = c_storage + it;
+		cache_line* L = c_storage + it;
 		L->prev = (0 == it) ? NULL : c_storage + it - 1;
 		L->next = ((_count - 1) == it) ? NULL : c_storage + it + 1;
 		L->data = data + it * _line;
@@ -151,7 +151,7 @@ void CSoundRender_Cache::destroy()
 	_count = 0;
 }
 
-void CSoundRender_Cache::cat_create(cache_cat &cat, u32 bytes)
+void CSoundRender_Cache::cat_create(cache_cat& cat, u32 bytes)
 {
 	cat.size = bytes / _line;
 	if (bytes % _line)
@@ -161,7 +161,7 @@ void CSoundRender_Cache::cat_create(cache_cat &cat, u32 bytes)
 	Memory.mem_fill32(cat.table, 0xffffffff, allocsize / 2);
 }
 
-void CSoundRender_Cache::cat_destroy(cache_cat &cat)
+void CSoundRender_Cache::cat_destroy(cache_cat& cat)
 {
 	xr_free(cat.table);
 	cat.size = 0;

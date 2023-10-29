@@ -3,10 +3,11 @@
 
 class CPseudoGigant;
 
-class CStateManagerGigant : public CMonsterStateManager<CPseudoGigant> {
+class CStateManagerGigant : public CMonsterStateManager<CPseudoGigant>
+{
 	typedef CMonsterStateManager<CPseudoGigant> inherited;
-public:
 
-					CStateManagerGigant	(CPseudoGigant *monster); 
-	virtual void	execute				();
+  public:
+	CStateManagerGigant(CPseudoGigant* monster);
+	virtual void execute();
 };

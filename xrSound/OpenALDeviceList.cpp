@@ -28,13 +28,13 @@
 #include <openal/alc.h>
 
 #pragma warning(push)
-#pragma warning(disable:4995)
+#pragma warning(disable : 4995)
 #include <objbase.h>
 #pragma warning(pop)
 
- /*
-  * Init call
-  */
+/*
+ * Init call
+ */
 ALDeviceList::ALDeviceList()
 {
 	snd_device_id = u32(-1);
@@ -54,12 +54,11 @@ ALDeviceList::~ALDeviceList()
 	snd_devices_token = NULL;
 }
 
-
 void ALDeviceList::Enumerate()
 {
 	char* devices;
-	int					major, minor, index;
-	LPCSTR				actualDeviceName;
+	int major, minor, index;
+	LPCSTR actualDeviceName;
 
 	Msg("SOUND: OpenAL: enumerate devices...");
 	// have a set of vectors storing the device list, selection status, spec version #, and XRAM support status
@@ -78,7 +77,7 @@ void ALDeviceList::Enumerate()
 		Msg("SOUND: OpenAL: system default SndDevice name is %s", m_defaultDeviceName.c_str());
 
 		// ManowaR
-		// "Generic Hardware" device on software AC'97 codecs introduce 
+		// "Generic Hardware" device on software AC'97 codecs introduce
 		// high CPU usage ( up to 30% ) as a consequence - freezes, FPS drop
 		// So if default device is "Generic Hardware" which maps to DirectSound3D interface
 		// We re-assign it to "Generic Software" to get use of old good DirectSound interface
@@ -124,8 +123,9 @@ void ALDeviceList::Enumerate()
 						m_devices.back().props.efx = (alIsExtensionPresent("ALC_EXT_EFX") == TRUE);
 						m_devices.back().props.xram = (alIsExtensionPresent("EAX_RAM") == TRUE);
 
-						m_devices.back().props.eax_unwanted = ((0 == xr_strcmp(actualDeviceName, AL_GENERIC_HARDWARE)) ||
-							(0 == xr_strcmp(actualDeviceName, AL_GENERIC_SOFTWARE)));
+						m_devices.back().props.eax_unwanted =
+							((0 == xr_strcmp(actualDeviceName, AL_GENERIC_HARDWARE)) ||
+							 (0 == xr_strcmp(actualDeviceName, AL_GENERIC_SOFTWARE)));
 						++index;
 					}
 					alcDestroyContext(context);
@@ -143,7 +143,7 @@ void ALDeviceList::Enumerate()
 	else
 		Msg("SOUND: OpenAL: EnumerationExtension NOT Present");
 
-	//make token
+	// make token
 	u32 _cnt = GetNumDevices();
 	snd_devices_token = xr_alloc<xr_token>(_cnt + 1);
 	snd_devices_token[_cnt].id = -1;
@@ -158,23 +158,15 @@ void ALDeviceList::Enumerate()
 	if (0 != GetNumDevices())
 		Msg("SOUND: OpenAL: All available devices:");
 
-
 	int majorVersion, minorVersion;
-
 
 	for (u32 j = 0; j < GetNumDevices(); j++)
 	{
 		GetDeviceVersion(j, &majorVersion, &minorVersion);
-		Msg("%d. %s, Spec Version %d.%d %s eax[%d] efx[%s] xram[%s]",
-			j + 1,
-			GetDeviceName(j),
-			majorVersion,
-			minorVersion,
-			(stricmp(GetDeviceName(j), m_defaultDeviceName.c_str()) == 0) ? "(default)" : "",
-			GetDeviceDesc(j).props.eax,
-			GetDeviceDesc(j).props.efx ? "yes" : "no",
-			GetDeviceDesc(j).props.xram ? "yes" : "no"
-		);
+		Msg("%d. %s, Spec Version %d.%d %s eax[%d] efx[%s] xram[%s]", j + 1, GetDeviceName(j), majorVersion,
+			minorVersion, (stricmp(GetDeviceName(j), m_defaultDeviceName.c_str()) == 0) ? "(default)" : "",
+			GetDeviceDesc(j).props.eax, GetDeviceDesc(j).props.efx ? "yes" : "no",
+			GetDeviceDesc(j).props.xram ? "yes" : "no");
 	}
 	if (!strstr(GetCommandLine(), "-editor"))
 		CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -194,7 +186,7 @@ void ALDeviceList::SelectBestDevice()
 
 	if (snd_device_id == u32(-1))
 	{
-		//select best
+		// select best
 		u32 new_device_id = snd_device_id;
 		for (u32 i = 0; i < GetNumDevices(); ++i)
 		{
@@ -213,7 +205,7 @@ void ALDeviceList::SelectBestDevice()
 		if (new_device_id == u32(-1))
 		{
 			R_ASSERT(GetNumDevices() != 0);
-			new_device_id = 0; //first
+			new_device_id = 0; // first
 		};
 		snd_device_id = new_device_id;
 	}

@@ -8,39 +8,39 @@
 
 #pragma once
 
-IC	bool CStalkerMovementParams::operator==	(const CStalkerMovementParams &params) const
+IC bool CStalkerMovementParams::operator==(const CStalkerMovementParams& params) const
 {
 	if (m_use_desired_position != params.m_use_desired_position)
-		return				(false);
+		return (false);
 
 	if (m_use_desired_direction != params.m_use_desired_direction)
-		return				(false);
+		return (false);
 
 	if (m_detail_path_type != params.m_detail_path_type)
-		return				(false);
+		return (false);
 
 	if (m_path_type != params.m_path_type)
-		return				(false);
+		return (false);
 
 	if (m_mental_state != params.m_mental_state)
-		return				(false);
+		return (false);
 
 	if (m_movement_type != params.m_movement_type)
-		return				(false);
+		return (false);
 
 	if (m_body_state != params.m_body_state)
-		return				(false);
+		return (false);
 
 	if (m_use_desired_direction && !m_desired_direction.similar(params.m_desired_direction))
-		return				(false);
+		return (false);
 
 	if (m_use_desired_position && !m_desired_position.similar(params.m_desired_position))
-		return				(false);
+		return (false);
 
-	return					(true);
+	return (true);
 }
 
-IC	bool CStalkerMovementParams::operator!=	(const CStalkerMovementParams &params) const
+IC bool CStalkerMovementParams::operator!=(const CStalkerMovementParams& params) const
 {
-	return					(!(*this == params));
+	return (!(*this == params));
 }

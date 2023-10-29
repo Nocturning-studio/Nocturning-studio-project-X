@@ -9,22 +9,24 @@ class CGameSpy_Browser;
 
 class CGameSpy_Full
 {
-	HMODULE	m_hGameSpyDLL;
+	HMODULE m_hGameSpyDLL;
 
-	void	LoadGameSpy();
+	void LoadGameSpy();
 
-	bool	m_bServicesAlreadyChecked;
-public:
-	CGameSpy_Full	();
-	~CGameSpy_Full	();
+	bool m_bServicesAlreadyChecked;
 
-	CGameSpy_Available*	m_pGSA;
-	CGameSpy_Patching*	m_pGS_Patching;
-	CGameSpy_HTTP*		m_pGS_HTTP;
-	CGameSpy_Browser*	m_pGS_SB;
+  public:
+	CGameSpy_Full();
+	~CGameSpy_Full();
 
-	void		Update	();
-	const char*	GetGameVersion		(const	char*result);
-private:
-	GAMESPY_FN_VAR_DECL(const char*, GetGameVersion, (const	char*));
+	CGameSpy_Available* m_pGSA;
+	CGameSpy_Patching* m_pGS_Patching;
+	CGameSpy_HTTP* m_pGS_HTTP;
+	CGameSpy_Browser* m_pGS_SB;
+
+	void Update();
+	const char* GetGameVersion(const char* result);
+
+  private:
+	GAMESPY_FN_VAR_DECL(const char*, GetGameVersion, (const char*));
 };

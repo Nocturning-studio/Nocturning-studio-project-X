@@ -6,8 +6,10 @@
 XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2);
 XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3);
 XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5, const char* S6);
+XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4,
+						   const char* S5);
+XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4,
+						   const char* S5, const char* S6);
 
 #else // _EDITOR
 // obsolete: should be deleted as soon borland work correctly with new strconcats
@@ -72,7 +74,7 @@ IC char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, cons
 	do                                                                                                                 \
 	{                                                                                                                  \
 		xray::core::detail::string_tupples STRCONCAT_tupples_unique_identifier(__VA_ARGS__);                           \
-		(dest) = (String)_alloca(STRCONCAT_tupples_unique_identifier.size());                                           \
+		(dest) = (String)_alloca(STRCONCAT_tupples_unique_identifier.size());                                          \
 		STRCONCAT_tupples_unique_identifier.concat(dest);                                                              \
 	} while (0)
 

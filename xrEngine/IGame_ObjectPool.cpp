@@ -17,14 +17,15 @@ void IGame_ObjectPool::prefetch()
 {
 	R_ASSERT(m_PrefetchObjects.empty());
 
-	int	p_count = 0;
+	int p_count = 0;
 	::Render->model_Logging(FALSE);
 
-	string256				section;
+	string256 section;
 	// prefetch objects
 	strconcat(sizeof(section), section, "prefetch_objects_", g_pGamePersistent->m_game_params.m_game_type);
 	CInifile::Sect& sect = pSettings->r_section(section);
-	for (CInifile::SectCIt I = sect.Data.begin(); I != sect.Data.end(); I++) {
+	for (CInifile::SectCIt I = sect.Data.begin(); I != sect.Data.end(); I++)
+	{
 		const CInifile::Item& item = *I;
 		CLASS_ID CLS = pSettings->r_clsid(item.first.c_str(), "class");
 		p_count++;
@@ -48,15 +49,15 @@ void IGame_ObjectPool::clear()
 	m_PrefetchObjects.clear();
 }
 
-CObject* IGame_ObjectPool::create(LPCSTR	name)
+CObject* IGame_ObjectPool::create(LPCSTR name)
 {
 	CLASS_ID CLS = pSettings->r_clsid(name, "class");
 	CObject* O = (CObject*)NEW_INSTANCE(CLS);
 	O->Load(name);
-	return				O;
+	return O;
 }
 
-void		IGame_ObjectPool::destroy(CObject* O)
+void IGame_ObjectPool::destroy(CObject* O)
 {
 	xr_delete(O);
 }
