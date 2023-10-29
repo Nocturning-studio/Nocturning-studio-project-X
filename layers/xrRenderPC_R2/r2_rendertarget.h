@@ -117,7 +117,6 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_bloom_dbg_1;
 	ref_shader s_bloom_dbg_2;
 	ref_shader s_bloom;
-	float f_bloom_factor;
 
 	// AO
 	ref_shader s_ao;

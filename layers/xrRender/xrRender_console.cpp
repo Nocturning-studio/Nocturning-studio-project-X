@@ -155,21 +155,22 @@ float ps_r2_autoexposure_adaptation = 1.f;
 float ps_r2_autoexposure_low_lum = 0.0001f;
 float ps_r2_autoexposure_amount = 0.5f;
 
-float ps_r2_ls_bloom_kernel_g = 3.0f;
-float ps_r2_ls_bloom_kernel_b = .7f;
-float ps_r2_ls_bloom_speed = 100.f;
-float ps_r2_ls_bloom_kernel_scale = 0.8f; // gauss
-float ps_r2_ls_bloom_threshold = .2f;
+float ps_r2_bloom_kernel_g = 3.0f;
+float ps_r2_bloom_kernel_b = 0.7f;
+float ps_r2_bloom_speed = 100.f;
+float ps_r2_bloom_kernel_scale = 0.8f; // gauss
+float ps_r2_bloom_threshold = 0.2f;
+float ps_r2_bloom_factor = 0.5f;
 
-float ps_r2_ls_dsm_kernel = .7f;
-float ps_r2_ls_psm_kernel = .7f;
-float ps_r2_ls_ssm_kernel = .7f;
+float ps_r2_ls_dsm_kernel = 0.7f;
+float ps_r2_ls_psm_kernel = 0.7f;
+float ps_r2_ls_ssm_kernel = 0.7f;
 
-Fvector ps_r2_aa_barier = {.8f, .1f, 0};
-Fvector ps_r2_aa_weight = {.25f, .25f, 0};
-float ps_r2_aa_kernel = .5f;
+Fvector ps_r2_aa_barier = {0.8f, 0.1f, 0.0f};
+Fvector ps_r2_aa_weight = {0.25f, 0.25f, 0.0f};
+float ps_r2_aa_kernel = 0.5f;
 
-float ps_r2_mblur = .5f;
+float ps_r2_mblur = 0.5f;
 
 Fvector3 ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f); //	x - min (0), y - focus (1.4), z - max (100)
 float ps_r2_dof_sky = 300;								  //	distance to sky
@@ -663,11 +664,12 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_autoexposure_amount", &ps_r2_autoexposure_amount, 0.0000f, 1.0f);
 
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_postprocess_flags, R2FLAG_BLOOM);
-	CMD4(CCC_Float, "r2_bloom_kernel_scale", &ps_r2_ls_bloom_kernel_scale, 0.5f, 2.f);
-	CMD4(CCC_Float, "r2_bloom_kernel_g", &ps_r2_ls_bloom_kernel_g, 1.f, 7.f);
-	CMD4(CCC_Float, "r2_bloom_kernel_b", &ps_r2_ls_bloom_kernel_b, 0.01f, 1.f);
-	CMD4(CCC_Float, "r2_bloom_threshold", &ps_r2_ls_bloom_threshold, 0.f, 1.f);
-	CMD4(CCC_Float, "r2_bloom_speed", &ps_r2_ls_bloom_speed, 0.f, 100.f);
+	CMD4(CCC_Float, "r2_bloom_kernel_scale", &ps_r2_bloom_kernel_scale, 0.5f, 2.0f);
+	CMD4(CCC_Float, "r2_bloom_kernel_g", &ps_r2_bloom_kernel_g, 1.0f, 7.0f);
+	CMD4(CCC_Float, "r2_bloom_kernel_b", &ps_r2_bloom_kernel_b, 0.01f, 1.0f);
+	CMD4(CCC_Float, "r2_bloom_threshold", &ps_r2_bloom_threshold, 0.0f, 1.0f);
+	CMD4(CCC_Float, "r2_bloom_speed", &ps_r2_bloom_speed, 0.0f, 100.0f);
+	CMD4(CCC_Float, "r2_bloom_factor", &ps_r2_bloom_factor, 0.0f, 1.0f);
 	CMD3(CCC_Mask, "r2_bloom_fast", &ps_r2_postprocess_flags, R2FLAG_FASTBLOOM);
 
 	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_postprocess_flags, R2FLAG_MBLUR);

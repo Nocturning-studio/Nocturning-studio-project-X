@@ -80,11 +80,12 @@ extern ECORE_API float ps_r2_autoexposure_adaptation;
 extern ECORE_API float ps_r2_autoexposure_low_lum;
 extern ECORE_API float ps_r2_autoexposure_amount;
 
-extern ECORE_API float ps_r2_ls_bloom_kernel_scale; // gauss
-extern ECORE_API float ps_r2_ls_bloom_kernel_g;		// gauss
-extern ECORE_API float ps_r2_ls_bloom_kernel_b;		// bilinear
-extern ECORE_API float ps_r2_ls_bloom_threshold;
-extern ECORE_API float ps_r2_ls_bloom_speed;
+extern ECORE_API float ps_r2_bloom_kernel_scale; // gauss
+extern ECORE_API float ps_r2_bloom_kernel_g;		// gauss
+extern ECORE_API float ps_r2_bloom_kernel_b;		// bilinear
+extern ECORE_API float ps_r2_bloom_threshold;
+extern ECORE_API float ps_r2_bloom_speed;
+extern ECORE_API float ps_r2_bloom_factor;
 
 extern ECORE_API float ps_r2_ls_dsm_kernel;
 extern ECORE_API float ps_r2_ls_psm_kernel;
