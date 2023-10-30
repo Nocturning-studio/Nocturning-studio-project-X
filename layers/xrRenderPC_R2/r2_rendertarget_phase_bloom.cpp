@@ -129,10 +129,11 @@ void CRenderTarget::phase_bloom()
 		RCache.Vertex.Unlock(4, g_bloom_build->vb_stride);
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
-		float s = ps_r2_bloom_threshold;														// scale
+		float s = ps_r2_bloom_threshold;															 // scale
 		float bloom_factor = .9f * ps_r2_bloom_factor + .1f * ps_r2_bloom_speed * Device.fTimeDelta; // speed
 		RCache.set_Element(s_bloom->E[0]);
 		RCache.set_c("bloom_parameters", s, bloom_factor, s, bloom_factor);
+		RCache.set_c("bloom_resolution", one.x, one.y, 1.0f / one.x, 1.0f / one.y);
 		RCache.set_Geometry(g_bloom_build);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
@@ -140,7 +141,7 @@ void CRenderTarget::phase_bloom()
 	// Capture luminance values
 	phase_luminance();
 
-	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM) && ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
+	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM) || ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 	{
 		// FAST FILTER
 		float _w = BLOOM_size_X;
