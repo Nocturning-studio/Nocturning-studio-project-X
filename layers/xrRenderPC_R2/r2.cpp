@@ -102,7 +102,8 @@ void CRender::create()
 	// hardware
 	///////////////////////////////////////////////////
 	// Smap res choosing
-#pragma todo(Deathman to Deathman: Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot/point источников света)
+#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot /          \
+			 point источников света)
 	if (o.sunstatic)
 	{
 		o.smapsize = 1024;
@@ -652,7 +653,7 @@ void CRender::clearAllShaderOptions()
 }
 
 static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 const buffer_size, LPCSTR const file_name,
-							 void*& result, bool const disasm)
+							 void*& result, bool const disasm, LPCSTR const disasm_file_name)
 {
 	HRESULT _result = E_FAIL;
 	if (pTarget[0] == 'p')
@@ -709,8 +710,8 @@ static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 cons
 		ID3DXBuffer* _disasm = 0;
 		D3DXDisassembleShader(LPDWORD(buffer), TRUE, 0, &_disasm);
 		string_path dname;
-		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", file_name,
-				  ('v' == pTarget[0]) ? "_vertex_shader.txt" : "_pixel_shader.txt");
+		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", disasm_file_name,
+				  ('v' == pTarget[0]) ? "_vertex_shader.html" : "_pixel_shader.html");
 		IWriter* W = FS.w_open("$app_data_root$", dname);
 		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
 		FS.w_close(W);
@@ -1321,6 +1322,11 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		strcat(file_name, temp_file_name);
 	}
 
+	string_path disasm_file_name = {0};
+	strcat(disasm_file_name, getShaderPath());
+	strcat(disasm_file_name, "\\");
+	strcat(disasm_file_name, name);
+
 	if (FS.exist(file_name))
 	{
 		// Msg("opening library or cache shader...");
@@ -1337,7 +1343,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			if (real_crc == crc)
 			{
 				_result = create_shader(pTarget, (DWORD*)file->pointer(), static_cast<u32>(file->elapsed()), file_name,
-										result, o.disasm);
+										result, o.disasm, disasm_file_name);
 			}
 		}
 		file->close();
@@ -1379,7 +1385,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			FS.w_close(file);
 
 			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(),
-									file_name, result, o.disasm);
+									file_name, result, o.disasm, disasm_file_name);
 
 			if (pErrorBuf)
 			{
