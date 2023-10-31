@@ -959,7 +959,7 @@ void CRender::render_sun_cascades()
 
 void CRender::render_sun_cascade(u32 cascade_ind)
 {
-	light* fuckingsun = (light*)Lights.sun_adapted._get();
+	light* sun = (light*)Lights.sun_adapted._get();
 
 	// calculate view-frustum bounds in world space
 	Fmatrix ex_project, ex_full, ex_full_inverse;
@@ -1005,7 +1005,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		cull_sector = largest_sector;
 
 		// COP - 100 km away
-		cull_COP.mad(Device.vCameraPosition, fuckingsun->direction, -tweak_COP_initial_offs);
+		cull_COP.mad(Device.vCameraPosition, sun->direction, -tweak_COP_initial_offs);
 
 		// Create frustum for query
 		cull_frustum._clear();
@@ -1016,8 +1016,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		// view: auto find 'up' and 'right' vectors
 		Fmatrix mdir_View, mdir_Project;
 		Fvector L_dir, L_up, L_right, L_pos;
-		L_pos.set(fuckingsun->position);
-		L_dir.set(fuckingsun->direction).normalize();
+		L_pos.set(sun->position);
+		L_dir.set(sun->direction).normalize();
 		L_right.set(1, 0, 0);
 		if (_abs(L_right.dotproduct(L_dir)) > .99f)
 			L_right.set(0, 0, 1);
@@ -1166,10 +1166,10 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		m_sun_cascades[cascade_ind].xform = cull_xform;
 
 		s32 limit = RImplementation.o.smapsize - 1;
-		fuckingsun->X.D.minX = 0;
-		fuckingsun->X.D.maxX = limit;
-		fuckingsun->X.D.minY = 0;
-		fuckingsun->X.D.maxY = limit;
+		sun->X.D.minX = 0;
+		sun->X.D.maxX = limit;
+		sun->X.D.minY = 0;
+		sun->X.D.maxY = limit;
 
 		// full-xform
 		FPU::m24r();
@@ -1185,14 +1185,14 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			r_pmask(true, true);
 		else
 			r_pmask(true, false);
-		//		fuckingsun->svis.begin					();
+		//		sun->svis.begin					();
 	}
 
 	// Fill the database
 	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 
 	// Finalize & Cleanup
-	fuckingsun->X.D.combine = cull_xform;
+	sun->X.D.combine = cull_xform;
 
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
@@ -1201,18 +1201,18 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		bool bSpecial = mapNormal[1].size() || mapMatrix[1].size() || mapSorted.size();
 		if (bNormal || bSpecial)
 		{
-			Target->phase_smap_direct(fuckingsun, SE_SUN_NEAR);
+			Target->phase_smap_direct(sun, SE_SUN_NEAR);
 			RCache.set_xform_world(Fidentity);
 			RCache.set_xform_view(Fidentity);
-			RCache.set_xform_project(fuckingsun->X.D.combine);
+			RCache.set_xform_project(sun->X.D.combine);
 			r_dsgraph_render_graph(0);
 			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))
 				Details->Render();
-			fuckingsun->X.D.transluent = FALSE;
+			sun->X.D.transluent = FALSE;
 			if (bSpecial)
 			{
-				fuckingsun->X.D.transluent = TRUE;
-				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_FAR);
+				sun->X.D.transluent = TRUE;
+				Target->phase_smap_direct_tsh(sun, SE_SUN_FAR);
 				r_dsgraph_render_graph(1); // normal level, secondary priority
 				r_dsgraph_render_sorted(); // strict-sorted geoms
 			}
@@ -1221,7 +1221,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 	// End SMAP-render
 	{
-		//		fuckingsun->svis.end					();
+		//		sun->svis.end					();
 		r_pmask(true, false);
 	}
 
