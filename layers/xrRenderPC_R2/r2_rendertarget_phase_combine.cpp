@@ -28,23 +28,17 @@ void CRenderTarget::phase_combine()
 	RCache.set_Stencil(FALSE);
 
 	// draw skybox
-	if (1)
-	{
-		RCache.set_ColorWriteEnable();
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
-		g_pGamePersistent->Environment().RenderSky();
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
-	}
+	RCache.set_ColorWriteEnable();
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+	g_pGamePersistent->Environment().RenderSky();
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
 
-	//
-	// if (RImplementation.o.bug)	{
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00); // stencil should be >= 1
 	if (RImplementation.o.nvstencil)
 	{
 		u_stencil_optimize(FALSE);
 		RCache.set_ColorWriteEnable();
 	}
-	//}
 
 	// calc m-blur matrices
 	Fmatrix m_previous, m_current;

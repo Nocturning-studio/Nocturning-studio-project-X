@@ -210,6 +210,7 @@ void CRender::Render()
 		render_menu();
 		return;
 	};
+
 	if (!(g_pGameLevel && g_pGameLevel->pHUD))
 		return;
 
@@ -219,20 +220,17 @@ void CRender::Render()
 		return;
 	}
 
-	//.	VERIFY					(g_pGameLevel && g_pGameLevel->pHUD);
-
 	// Configure
 	RImplementation.o.distortion = FALSE; // disable distorion
 	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
 	BOOL bSUN = ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
 	if (o.sunstatic)
 		bSUN = FALSE;
-	// Msg						("sstatic: %s, sun: %s",o.sunstatic?"true":"false", bSUN?"true":"false");
 
 	// HOM
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = 0;
-	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	if (!ps_render_flags.test(RFLAG_EXP_MT_CALC))
 	{
 		HOM.Enable();
 		HOM.Render(ViewBase);
@@ -244,7 +242,7 @@ void CRender::Render()
 		Device.Statistic->RenderCALC.Begin();
 		float z_distance = ps_r2_zfill;
 		Fmatrix m_zfill, m_project;
-		m_project.build_projection(deg2rad(Device.fFOV /* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR,
+		m_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR,
 								   z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		m_zfill.mul(m_project, Device.mView);
 		r_pmask(true, false); // enable priority "0"
@@ -277,7 +275,7 @@ void CRender::Render()
 		while ((hr = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE)
 		{
 			if (!SwitchToThread())
-				Sleep(ps_r2_wait_sleep);
+				Sleep(ps_r_thread_wait_sleep);
 			if (T.GetElapsed_ms() > 500)
 			{
 				result = FALSE;
@@ -382,21 +380,6 @@ void CRender::Render()
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)
 	{
-		/*
-				// skybox can be drawn here
-				if (0)
-				{
-					Target->u_setrt		( Target->rt_Generic_0,	Target->rt_Generic_1,0,HW.pBaseZB );
-					RCache.set_CullMode	( CULL_NONE );
-					RCache.set_Stencil	( FALSE		);
-
-					// draw skybox
-					RCache.set_ColorWriteEnable					();
-					CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	FALSE				));
-					g_pGamePersistent->Environment().RenderSky	();
-					CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	TRUE				));
-				}
-		*/
 		// level
 		PortalTraverser.fade_render(); // faded-portals, should be calculated before GBuffer
 		Target->create_gbuffer();
