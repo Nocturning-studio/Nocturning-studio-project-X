@@ -114,6 +114,20 @@ void __cdecl Msg(const char* format, ...)
 		Log(buf);
 }
 
+void __cdecl DbgMsg(const char* format, ...)
+{
+#ifdef DEBUG
+	va_list mark;
+	string1024 buf;
+	va_start(mark, format);
+	int sz = _vsnprintf(buf, sizeof(buf) - 1, format, mark);
+	buf[sizeof(buf) - 1] = 0;
+	va_end(mark);
+	if (sz)
+		Log(buf);
+#endif
+}
+
 void Log(const char* msg, const char* dop)
 {
 	char buf[1024];
