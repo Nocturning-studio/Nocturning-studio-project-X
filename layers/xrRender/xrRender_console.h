@@ -38,6 +38,7 @@ extern ECORE_API Flags32 ps_render_flags;
 enum
 {
 	RFLAG_LENS_FLARES = (1 << 0),
+	RFLAG_EXP_MT_CALC = (1 << 1),
 };
 
 /*-------------------------------------------------------------------------------*/
@@ -199,8 +200,7 @@ enum
 	R2FLAG_EXP_SPLIT_SCENE = (1 << 2),
 	R2FLAG_USE_NVDBT = (1 << 3),
 	R2FLAG_USE_NVSTENCIL = (1 << 4),
-	R2FLAG_EXP_MT_CALC = (1 << 5),
-	R2FLAG_HARD_OPTIMIZATION = (1 << 6)
+	R2FLAG_HARD_OPTIMIZATION = (1 << 5)
 };
 
 /*-------------------------------------------------------------------------------*/

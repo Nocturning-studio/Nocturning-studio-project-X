@@ -345,7 +345,7 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
 	Models->DeleteQueue();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	if (ps_render_flags.test(RFLAG_EXP_MT_CALC))
 	{
 		// MT-details (@front)
 		Device.seqParallel.insert(Device.seqParallel.begin(),

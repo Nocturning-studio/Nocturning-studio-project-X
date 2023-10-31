@@ -122,7 +122,7 @@ float ps_r__ssaHZBvsTEX = 96.f;
 int ps_r__tf_Anisotropic = 4;
 
 // Render common flags
-Flags32 ps_render_flags = {RFLAG_LENS_FLARES};
+Flags32 ps_render_flags = {RFLAG_LENS_FLARES | RFLAG_EXP_MT_CALC};
 
 /*-------------------------------------------------------------------------------*/
 // R1-specific values
@@ -226,7 +226,7 @@ Flags32 ps_r2_overlay_flags = {
 	0,
 };
 
-Flags32 ps_r2_ls_flags = {R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE | R2FLAG_EXP_MT_CALC};
+Flags32 ps_r2_ls_flags = {R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE};
 
 /*-------------------------------------------------------------------------------*/
 // Methods
@@ -766,7 +766,7 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_gloss_factor", &ps_r2_gloss_factor, 1.f, 3.f);
 
 	CMD3(CCC_Mask, "r2_use_nvdbt", &ps_r2_ls_flags, R2FLAG_USE_NVDBT);
-	CMD3(CCC_Mask, "r2_mt", &ps_r2_ls_flags, R2FLAG_EXP_MT_CALC);
+	CMD3(CCC_Mask, "r__mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
 
 	CMD4(CCC_Integer, "r2_wait_sleep", &ps_r2_wait_sleep, 0, 1);
 
