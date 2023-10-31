@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\xrRender\r__dsgraph_structure.h"
+#include "..\xrRender\r__occlusion.h"
 
 #include "..\xrRender\PSLibrary.h"
 
@@ -51,7 +52,7 @@ class CRender : public R_dsgraph_structure
 	xrXRC Sectors_xrc;
 	CDB::MODEL* rmPortals;
 	CHOM HOM;
-	//.	R_occlusion													HWOCC;
+	R_occlusion	HWOCC;
 
 	// Global containers
 	xr_vector<FSlideWindowItem> SWIs;
@@ -213,6 +214,20 @@ class CRender : public R_dsgraph_structure
 	// Constructor/destructor/loader
 	CRender();
 	virtual ~CRender();
+
+		// HW-occlusion culling
+	IC u32 occq_begin(u32& ID)
+	{
+		return HWOCC.occq_begin(ID);
+	}
+	IC void occq_end(u32& ID)
+	{
+		HWOCC.occq_end(ID);
+	}
+	IC u32 occq_get(u32& ID)
+	{
+		return HWOCC.occq_get(ID);
+	}
 
   private:
 	FS_FileSet m_file_set;

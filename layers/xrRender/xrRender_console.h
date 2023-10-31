@@ -30,6 +30,8 @@ extern ECORE_API float ps_r__ssaDONTSORT;
 extern ECORE_API float ps_r__ssaHZBvsTEX;
 extern ECORE_API int ps_r__tf_Anisotropic;
 
+extern ECORE_API int ps_r_thread_wait_sleep;
+
 // Postprocess effects
 extern ECORE_API u32 ps_vignette_mode;
 
@@ -39,6 +41,7 @@ enum
 {
 	RFLAG_LENS_FLARES = (1 << 0),
 	RFLAG_EXP_MT_CALC = (1 << 1),
+	RFLAG_EXP_HW_OCC  = (1 << 2),
 };
 
 /*-------------------------------------------------------------------------------*/
@@ -138,8 +141,6 @@ extern ECORE_API float ps_r2_dhemi_scale; // 1.5f
 extern ECORE_API int ps_r2_dhemi_count;	  // 5
 
 extern ECORE_API float ps_r2_slight_fade; // 1.f
-
-extern ECORE_API int ps_r2_wait_sleep;
 
 extern ECORE_API u32 ps_r2_ao;
 extern ECORE_API u32 ps_r2_ao_quality;

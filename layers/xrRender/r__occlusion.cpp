@@ -3,7 +3,7 @@
 
 R_occlusion::R_occlusion(void)
 {
-	enabled = strstr(Core.Params, "-no_occq") ? FALSE : TRUE;
+	enabled = ps_render_flags.test(RFLAG_EXP_HW_OCC);
 }
 R_occlusion::~R_occlusion(void)
 {
@@ -89,7 +89,7 @@ u32 R_occlusion::occq_get(u32& ID)
 	while ((hr = used[ID].Q->GetData(&fragments, sizeof(fragments), D3DGETDATA_FLUSH)) == S_FALSE)
 	{
 		if (!SwitchToThread())
-			Sleep(ps_r2_wait_sleep);
+			Sleep(ps_r_thread_wait_sleep);
 		if (T.GetElapsed_ms() > 500)
 		{
 			fragments = 0xffffffff;

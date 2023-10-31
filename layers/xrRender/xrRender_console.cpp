@@ -121,8 +121,10 @@ float ps_r__ssaHZBvsTEX = 96.f;
 
 int ps_r__tf_Anisotropic = 4;
 
+int ps_r_thread_wait_sleep = 0;
+
 // Render common flags
-Flags32 ps_render_flags = {RFLAG_LENS_FLARES | RFLAG_EXP_MT_CALC};
+Flags32 ps_render_flags = {RFLAG_LENS_FLARES | RFLAG_EXP_MT_CALC | RFLAG_EXP_HW_OCC};
 
 /*-------------------------------------------------------------------------------*/
 // R1-specific values
@@ -207,8 +209,6 @@ float ps_r2_dhemi_light_scale = 0.2f;
 float ps_r2_dhemi_light_flow = 0.1f;
 float ps_r2_dhemi_scale = 1.f;
 int ps_r2_dhemi_count = 5;
-
-int ps_r2_wait_sleep = 0;
 
 float ps_r2_lt_smooth = 1.f;
 
@@ -622,6 +622,12 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r__lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
 
+	CMD3(CCC_Mask, "r__mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
+
+	CMD4(CCC_Integer, "r__wait_sleep", &ps_r_thread_wait_sleep, 0, 1);
+
+	CMD3(CCC_Mask, "r__hardware_occlusion_culling", &ps_render_flags, RFLAG_EXP_HW_OCC);
+
 	// R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r1_ssa_lod_b", &ps_r1_ssaLOD_B, 16, 64);
@@ -766,9 +772,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_gloss_factor", &ps_r2_gloss_factor, 1.f, 3.f);
 
 	CMD3(CCC_Mask, "r2_use_nvdbt", &ps_r2_ls_flags, R2FLAG_USE_NVDBT);
-	CMD3(CCC_Mask, "r__mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
-
-	CMD4(CCC_Integer, "r2_wait_sleep", &ps_r2_wait_sleep, 0, 1);
 
 	CMD4(CCC_Float, "r2_ls_depth_scale", &ps_r2_ls_depth_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
