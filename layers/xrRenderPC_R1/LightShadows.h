@@ -7,7 +7,7 @@
 #pragma once
 
 #include "..\xrRender\light.h"
-#include "..\xrRender\r__dsgraph_types.h"
+#include "..\xrRender\r_dsgraph_types.h"
 
 class CLightShadows
 {

@@ -83,7 +83,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 	}
 
 	// Prepare to selection
-	float density = ps_r__Detail_density;
+	float density = ps_r_Detail_density;
 	float jitter = density / 1.7f;
 	u32 d_size = iCeil(dm_slot_size / density);
 	svector<int, dm_obj_in_slot> selected;
@@ -221,7 +221,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 			Item.c_sun = DS.r_qclr(DS.c_dir, 15);
 
 			//? hack: RGB = hemi
-			//? Item.c_rgb.add					(ps_r__Detail_rainbow_hemi*Item.c_hemi);
+			//? Item.c_rgb.add					(ps_r_Detail_rainbow_hemi*Item.c_hemi);
 
 			// Vis-sorting
 			if (!UseVS())

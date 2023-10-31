@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "r__sector.h"
+#include "r_sector.h"
 #include "..\xrEngine\xrLevel.h"
 #include "..\xrEngine\xr_object.h"
 #include "..\xrEngine\fbasicvisual.h"

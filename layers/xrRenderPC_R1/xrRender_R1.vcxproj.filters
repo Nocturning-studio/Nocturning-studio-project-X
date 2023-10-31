@@ -63,10 +63,10 @@
     <ClInclude Include="..\xrRender\PSLibrary.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\r__dsgraph_structure.h">
+    <ClInclude Include="..\xrRender\r_dsgraph_structure.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\r__dsgraph_types.h">
+    <ClInclude Include="..\xrRender\r_dsgraph_types.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\doug_lea_memory_allocator.h">
@@ -180,7 +180,7 @@
     <ClInclude Include="..\xrRender\ParticleGroup.h">
       <Filter>Models\Visuals</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\r__sector.h">
+    <ClInclude Include="..\xrRender\r_sector.h">
       <Filter>Visibility\Sector/Portal</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\HOM.h">
@@ -210,7 +210,7 @@
     <ClInclude Include="..\xrRender\LightTrack.h">
       <Filter>Lights</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\r__occlusion.h">
+    <ClInclude Include="..\xrRender\r_occlusion.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,16 +242,16 @@
     <ClCompile Include="..\xrRender\PSLibrary.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__dsgraph_build.cpp">
+    <ClCompile Include="..\xrRender\r_dsgraph_build.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__dsgraph_render.cpp">
+    <ClCompile Include="..\xrRender\r_dsgraph_render.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__dsgraph_render_lods.cpp">
+    <ClCompile Include="..\xrRender\r_dsgraph_render_lods.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__screenshot.cpp">
+    <ClCompile Include="..\xrRender\r_screenshot.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Texture.cpp">
@@ -380,10 +380,10 @@
     <ClCompile Include="..\xrRender\ParticleGroup.cpp">
       <Filter>Models\Visuals</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__sector.cpp">
+    <ClCompile Include="..\xrRender\r_sector.cpp">
       <Filter>Visibility\Sector/Portal</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__sector_traversal.cpp">
+    <ClCompile Include="..\xrRender\r_sector_traversal.cpp">
       <Filter>Visibility\Sector/Portal</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\HOM.cpp">
@@ -416,7 +416,7 @@
     <ClCompile Include="..\xrRender\LightTrack.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__occlusion.cpp">
+    <ClCompile Include="..\xrRender\r_occlusion.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -38,7 +38,7 @@ BOOL CRenderTarget::Create()
 	curHeight = Device.dwHeight;
 
 	// Select mode to operate in
-	float amount = ps_r__Supersample ? float(ps_r__Supersample) : 1;
+	float amount = ps_r_Supersample ? float(ps_r_Supersample) : 1;
 	float scale = _sqrt(amount);
 	rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 16384);
 	rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 16384);
@@ -179,7 +179,7 @@ BOOL CRenderTarget::NeedPostProcess()
 
 BOOL CRenderTarget::Perform()
 {
-	return Available() && (NeedPostProcess() || (ps_r__Supersample > 1) || (frame_distort == (Device.dwFrame - 1)));
+	return Available() && (NeedPostProcess() || (ps_r_Supersample > 1) || (frame_distort == (Device.dwFrame - 1)));
 }
 
 #include <dinput.h>

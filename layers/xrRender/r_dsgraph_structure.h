@@ -2,8 +2,8 @@
 
 #include "..\xrEngine\render.h"
 #include "..\xrEngine\ispatial.h"
-#include "r__dsgraph_types.h"
-#include "r__sector.h"
+#include "r_dsgraph_types.h"
+#include "r_sector.h"
 
 //////////////////////////////////////////////////////////////////////////
 // feedback	for receiving visuals										//

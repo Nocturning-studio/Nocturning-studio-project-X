@@ -1042,10 +1042,10 @@
     <ClInclude Include="..\xrRender\ParticleEffectDef.h" />
     <ClInclude Include="..\xrRender\ParticleGroup.h" />
     <ClInclude Include="..\xrRender\PSLibrary.h" />
-    <ClInclude Include="..\xrRender\r__dsgraph_structure.h" />
-    <ClInclude Include="..\xrRender\r__dsgraph_types.h" />
-    <ClInclude Include="..\xrRender\r__occlusion.h" />
-    <ClInclude Include="..\xrRender\r__sector.h" />
+    <ClInclude Include="..\xrRender\r_dsgraph_structure.h" />
+    <ClInclude Include="..\xrRender\r_dsgraph_types.h" />
+    <ClInclude Include="..\xrRender\r_occlusion.h" />
+    <ClInclude Include="..\xrRender\r_sector.h" />
     <ClInclude Include="..\xrRender\VertexCache.h" />
     <ClInclude Include="..\xrRender\WallmarksEngine.h" />
     <ClInclude Include="..\xrRender\xrRender_console.h" />
@@ -1158,16 +1158,16 @@
     <ClCompile Include="..\xrRender\ParticleEffectDef.cpp" />
     <ClCompile Include="..\xrRender\ParticleGroup.cpp" />
     <ClCompile Include="..\xrRender\PSLibrary.cpp" />
-    <ClCompile Include="..\xrRender\r__dsgraph_build.cpp" />
-    <ClCompile Include="..\xrRender\r__dsgraph_render.cpp" />
-    <ClCompile Include="..\xrRender\r__dsgraph_render_lods.cpp">
+    <ClCompile Include="..\xrRender\r_dsgraph_build.cpp" />
+    <ClCompile Include="..\xrRender\r_dsgraph_render.cpp" />
+    <ClCompile Include="..\xrRender\r_dsgraph_render_lods.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
-    <ClCompile Include="..\xrRender\r__occlusion.cpp" />
-    <ClCompile Include="..\xrRender\r__screenshot.cpp" />
-    <ClCompile Include="..\xrRender\r__sector.cpp" />
-    <ClCompile Include="..\xrRender\r__sector_traversal.cpp" />
+    <ClCompile Include="..\xrRender\r_occlusion.cpp" />
+    <ClCompile Include="..\xrRender\r_screenshot.cpp" />
+    <ClCompile Include="..\xrRender\r_sector.cpp" />
+    <ClCompile Include="..\xrRender\r_sector_traversal.cpp" />
     <ClCompile Include="..\xrRender\Texture.cpp" />
     <ClCompile Include="..\xrRender\tga.cpp" />
     <ClCompile Include="..\xrRender\VertexCache.cpp" />

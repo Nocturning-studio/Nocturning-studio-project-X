@@ -101,7 +101,7 @@ CWallmarksEngine::static_wallmark* CWallmarksEngine::static_wm_allocate()
 		static_pool.pop_back();
 	}
 
-	W->ttl = ps_r__WallmarkTTL;
+	W->ttl = ps_r_WallmarkTTL;
 	W->verts.clear();
 	return W;
 }
@@ -113,7 +113,7 @@ void CWallmarksEngine::static_wm_destroy(CWallmarksEngine::static_wallmark* W)
 // render
 void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark* W, FVF::LIT*& V)
 {
-	float a = 1 - (W->ttl / ps_r__WallmarkTTL);
+	float a = 1 - (W->ttl / ps_r_WallmarkTTL);
 	int aC = iFloor(a * 255.f);
 	clamp(aC, 0, 255);
 	u32 C = color_rgba(128, 128, 128, aC);
@@ -377,13 +377,13 @@ void CWallmarksEngine::Render()
 	//	if (marks.empty())			return;
 	// Projection and xform
 	float _43 = Device.mProject._43;
-	Device.mProject._43 -= ps_r__WallmarkSHIFT;
+	Device.mProject._43 -= ps_r_WallmarkSHIFT;
 	RCache.set_xform_world(Fidentity);
 	RCache.set_xform_project(Device.mProject);
 
 	Fmatrix mSavedView = Device.mView;
 	Fvector mViewPos;
-	mViewPos.mad(Device.vCameraPosition, Device.vCameraDirection, ps_r__WallmarkSHIFT_V);
+	mViewPos.mad(Device.vCameraPosition, Device.vCameraDirection, ps_r_WallmarkSHIFT_V);
 	Device.mView.build_camera_dir(mViewPos, Device.vCameraDirection, Device.vCameraTop);
 	RCache.set_xform_view(Device.mView);
 

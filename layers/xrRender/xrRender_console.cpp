@@ -94,32 +94,32 @@ xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"whit
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
-int ps_r__Supersample = 1;
-int ps_r__LightSleepFrames = 10;
+int ps_r_Supersample = 1;
+int ps_r_LightSleepFrames = 10;
 
-float ps_r__Detail_l_ambient = 0.9f;
-float ps_r__Detail_l_aniso = 0.25f;
-float ps_r__Detail_density = 0.3f;
-float ps_r__Detail_rainbow_hemi = 0.75f;
+float ps_r_Detail_l_ambient = 0.9f;
+float ps_r_Detail_l_aniso = 0.25f;
+float ps_r_Detail_density = 0.3f;
+float ps_r_Detail_rainbow_hemi = 0.75f;
 
-float ps_r__Tree_w_rot = 10.0f;
-float ps_r__Tree_w_speed = 1.00f;
-float ps_r__Tree_w_amp = 0.005f;
-Fvector ps_r__Tree_Wave = {.1f, .01f, .11f};
-float ps_r__Tree_SBC = 1.5f; // scale bias correct
+float ps_r_Tree_w_rot = 10.0f;
+float ps_r_Tree_w_speed = 1.00f;
+float ps_r_Tree_w_amp = 0.005f;
+Fvector ps_r_Tree_Wave = {.1f, .01f, .11f};
+float ps_r_Tree_SBC = 1.5f; // scale bias correct
 
-float ps_r__WallmarkTTL = 300.f;
-float ps_r__WallmarkSHIFT = 0.0001f;
-float ps_r__WallmarkSHIFT_V = 0.0001f;
+float ps_r_WallmarkTTL = 300.f;
+float ps_r_WallmarkSHIFT = 0.0001f;
+float ps_r_WallmarkSHIFT_V = 0.0001f;
 
-float ps_r__GLOD_ssa_start = 256.f;
-float ps_r__GLOD_ssa_end = 64.f;
-float ps_r__LOD = 1.f;
-float ps_r__ssaDISCARD = 3.5f;
-float ps_r__ssaDONTSORT = 32.f;
-float ps_r__ssaHZBvsTEX = 96.f;
+float ps_r_GLOD_ssa_start = 256.f;
+float ps_r_GLOD_ssa_end = 64.f;
+float ps_r_LOD = 1.f;
+float ps_r_ssaDISCARD = 3.5f;
+float ps_r_ssaDONTSORT = 32.f;
+float ps_r_ssaHZBvsTEX = 96.f;
 
-int ps_r__tf_Anisotropic = 4;
+int ps_r_tf_Anisotropic = 4;
 
 int ps_r_thread_wait_sleep = 0;
 
@@ -419,7 +419,7 @@ class CCC_EffPreset : public CCC_Token
 ///////////////////////////////////////////////////////////////////////////////////
 #if RENDER == R_R2
 ///////////////////////////////////////////////////////////////////////////////////
-#include "r__pixel_calculator.h"
+#include "r_pixel_calculator.h"
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_BuildSSA : public IConsole_Command
 {
@@ -593,40 +593,40 @@ void xrRender_initconsole()
 
 	CMD1(CCC_Screenshot, "screenshot");
 
-	CMD4(CCC_Integer, "r__lsleep_frames", &ps_r__LightSleepFrames, 4, 30);
-	CMD4(CCC_Float, "r__ssa_glod_start", &ps_r__GLOD_ssa_start, 128, 512);
-	CMD4(CCC_Float, "r__ssa_glod_end", &ps_r__GLOD_ssa_end, 16, 96);
-	CMD4(CCC_Float, "r__wallmark_shift_pp", &ps_r__WallmarkSHIFT, 0.0f, 1.f);
-	CMD4(CCC_Float, "r__wallmark_shift_v", &ps_r__WallmarkSHIFT_V, 0.0f, 1.f);
-	CMD4(CCC_Float, "r__wallmark_ttl", &ps_r__WallmarkTTL, 1.0f, 5.f * 60.f);
+	CMD4(CCC_Integer, "r_lsleep_frames", &ps_r_LightSleepFrames, 4, 30);
+	CMD4(CCC_Float, "r_ssa_glod_start", &ps_r_GLOD_ssa_start, 128, 512);
+	CMD4(CCC_Float, "r_ssa_glod_end", &ps_r_GLOD_ssa_end, 16, 96);
+	CMD4(CCC_Float, "r_wallmark_shift_pp", &ps_r_WallmarkSHIFT, 0.0f, 1.f);
+	CMD4(CCC_Float, "r_wallmark_shift_v", &ps_r_WallmarkSHIFT_V, 0.0f, 1.f);
+	CMD4(CCC_Float, "r_wallmark_ttl", &ps_r_WallmarkTTL, 1.0f, 5.f * 60.f);
 	CMD1(CCC_ModelPoolStat, "stat_models");
 
-	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 16);
+	CMD4(CCC_Integer, "r_supersample", &ps_r_Supersample, 1, 16);
 
-	CMD4(CCC_Float, "r__geometry_lod", &ps_r__LOD, 0.1f, 1.2f);
+	CMD4(CCC_Float, "r_geometry_lod", &ps_r_LOD, 0.1f, 1.2f);
 
-	CMD4(CCC_Float, "r__detail_density", &ps_r__Detail_density, .2f, 0.6f);
+	CMD4(CCC_Float, "r_detail_density", &ps_r_Detail_density, .2f, 0.6f);
 
-	CMD4(CCC_Float, "r__detail_l_ambient", &ps_r__Detail_l_ambient, .5f, .95f);
-	CMD4(CCC_Float, "r__detail_l_aniso", &ps_r__Detail_l_aniso, .1f, .5f);
+	CMD4(CCC_Float, "r_detail_l_ambient", &ps_r_Detail_l_ambient, .5f, .95f);
+	CMD4(CCC_Float, "r_detail_l_aniso", &ps_r_Detail_l_aniso, .1f, .5f);
 
-	CMD4(CCC_Float, "r__d_tree_w_amp", &ps_r__Tree_w_amp, .001f, 1.f);
-	CMD4(CCC_Float, "r__d_tree_w_rot", &ps_r__Tree_w_rot, .01f, 100.f);
-	CMD4(CCC_Float, "r__d_tree_w_speed", &ps_r__Tree_w_speed, 1.0f, 10.f);
+	CMD4(CCC_Float, "r_d_tree_w_amp", &ps_r_Tree_w_amp, .001f, 1.f);
+	CMD4(CCC_Float, "r_d_tree_w_rot", &ps_r_Tree_w_rot, .01f, 100.f);
+	CMD4(CCC_Float, "r_d_tree_w_speed", &ps_r_Tree_w_speed, 1.0f, 10.f);
 
 	tw_min.set(EPS, EPS, EPS);
 	tw_max.set(2, 2, 2);
-	CMD4(CCC_Vector3, "r__d_tree_wave", &ps_r__Tree_Wave, tw_min, tw_max);
+	CMD4(CCC_Vector3, "r_d_tree_wave", &ps_r_Tree_Wave, tw_min, tw_max);
 
-	CMD2(CCC_tf_Aniso, "r__tf_aniso", &ps_r__tf_Anisotropic); //	{1..16}
+	CMD2(CCC_tf_Aniso, "r_tf_aniso", &ps_r_tf_Anisotropic); //	{1..16}
 
-	CMD3(CCC_Mask, "r__lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
+	CMD3(CCC_Mask, "r_lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
 
-	CMD3(CCC_Mask, "r__mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
+	CMD3(CCC_Mask, "r_mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
 
-	CMD4(CCC_Integer, "r__wait_sleep", &ps_r_thread_wait_sleep, 0, 1);
+	CMD4(CCC_Integer, "r_wait_sleep", &ps_r_thread_wait_sleep, 0, 1);
 
-	CMD3(CCC_Mask, "r__hardware_occlusion_culling", &ps_render_flags, RFLAG_EXP_HW_OCC);
+	CMD3(CCC_Mask, "r_hardware_occlusion_culling", &ps_render_flags, RFLAG_EXP_HW_OCC);
 
 	// R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
@@ -779,7 +779,7 @@ void xrRender_initconsole()
 ///////////////////////////////////////////////////////////////////////////////////
 void xrRender_apply_tf()
 {
-	Console->Execute("r__tf_aniso");
+	Console->Execute("r_tf_aniso");
 #if RENDER == R_R1
 	Console->Execute("r1_tf_mipbias");
 #else

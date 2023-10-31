@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "r__pixel_calculator.h"
+#include "r_pixel_calculator.h"
 #define rt_dimensions 1024
 
 void r_pixel_calculator::begin()

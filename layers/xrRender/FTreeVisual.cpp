@@ -134,7 +134,7 @@ void FTreeVisual::Render(float LOD)
 	xform_v.mul_43(RCache.get_xform_view(), xform);
 	RCache.set_c(m_xform_v, xform_v); // matrix
 #endif
-	float s = ps_r__Tree_SBC;
+	float s = ps_r_Tree_SBC;
 	RCache.set_c(m_xform, xform);						// matrix
 	RCache.set_c(c_consts, tvs.scale, tvs.scale, 0, 0); // consts/scale
 	RCache.set_c(c_wave, tvs.wave);						// wave

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\r__occlusion.h"
+#include ".\r_occlusion.h"
 
 R_occlusion::R_occlusion(void)
 {

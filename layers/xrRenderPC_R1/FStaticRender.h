@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\xrRender\r__dsgraph_structure.h"
-#include "..\xrRender\r__occlusion.h"
+#include "..\xrRender\r_dsgraph_structure.h"
+#include "..\xrRender\r_occlusion.h"
 
 #include "..\xrRender\PSLibrary.h"
 

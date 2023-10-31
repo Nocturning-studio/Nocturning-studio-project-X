@@ -95,7 +95,7 @@ void CUIOptionsItem::SaveOptTokenValue(const char* val)
 void CUIOptionsItem::SaveValue()
 {
 	if (m_entry == "vid_mode" || m_entry == "_preset" || m_entry == "rs_fullscreen" || m_entry == "rs_fullscreen" ||
-		m_entry == "r__supersample" || m_entry == "rs_refresh_60hz" || m_entry == "rs_no_v_sync" ||
+		m_entry == "r_supersample" || m_entry == "rs_refresh_60hz" || m_entry == "rs_no_v_sync" ||
 		m_entry == "texture_lod")
 		m_optionsManager.DoVidRestart();
 

@@ -5,30 +5,30 @@
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
-extern ENGINE_API int ps_r__Supersample;
-extern ECORE_API int ps_r__LightSleepFrames;
+extern ENGINE_API int ps_r_Supersample;
+extern ECORE_API int ps_r_LightSleepFrames;
 
-extern ECORE_API float ps_r__Detail_l_ambient;
-extern ECORE_API float ps_r__Detail_l_aniso;
-extern ECORE_API float ps_r__Detail_density;
+extern ECORE_API float ps_r_Detail_l_ambient;
+extern ECORE_API float ps_r_Detail_l_aniso;
+extern ECORE_API float ps_r_Detail_density;
 
-extern ECORE_API float ps_r__Tree_w_rot;
-extern ECORE_API float ps_r__Tree_w_speed;
-extern ECORE_API float ps_r__Tree_w_amp;
-extern ECORE_API float ps_r__Tree_SBC; // scale bias correct
-extern ECORE_API Fvector ps_r__Tree_Wave;
+extern ECORE_API float ps_r_Tree_w_rot;
+extern ECORE_API float ps_r_Tree_w_speed;
+extern ECORE_API float ps_r_Tree_w_amp;
+extern ECORE_API float ps_r_Tree_SBC; // scale bias correct
+extern ECORE_API Fvector ps_r_Tree_Wave;
 
-extern ECORE_API float ps_r__WallmarkTTL;
-extern ECORE_API float ps_r__WallmarkSHIFT;
-extern ECORE_API float ps_r__WallmarkSHIFT_V;
+extern ECORE_API float ps_r_WallmarkTTL;
+extern ECORE_API float ps_r_WallmarkSHIFT;
+extern ECORE_API float ps_r_WallmarkSHIFT_V;
 
-extern ECORE_API float ps_r__GLOD_ssa_start;
-extern ECORE_API float ps_r__GLOD_ssa_end;
-extern ECORE_API float ps_r__LOD;
-extern ECORE_API float ps_r__ssaDISCARD;
-extern ECORE_API float ps_r__ssaDONTSORT;
-extern ECORE_API float ps_r__ssaHZBvsTEX;
-extern ECORE_API int ps_r__tf_Anisotropic;
+extern ECORE_API float ps_r_GLOD_ssa_start;
+extern ECORE_API float ps_r_GLOD_ssa_end;
+extern ECORE_API float ps_r_LOD;
+extern ECORE_API float ps_r_ssaDISCARD;
+extern ECORE_API float ps_r_ssaDONTSORT;
+extern ECORE_API float ps_r_ssaHZBvsTEX;
+extern ECORE_API int ps_r_tf_Anisotropic;
 
 extern ECORE_API int ps_r_thread_wait_sleep;
 
