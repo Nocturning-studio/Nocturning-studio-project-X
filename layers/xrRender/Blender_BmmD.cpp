@@ -182,7 +182,8 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_parallax", TRUE);
 
 		C.r_Sampler("s_mask", mask);
-		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
+					D3DTEXF_LINEAR);
 
 		if (ps_r2_debug_textures == 1)
 			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
@@ -239,7 +240,8 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 		else
 			C.r_Sampler("s_base", C.L_textures[0]);
 
-		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
+					D3DTEXF_LINEAR);
 		C.r_Sampler("s_detail", oT2_Name);
 		C.r_End();
 		break;
