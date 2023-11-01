@@ -29,15 +29,22 @@ IGame_Level::~IGame_Level()
 {
 	if (strstr(Core.Params, "-nes_texture_storing"))
 		Device.Resources->StoreNecessaryTextures();
-	//.	DEL_INSTANCE				( pHUD			);
+
 	xr_delete(pLevel);
 
 	// Render-level unload
+	g_pGamePersistent->LoadTitle("st_start_level_unloading");
 	Render->level_Unload();
+
+	g_pGamePersistent->LoadTitle("st_unloading_weathers");
+	g_pGamePersistent->Environment().unload();
+
 	xr_delete(m_pCameras);
+
 	// Unregister
 	Device.seqRender.Remove(this);
 	Device.seqFrame.Remove(this);
+
 	CCameraManager::ResetPP();
 }
 
@@ -80,28 +87,35 @@ BOOL IGame_Level::Load(u32 dwNum)
 	pApp->LoadSwitch();
 
 	// HUD + Environment
-	//.	pHUD						= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 	if (g_hud)
 		pHUD = g_hud;
 	else
 		pHUD = (CCustomHUD*)NEW_INSTANCE(CLSID_HUDMANAGER);
 
 	// Render-level Load
+	g_pGamePersistent->LoadTitle("st_start_loading_level");
 	Render->level_Load(LL_Stream);
 	tscreate.FrameEnd();
-	// Msg						("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
 
 	// Objects
+	g_pGamePersistent->LoadTitle("st_loading_weathers");
+	g_pGamePersistent->Environment().load();
+
+	g_pGamePersistent->LoadTitle("st_loading_env_mods");
 	g_pGamePersistent->Environment().mods_load();
+
 	R_ASSERT(Load_GameSpecific_Before());
 	Objects.Load();
 	R_ASSERT(Load_GameSpecific_After());
 
 	// Done
 	FS.r_close(LL_Stream);
+
 	bReady = true;
+
 	if (!g_dedicated_server)
 		IR_Capture();
+
 #ifndef DEDICATED_SERVER
 	Device.seqRender.Add(this);
 #endif
@@ -115,8 +129,6 @@ int psNET_DedicatedSleep = 5;
 void IGame_Level::OnRender()
 {
 #ifndef DEDICATED_SERVER
-	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
-
 	// Level render, only when no client output required
 	if (!g_dedicated_server)
 	{
@@ -127,18 +139,11 @@ void IGame_Level::OnRender()
 	{
 		Sleep(psNET_DedicatedSleep);
 	}
-
-	// Font
-//	pApp->pFontSystem->SetSizeI(0.023f);
-//	pApp->pFontSystem->OnRender	();
 #endif
 }
 
 void IGame_Level::OnFrame()
 {
-	// Log				("- level:on-frame: ",u32(Device.dwFrame));
-	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
-
 	// Update all objects
 	VERIFY(bReady);
 	Objects.Update(false);
@@ -171,9 +176,6 @@ void CServerInfo::AddItem(LPCSTR name_, LPCSTR value_, u32 color_)
 void CServerInfo::AddItem(shared_str& name_, LPCSTR value_, u32 color_)
 {
 	SItem_ServerInfo it;
-	//	shared_str s_name = CStringTable().translate( name_ );
-
-	//	strcpy_s( it.name, s_name.c_str() );
 	strcpy_s(it.name, name_.c_str());
 	strcat_s(it.name, " = ");
 	strcat_s(it.name, value_);
