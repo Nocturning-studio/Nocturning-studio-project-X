@@ -359,6 +359,65 @@ void CResourceManager::DeferredUpload()
 
 	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
+
+void TextureUnloading(u16 thread_num, u32 lowerbound, u32 upperbound)
+{
+	Msg("* THREAD #%d: Started.", thread_num);
+
+	for (size_t i = lowerbound; i < upperbound; i++)
+		tex_to_load[i]->Unload();
+
+	Msg("* THREAD #%d: Task Completed.", thread_num);
+}
+
+void CResourceManager::DeferredUnload()
+{
+	if (!Device.b_is_Ready)
+		return;
+
+	const u32 MinTexturesCntToUseMT = 100;
+
+	tex_to_load.clear();
+	Msg("* New phase started: Texture Unloading, size = %d", m_textures.size());
+	CTimer timer;
+	timer.Start();
+
+	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load"))
+	{
+		Msg("* Phase info: Texture Unloading -> Use one thread");
+
+		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+			t->second->Load();
+	}
+	else
+	{
+		u32 th_count = std::thread::hardware_concurrency();
+		u32 texCntOneThread = m_textures.size() / th_count;
+		std::thread* th_arr = new std::thread[th_count];
+
+		for (const auto& tex : m_textures)
+			tex_to_load.push_back(tex.second);
+
+		for (u16 i = 0; i < th_count; i++)
+		{
+			u32 from = i * texCntOneThread;
+			u32 to = (i + 1) * texCntOneThread;
+
+			if (i == th_count - 1)
+				to = m_textures.size();
+
+			th_arr[i] = std::thread(&TextureUnloading, i, from, to);
+		}
+
+		for (size_t i = 0; i < th_count; i++)
+			th_arr[i].join();
+
+		delete[] th_arr;
+		tex_to_load.clear();
+	}
+
+	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
+}
 #else  // MT_TEXTURES
 void CResourceManager::DeferredUpload()
 {
@@ -369,7 +428,6 @@ void CResourceManager::DeferredUpload()
 		t->second->Load();
 	}
 }
-#endif // MT_TEXTURES
 
 void CResourceManager::DeferredUnload()
 {
@@ -378,6 +436,7 @@ void CResourceManager::DeferredUnload()
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 		t->second->Unload();
 }
+#endif // MT_TEXTURES
 
 #ifdef _EDITOR
 void CResourceManager::ED_UpdateTextures(AStringVec* names)
