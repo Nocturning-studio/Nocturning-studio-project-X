@@ -29,6 +29,7 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_luminance;
 	IBlender* b_combine;
 	IBlender* b_dof;
+	IBlender* b_motion_blur;
 	IBlender* b_frame_overlay;
 #ifdef DEBUG
 	struct dbg_line_t
@@ -71,6 +72,8 @@ class CRenderTarget : public IRender_Target
 	// env
 	ref_texture t_envmap_0; // env-0
 	ref_texture t_envmap_1; // env-1
+
+	ref_rt rt_Motion_Blur_Saved_Frame;
 
 	// smap
 	ref_rt rt_smap_surf;		   // 32bit,		color
@@ -141,6 +144,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_combine;
 	ref_shader s_combine_volumetric;
 	ref_shader s_dof;
+	ref_shader s_motion_blur;
 	ref_shader s_frame_overlay;
 
   public:
@@ -222,6 +226,7 @@ class CRenderTarget : public IRender_Target
 	//	Igor: for volumetric lights
 	void accum_volumetric(light* L);
 	void accum_reflected(light* L);
+
 	void phase_bloom();
 
 	void phase_create_ao();
@@ -232,17 +237,26 @@ class CRenderTarget : public IRender_Target
 	void phase_ao();
 
 	void phase_luminance();
+
 	void phase_combine();
 	void phase_combine_volumetric();
+
 	void photo_grid();
 	void cinema_borders();
 	void watermark();
 	void draw_overlays();
+
 	void phase_antialiasing();
+
 	void depth_of_field_pass_first();
 	void depth_of_field_pass_second();
 	void depth_of_field_pass_third();
 	void phase_depth_of_field();
+
+	void motion_blur_phase_save_frame();
+	void phase_motion_blur();
+	void motion_blur_phase_combine();
+
 	void phase_pp();
 
 	virtual void set_blur(float f)

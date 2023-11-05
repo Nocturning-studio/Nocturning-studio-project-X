@@ -276,6 +276,9 @@
     <ClInclude Include="r2_rendertarget.h">
       <Filter>Rendertargets\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Blender_motion_blur.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -592,6 +595,12 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_enable_scissor.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_motion_blur.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_motion_blur.cpp">
+      <Filter>Shading templates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

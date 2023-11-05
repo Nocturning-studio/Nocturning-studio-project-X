@@ -420,6 +420,9 @@ void CRenderTarget::phase_combine()
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
 			phase_depth_of_field();
 
+		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+			phase_motion_blur();
+
 		draw_overlays();
 
 		phase_pp();

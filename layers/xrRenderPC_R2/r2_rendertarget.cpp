@@ -4,6 +4,7 @@
 #include "blender_bloom_build.h"
 #include "blender_combine.h"
 #include "blender_depth_of_field.h"
+#include "blender_motion_blur.h"
 #include "blender_frame_overlay.h"
 #include "blender_light_direct.h"
 #include "blender_light_direct_cascade.h"
@@ -228,6 +229,7 @@ CRenderTarget::CRenderTarget()
 	b_luminance = xr_new<CBlender_luminance>();
 	b_combine = xr_new<CBlender_combine>();
 	b_dof = xr_new<CBlender_depth_of_field>();
+	b_motion_blur = xr_new<CBlender_motion_blur>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
 
 	//	NORMAL
@@ -242,6 +244,7 @@ CRenderTarget::CRenderTarget()
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 		}
 		else
 		{
@@ -249,6 +252,7 @@ CRenderTarget::CRenderTarget()
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		}
 	}
 
@@ -523,6 +527,8 @@ CRenderTarget::CRenderTarget()
 	// Create shader resource
 	s_dof.create(b_dof, "r2\\dof");
 
+	s_motion_blur.create(b_motion_blur, "r2\\motion_blur");
+
 	// PP
 	s_postprocess.create("postprocess");
 	g_postprocess.create(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_SPECULAR | D3DFVF_TEX3, RCache.Vertex.Buffer(),
@@ -574,6 +580,7 @@ CRenderTarget::~CRenderTarget()
 
 	// Blenders
 	xr_delete(b_frame_overlay);
+	xr_delete(b_motion_blur);
 	xr_delete(b_dof);
 	xr_delete(b_combine);
 	xr_delete(b_luminance);

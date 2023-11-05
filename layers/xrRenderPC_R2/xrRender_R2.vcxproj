@@ -1077,6 +1077,7 @@
     <ClInclude Include="blender_light_reflected.h" />
     <ClInclude Include="blender_light_spot.h" />
     <ClInclude Include="blender_luminance.h" />
+    <ClInclude Include="Blender_motion_blur.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="DetailFormat.h" />
     <ClInclude Include="doug_lea_memory_allocator.h" />
@@ -1208,6 +1209,7 @@
     <ClCompile Include="blender_light_reflected.cpp" />
     <ClCompile Include="blender_light_spot.cpp" />
     <ClCompile Include="blender_luminance.cpp" />
+    <ClCompile Include="Blender_motion_blur.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
     <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="Light_Render_Direct.cpp" />
@@ -1240,6 +1242,7 @@
     <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp" />
     <ClCompile Include="r2_rendertarget_draw_volume.cpp" />
     <ClCompile Include="r2_rendertarget_enable_scissor.cpp" />
+    <ClCompile Include="r2_rendertarget_motion_blur.cpp" />
     <ClCompile Include="r2_rendertarget_phase_accumulator.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ao.cpp" />
     <ClCompile Include="r2_rendertarget_phase_bloom.cpp" />
