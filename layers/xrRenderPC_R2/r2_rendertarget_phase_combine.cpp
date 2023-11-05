@@ -174,7 +174,6 @@ void CRenderTarget::phase_combine()
 		u_setrt(rt_GBuffer_Albedo, 0, 0, HW.pBaseZB); // LDR RT
 	else
 		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-	// u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -251,6 +250,7 @@ void CRenderTarget::phase_combine()
 
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
+
 	RCache.set_Stencil(FALSE);
 
 	if (ps_render_flags.test(RFLAG_LENS_FLARES))

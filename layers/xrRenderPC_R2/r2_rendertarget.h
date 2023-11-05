@@ -207,7 +207,6 @@ class CRenderTarget : public IRender_Target
 	void phase_smap_spot_tsh(light* L);
 	void phase_accumulator();
 	void phase_vol_accumulator();
-	void shadow_direct(light* L, u32 dls_phase);
 
 	bool need_to_render_sunshafts();
 
@@ -217,8 +216,6 @@ class CRenderTarget : public IRender_Target
 	void draw_volume(light* L);
 	void accum_direct(u32 sub_phase);
 	void accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix& xform_prev, float fBias);
-	void accum_direct_f(u32 sub_phase);
-	void accum_direct_lum();
 	void accum_direct_volumetric(u32 sub_phase, const u32 Offset, const Fmatrix& mShadow);
 	void accum_direct_blend();
 	void accum_point(light* L);
@@ -247,6 +244,8 @@ class CRenderTarget : public IRender_Target
 	void draw_overlays();
 
 	void phase_antialiasing();
+
+	void phase_distortion();
 
 	void depth_of_field_pass_first();
 	void depth_of_field_pass_second();
