@@ -1831,6 +1831,11 @@
     <ClInclude Include="EnnumerateVertices.h" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="Environment.h" />
+    <ClInclude Include="Environment_ambient.h" />
+    <ClInclude Include="Environment_descriptor.h" />
+    <ClInclude Include="Environment_descriptor_mixer.h" />
+    <ClInclude Include="Environment_modifiers.h" />
+    <ClInclude Include="Environment_render.h" />
     <ClInclude Include="ETextureParams.h" />
     <ClInclude Include="EventAPI.h" />
     <ClInclude Include="FBasicVisual.h" />
@@ -2026,7 +2031,10 @@
     <ClCompile Include="EngineAPI.cpp" />
     <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="Environment.cpp" />
-    <ClCompile Include="Environment_misc.cpp" />
+    <ClCompile Include="Environment_ambient.cpp" />
+    <ClCompile Include="Environment_descriptor.cpp" />
+    <ClCompile Include="Environment_descriptor_mixer.cpp" />
+    <ClCompile Include="Environment_modifiers.cpp" />
     <ClCompile Include="Environment_render.cpp" />
     <ClCompile Include="ETextureParams.cpp" />
     <ClCompile Include="EventAPI.cpp" />

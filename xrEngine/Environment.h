@@ -1,272 +1,26 @@
-#ifndef EnvironmentH
-#define EnvironmentH
+#pragma once
 
 // refs
 class ENGINE_API IRender_Visual;
 class ENGINE_API CInifile;
 class ENGINE_API CEnvironment;
-
-// refs - effects
-class ENGINE_API CEnvironment;
 class ENGINE_API CLensFlare;
 class ENGINE_API CEffect_Rain;
 class ENGINE_API CEffect_Thunderbolt;
-
 class ENGINE_API CPerlinNoise1D;
 
 struct SThunderboltDesc;
 struct SThunderboltCollection;
 class CLensFlareDescriptor;
 
-#define DAY_LENGTH 86400.f
+ENGINE_API extern Flags32 psEnvFlags;
 
-#include "blenders\blender.h"
-class CBlender_skybox : public IBlender
-{
-  public:
-	virtual LPCSTR getComment()
-	{
-		return "INTERNAL: combiner";
-	}
-	virtual BOOL canBeDetailed()
-	{
-		return FALSE;
-	}
-	virtual BOOL canBeLMAPped()
-	{
-		return FALSE;
-	}
-
-	virtual void Compile(CBlender_Compile& C)
-	{
-		C.r_Pass("sky2", "sky2", FALSE, TRUE, FALSE);
-		C.r_Sampler_clf("s_sky0", "$null");
-		C.r_Sampler_clf("s_sky1", "$null");
-		C.r_Sampler_rtf("s_autoexposure", "$user$autoexposure"); //. hack
-		C.r_End();
-	}
-};
-
-// t-defs
-class ENGINE_API CEnvModifier
-{
-  public:
-	Fvector3 position;
-	float radius;
-	float power;
-
-	float far_plane;
-
-	Fvector3 fog_color;
-	float fog_density;
-	float fog_sky_influence;
-	float vertical_fog_intensity;
-	float vertical_fog_density;
-	float vertical_fog_height;
-
-	Fvector3 ambient;
-	Fvector3 sky_color;
-	Fvector3 hemi_color;
-	Flags16 use_flags;
-
-	bool load(IReader* fs);
-	float sum(CEnvModifier& _another, Fvector3& view);
-};
-
-class ENGINE_API CEnvAmbient
-{
-  public:
-	struct SEffect
-	{
-		u32 life_time;
-		ref_sound sound;
-		shared_str particles;
-		Fvector offset;
-		float wind_gust_factor;
-		float wind_blast_in_time;
-		float wind_blast_out_time;
-		float wind_blast_strength;
-		Fvector wind_blast_direction;
-
-		~SEffect()
-		{
-		}
-	};
-	DEFINE_VECTOR(SEffect*, EffectVec, EffectVecIt);
-	struct SSndChannel
-	{
-		shared_str m_load_section;
-		Fvector2 m_sound_dist;
-		Ivector4 m_sound_period;
-
-		typedef xr_vector<ref_sound> sounds_type;
-
-		void load(CInifile& config, LPCSTR sect);
-		ref_sound& get_rnd_sound()
-		{
-			return sounds()[Random.randI(sounds().size())];
-		}
-		u32 get_rnd_sound_time()
-		{
-			return (m_sound_period.z < m_sound_period.w) ? Random.randI(m_sound_period.z, m_sound_period.w) : 0;
-		}
-		u32 get_rnd_sound_first_time()
-		{
-			return (m_sound_period.x < m_sound_period.y) ? Random.randI(m_sound_period.x, m_sound_period.y) : 0;
-		}
-		float get_rnd_sound_dist()
-		{
-			return (m_sound_dist.x < m_sound_dist.y) ? Random.randF(m_sound_dist.x, m_sound_dist.y) : 0;
-		}
-		~SSndChannel()
-		{
-		}
-		IC sounds_type& sounds()
-		{
-			return m_sounds;
-		}
-
-	  protected:
-		xr_vector<ref_sound> m_sounds;
-	};
-	DEFINE_VECTOR(SSndChannel*, SSndChannelVec, SSndChannelVecIt);
-
-  protected:
-	shared_str m_load_section;
-
-	EffectVec m_effects;
-	Ivector2 m_effect_period;
-
-	SSndChannelVec m_sound_channels;
-	shared_str m_ambients_config_filename;
-
-  public:
-	IC const shared_str& name()
-	{
-		return m_load_section;
-	}
-	IC const shared_str& get_ambients_config_filename()
-	{
-		return m_ambients_config_filename;
-	}
-
-	void load(CInifile& ambients_config, CInifile& sound_channels_config, CInifile& effects_config,
-			  const shared_str& section);
-	IC SEffect* get_rnd_effect()
-	{
-		return effects().empty() ? 0 : effects()[Random.randI(effects().size())];
-	}
-	IC u32 get_rnd_effect_time()
-	{
-		return Random.randI(m_effect_period.x, m_effect_period.y);
-	}
-
-	SEffect* create_effect(CInifile& config, LPCSTR id);
-	SSndChannel* create_sound_channel(CInifile& config, LPCSTR id);
-	~CEnvAmbient();
-	void destroy();
-	IC EffectVec& effects()
-	{
-		return m_effects;
-	}
-	IC SSndChannelVec& get_snd_channels()
-	{
-		return m_sound_channels;
-	}
-};
-
-class ENGINE_API CEnvDescriptor
-{
-  public:
-	float exec_time;
-	float exec_time_loaded;
-
-	shared_str sky_texture_name;
-	shared_str sky_texture_env_name;
-	shared_str clouds_texture_name;
-
-	ref_texture sky_texture;
-	ref_texture sky_texture_env;
-	ref_texture clouds_texture;
-
-	Fvector4 clouds_color;
-	Fvector3 sky_color;
-	float sky_rotation;
-
-	float far_plane;
-
-	Fvector3 fog_color;
-	float fog_density;
-	float fog_sky_influence;
-	float vertical_fog_intensity;
-	float vertical_fog_density;
-	float vertical_fog_height;
-
-	float rain_density;
-	Fvector3 rain_color;
-
-	float bolt_period;
-	float bolt_duration;
-
-	float wind_velocity;
-	float wind_direction;
-
-	Fvector3 ambient;
-	Fvector4 hemi_color; // w = R2 correction
-	Fvector3 sun_color;
-	Fvector3 sun_dir;
-	float m_fSunShaftsIntensity;
-	float m_fWaterIntensity;
-
-	shared_str lens_flare_id;
-	shared_str tb_id;
-
-	// SkyLoader: trees wave
-	float m_fTreeAmplitude;
-	float m_fTreeSpeed;
-	float m_fTreeRotation;
-	Fvector3 m_fTreeWave;
-
-	// Deathman(Очередное ЧСВ в коде указало свой ник): Кинематографические инструменты
-	Fvector3 m_SepiaColor;
-	float m_SepiaPower;
-	float m_VignettePower;
-
-	CEnvAmbient* env_ambient;
-
-	CEnvDescriptor(shared_str const& identifier);
-
-	void load(CEnvironment& environment, CInifile& config);
-	void copy(const CEnvDescriptor& src)
-	{
-		float tm0 = exec_time;
-		float tm1 = exec_time_loaded;
-		*this = src;
-		exec_time = tm0;
-		exec_time_loaded = tm1;
-	}
-
-	void on_device_create();
-	void on_device_destroy();
-
-	shared_str m_identifier;
-};
-
-class ENGINE_API CEnvDescriptorMixer : public CEnvDescriptor
-{
-  public:
-	STextureList sky_r_textures;
-	STextureList sky_r_textures_env;
-	STextureList clouds_r_textures;
-	float weight;
-
-  public:
-	CEnvDescriptorMixer(shared_str const& identifier);
-	void lerp(CEnvironment* parent, CEnvDescriptor& A, CEnvDescriptor& B, float f, CEnvModifier& M, float m_power);
-	void clear();
-	void destroy();
-};
-
+#include "Environment_render.h"
+#include "Environment_ambient.h"
+#include "Environment_modifiers.h"
+#include "Environment_descriptor.h"
+#include "Environment_descriptor_mixer.h"
+							
 class ENGINE_API CEnvironment
 {
 	struct str_pred : public std::binary_function<shared_str, shared_str, bool>
@@ -447,8 +201,3 @@ class ENGINE_API CEnvironment
 	float p_sun_color;
 	float p_fog_color;
 };
-
-ENGINE_API extern Flags32 psEnvFlags;
-ENGINE_API extern float psVisDistance;
-
-#endif // EnvironmentH

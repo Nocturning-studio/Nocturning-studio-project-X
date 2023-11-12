@@ -151,6 +151,9 @@
     <Filter Include="Engine\text_editor\line_editor_control">
       <UniqueIdentifier>{42e37fd5-bc9c-4f61-81f4-1e0bfd5aa9de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game API\Environment\Hemisphere">
+      <UniqueIdentifier>{a0a981e9-3342-4843-8de4-f900f0c05969}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -229,9 +232,6 @@
       <Filter>Game API\HUD</Filter>
     </ClInclude>
     <ClInclude Include="Environment.h">
-      <Filter>Game API\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="xrHemisphere.h">
       <Filter>Game API\Environment</Filter>
     </ClInclude>
     <ClInclude Include="Rain.h">
@@ -531,6 +531,24 @@
     <ClInclude Include="line_edit_control.h">
       <Filter>Engine\text_editor\line_editor_control</Filter>
     </ClInclude>
+    <ClInclude Include="Environment_descriptor.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment_modifiers.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment_render.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment_ambient.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment_descriptor_mixer.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="xrHemisphere.h">
+      <Filter>Game API\Environment\Hemisphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -605,13 +623,7 @@
     <ClCompile Include="Environment.cpp">
       <Filter>Game API\Environment</Filter>
     </ClCompile>
-    <ClCompile Include="Environment_misc.cpp">
-      <Filter>Game API\Environment</Filter>
-    </ClCompile>
     <ClCompile Include="Environment_render.cpp">
-      <Filter>Game API\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="xrHemisphere.cpp">
       <Filter>Game API\Environment</Filter>
     </ClCompile>
     <ClCompile Include="Rain.cpp">
@@ -928,6 +940,21 @@
     </ClCompile>
     <ClCompile Include="XR_IOConsole_get.cpp">
       <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment_descriptor.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment_modifiers.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment_ambient.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment_descriptor_mixer.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="xrHemisphere.cpp">
+      <Filter>Game API\Environment\Hemisphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
