@@ -36,6 +36,9 @@ IGame_Level::~IGame_Level()
 	g_pGamePersistent->LoadTitle("st_start_level_unloading");
 	Render->level_Unload();
 
+	g_pGamePersistent->LoadTitle("st_unloading_env_mods");
+	g_pGamePersistent->Environment().mods_unload();
+
 	g_pGamePersistent->LoadTitle("st_unloading_weathers");
 	g_pGamePersistent->Environment().unload();
 
@@ -103,6 +106,9 @@ BOOL IGame_Level::Load(u32 dwNum)
 
 	g_pGamePersistent->LoadTitle("st_loading_env_mods");
 	g_pGamePersistent->Environment().mods_load();
+
+	g_pGamePersistent->LoadTitle("st_loading_level_specific_ambients");
+	g_pGamePersistent->Environment().load_level_specific_ambients();
 
 	R_ASSERT(Load_GameSpecific_Before());
 	Objects.Load();

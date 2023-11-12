@@ -53,38 +53,16 @@ float CEnvModifier::sum(CEnvModifier& M, Fvector3& view)
 		fog_density += M.fog_density * _power;
 		use_flags.set(eFogDensity, TRUE);
 	}
-	if (M.use_flags.test(eFogSkyInfluence))
-	{
-		fog_sky_influence += M.fog_sky_influence * _power;
-		use_flags.set(eFogSkyInfluence, TRUE);
-	}
-	if (M.use_flags.test(eVerticalFogIntensity))
-	{
-		vertical_fog_intensity += M.vertical_fog_intensity * _power;
-		use_flags.set(eVerticalFogIntensity, TRUE);
-	}
-	if (M.use_flags.test(eVerticalFogDensity))
-	{
-		vertical_fog_density += M.vertical_fog_density * _power;
-		use_flags.set(eVerticalFogDensity, TRUE);
-	}
-	if (M.use_flags.test(eVerticalFogHeight))
-	{
-		vertical_fog_height += M.vertical_fog_height * _power;
-		use_flags.set(eVerticalFogHeight, TRUE);
-	}
 	if (M.use_flags.test(eAmbientColor))
 	{
 		ambient.mad(M.ambient, _power);
 		use_flags.set(eAmbientColor, TRUE);
 	}
-
 	if (M.use_flags.test(eSkyColor))
 	{
 		sky_color.mad(M.sky_color, _power);
 		use_flags.set(eSkyColor, TRUE);
 	}
-
 	if (M.use_flags.test(eHemiColor))
 	{
 		hemi_color.mad(M.hemi_color, _power);
@@ -108,10 +86,7 @@ void CEnvAmbient::SSndChannel::load(CInifile& config, LPCSTR sect)
 	m_sound_period.z = config.r_s32(m_load_section, "period2");
 	m_sound_period.w = config.r_s32(m_load_section, "period3");
 
-	//	m_sound_period			= config.r_ivector4(sect,"sound_period");
 	R_ASSERT(m_sound_period.x <= m_sound_period.y && m_sound_period.z <= m_sound_period.w);
-	//	m_sound_period.mul		(1000);// now in ms
-	//	m_sound_dist			= config.r_fvector2(sect,"sound_dist");
 	R_ASSERT2(m_sound_dist.y > m_sound_dist.x, sect);
 
 	LPCSTR snds = config.r_string(sect, "sounds");
@@ -185,7 +160,6 @@ void CEnvAmbient::load(CInifile& ambients_config, CInifile& sound_channels_confi
 	// sounds
 	LPCSTR channels = ambients_config.r_string(sect, "sound_channels");
 	u32 cnt = _GetItemCount(channels);
-	//	R_ASSERT3				(cnt,"sound_channels empty", sect.c_str());
 	m_sound_channels.resize(cnt);
 
 	for (u32 i = 0; i < cnt; ++i)
@@ -196,7 +170,6 @@ void CEnvAmbient::load(CInifile& ambients_config, CInifile& sound_channels_confi
 						iFloor(ambients_config.r_float(sect, "max_effect_period") * 1000.f));
 	LPCSTR effs = ambients_config.r_string(sect, "effects");
 	cnt = _GetItemCount(effs);
-	//	R_ASSERT3				(cnt,"effects empty", sect.c_str());
 
 	m_effects.resize(cnt);
 	for (u32 k = 0; k < cnt; ++k)
@@ -467,18 +440,15 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 
 	sky_rotation = (fi * A.sky_rotation + f * B.sky_rotation);
 
-	//.	far_plane				=	(fi*A.far_plane + f*B.far_plane + Mdf.far_plane)*psVisDistance*modif_power;
 	if (Mdf.use_flags.test(eViewDist))
 		far_plane = (fi * A.far_plane + f * B.far_plane + Mdf.far_plane) * psVisDistance * modif_power;
 	else
 		far_plane = (fi * A.far_plane + f * B.far_plane) * psVisDistance;
 
-	//.	fog_color.lerp			(A.fog_color,B.fog_color,f).add(Mdf.fog_color).mul(modif_power);
 	fog_color.lerp(A.fog_color, B.fog_color, f);
 	if (Mdf.use_flags.test(eFogColor))
 		fog_color.add(Mdf.fog_color).mul(modif_power);
 
-	//.	fog_density				=	(fi*A.fog_density + f*B.fog_density + Mdf.fog_density)*modif_power;
 	fog_density = (fi * A.fog_density + f * B.fog_density);
 	if (Mdf.use_flags.test(eFogDensity))
 	{
@@ -494,30 +464,16 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	}
 
 	vertical_fog_intensity = (fi * A.vertical_fog_intensity + f * B.vertical_fog_intensity);
-	//	if (Mdf.use_flags.test(eVerticalFogIntensity))
-	//	{
-	//		vertical_fog_intensity += Mdf.vertical_fog_intensity;
-	//		vertical_fog_intensity *= modif_power;
-	//	}
 
 	vertical_fog_density = (fi * A.vertical_fog_density + f * B.vertical_fog_density);
-	//	if (Mdf.use_flags.test(eVerticalFogDensity))
-	//	{
-	//		vertical_fog_density += Mdf.vertical_fog_density;
-	//		vertical_fog_density *= modif_power;
-	//	}
 
 	vertical_fog_height = (fi * A.vertical_fog_height + f * B.vertical_fog_height);
-	//	if (Mdf.use_flags.test(eVerticalFogHeight))
-	//	{
-	//		vertical_fog_height += Mdf.vertical_fog_height;
-	//		vertical_fog_height *= modif_power;
-	//	}
 
 	rain_density = fi * A.rain_density + f * B.rain_density;
 	rain_color.lerp(A.rain_color, B.rain_color, f);
 	bolt_period = fi * A.bolt_period + f * B.bolt_period;
 	bolt_duration = fi * A.bolt_duration + f * B.bolt_duration;
+
 	// wind
 	wind_velocity = fi * A.wind_velocity + f * B.wind_velocity;
 	wind_direction = fi * A.wind_direction + f * B.wind_direction;
@@ -536,12 +492,10 @@ void CEnvDescriptorMixer::lerp(CEnvironment*, CEnvDescriptor& A, CEnvDescriptor&
 	m_VignettePower = fi * A.m_VignettePower + f * B.m_VignettePower;
 
 	// colors
-	//.	sky_color.lerp			(A.sky_color,B.sky_color,f).add(Mdf.sky_color).mul(modif_power);
 	sky_color.lerp(A.sky_color, B.sky_color, f);
 	if (Mdf.use_flags.test(eSkyColor))
 		sky_color.add(Mdf.sky_color).mul(modif_power);
 
-	//.	ambient.lerp			(A.ambient,B.ambient,f).add(Mdf.ambient).mul(modif_power);
 	ambient.lerp(A.ambient, B.ambient, f);
 	if (Mdf.use_flags.test(eAmbientColor))
 		ambient.add(Mdf.ambient).mul(modif_power);
@@ -601,8 +555,6 @@ void CEnvironment::mods_load()
 		}
 		FS.r_close(fs);
 	}
-
-	load_level_specific_ambients();
 }
 
 void CEnvironment::load_level_specific_ambients()
@@ -776,7 +728,8 @@ void CEnvironment::load()
 	if (!CurrentEnv)
 		create_mixer();
 
-	autoexposure = Device.Resources->_CreateTexture("$user$autoexposure"); //. hack
+	autoexposure = Device.Resources->_CreateTexture("$user$autoexposure");
+
 	if (!eff_Rain)
 		eff_Rain = xr_new<CEffect_Rain>();
 	if (!eff_LensFlare)

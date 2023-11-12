@@ -372,6 +372,8 @@ class ENGINE_API CEnvironment
 	void mods_load();
 	void mods_unload();
 
+	void load_level_specific_ambients();
+
 	void OnFrame();
 	void calculate_dynamic_sun_dir();
 	void lerp(float& current_weight);
@@ -427,8 +429,6 @@ class ENGINE_API CEnvironment
 	void load_weather_effects();
 	void create_mixer();
 	void destroy_mixer();
-
-	void load_level_specific_ambients();
 
   public:
 	SThunderboltDesc* thunderbolt_description(CInifile& config, shared_str const& section);
