@@ -1,6 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #include "r2_rendertarget.h"
-
+///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::photo_grid()
 {
 	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
@@ -134,8 +138,11 @@ void CRenderTarget::draw_overlays()
 {
 	if (ps_r2_overlay_flags.test(R2FLAG_PHOTO_GRID))
 		photo_grid();
+
 	if (ps_r2_overlay_flags.test(R2FLAG_CINEMA_BORDERS))
 		cinema_borders();
+
 	if (ps_r2_overlay_flags.test(R2FLAG_WATERMARK))
 		watermark();
 }
+///////////////////////////////////////////////////////////////////////////////////
