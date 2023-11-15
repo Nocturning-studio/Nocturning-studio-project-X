@@ -2,6 +2,7 @@
 #include "..\xrEngine\resourcemanager.h"
 #include "blender_ao_build.h"
 #include "blender_bloom_build.h"
+#include "blender_antialiasing.h"
 #include "blender_combine.h"
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
@@ -228,6 +229,7 @@ CRenderTarget::CRenderTarget()
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_luminance = xr_new<CBlender_luminance>();
 	b_combine = xr_new<CBlender_combine>();
+	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_dof = xr_new<CBlender_depth_of_field>();
 	b_motion_blur = xr_new<CBlender_motion_blur>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
@@ -522,7 +524,9 @@ CRenderTarget::CRenderTarget()
 	}
 
 	// Create shader resource for fog
-	s_frame_overlay.create(b_frame_overlay, "r2\\frame overlay");
+	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
+
+	s_antialiasing.create(b_antialiasing, "r2\\antialiasing");
 
 	// Create shader resource
 	s_dof.create(b_dof, "r2\\dof");
@@ -582,6 +586,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_frame_overlay);
 	xr_delete(b_motion_blur);
 	xr_delete(b_dof);
+	xr_delete(b_antialiasing);
 	xr_delete(b_combine);
 	xr_delete(b_luminance);
 	xr_delete(b_bloom);

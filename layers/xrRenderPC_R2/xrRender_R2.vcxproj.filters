@@ -100,6 +100,9 @@
     <Filter Include="Shading templates\Forward rendering">
       <UniqueIdentifier>{ed178e34-be90-41d6-bc02-c215b6ccf8df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shading templates\Postprocess stage\Antialiasing">
+      <UniqueIdentifier>{d96e805c-1825-4b20-a2a4-2d94e6d1e59e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -308,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="..\xrRender\Blender_Particle.h">
       <Filter>Shading templates\Forward rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_antialiasing.h">
+      <Filter>Shading templates\Postprocess stage\Antialiasing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -536,12 +542,6 @@
     <ClCompile Include="r2_rendertarget_phase_occq.cpp">
       <Filter>Rendertargets\Render stages\Occlusion culling stage</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_ao.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_bloom.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_depth_of_field.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
@@ -562,9 +562,6 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_enable_scissor.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_motion_blur.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
     <ClCompile Include="blender_deffer_aref.cpp">
       <Filter>Shading templates\GBuffer stage</Filter>
@@ -631,6 +628,21 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\Blender_Particle.cpp">
       <Filter>Shading templates\Forward rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_motion_blur.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_bloom.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_ao.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_antialiasing.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_antialiasing.cpp">
+      <Filter>Shading templates\Postprocess stage\Antialiasing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

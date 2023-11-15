@@ -16,7 +16,7 @@ class CRenderTarget : public IRender_Target
 
   public:
 	u32 dwLightMarkerID;
-	//
+
 	IBlender* b_occq;
 	IBlender* b_accum_mask;
 	IBlender* b_accum_direct;
@@ -28,9 +28,11 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_ao;
 	IBlender* b_luminance;
 	IBlender* b_combine;
+	IBlender* b_antialiasing;
 	IBlender* b_dof;
 	IBlender* b_motion_blur;
 	IBlender* b_frame_overlay;
+
 #ifdef DEBUG
 	struct dbg_line_t
 	{
@@ -143,6 +145,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_combine_dbg_Accumulator;
 	ref_shader s_combine;
 	ref_shader s_combine_volumetric;
+	ref_shader s_antialiasing;
 	ref_shader s_dof;
 	ref_shader s_motion_blur;
 	ref_shader s_frame_overlay;
@@ -243,6 +246,9 @@ class CRenderTarget : public IRender_Target
 	void watermark();
 	void draw_overlays();
 
+	void antialiasing_phase_fxaa();
+	void antialiasing_phase_dlaa();
+	void antialiasing_phase_dlaa_with_edge_detecting();
 	void phase_antialiasing();
 
 	void phase_distortion();
@@ -253,8 +259,8 @@ class CRenderTarget : public IRender_Target
 	void phase_depth_of_field();
 
 	void motion_blur_phase_save_frame();
-	void phase_motion_blur();
 	void motion_blur_phase_combine();
+	void phase_motion_blur();
 
 	void phase_pp();
 
