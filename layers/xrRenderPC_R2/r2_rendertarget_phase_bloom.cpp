@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "r2_rendertarget.h"
 #include "..\xrEngine\igame_persistent.h"
 #include "..\xrEngine\environment.h"
 
@@ -355,9 +355,6 @@ void CRenderTarget::phase_bloom()
 		}
 	}
 
-	// we are left here with bloom-target setup as primary one
-	// for FP16-BLEND capable HW we can blend flares into smaller target, because they are smooth
-	// if (RImplementation.o.fp16_blend)		g_pGamePersistent->Environment().RenderFlares	();	// lens-flares
 	bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
 	if (_menu_pp)
 	{
@@ -366,4 +363,47 @@ void CRenderTarget::phase_bloom()
 
 	// re-enable z-buffer
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+}
+
+void CRenderTarget::phase_combine_bloom()
+{
+	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+
+	RCache.set_CullMode(CULL_NONE);
+	RCache.set_Stencil(FALSE);
+
+	// Constants
+	u32 Offset = 0;
+	u32 C = color_rgba(0, 0, 0, 255);
+
+	float w = float(Device.dwWidth);
+	float h = float(Device.dwHeight);
+
+	float d_Z = EPS_S;
+	float d_W = 1.f;
+
+	Fvector2 p0, p1;
+	p0.set(0.5f / w, 0.5f / h);
+	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
+
+	// Fill vertex buffer
+	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+	pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+	pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+	pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+	pv++;
+	RCache.Vertex.Unlock(4, g_combine->vb_stride);
+
+	// Set pass
+	RCache.set_Element(s_bloom->E[5]);
+
+	// Set geometry
+	RCache.set_Geometry(g_combine);
+
+	// Draw
+	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }

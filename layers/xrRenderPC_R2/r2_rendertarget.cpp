@@ -1,11 +1,15 @@
 #include "r2_rendertarget.h"
 #include "..\xrEngine\resourcemanager.h"
-#include "blender_ao_build.h"
+#include "blender_ambient_occlusion.h"
 #include "blender_bloom_build.h"
 #include "blender_antialiasing.h"
 #include "blender_combine.h"
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
+#include "blender_sepia.h"
+#include "blender_sharpen.h"
+#include "blender_vignette.h"
+#include "blender_chromatic_abberation.h"
 #include "blender_frame_overlay.h"
 #include "blender_light_direct.h"
 #include "blender_light_direct_cascade.h"
@@ -225,13 +229,17 @@ CRenderTarget::CRenderTarget()
 	b_accum_point = xr_new<CBlender_accum_point>();
 	b_accum_spot = xr_new<CBlender_accum_spot>();
 	b_accum_reflected = xr_new<CBlender_accum_reflected>();
-	b_ao = xr_new<CBlender_ao_build>();
+	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_luminance = xr_new<CBlender_luminance>();
 	b_combine = xr_new<CBlender_combine>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_dof = xr_new<CBlender_depth_of_field>();
 	b_motion_blur = xr_new<CBlender_motion_blur>();
+	b_sepia = xr_new<CBlender_sepia>();
+	b_chromatic_abberation = xr_new<CBlender_chromatic_abberation>();
+	b_sharpen = xr_new<CBlender_sharpen>();
+	b_vignette = xr_new<CBlender_vignette>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
 
 	//	NORMAL
@@ -362,7 +370,7 @@ CRenderTarget::CRenderTarget()
 		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_X8R8G8B8);
 
 		// Create shader resource
-		s_ao.create(b_ao, "r2\\ao");
+		s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
 	}
 
 	// autoexposure
@@ -523,15 +531,21 @@ CRenderTarget::CRenderTarget()
 		}
 	}
 
-	// Create shader resource for fog
-	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
-
 	s_antialiasing.create(b_antialiasing, "r2\\antialiasing");
 
-	// Create shader resource
 	s_dof.create(b_dof, "r2\\dof");
 
 	s_motion_blur.create(b_motion_blur, "r2\\motion_blur");
+
+	s_chromatic_abberation.create(b_chromatic_abberation, "r2\\chromatic_abberation");
+
+	s_sepia.create(b_sepia, "r2\\sepia");
+
+	s_sharpen.create(b_sharpen, "r2\\sharpen");
+
+	s_vignette.create(b_vignette, "r2\\vignette");
+
+	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
 
 	// PP
 	s_postprocess.create("postprocess");
@@ -590,7 +604,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_combine);
 	xr_delete(b_luminance);
 	xr_delete(b_bloom);
-	xr_delete(b_ao);
+	xr_delete(b_ambient_occlusion);
 	xr_delete(b_accum_reflected);
 	xr_delete(b_accum_spot);
 	xr_delete(b_accum_point);

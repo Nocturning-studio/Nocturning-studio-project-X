@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////////////
+// Created: 15.11.2023
 // Author: Deathman
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #pragma once
 ///////////////////////////////////////////////////////////////////////////////////
-class CBlender_ao_build : public IBlender
+class CBlender_sharpen : public IBlender
 {
   public:
 	virtual LPCSTR getComment()
 	{
-		return "INTERNAL: Ambient occlusion";
+		return "INTERNAL: Sharpen";
 	}
 
 	virtual BOOL canBeDetailed()
@@ -24,7 +25,7 @@ class CBlender_ao_build : public IBlender
 
 	virtual void Compile(CBlender_Compile& C);
 
-	CBlender_ao_build();
-	virtual ~CBlender_ao_build();
+	CBlender_sharpen();
+	virtual ~CBlender_sharpen();
 };
 ///////////////////////////////////////////////////////////////////////////////////

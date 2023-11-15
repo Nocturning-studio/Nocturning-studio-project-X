@@ -58,9 +58,6 @@
     <Filter Include="Rendertargets\Render stages\Scene combine stage">
       <UniqueIdentifier>{c8ba8337-f7ec-4e83-824d-72dbd0be3165}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendertargets\Render stages\Occlusion culling stage">
-      <UniqueIdentifier>{52b64951-58a7-49f9-9bc8-5580e7f82d3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rendertargets\Render stages\Postprocess stages">
       <UniqueIdentifier>{cc4245e8-dd12-4eca-828c-efeab14ab465}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,30 @@
     </Filter>
     <Filter Include="Shading templates\Postprocess stage\Antialiasing">
       <UniqueIdentifier>{d96e805c-1825-4b20-a2a4-2d94e6d1e59e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading templates\Postprocess stage\Vignette">
+      <UniqueIdentifier>{5775da43-5eda-4402-bec0-0ecba0939a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading templates\Postprocess stage\Sharpen">
+      <UniqueIdentifier>{a8627c0f-b8ca-41d0-9b76-6028ff5e0a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading templates\Postprocess stage\Chromatic abberation">
+      <UniqueIdentifier>{43f72539-6570-40df-88d7-b4416823aecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading templates\Postprocess stage\Sepia">
+      <UniqueIdentifier>{49b263cf-d1eb-456a-97d7-5673e0c5c00d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendertargets\Render stages\Light accumulation stage\Occlusion culling stage">
+      <UniqueIdentifier>{52b64951-58a7-49f9-9bc8-5580e7f82d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendertargets\Render stages\Light accumulation stage\Direct">
+      <UniqueIdentifier>{da8e30e7-900b-4650-a603-bd330811dd4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendertargets\Render stages\Light accumulation stage\Core">
+      <UniqueIdentifier>{e6aa645c-aa56-48a2-a216-78078383a554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni">
+      <UniqueIdentifier>{8ecf1628-3ffe-4e54-917d-028ab5f7b670}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,7 +312,7 @@
     <ClInclude Include="..\xrRender\Blender_Editor_Wire.h">
       <Filter>Shading templates\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Blender_ao_build.h">
+    <ClInclude Include="Blender_ambient_occlusion.h">
       <Filter>Shading templates\Postprocess stage\Ambient occlusion</Filter>
     </ClInclude>
     <ClInclude Include="blender_bloom_build.h">
@@ -314,6 +335,18 @@
     </ClInclude>
     <ClInclude Include="Blender_antialiasing.h">
       <Filter>Shading templates\Postprocess stage\Antialiasing</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_chromatic_abberation.h">
+      <Filter>Shading templates\Postprocess stage\Chromatic abberation</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_sepia.h">
+      <Filter>Shading templates\Postprocess stage\Sepia</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_sharpen.h">
+      <Filter>Shading templates\Postprocess stage\Sharpen</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_vignette.h">
+      <Filter>Shading templates\Postprocess stage\Vignette</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -503,44 +536,11 @@
     <ClCompile Include="r2_rendertarget_phase_gbuffer.cpp">
       <Filter>Rendertargets\Render stages\GBuffer stage</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_direct.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_omnipart_geom.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_point.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_point_geom.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_reflected.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_spot.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_draw_volume.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_accumulator.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_combine.cpp">
       <Filter>Rendertargets\Render stages\Scene combine stage</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_smap_S.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_smap_D.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_occq.cpp">
-      <Filter>Rendertargets\Render stages\Occlusion culling stage</Filter>
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Occlusion culling stage</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_depth_of_field.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
@@ -559,9 +559,6 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget.cpp">
       <Filter>Rendertargets\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_enable_scissor.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage</Filter>
     </ClCompile>
     <ClCompile Include="blender_deffer_aref.cpp">
       <Filter>Shading templates\GBuffer stage</Filter>
@@ -608,7 +605,7 @@
     <ClCompile Include="..\xrRender\Blender_Editor_Wire.cpp">
       <Filter>Shading templates\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Blender_ao_build.cpp">
+    <ClCompile Include="Blender_ambient_occlusion.cpp">
       <Filter>Shading templates\Postprocess stage\Ambient occlusion</Filter>
     </ClCompile>
     <ClCompile Include="blender_bloom_build.cpp">
@@ -643,6 +640,66 @@
     </ClCompile>
     <ClCompile Include="Blender_antialiasing.cpp">
       <Filter>Shading templates\Postprocess stage\Antialiasing</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_vignette.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_sharpen.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_sepia.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_chromatic_abberation.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_chromatic_abberation.cpp">
+      <Filter>Shading templates\Postprocess stage\Chromatic abberation</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_sepia.cpp">
+      <Filter>Shading templates\Postprocess stage\Sepia</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_sharpen.cpp">
+      <Filter>Shading templates\Postprocess stage\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_vignette.cpp">
+      <Filter>Shading templates\Postprocess stage\Vignette</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_direct.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Direct</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_smap_D.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_smap_S.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_accumulator.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_enable_scissor.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_omnipart_geom.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_point.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_point_geom.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_reflected.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_spot.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_draw_volume.cpp">
+      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

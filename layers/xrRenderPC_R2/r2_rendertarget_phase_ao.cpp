@@ -51,13 +51,13 @@ void CRenderTarget::phase_create_ao()
 	switch (ps_r2_ao)
 	{
 	case 1: // SSAO
-		RCache.set_Element(s_ao->E[0]);
+		RCache.set_Element(s_ambient_occlusion->E[0]);
 		break;
 	case 2: // HDAO
-		RCache.set_Element(s_ao->E[1]);
+		RCache.set_Element(s_ambient_occlusion->E[1]);
 		break;
 	case 3: // HBAO
-		RCache.set_Element(s_ao->E[2]);
+		RCache.set_Element(s_ambient_occlusion->E[2]);
 		break;
 	}
 
@@ -115,7 +115,7 @@ void CRenderTarget::phase_diagonal_filter()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	// Set pass
-	RCache.set_Element(s_ao->E[3]);
+	RCache.set_Element(s_ambient_occlusion->E[3]);
 
 	// Set geometry
 	RCache.set_Geometry(g_combine);
@@ -171,7 +171,7 @@ void CRenderTarget::phase_strided_filter()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	// Set pass
-	RCache.set_Element(s_ao->E[4]);
+	RCache.set_Element(s_ambient_occlusion->E[4]);
 
 	// Set geometry
 	RCache.set_Geometry(g_combine);
@@ -221,7 +221,7 @@ void CRenderTarget::phase_finalize()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	// Set pass
-	RCache.set_Element(s_ao->E[5]);
+	RCache.set_Element(s_ambient_occlusion->E[5]);
 
 	// Set geometry
 	RCache.set_Geometry(g_combine);

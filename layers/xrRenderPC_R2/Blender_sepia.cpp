@@ -1,37 +1,31 @@
 ///////////////////////////////////////////////////////////////////////////////////
+// Created: 15.11.2023
 // Author: Deathman
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #pragma hdrstop
 ///////////////////////////////////////////////////////////////////////////////////
-#include "blender_motion_blur.h"
+#include "blender_sepia.h"
 #include "r2_types.h"
 ///////////////////////////////////////////////////////////////////////////////////
-CBlender_motion_blur::CBlender_motion_blur()
+CBlender_sepia::CBlender_sepia()
 {
 	description.CLS = 0;
 }
 
-CBlender_motion_blur::~CBlender_motion_blur()
+CBlender_sepia::~CBlender_sepia()
 {
 }
 
-void CBlender_motion_blur::Compile(CBlender_Compile& C)
+void CBlender_sepia::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
 	switch (C.iElement)
 	{
 	case 0:
-		C.r_Pass("null", "postprocess_stage_motion_blur_pass_combine", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_rtf("s_previous_image", r2_RT_mblur_saved_frame);
-		jitter(C);
-		C.r_End();
-		break;
-	case 1:
-		C.r_Pass("null", "postprocess_stage_motion_blur_pass_save_frame", FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_sepia", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
 		jitter(C);
 		C.r_End();

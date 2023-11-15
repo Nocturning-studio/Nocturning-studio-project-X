@@ -6,41 +6,35 @@
 #include "stdafx.h"
 #pragma hdrstop
 ///////////////////////////////////////////////////////////////////////////////////
-#include "blender_antialiasing.h"
+#include "blender_vignette.h"
 #include "r2_types.h"
 ///////////////////////////////////////////////////////////////////////////////////
-CBlender_antialiasing::CBlender_antialiasing()
+CBlender_vignette::CBlender_vignette()
 {
 	description.CLS = 0;
 }
 
-CBlender_antialiasing::~CBlender_antialiasing()
+CBlender_vignette::~CBlender_vignette()
 {
 }
 
-void CBlender_antialiasing::Compile(CBlender_Compile& C)
+void CBlender_vignette::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
 	switch (C.iElement)
 	{
 	case 0:
-		C.r_Pass("null", "postprocess_stage_antialiasing_pass_dlaa", FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_vignette_pass_static", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_tex("s_vignette", "vfx\\vfx_vignette");
 		jitter(C);
 		C.r_End();
 		break;
 	case 1:
-		C.r_Pass("null", "postprocess_stage_antialiasing_pass_dlaa_edge_detect", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
+		C.r_Pass("null", "postprocess_stage_vignette_pass_dynamic", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
-		jitter(C);
-		C.r_End();
-		break;
-	case 2:
-		C.r_Pass("null", "postprocess_stage_antialiasing_pass_fxaa", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_tex("s_vignette", "vfx\\vfx_vignette");
 		jitter(C);
 		C.r_End();
 		break;

@@ -25,12 +25,16 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_accum_spot;
 	IBlender* b_accum_reflected;
 	IBlender* b_bloom;
-	IBlender* b_ao;
+	IBlender* b_ambient_occlusion;
 	IBlender* b_luminance;
 	IBlender* b_combine;
 	IBlender* b_antialiasing;
 	IBlender* b_dof;
 	IBlender* b_motion_blur;
+	IBlender* b_sepia;
+	IBlender* b_chromatic_abberation;
+	IBlender* b_sharpen;
+	IBlender* b_vignette;
 	IBlender* b_frame_overlay;
 
 #ifdef DEBUG
@@ -124,7 +128,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_bloom;
 
 	// AO
-	ref_shader s_ao;
+	ref_shader s_ambient_occlusion;
 
 	// AA
 	ref_shader s_aa;
@@ -140,6 +144,7 @@ class CRenderTarget : public IRender_Target
 	ref_geom g_combine_cuboid;
 	ref_geom g_aa_blur;
 	ref_geom g_aa_AA;
+
 	ref_shader s_combine_dbg_0;
 	ref_shader s_combine_dbg_1;
 	ref_shader s_combine_dbg_Accumulator;
@@ -148,6 +153,10 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_antialiasing;
 	ref_shader s_dof;
 	ref_shader s_motion_blur;
+	ref_shader s_chromatic_abberation;
+	ref_shader s_sepia;
+	ref_shader s_sharpen;
+	ref_shader s_vignette;
 	ref_shader s_frame_overlay;
 
   public:
@@ -228,6 +237,7 @@ class CRenderTarget : public IRender_Target
 	void accum_reflected(light* L);
 
 	void phase_bloom();
+	void phase_combine_bloom();
 
 	void phase_create_ao();
 	void phase_diagonal_filter();
@@ -261,6 +271,14 @@ class CRenderTarget : public IRender_Target
 	void motion_blur_phase_save_frame();
 	void motion_blur_phase_combine();
 	void phase_motion_blur();
+
+	void phase_chromatic_abberation();
+
+	void phase_sepia();
+
+	void phase_sharpen();
+
+	void phase_vignette();
 
 	void phase_pp();
 
