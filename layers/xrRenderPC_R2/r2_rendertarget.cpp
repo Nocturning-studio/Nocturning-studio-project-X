@@ -622,28 +622,9 @@ void CRenderTarget::reset_light_marker(bool bResetStencil)
 						   D3DSTENCILOP_ZERO);
 		// RCache.set_Stencil	(TRUE,D3DCMP_ALWAYS,dwLightMarkerID,0x00,0xFF, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO,
 		// D3DSTENCILOP_ZERO);
-		RCache.set_Element(s_occq->E[1]);
+		RCache.set_Element(s_occq->E[0]);
 		RCache.set_Geometry(g_combine);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-
-		/*
-				u32		Offset;
-				float	_w					= float(Device.dwWidth);
-				float	_h					= float(Device.dwHeight);
-				u32		C					= color_rgba	(255,255,255,255);
-				float	eps					= 0;
-				float	_dw					= 0.5f;
-				float	_dh					= 0.5f;
-				FVF::TL* pv					= (FVF::TL*) RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);
-				pv->set						(-_dw,		_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-				pv->set						(-_dw,		-_dh,		eps,	1.f, C, 0, 0);	pv++;
-				pv->set						(_w-_dw,	_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-				pv->set						(_w-_dw,	-_dh,		eps,	1.f, C, 0, 0);	pv++;
-				RCache.Vertex.Unlock		(4,g_combine->vb_stride);
-				RCache.set_Element			(s_occq->E[2]	);
-				RCache.set_Geometry			(g_combine		);
-				RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-		*/
 	}
 }
 
