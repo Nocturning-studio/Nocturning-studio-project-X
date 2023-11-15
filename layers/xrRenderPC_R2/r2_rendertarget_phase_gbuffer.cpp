@@ -35,6 +35,10 @@ void CRenderTarget::create_gbuffer()
 
 	// Misc	- draw only front-faces
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE));
+
+	//Set backface culling
 	RCache.set_CullMode(CULL_CCW);
+
 	RCache.set_ColorWriteEnable();
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
