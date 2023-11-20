@@ -1093,7 +1093,6 @@
     <ClInclude Include="light_smapvis.h" />
     <ClInclude Include="r2.h" />
     <ClInclude Include="r2_rendertarget.h" />
-    <ClInclude Include="r2_rendertarget_wallmarks.h" />
     <ClInclude Include="r2_types.h" />
     <ClInclude Include="SMAP_Allocator.h" />
     <ClInclude Include="stdafx.h" />
@@ -1250,15 +1249,16 @@
     <ClCompile Include="r2_rendertarget_accum_reflected.cpp" />
     <ClCompile Include="r2_rendertarget_accum_spot.cpp" />
     <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp" />
-    <ClCompile Include="r2_rendertarget_antialiasing.cpp" />
-    <ClCompile Include="r2_rendertarget_chromatic_abberation.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_antialiasing.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_chromatic_abberation.cpp" />
     <ClCompile Include="r2_rendertarget_draw_volume.cpp" />
     <ClCompile Include="r2_rendertarget_enable_scissor.cpp" />
-    <ClCompile Include="r2_rendertarget_motion_blur.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_motion_blur.cpp" />
     <ClCompile Include="r2_rendertarget_phase_accumulator.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ao.cpp" />
     <ClCompile Include="r2_rendertarget_phase_bloom.cpp" />
     <ClCompile Include="r2_rendertarget_phase_combine.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_combine_volumetric_lights.cpp" />
     <ClCompile Include="r2_rendertarget_phase_depth_of_field.cpp" />
     <ClCompile Include="r2_rendertarget_phase_frame_overlay.cpp" />
     <ClCompile Include="r2_rendertarget_phase_luminance.cpp" />
@@ -1270,6 +1270,7 @@
     <ClCompile Include="r2_rendertarget_phase_smap_D.cpp" />
     <ClCompile Include="r2_rendertarget_phase_smap_S.cpp" />
     <ClCompile Include="r2_rendertarget_phase_vignette.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_wallmarks.cpp" />
     <ClCompile Include="r2_R_calculate.cpp" />
     <ClCompile Include="r2_R_lights.cpp" />
     <ClCompile Include="r2_R_render.cpp" />

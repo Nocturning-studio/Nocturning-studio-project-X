@@ -119,6 +119,9 @@ float ps_r_ssaDISCARD = 3.5f;
 float ps_r_ssaDONTSORT = 32.f;
 float ps_r_ssaHZBvsTEX = 96.f;
 
+float ps_pps_u = 0.0f;
+float ps_pps_v = 0.0f;
+
 int ps_r_tf_Anisotropic = 4;
 
 int ps_r_thread_wait_sleep = 0;
@@ -134,8 +137,6 @@ float ps_r1_ssaLOD_B = 48.f;
 float ps_r1_tf_Mipbias = 0.0f;
 float ps_r1_lmodel_lerp = 0.1f;
 float ps_r1_dlights_clip = 30.f;
-float ps_r1_pps_u = 0.f;
-float ps_r1_pps_v = 0.f;
 int ps_r1_GlowsPerFrame = 16;
 
 // R1-specific flags
@@ -628,6 +629,9 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r_hardware_occlusion_culling", &ps_render_flags, RFLAG_EXP_HW_OCC);
 
+	CMD4(CCC_Float, "r_pps_u", &ps_pps_u, -1.f, +1.f);
+	CMD4(CCC_Float, "r_pps_v", &ps_pps_v, -1.f, +1.f);
+
 	// R1-specific commands
 	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r1_ssa_lod_b", &ps_r1_ssaLOD_B, 16, 64);
@@ -635,8 +639,6 @@ void xrRender_initconsole()
 	CMD2(CCC_tf_MipBias, "r1_tf_mipbias", &ps_r1_tf_Mipbias); //	{-3 +3}
 	CMD3(CCC_Mask, "r1_dlights", &ps_r1_flags, R1FLAG_DLIGHTS);
 	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
-	CMD4(CCC_Float, "r1_pps_u", &ps_r1_pps_u, -1.f, +1.f);
-	CMD4(CCC_Float, "r1_pps_v", &ps_r1_pps_v, -1.f, +1.f);
 	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
 	CMD4(CCC_Integer, "r1_glows_per_frame", &ps_r1_GlowsPerFrame, 2, 32);
 

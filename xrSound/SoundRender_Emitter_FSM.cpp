@@ -288,8 +288,9 @@ BOOL CSoundRender_Emitter::update_culling(float dt)
 
 		// Update occlusion
 		volume_lerp(occluder_volume, SoundRender->get_occlusion(p_source.position, .2f, occluder), 1.f, dt);
-		//		float occ = (owner_data->g_type == SOUND_TYPE_WORLD_AMBIENT) ? 1.0f :
-		//SoundRender->get_occlusion(p_source.position, .2f, occluder); 		volume_lerp(occluder_volume, occ, 1.f, dt);
+		// float occ = (owner_data->g_type == SOUND_TYPE_WORLD_AMBIENT) ? 1.0f :
+		//  SoundRender->get_occlusion(p_source.position, .2f, occluder);
+		//  volume_lerp(occluder_volume, occ, 1.f, dt);
 		clamp(occluder_volume, 0.f, 1.f);
 	}
 	clamp(fade_volume, 0.f, 1.f);

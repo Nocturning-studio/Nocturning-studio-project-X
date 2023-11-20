@@ -35,13 +35,16 @@ extern ECORE_API int ps_r_thread_wait_sleep;
 // Postprocess effects
 extern ECORE_API u32 ps_vignette_mode;
 
+extern ECORE_API float ps_pps_u;
+extern ECORE_API float ps_pps_v;
+
 // Render common flags
 extern ECORE_API Flags32 ps_render_flags;
 enum
 {
 	RFLAG_LENS_FLARES = (1 << 0),
 	RFLAG_EXP_MT_CALC = (1 << 1),
-	RFLAG_EXP_HW_OCC  = (1 << 2),
+	RFLAG_EXP_HW_OCC = (1 << 2),
 };
 
 /*-------------------------------------------------------------------------------*/
@@ -53,8 +56,6 @@ extern ECORE_API float ps_r1_ssaLOD_B;
 extern ECORE_API float ps_r1_tf_Mipbias;
 extern ECORE_API float ps_r1_lmodel_lerp;
 extern ECORE_API float ps_r1_dlights_clip;
-extern ECORE_API float ps_r1_pps_u;
-extern ECORE_API float ps_r1_pps_v;
 extern ECORE_API int ps_r1_GlowsPerFrame;
 
 // R1-specific flags
@@ -85,8 +86,8 @@ extern ECORE_API float ps_r2_autoexposure_low_lum;
 extern ECORE_API float ps_r2_autoexposure_amount;
 
 extern ECORE_API float ps_r2_bloom_kernel_scale; // gauss
-extern ECORE_API float ps_r2_bloom_kernel_g;		// gauss
-extern ECORE_API float ps_r2_bloom_kernel_b;		// bilinear
+extern ECORE_API float ps_r2_bloom_kernel_g;	 // gauss
+extern ECORE_API float ps_r2_bloom_kernel_b;	 // bilinear
 extern ECORE_API float ps_r2_bloom_threshold;
 extern ECORE_API float ps_r2_bloom_speed;
 extern ECORE_API float ps_r2_bloom_factor;

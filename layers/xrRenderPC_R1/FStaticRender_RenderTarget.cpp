@@ -286,7 +286,7 @@ void CRenderTarget::End()
 	calc_tc_noise(n0, n1);
 
 	// Fill vertex buffer
-	float du = ps_r1_pps_u, dv = ps_r1_pps_v;
+	float du = ps_pps_u, dv = ps_pps_v;
 	TL_2c3uv* pv = (TL_2c3uv*)RCache.Vertex.Lock(4, g_postprocess.stride(), Offset);
 	pv->set(du + 0, dv + float(_h), p_color, p_gray, r0.x, r1.y, l0.x, l1.y, n0.x, n1.y);
 	pv++;

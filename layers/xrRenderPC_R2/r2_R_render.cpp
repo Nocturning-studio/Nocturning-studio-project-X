@@ -13,7 +13,6 @@ IC bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::render_main(Fmatrix& m_ViewProjection, bool _fportals)
 {
-	//	Msg						("---begin");
 	marker++;
 
 	// Calculate sector(s) and their objects
@@ -310,18 +309,25 @@ void CRender::Render()
 	{
 		// level, DO NOT SPLIT
 		Target->create_gbuffer();
+
 		r_dsgraph_render_hud();
+
 		r_dsgraph_render_graph(0);
+
 		r_dsgraph_render_lods(true, true);
+
 		if (Details)
 			Details->Render();
+
 		Target->disable_anisotropy_filtering();
 	}
 	else
 	{
 		// level, SPLIT
 		Target->create_gbuffer();
+
 		r_dsgraph_render_graph(0);
+
 		Target->disable_anisotropy_filtering();
 	}
 
@@ -417,7 +423,7 @@ void CRender::Render()
 		Lights_LastFrame.clear();
 	}
 
-	// Directional light - fucking sun
+	// Directional light - sun
 	if (bSUN)
 	{
 		RImplementation.stats.l_visible++;
