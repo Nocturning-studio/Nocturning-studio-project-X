@@ -96,15 +96,6 @@ void CRenderTarget::accum_point(light* L)
 		draw_volume(L);
 	}
 
-	// blend-copy
-	if (!RImplementation.o.fp16_blend)
-	{
-		u_setrt(rt_Accumulator, NULL, NULL, HW.pBaseZB);
-		RCache.set_Element(s_accum_mask->E[SE_MASK_ACCUM_VOL]);
-		RCache.set_c("m_texgen", m_Texgen);
-		draw_volume(L);
-	}
-
 	dwLightMarkerID += 2; // keep lowest bit always setted up
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE));
 

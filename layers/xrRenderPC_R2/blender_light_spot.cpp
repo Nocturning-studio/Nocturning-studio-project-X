@@ -17,8 +17,6 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 
 	BOOL b_HW_smap = RImplementation.o.HW_smap;
 	BOOL b_HW_PCF = RImplementation.o.HW_smap_PCF;
-	BOOL blend = RImplementation.o.fp16_blend;
-	D3DBLEND dest = blend ? D3DBLEND_ONE : D3DBLEND_ZERO;
 
 	switch (C.iElement)
 	{
@@ -28,7 +26,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_UNSHADOWED: // unshadowed
-		C.r_Pass("accum_volume", "accum_spot_unshadowed", false, FALSE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_spot_unshadowed", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -38,7 +36,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_NORMAL: // normal
-		C.r_Pass("accum_volume", "accum_spot_normal", false, FALSE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_spot_normal", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -58,7 +56,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_FULLSIZE: // normal-fullsize
-		C.r_Pass("accum_volume", "accum_spot_fullsize", false, FALSE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_spot_fullsize", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -78,7 +76,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_TRANSLUENT: // shadowed + transluency
-		C.r_Pass("accum_volume", "accum_spot_fullsize", false, FALSE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_spot_fullsize", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);

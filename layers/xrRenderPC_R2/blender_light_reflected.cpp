@@ -14,10 +14,8 @@ CBlender_accum_reflected::~CBlender_accum_reflected()
 void CBlender_accum_reflected::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	BOOL blend = RImplementation.o.fp16_blend;
-	D3DBLEND dest = blend ? D3DBLEND_ONE : D3DBLEND_ZERO;
 
-	C.r_Pass("accum_volume", "accum_indirect", false, FALSE, FALSE, blend, D3DBLEND_ONE, dest);
+	C.r_Pass("accum_volume", "accum_indirect", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 	C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 	C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 	C.r_Sampler_clw("s_material", r2_material);

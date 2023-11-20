@@ -61,15 +61,5 @@ void CRenderTarget::accum_reflected(light* L)
 		draw_volume(L);
 	}
 
-	// blend-copy
-	if (!RImplementation.o.fp16_blend)
-	{
-		u_setrt(rt_Accumulator, NULL, NULL, HW.pBaseZB);
-		RCache.set_Element(s_accum_mask->E[SE_MASK_ACCUM_VOL]);
-		RCache.set_c("m_texgen", m_Texgen);
-		draw_volume(L);
-	}
-
-	//
 	u_DBT_disable();
 }

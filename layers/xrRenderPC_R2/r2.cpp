@@ -101,7 +101,7 @@ void CRender::create()
 
 	///////////////////////////////////////////////////
 	// Smap resolution choosing
-#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot\point источников света)
+#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot или point источников света)
 	if (o.sunstatic)
 	{
 		o.smapsize = 1024;
@@ -813,15 +813,6 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		def_it++;
 	}
 	sh_name[len] = '0' + char(o.fp16_filter);
-	++len;
-
-	if (o.fp16_blend)
-	{
-		defines[def_it].Name = "FP16_BLEND";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.fp16_blend);
 	++len;
 
 	if (o.HW_smap)

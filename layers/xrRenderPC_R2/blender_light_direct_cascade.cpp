@@ -17,19 +17,12 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 
 	BOOL b_HW_smap = RImplementation.o.HW_smap;
 	BOOL b_HW_PCF = RImplementation.o.HW_smap_PCF;
-	BOOL blend = FALSE; // RImplementation.o.fp16_blend;
-	D3DBLEND dest = blend ? D3DBLEND_ONE : D3DBLEND_ZERO;
-	if (RImplementation.o.sunfilter)
-	{
-		blend = FALSE;
-		dest = D3DBLEND_ZERO;
-	}
 
 	switch (C.iElement)
 	{
 	case SE_SUN_NEAR: // near pass - enable Z-test to perform depth-clipping
 	case SE_SUN_MIDDLE:
-		C.r_Pass("accum_volume", "accum_sun_cascade", false, TRUE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_sun_cascade", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.PassSET_ZB(TRUE, FALSE, TRUE); // force inverted Z-Buffer
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
@@ -58,7 +51,7 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_SUN_FAR: // far pass, only stencil clipping performed
-		C.r_Pass("accum_volume", "accum_sun_cascade_far", false, TRUE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("accum_volume", "accum_sun_cascade_far", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);

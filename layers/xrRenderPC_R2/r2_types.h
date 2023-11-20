@@ -6,7 +6,6 @@
 
 // other
 #define r2_RT_accum "$user$accum"			// ---	16 bit fp or 16 bit fx
-#define r2_RT_accum_temp "$user$accum_temp" // ---	16 bit fp - only for HW which doesn't feature fp16 blend
 
 #define r2_T_envs0 "$user$env_s0" // ---
 #define r2_T_envs1 "$user$env_s1" // ---
@@ -77,15 +76,11 @@ const u32 LUMINANCE_size = 16;
 #define SE_MASK_SPOT 0
 #define SE_MASK_POINT 1
 #define SE_MASK_DIRECT 2
-#define SE_MASK_ACCUM_VOL 3
-#define SE_MASK_ACCUM_2D 4
-#define SE_MASK_ALBEDO 5
 
 // sun
 #define SE_SUN_NEAR 0
 #define SE_SUN_MIDDLE 1
 #define SE_SUN_FAR 2
-#define SE_SUN_LUMINANCE 3
 
 extern float ps_r2_gloss_factor;
 IC float u_diffuse2s(float x, float y, float z)

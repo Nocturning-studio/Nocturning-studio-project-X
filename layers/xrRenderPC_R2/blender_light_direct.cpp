@@ -17,7 +17,7 @@ void CBlender_accum_direct::Compile(CBlender_Compile& C)
 
 	BOOL b_HW_smap = RImplementation.o.HW_smap;
 	BOOL b_HW_PCF = RImplementation.o.HW_smap_PCF;
-	BOOL blend = FALSE; // RImplementation.o.fp16_blend;
+	BOOL blend = FALSE;
 	D3DBLEND dest = blend ? D3DBLEND_ONE : D3DBLEND_ZERO;
 	if (RImplementation.o.sunfilter)
 	{
@@ -29,7 +29,7 @@ void CBlender_accum_direct::Compile(CBlender_Compile& C)
 	{
 	case SE_SUN_NEAR: // near pass - enable Z-test to perform depth-clipping
 	case SE_SUN_MIDDLE:
-		C.r_Pass("null", "accum_sun_near", false, TRUE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("null", "accum_sun_near", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.PassSET_ZB(TRUE, FALSE, TRUE); // force inverted Z-Buffer
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
@@ -52,7 +52,7 @@ void CBlender_accum_direct::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_SUN_FAR: // far pass, only stencil clipping performed
-		C.r_Pass("null", "accum_sun_far", false, TRUE, FALSE, blend, D3DBLEND_ONE, dest);
+		C.r_Pass("null", "accum_sun_far", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -68,16 +68,6 @@ void CBlender_accum_direct::Compile(CBlender_Compile& C)
 		}
 		else
 			C.r_Sampler_rtf("s_smap", r2_RT_smap_surf);
-		jitter(C);
-		C.r_End();
-		break;
-	case SE_SUN_LUMINANCE: // luminance pass
-		C.r_Pass("null", "accum_sun", false, FALSE, FALSE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_clw("s_material", r2_material);
-		C.r_Sampler_clf("s_smap", r2_RT_generic0);
 		jitter(C);
 		C.r_End();
 		break;
