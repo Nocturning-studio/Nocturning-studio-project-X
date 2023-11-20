@@ -210,7 +210,7 @@ void CRender::create()
 	o.fp16_filter = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
-	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256),
+	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_filter && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256),
 			  "Hardware doesn't meet minimum feature-level");
 
 	// nvstencil on NV40 and up
@@ -804,15 +804,6 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		len += 4;
 	}
 	sh_name[len] = '0' + char(o.smapsize);
-	++len;
-
-	if (o.fp16_filter)
-	{
-		defines[def_it].Name = "FP16_FILTER";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.fp16_filter);
 	++len;
 
 	if (o.HW_smap)
