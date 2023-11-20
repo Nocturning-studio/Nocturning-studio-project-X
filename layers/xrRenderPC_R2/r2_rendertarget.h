@@ -226,14 +226,14 @@ class CRenderTarget : public IRender_Target
 	void enable_dbt_bounds(light* L);
 
 	void draw_volume(light* L);
-	void accum_direct(u32 sub_phase);
 	void accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix& xform_prev, float fBias);
 	void accum_direct_volumetric(u32 sub_phase, const u32 Offset, const Fmatrix& mShadow);
-	void accum_direct_blend();
 	void accum_point(light* L);
 	void accum_spot(light* L);
+
 	//	Igor: for volumetric lights
 	void accum_volumetric(light* L);
+
 	void accum_reflected(light* L);
 
 	void phase_bloom();

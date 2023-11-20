@@ -289,47 +289,27 @@ void CRender::Render()
 	//******* Main calc - DEFERRER RENDERER
 	// Main calc
 	Device.Statistic->RenderCALC.Begin();
+
 	r_pmask(true, false, true); // enable priority "0",+ capture wmarks
+
 	if (bSUN)
 		set_Recorder(&main_coarse_structure);
 	else
 		set_Recorder(NULL);
+
 	phase = PHASE_NORMAL;
 	render_main(Device.mFullTransform, true);
 	set_Recorder(NULL);
 	r_pmask(true, false); // disable priority "1"
 	Device.Statistic->RenderCALC.End();
 
-	BOOL split_the_scene_to_minimize_wait = FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))
-		split_the_scene_to_minimize_wait = TRUE;
-
 	//******* Main render :: PART-0	-- first
-	if (!split_the_scene_to_minimize_wait)
-	{
-		// level, DO NOT SPLIT
-		Target->create_gbuffer();
+	// level, SPLIT
+	Target->create_gbuffer();
 
-		r_dsgraph_render_hud();
+	r_dsgraph_render_graph(0);
 
-		r_dsgraph_render_graph(0);
-
-		r_dsgraph_render_lods(true, true);
-
-		if (Details)
-			Details->Render();
-
-		Target->disable_anisotropy_filtering();
-	}
-	else
-	{
-		// level, SPLIT
-		Target->create_gbuffer();
-
-		r_dsgraph_render_graph(0);
-
-		Target->disable_anisotropy_filtering();
-	}
+	Target->disable_anisotropy_filtering();
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
@@ -384,23 +364,27 @@ void CRender::Render()
 	LP_pending.sort();
 
 	//******* Main render :: PART-1 (second)
-	if (split_the_scene_to_minimize_wait)
-	{
-		// level
-		PortalTraverser.fade_render(); // faded-portals, should be calculated before GBuffer
-		Target->create_gbuffer();
-		r_dsgraph_render_hud();
-		r_dsgraph_render_lods(true, true);
-		if (Details)
-			Details->Render();
-		Target->disable_anisotropy_filtering();
-	}
+	// level
+	PortalTraverser.fade_render();
+
+	Target->create_gbuffer();
+
+	r_dsgraph_render_hud();
+
+	r_dsgraph_render_lods(true, true);
+
+	if (Details)
+		Details->Render();
+
+	Target->disable_anisotropy_filtering();
 
 	// Wall marks
 	if (Wallmarks)
 	{
 		Target->phase_wallmarks();
+
 		g_r = 0;
+
 		Wallmarks->Render(); // wallmarks has priority as normal geometry
 	}
 
@@ -428,22 +412,25 @@ void CRender::Render()
 	{
 		RImplementation.stats.l_visible++;
 		render_sun_cascades();
-		Target->accum_direct_blend();
+		Target->dwLightMarkerID += 2;
 	}
 
 	// Lighting, non dependant on OCCQ
 	Target->phase_accumulator();
-	HOM.Disable();
+
 	render_lights(LP_normal);
 
 	// Lighting, dependant on OCCQ
 	render_lights(LP_pending);
+
+	HOM.Disable();
 
 	if (ps_r2_ao >= 1 && RImplementation.o.advancedpp)
 		Target->phase_ao();
 
 	// Postprocess
 	Target->phase_combine();
+
 	VERIFY(0 == mapDistort.size());
 }
 

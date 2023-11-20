@@ -662,10 +662,10 @@
     <ClCompile Include="r2_rendertarget_accum_direct.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage\Direct</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_smap_D.cpp">
+    <ClCompile Include="r2_rendertarget_phase_smap_Direct.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_smap_S.cpp">
+    <ClCompile Include="r2_rendertarget_phase_smap_Spot.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage\Core</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_accumulator.cpp">

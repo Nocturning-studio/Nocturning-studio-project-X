@@ -71,6 +71,11 @@ class CRender : public R_dsgraph_structure
 		u32 sunstatic : 1;
 
 		u32 forceskinw : 1;
+
+		float sun_depth_near_scale;
+		float sun_depth_near_bias;
+		float sun_depth_far_scale;
+		float sun_depth_far_bias;
 	} o;
 	struct _stats
 	{

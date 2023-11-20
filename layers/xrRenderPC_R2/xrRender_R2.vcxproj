@@ -1267,8 +1267,8 @@
     <ClCompile Include="r2_rendertarget_phase_gbuffer.cpp" />
     <ClCompile Include="r2_rendertarget_phase_sepia.cpp" />
     <ClCompile Include="r2_rendertarget_phase_sharpen.cpp" />
-    <ClCompile Include="r2_rendertarget_phase_smap_D.cpp" />
-    <ClCompile Include="r2_rendertarget_phase_smap_S.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_smap_Direct.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_smap_Spot.cpp" />
     <ClCompile Include="r2_rendertarget_phase_vignette.cpp" />
     <ClCompile Include="r2_rendertarget_phase_wallmarks.cpp" />
     <ClCompile Include="r2_R_calculate.cpp" />

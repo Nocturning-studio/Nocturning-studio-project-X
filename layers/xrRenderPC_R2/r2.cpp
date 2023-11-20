@@ -99,11 +99,9 @@ void CRender::create()
 
 	m_skinning = -1;
 
-	// hardware
 	///////////////////////////////////////////////////
-	// Smap res choosing
-#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot /          \
-			 point источников света)
+	// Smap resolution choosing
+#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot\point источников света)
 	if (o.sunstatic)
 	{
 		o.smapsize = 1024;
@@ -114,20 +112,32 @@ void CRender::create()
 		{
 		case 1:
 			o.smapsize = 1024;
+			o.sun_depth_far_bias = -0.001f;
+			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 2:
 			o.smapsize = 1536;
+			o.sun_depth_far_bias = -0.001f;
+			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 3:
 			o.smapsize = 1536;
+			o.sun_depth_far_bias = -0.001f;
+			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 4:
 			o.smapsize = 2048;
+			o.sun_depth_far_bias = -0.001f;
+			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 5:
 			o.smapsize = 2560;
+			o.sun_depth_far_bias = -0.0003f;
+			o.sun_depth_near_bias = -0.00004f;
 			break;
 		}
+		o.sun_depth_far_scale = 1.0f;
+		o.sun_depth_near_scale = 1.0f;
 	}
 	///////////////////////////////////////////////////
 
@@ -137,18 +147,10 @@ void CRender::create()
 	// Check for NULL render target support
 	D3DFORMAT nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 	o.nullrt = HW.support(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
-	/*
-	if (o.nullrt)		{
-	Msg				("* NULLRT supported and used");
-	};
-	*/
+
 	if (o.nullrt)
 	{
 		Msg("* NULLRT supported");
-
-		//.	    _tzset			();
-		//.		??? _strdate	( date, 128 );	???
-		//.		??? if (date < 22-march-07)
 		if (0)
 		{
 			u32 device_id = HW.Caps.id_device;

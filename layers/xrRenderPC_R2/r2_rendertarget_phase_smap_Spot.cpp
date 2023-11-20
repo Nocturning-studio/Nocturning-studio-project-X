@@ -12,20 +12,18 @@ void CRenderTarget::phase_smap_spot_clear()
 void CRenderTarget::phase_smap_spot(light* L)
 {
 	// Targets + viewport
-	if (RImplementation.o.HW_smap)
-		u_setrt(rt_smap_surf, NULL, NULL, rt_smap_depth->pRT);
-	else
-		u_setrt(rt_smap_surf, NULL, NULL, rt_smap_ZB);
+	u_setrt(rt_smap_surf, NULL, NULL, rt_smap_depth->pRT);
+
 	D3DVIEWPORT9 VP = {L->X.S.posX, L->X.S.posY, L->X.S.size, L->X.S.size, 0, 1};
 	CHK_DX(HW.pDevice->SetViewport(&VP));
 
-	// Misc	- draw only front-faces //back-faces
+	// Misc	- draw only front-faces
 	RCache.set_CullMode(CULL_CCW);
 	RCache.set_Stencil(FALSE);
 	// no transparency
 #pragma todo("can optimize for multi-lights covering more than say 50%...")
-	if (RImplementation.o.HW_smap)
-		RCache.set_ColorWriteEnable(FALSE);
+
+	RCache.set_ColorWriteEnable(FALSE);
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0L));
 }
 
