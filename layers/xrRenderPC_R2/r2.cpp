@@ -199,7 +199,6 @@ void CRender::create()
 	};
 
 	// SMAP / DST
-	o.HW_smap_FETCH4 = FALSE;
 	o.HW_smap = HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap_PCF = o.HW_smap;
 	if (o.HW_smap)
@@ -210,29 +209,6 @@ void CRender::create()
 
 	o.fp16_filter = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
-
-	// search for ATI formats
-	if (!o.HW_smap && (0 == strstr(Core.Params, "-nodf24")))
-	{
-		o.HW_smap = HW.support((D3DFORMAT)(MAKEFOURCC('D', 'F', '2', '4')), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
-		if (o.HW_smap)
-		{
-			o.HW_smap_FORMAT = MAKEFOURCC('D', 'F', '2', '4');
-			o.HW_smap_PCF = FALSE;
-			o.HW_smap_FETCH4 = TRUE;
-		}
-		Msg("* DF24/F4 supported and used [%X]", o.HW_smap_FORMAT);
-	}
-
-	// emulate ATI-R4xx series
-	if (strstr(Core.Params, "-r4xx"))
-	{
-		o.mrtmixdepth = FALSE;
-		o.HW_smap = FALSE;
-		o.HW_smap_PCF = FALSE;
-		o.fp16_filter = FALSE;
-		o.fp16_blend = FALSE;
-	}
 
 	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256),
 			  "Hardware doesn't meet minimum feature-level");
@@ -864,24 +840,6 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		def_it++;
 	}
 	sh_name[len] = '0' + char(o.HW_smap_PCF);
-	++len;
-
-	if (o.HW_smap_FETCH4)
-	{
-		defines[def_it].Name = "USE_FETCH4";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.HW_smap_FETCH4);
-	++len;
-
-	if (o.sjitter)
-	{
-		defines[def_it].Name = "USE_SJITTER";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.sjitter);
 	++len;
 
 	if (HW.Caps.raster_major >= 3)

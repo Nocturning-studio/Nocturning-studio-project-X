@@ -266,14 +266,6 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 		else
 			HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
 
-		// Fetch4 : enable
-		if (RImplementation.o.HW_smap_FETCH4)
-		{
-			//. we hacked the shader to force smap on S0
-#define FOURCC_GET4 MAKEFOURCC('G', 'E', 'T', '4')
-			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4);
-		}
-
 		// setup stencil
 		if (SE_SUN_NEAR == sub_phase || sub_phase == SE_SUN_MIDDLE /*|| SE_SUN_FAR==sub_phase*/)
 			RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, dwLightMarkerID, 0xff, 0xFE, D3DSTENCILOP_KEEP,
@@ -282,14 +274,6 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 			RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, dwLightMarkerID, 0xff, 0x00);
 
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 8, 0, 16);
-
-		// Fetch4 : disable
-		if (RImplementation.o.HW_smap_FETCH4)
-		{
-			//. we hacked the shader to force smap on S0
-#define FOURCC_GET1 MAKEFOURCC('G', 'E', 'T', '1')
-			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET1);
-		}
 
 		// disable depth bounds
 		u_DBT_disable();
@@ -430,26 +414,10 @@ void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, con
 				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 		}
 
-		// Fetch4 : enable
-		if (RImplementation.o.HW_smap_FETCH4)
-		{
-			//. we hacked the shader to force smap on S0
-#define FOURCC_GET4 MAKEFOURCC('G', 'E', 'T', '4')
-			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4);
-		}
-
 		// setup stencil: we have to draw to both lit and unlit pixels
 		// RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
 
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 8, 0, 16);
-
-		// Fetch4 : disable
-		if (RImplementation.o.HW_smap_FETCH4)
-		{
-			//. we hacked the shader to force smap on S0
-#define FOURCC_GET1 MAKEFOURCC('G', 'E', 'T', '1')
-			HW.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET1);
-		}
 
 		// disable depth bounds
 		u_DBT_disable();

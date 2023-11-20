@@ -46,7 +46,6 @@ class CRender : public R_dsgraph_structure
 		u32 fp16_blend : 1;
 		u32 HW_smap : 1;
 		u32 HW_smap_PCF : 1;
-		u32 HW_smap_FETCH4 : 1;
 
 		u32 HW_smap_FORMAT : 32;
 
