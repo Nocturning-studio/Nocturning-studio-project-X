@@ -97,7 +97,6 @@ class CRenderTarget : public IRender_Target
 	// Accum
 	ref_shader s_accum_mask;
 	ref_shader s_accum_direct_cascade;
-	ref_shader s_accum_direct_volumetric;
 	ref_shader s_accum_direct_volumetric_cascade;
 	ref_shader s_accum_point;
 	ref_shader s_accum_spot;
