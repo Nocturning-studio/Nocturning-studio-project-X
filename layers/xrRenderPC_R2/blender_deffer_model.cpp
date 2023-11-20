@@ -87,11 +87,7 @@ void CBlender_deffer_model::Compile(CBlender_Compile& C)
 		case SE_R2_SHADOW: // smap
 			if (bAref)
 			{
-				if (RImplementation.o.HW_smap)
-					C.r_Pass("shadow_direct_dynamic_mesh_alphatest", "shadow_direct_static_mesh_alphatest", FALSE, TRUE,
-							 TRUE, FALSE, D3DBLEND_ZERO, D3DBLEND_ONE, TRUE, 220);
-				else
-					C.r_Pass("shadow_direct_dynamic_mesh_alphatest", "shadow_direct_static_mesh_alphatest", FALSE);
+				C.r_Pass("shadow_direct_dynamic_mesh_alphatest", "shadow_direct_static_mesh_alphatest", FALSE, TRUE, TRUE, FALSE, D3DBLEND_ZERO, D3DBLEND_ONE, TRUE, 220);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_End();
 				break;

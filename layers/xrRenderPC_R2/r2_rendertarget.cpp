@@ -270,42 +270,21 @@ CRenderTarget::CRenderTarget()
 	s_occq.create(b_occq, "r2\\occq");
 
 	// DIRECT (spot)
-	D3DFORMAT depth_format = (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
+	D3DFORMAT nullrt = D3DFMT_R5G6B5;
+	if (RImplementation.o.nullrt)
+		nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 
-	if (RImplementation.o.HW_smap)
+	u32 size = RImplementation.o.smapsize;
+	rt_smap_depth.create(r2_RT_smap_depth, size, size, D3DFMT_D24X8);
+	rt_smap_surf.create(r2_RT_smap_surf, size, size, nullrt);
+	rt_smap_ZB = NULL;
+	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
+	s_accum_direct.create(b_accum_direct, "r2\\accum_direct");
+	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
+	if (RImplementation.o.advancedpp)
 	{
-		D3DFORMAT nullrt = D3DFMT_R5G6B5;
-		if (RImplementation.o.nullrt)
-			nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
-
-		u32 size = RImplementation.o.smapsize;
-		rt_smap_depth.create(r2_RT_smap_depth, size, size, depth_format);
-		rt_smap_surf.create(r2_RT_smap_surf, size, size, nullrt);
-		rt_smap_ZB = NULL;
-		s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
-		s_accum_direct.create(b_accum_direct, "r2\\accum_direct");
-		s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
-		if (RImplementation.o.advancedpp)
-		{
-			s_accum_direct_volumetric.create("accum_volumetric_sun");
-			s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
-		}
-	}
-	else
-	{
-		u32 size = RImplementation.o.smapsize;
-		rt_smap_surf.create(r2_RT_smap_surf, size, size, D3DFMT_R16F);
-		rt_smap_depth = NULL;
-		R_CHK(HW.pDevice->CreateDepthStencilSurface(size, size, D3DFMT_D24X8, D3DMULTISAMPLE_NONE, 0, TRUE, &rt_smap_ZB,
-													NULL));
-		s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
-		s_accum_direct.create(b_accum_direct, "r2\\accum_direct");
-		s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
-		if (RImplementation.o.advancedpp)
-		{
-			s_accum_direct_volumetric.create("accum_volumetric_sun");
-			s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
-		}
+		s_accum_direct_volumetric.create("accum_volumetric_sun");
+		s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
 	}
 
 	// POINT

@@ -200,17 +200,11 @@ void CRender::create()
 
 	// SMAP / DST
 	o.HW_smap = HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
-	o.HW_smap_PCF = o.HW_smap;
-	if (o.HW_smap)
-	{
-		o.HW_smap_FORMAT = D3DFMT_D24X8;
-		Msg("* HWDST/PCF supported and used");
-	}
-
 	o.fp16_filter = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
-	R_ASSERT2(o.mrt && o.mrtmixdepth && o.fp16_filter && o.fp16_blend && (HW.Caps.raster.dwInstructions >= 256),
+	R_ASSERT2(o.mrt && o.mrtmixdepth && o.HW_smap && o.fp16_filter && o.fp16_blend &&
+				  (HW.Caps.raster.dwInstructions >= 256),
 			  "Hardware doesn't meet minimum feature-level");
 
 	// nvstencil on NV40 and up
@@ -804,24 +798,6 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		len += 4;
 	}
 	sh_name[len] = '0' + char(o.smapsize);
-	++len;
-
-	if (o.HW_smap)
-	{
-		defines[def_it].Name = "USE_HWSMAP";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.HW_smap);
-	++len;
-
-	if (o.HW_smap_PCF)
-	{
-		defines[def_it].Name = "USE_HWSMAP_PCF";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.HW_smap_PCF);
 	++len;
 
 	if (HW.Caps.raster_major >= 3)

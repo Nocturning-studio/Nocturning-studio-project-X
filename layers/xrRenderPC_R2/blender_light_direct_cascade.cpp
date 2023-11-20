@@ -15,9 +15,6 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-	BOOL b_HW_smap = RImplementation.o.HW_smap;
-	BOOL b_HW_PCF = RImplementation.o.HW_smap_PCF;
-
 	switch (C.iElement)
 	{
 	case SE_SUN_NEAR: // near pass - enable Z-test to perform depth-clipping
@@ -30,18 +27,7 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
 		C.r_Sampler("s_lmap", r2_sunmask);
-		if (b_HW_smap)
-		{
-			if (b_HW_PCF)
-				C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-			else
-			{
-				C.r_Sampler_rtf("s_smap", r2_RT_smap_depth);
-			}
-		}
-		else
-			C.r_Sampler_rtf("s_smap", r2_RT_smap_surf);
-
+		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
 		jitter(C);
 		// 		{
 		// 			u32 s = C.i_Sampler("s_smap");
@@ -58,15 +44,7 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
 		C.r_Sampler("s_lmap", r2_sunmask);
-		if (b_HW_smap)
-		{
-			if (b_HW_PCF)
-				C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-			else
-				C.r_Sampler_rtf("s_smap", r2_RT_smap_depth);
-		}
-		else
-			C.r_Sampler_rtf("s_smap", r2_RT_smap_surf);
+		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
 		jitter(C);
 		{
 			u32 s = C.i_Sampler("s_smap");
