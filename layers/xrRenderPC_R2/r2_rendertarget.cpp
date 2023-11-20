@@ -224,7 +224,6 @@ CRenderTarget::CRenderTarget()
 	// Blenders
 	b_occq = xr_new<CBlender_light_occq>();
 	b_accum_mask = xr_new<CBlender_accum_direct_mask>();
-	b_accum_direct = xr_new<CBlender_accum_direct>();
 	b_accum_direct_cascade = xr_new<CBlender_accum_direct_cascade>();
 	b_accum_point = xr_new<CBlender_accum_point>();
 	b_accum_spot = xr_new<CBlender_accum_spot>();
@@ -279,7 +278,6 @@ CRenderTarget::CRenderTarget()
 	rt_smap_surf.create(r2_RT_smap_surf, size, size, nullrt);
 	rt_smap_ZB = NULL;
 	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
-	s_accum_direct.create(b_accum_direct, "r2\\accum_direct");
 	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
 	if (RImplementation.o.advancedpp)
 	{
@@ -587,7 +585,6 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_accum_reflected);
 	xr_delete(b_accum_spot);
 	xr_delete(b_accum_point);
-	xr_delete(b_accum_direct);
 	xr_delete(b_accum_direct_cascade);
 	xr_delete(b_accum_mask);
 	xr_delete(b_occq);
