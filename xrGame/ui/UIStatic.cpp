@@ -9,6 +9,7 @@
 #include "../string_table.h"
 #include "../ui_base.h"
 #include "UIBtnHint.h"
+#include "UIHint.h"
 
 const char* const clDefault = "default";
 #define CREATE_LINES                                                                                                   \
@@ -54,6 +55,9 @@ CUIStatic::CUIStatic()
 
 	m_pLines = NULL;
 	m_bEnableTextHighlighting = false;
+
+	m_bChangeVis = false;
+	m_hint = nullptr;
 }
 
 CUIStatic::~CUIStatic()
@@ -317,6 +321,55 @@ void CUIStatic::Update()
 
 		g_btnHint->SetWndPos(r.lt);
 	}
+
+	// Hint stuff
+	if (m_hint && m_hint->HintStatic())
+	{
+		bool visible = false;
+		u32 hintColor;
+
+		if (m_bCursorOverWindow && GetVisible())
+		{
+			hintColor = m_hint->HintStatic()->m_bUseTextColor[H] ? m_hint->HintStatic()->m_dwTextColor[H]
+																 : m_hint->HintStatic()->m_dwTextColor[E];
+			visible = true;
+		}
+		else
+		{
+			hintColor = m_hint->HintStatic()->m_dwTextColor[E];
+			visible = false;
+		}
+
+#pragma todo("VAX: Если захотите это вернуть, то надо решить проблему фокуса")
+		// if (visible)
+		//	GetUICursor()->GetStatic()->SetTextureColor(color_argb(64, 255, 255, 255));
+		// else
+		//	GetUICursor()->GetStatic()->SetTextureColor(color_argb(255, 255, 255, 255));
+
+		m_hint->HintStatic()->SetTextColor(hintColor);
+		if (m_bChangeVis)
+			m_hint->HintStatic()->SetVisible(visible);
+
+		Fvector2 parentPos;
+		m_hint->GetParent()->GetAbsolutePos(parentPos);
+		Fvector2 cursosPos = GetUICursor()->GetCursorPosition();
+
+		float x = cursosPos.x - parentPos.x;
+		float y = cursosPos.y - parentPos.y - m_hint->GetHeight();
+
+		if (cursosPos.x + m_hint->GetWidth() > UI_BASE_WIDTH)
+		{
+			// Хинт упирается в конец экрана
+			x = (UI_BASE_WIDTH - m_hint->GetWidth()) - parentPos.x;
+		}
+		else if (cursosPos.x + m_hint->GetWidth() > UI_BASE_WIDTH * 1.5)
+		{
+			// Хинт рендерится в другую сторону
+			x -= m_hint->GetWidth();
+		}
+
+		m_hint->SetWndPos(x, y);
+	}
 }
 
 void CUIStatic::ResetXformAnimation()
@@ -554,6 +607,13 @@ CGameFont::EAligment CUIStatic::GetTextAlignment()
 	return m_pLines->GetTextAlignment();
 }
 
+void CUIStatic::SetVisible(bool vis)
+{
+	inherited::SetVisible(vis);
+	if (m_hint && m_hint->HintStatic())
+		m_hint->HintStatic()->SetVisible(false);
+}
+
 // void CUIStatic::SetTextAlign(CGameFont::EAligment align){
 //	CREATE_LINES;
 //	m_pLines->SetTextAlignment(align);
@@ -632,9 +692,47 @@ void CUIStatic::AdjustHeightToText()
 
 void CUIStatic::AdjustWidthToText()
 {
-	float _len = m_pLines->GetFont()->SizeOf_(m_pLines->GetText());
-	UI()->ClientToScreenScaledWidth(_len);
-	SetWidth(_len);
+	float width = 0;
+
+	if (m_pLines->GetTextComplexMode())
+	{
+		xr_vector<xr_string> tokens;
+		{
+			xr_string line = m_pLines->GetText();
+
+			size_t pos = 0;
+			do
+			{
+				pos = line.find("\\n");
+				xr_string token = line.substr(0, pos);
+				tokens.push_back(token);
+
+				line.erase(0, token.size() + 2);
+			} while (pos != line.npos);
+
+			for (auto& it : tokens)
+			{
+				it.erase(std::remove(it.begin(), it.end(), '\n'), it.end());
+			}
+		}
+
+		for (const auto& it : tokens)
+		{
+			float _len = m_pLines->GetFont()->SizeOf_(it.c_str());
+			if (_len > width)
+				width = _len;
+		}
+
+		width += 6;
+	}
+	else
+	{
+		// Single line calc
+		width = m_pLines->GetFont()->SizeOf_(m_pLines->GetText());
+	}
+
+	UI()->ClientToScreenScaledWidth(width);
+	SetWidth(width);
 }
 
 void CUIStatic::RescaleRelative2Rect(const Frect& r)

@@ -49,6 +49,8 @@ class CUIXmlInit
 	static bool InitEditBox(CUIXml& xml_doc, const char* paht, int index, CUIEditBox* pWnd);
 	static bool InitEditBoxEx(CUIXml& xml_doc, const char* paht, int index, CUIEditBoxEx* pWnd);
 	static bool InitStatic(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd);
+	static bool InitCustomHint(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd);
+	static bool InitHint(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd);
 	static bool InitCheck(CUIXml& xml_doc, const char* path, int index, CUICheckButton* pWnd);
 	static bool InitSpin(CUIXml& xml_doc, const char* path, int index, CUICustomSpin* pWnd);
 	static bool InitText(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd);

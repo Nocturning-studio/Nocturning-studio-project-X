@@ -8,6 +8,7 @@ class CUIFrameWindow;
 class CLAItem;
 class CUIXml;
 class CUILines;
+class CUIHint;
 
 struct lanim_cont
 {
@@ -152,6 +153,8 @@ class CUIStatic : public CUIWindow, public CUISingleTextureOwner, public IUIText
 	virtual void SetTextAlignment(ETextAlignment alignment);
 	virtual ETextAlignment GetTextAlignment();
 
+	virtual void SetVisible(bool vis);
+
 	// text additional
 	void SetTextComplexMode(bool md);
 	void SetTextAlign_script(u32 align);
@@ -267,6 +270,9 @@ class CUIStatic : public CUIWindow, public CUISingleTextureOwner, public IUIText
 	void SetTextColor(u32 color, E4States state);
 
 	CUILines* m_pLines;
+
+	bool m_bChangeVis;
+	CUIHint* m_hint;
 
   protected:
 	bool m_bEnableTextHighlighting;

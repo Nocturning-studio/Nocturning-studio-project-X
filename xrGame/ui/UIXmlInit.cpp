@@ -22,9 +22,11 @@
 #include "UIMultiTextStatic.h"
 #include "UIAnimatedStatic.h"
 #include "uixmlinit.h"
-#include "UIListBox.h" //#include "UIScrollView.h"
+#include "UIListBox.h" 
+//#include "UIScrollView.h"
 #include "UIComboBox.h"
 #include "UITrackBar.h"
+#include "UIHint.h"
 #include "../game_base_space.h"
 
 #include "UITextureMaster.h"
@@ -148,10 +150,10 @@ bool CUIXmlInit::InitFrameWindow(CUIXml& xml_doc, LPCSTR path, int index, CUIFra
 	return true;
 }
 
-bool CUIXmlInit::InitOptionsItem(CUIXml& xml_doc, const char* paht, int index, CUIOptionsItem* pWnd)
+bool CUIXmlInit::InitOptionsItem(CUIXml& xml_doc, const char* path, int index, CUIOptionsItem* pWnd)
 {
 	string256 buf;
-	strconcat(sizeof(buf), buf, paht, ":options_item");
+	strconcat(sizeof(buf), buf, path, ":options_item");
 
 	if (xml_doc.NavigateToNode(buf, index))
 	{
@@ -173,6 +175,8 @@ bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path, int index, CUIStatic* 
 	InitMultiText(xml_doc, path, index, pWnd);
 	InitTexture(xml_doc, path, index, pWnd);
 	InitTextureOffset(xml_doc, path, index, pWnd);
+	InitHint(xml_doc, path, index, pWnd);
+	InitCustomHint(xml_doc, path, index, pWnd);
 
 	int flag = xml_doc.ReadAttribInt(path, index, "heading", 0);
 	pWnd->EnableHeading((flag) ? true : false);
@@ -304,6 +308,286 @@ bool CUIXmlInit::InitText(CUIXml& xml_doc, const char* path, int index, IUITextC
 ////////////////////////////////////////////////////////////////////////////////////////////
 extern int keyname_to_dik(LPCSTR);
 
+bool CUIXmlInit::InitCustomHint(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd)
+{
+	string256 hint;
+	strconcat(sizeof(hint), hint, path, ":hint");
+
+	string256 buff;
+
+	XML_NODE* hint_xml = xml_doc.NavigateToNode(hint, index);
+	if (hint_xml)
+	{
+		pWnd->m_hint = xr_new<CUIHint>();
+		pWnd->m_hint->m_hint = xr_new<CUIStatic>();
+
+		CUIHint*& hint_wnd = pWnd->m_hint;
+		CUIStatic*& hint_obj = hint_wnd->m_hint;
+
+		InitStatic(xml_doc, hint, index, hint_obj);
+		hint_obj->SetTextComplexMode(true);
+		pWnd->AttachChild(hint_wnd);
+
+		hint_wnd->AttachChild(hint_obj);
+		hint_obj->AdjustWidthToText();
+		hint_obj->AdjustHeightToText();
+
+		int visChange = xml_doc.ReadAttribInt(hint, index, "changeVisability", NULL);
+		if (visChange)
+		{
+			pWnd->m_bChangeVis = true;
+			hint_obj->SetVisible(false);
+		}
+
+		/*strconcat(sizeof(buff), buff, hint, ":frame_line");
+		if (xml_doc.NavigateToNode(buff, index))
+		{
+			CUIFrameLineWnd* m_border = xr_new<CUIFrameLineWnd>();
+			m_border->SetAutoDelete(true);
+			hint_wnd->AttachChild(m_border);
+			InitFrameLine(xml_doc, buff, 0, m_border);
+			float hh = _max(hint_wnd->GetWidth() + 30.0f, 80.0f);
+			m_border->SetWidth(hh);
+			m_border->SetHeight(hint_wnd->GetHeight());
+		}*/
+
+		strconcat(sizeof(buff), buff, hint, ":hint_texture");
+		if (xml_doc.NavigateToNode(buff, index))
+		{
+			CUIStatic* m_border = xr_new<CUIStatic>();
+			m_border->SetAutoDelete(true);
+
+			hint_obj->AttachChild(m_border);
+
+			shared_str texture = xml_doc.Read(buff, index, nullptr);
+			((IUISingleTextureOwner*)m_border)->InitTexture(*texture);
+
+			Frect rect{0};
+
+			rect.x1 = 0;
+			rect.y1 = 0;
+			rect.x2 = hint_obj->GetWidth();
+			rect.y2 = hint_obj->GetHeight();
+
+			if (rect.width() != 0 && rect.height() != 0)
+				m_border->SetOriginalRect(rect);
+
+			m_border->SetWidth(hint_obj->GetWidth());
+			m_border->SetHeight(hint_obj->GetHeight());
+
+			const char* textureColor = xml_doc.ReadAttrib(buff, index, "color", nullptr);
+			if (textureColor)
+			{
+				VERIFY(GetColorDefs()->find(textureColor) != GetColorDefs()->end());
+				m_border->SetTextureColor((*m_pColorDefs)[textureColor]);
+			}
+			else
+			{
+				int r = xml_doc.ReadAttribInt(buff, index, "r", 0xff);
+				int g = xml_doc.ReadAttribInt(buff, index, "g", 0xff);
+				int b = xml_doc.ReadAttribInt(buff, index, "b", 0xff);
+				int a = xml_doc.ReadAttribInt(buff, index, "a", 0xff);
+
+				u32 color = color_argb(a, r, g, b);
+				m_border->SetTextureColor(color);
+			}
+		}
+
+		hint_wnd->SetWidth(hint_obj->GetWidth());
+		hint_wnd->SetHeight(hint_obj->GetHeight());
+
+		hint_wnd->SetAutoDelete(true);
+		hint_obj->SetAutoDelete(true);
+	}
+
+	return true;
+}
+
+inline bool InitFontByText(const char* fontName, u32& color, CGameFont*& pFnt)
+{
+	color = 0xff;
+
+	shared_str font_name = fontName;
+	if (*font_name == NULL || xr_strlen(*font_name) < 1)
+	{
+		pFnt = NULL;
+		return false;
+	}
+
+	if (*font_name)
+	{
+		if (!xr_strcmp(*font_name, GRAFFITI19_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontGraffiti19Russian;
+		}
+		else if (!xr_strcmp(*font_name, GRAFFITI22_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontGraffiti22Russian;
+		}
+		else if (!xr_strcmp(*font_name, GRAFFITI32_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontGraffiti32Russian;
+		}
+		else if (!xr_strcmp(*font_name, GRAFFITI50_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontGraffiti50Russian;
+		}
+		else if (!xr_strcmp(*font_name, "arial_14"))
+		{
+			pFnt = UI()->Font()->pFontArial14;
+		}
+		else if (!xr_strcmp(*font_name, MEDIUM_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontMedium;
+		}
+		else if (!xr_strcmp(*font_name, SMALL_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontStat;
+		}
+		else if (!xr_strcmp(*font_name, LETTERICA16_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontLetterica16Russian;
+		}
+		else if (!xr_strcmp(*font_name, LETTERICA18_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontLetterica18Russian;
+		}
+		else if (!xr_strcmp(*font_name, LETTERICA25_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontLetterica25;
+		}
+		else if (!xr_strcmp(*font_name, DI_FONT_NAME))
+		{
+			pFnt = UI()->Font()->pFontDI;
+		}
+		else
+		{
+			R_ASSERT3(0, "unknown font", *font_name);
+			pFnt = NULL;
+		}
+	}
+	return true;
+}
+
+bool CUIXmlInit::InitHint(CUIXml& xml_doc, const char* path, int index, CUIStatic* pWnd)
+{
+	string256 hint;
+	strconcat(sizeof(hint), hint, path, ":base_hint");
+
+	XML_NODE* hint_xml = xml_doc.NavigateToNode(hint, index);
+	if (hint_xml)
+	{
+		pWnd->m_hint = xr_new<CUIHint>();
+		pWnd->m_hint->m_hint = xr_new<CUIStatic>();
+
+		CUIHint*& hint_wnd = pWnd->m_hint;
+		CUIStatic*& hint_obj = hint_wnd->m_hint;
+
+		InitStatic(xml_doc, hint, index, hint_obj); // x, y, width, height
+		pWnd->AttachChild(hint_wnd);
+		hint_wnd->AttachChild(hint_obj);
+
+		const char* fontColor = xml_doc.ReadAttrib(hint, index, "colorF", nullptr);
+		if (fontColor)
+		{
+			VERIFY(GetColorDefs()->find(fontColor) != GetColorDefs()->end());
+			hint_obj->SetTextColor((*m_pColorDefs)[fontColor], CUIStatic::H);
+		}
+		else
+		{
+			int r = xml_doc.ReadAttribInt(path, index, "rF", 0xff);
+			int g = xml_doc.ReadAttribInt(path, index, "gF", 0xff);
+			int b = xml_doc.ReadAttribInt(path, index, "bF", 0xff);
+			int a = xml_doc.ReadAttribInt(path, index, "aF", 0xff);
+
+			u32 color = color_argb(a, r, g, b);
+			hint_obj->SetTextColor(color, CUIStatic::H);
+		}
+
+		const char* fontName = xml_doc.ReadAttrib(hint, index, "font", nullptr);
+		if (fontName)
+		{
+			u32 color = 0;
+			CGameFont* pFnt = nullptr;
+			InitFontByText(fontName, color, pFnt);
+
+			if (pFnt)
+			{
+				hint_obj->SetFont(pFnt);
+			}
+		}
+
+		CStringTable st;
+		shared_str text = xml_doc.Read(hint, index, nullptr);
+		if (*text)
+			hint_obj->SetText(*st.translate(*text));
+		hint_obj->SetTextComplexMode(true);
+
+		hint_obj->AdjustWidthToText();
+		hint_obj->AdjustHeightToText();
+		hint_obj->ResetClrAnimation();
+
+		int visChange = xml_doc.ReadAttribInt(hint, index, "changeVisability", 0);
+		if (visChange)
+		{
+			pWnd->m_bChangeVis = true;
+			hint_obj->SetVisible(false);
+		}
+
+		CUIStatic* m_border = xr_new<CUIStatic>();
+		m_border->SetAutoDelete(true);
+
+		hint_obj->AttachChild(m_border);
+
+		const char* textureC = xml_doc.ReadAttrib(hint, index, "hint_texture", "non_texture");
+		{
+			shared_str texture = textureC;
+			((IUISingleTextureOwner*)m_border)->InitTexture(*texture);
+
+			Frect rect{0};
+
+			rect.x1 = 0;
+			rect.y1 = 0;
+			rect.x2 = hint_obj->GetWidth();
+			rect.y2 = hint_obj->GetHeight();
+
+			if (rect.width() != 0 && rect.height() != 0)
+				m_border->SetOriginalRect(rect);
+
+			m_border->SetWidth(hint_obj->GetWidth());
+			m_border->SetHeight(hint_obj->GetHeight());
+
+			const char* textureColor = xml_doc.ReadAttrib(hint, index, "colorT", nullptr);
+			if (textureColor)
+			{
+				VERIFY(GetColorDefs()->find(textureColor) != GetColorDefs()->end());
+				m_border->SetTextureColor((*m_pColorDefs)[textureColor]);
+			}
+			else
+			{
+				int r = xml_doc.ReadAttribInt(hint, index, "rT", 0xff);
+				int g = xml_doc.ReadAttribInt(hint, index, "gT", 0xff);
+				int b = xml_doc.ReadAttribInt(hint, index, "bT", 0xff);
+				int a = xml_doc.ReadAttribInt(hint, index, "aT", 0xff);
+
+				u32 color = color_argb(a, r, g, b);
+				m_border->SetTextureColor(color);
+			}
+		}
+
+		float hh = _max(hint_obj->GetWidth() + 30.0f, 80.0f);
+		m_border->SetWidth(hh);
+
+		hint_wnd->SetWidth(hint_obj->GetWidth());
+		hint_wnd->SetHeight(hint_obj->GetHeight());
+
+		hint_wnd->SetAutoDelete(true);
+		hint_obj->SetAutoDelete(true);
+	}
+
+	return true;
+}
+
 bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, const char* path, int index, CUI3tButton* pWnd)
 {
 	R_ASSERT3(xml_doc.NavigateToNode(path, index), "XML node not found", path);
@@ -338,8 +622,9 @@ bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, const char* path, int index, CUI3
 	string256 hint;
 	strconcat(sizeof(hint), hint, path, ":hint");
 
-	if (xml_doc.NavigateToNode(hint, index))
-		InitStatic(xml_doc, hint, index, &pWnd->m_hint);
+	XML_NODE* hint_xml = xml_doc.NavigateToNode(hint, index);
+	if (hint_xml)
+		InitCustomHint(xml_doc, path, index, pWnd);
 
 	int r = xml_doc.ReadAttribInt(path, index, "check_mode", -1);
 	if (r != -1)

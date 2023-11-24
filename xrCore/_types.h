@@ -54,6 +54,7 @@ typedef pcstr LPCSTR;
 #define dbl_zero type_zero(double)
 #define dbl_eps type_epsilon(double)
 
+typedef char* string;
 typedef char string16[16];
 typedef char string32[32];
 typedef char string64[64];

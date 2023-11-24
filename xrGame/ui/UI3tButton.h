@@ -62,7 +62,6 @@ class CUI3tButton : public CUIButton
 		m_bCheckMode = mode;
 	}
 
-	CUIStatic m_hint;
 	CUI_IB_Static m_background;
 
   protected:

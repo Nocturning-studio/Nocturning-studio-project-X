@@ -196,7 +196,7 @@ class CUISimpleWindow : public IUISimpleWindow
 	{
 		return m_wndSize.x;
 	}
-	IC void SetVisible(bool vis)
+	IC virtual void SetVisible(bool vis)
 	{
 		m_bShowMe = vis;
 	}

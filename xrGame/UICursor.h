@@ -37,4 +37,8 @@ class CUICursor : public pureRender
 	{
 		bVisible = false;
 	}
+	CUIStatic* GetStatic()
+	{
+		return m_static;
+	}
 };
