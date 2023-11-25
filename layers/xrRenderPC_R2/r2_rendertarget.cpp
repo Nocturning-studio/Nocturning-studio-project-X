@@ -248,11 +248,12 @@ CRenderTarget::CRenderTarget()
 		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
+		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 		}
@@ -260,7 +261,6 @@ CRenderTarget::CRenderTarget()
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Generic_1.create(r2_RT_generic1, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		}

@@ -57,9 +57,11 @@ class CRenderTarget : public IRender_Target
 	ref_rt rt_Specular_Accumulator;
 
 	ref_rt rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
-	ref_rt rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	//	Igor: for volumetric lights
 	ref_rt rt_Generic_2; // 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+
+	ref_rt rt_Distortion_Mask;
+
 	ref_rt rt_Bloom_1;	 // 32bit, dim/4	(r,g,b,?)
 	ref_rt rt_Bloom_2;	 // 32bit, dim/4	(r,g,b,?)
 	ref_rt rt_LUM_64;	 // 64bit, 64x64,	log-average in all components

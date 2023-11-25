@@ -24,7 +24,7 @@ void CRenderTarget::phase_combine()
 	}
 
 	// low/hi RTs
-	u_setrt(rt_Generic_0, rt_Generic_1, 0, HW.pBaseZB);
+	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
@@ -154,7 +154,7 @@ void CRenderTarget::phase_combine()
 			bDistort = FALSE;
 		if (bDistort)
 		{
-			u_setrt(rt_Generic_1, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
+			u_setrt(rt_Distortion_Mask, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
 			RCache.set_CullMode(CULL_CCW);
 			RCache.set_Stencil(FALSE);
 			RCache.set_ColorWriteEnable();
