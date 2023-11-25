@@ -677,12 +677,12 @@ void CUIStatic::OnFocusReceive()
 
 void CUIStatic::OnFocusLost()
 {
-
 	inherited::OnFocusLost();
 	if (GetMessageTarget())
 		GetMessageTarget()->SendMessage(this, STATIC_FOCUS_LOST, NULL);
 }
 
+#pragma todo("Deathman to all: Ќеобходимо переписать этот метод, дл€ того чтобы хинты работали адекватно на всех разрешени€х")
 void CUIStatic::AdjustHeightToText()
 {
 	m_pLines->SetWidth(GetWidth());
