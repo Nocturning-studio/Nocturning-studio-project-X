@@ -173,12 +173,12 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case SE_R2_NORMAL_HQ: // deffer
-		extern u32 ps_r2_terrain_bump_mode;
-		if ((ps_r2_terrain_bump_mode == 1) || (r2_sun_static))
+		extern u32 ps_r2_bump_mode;
+		if ((ps_r2_bump_mode == 1) || (r2_sun_static))
 			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain", TRUE);
-		else if ((ps_r2_terrain_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
+		else if ((ps_r2_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
 			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax", TRUE);
-		if ((ps_r2_terrain_bump_mode == 3) && (r2_advanced_pp))
+		if ((ps_r2_bump_mode == 3) && (r2_advanced_pp))
 			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_parallax", TRUE);
 
 		C.r_Sampler("s_mask", mask);
