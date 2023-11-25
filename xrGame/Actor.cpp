@@ -1134,7 +1134,7 @@ void CActor::shedule_Update(u32 DT)
 		}
 
 		float bs = conditions().BleedingSpeed();
-		if (bs > 0.6f)
+		if (bs > 0.2f)
 		{
 			Fvector snd_pos;
 			snd_pos.set(0, ACTOR_HEIGHT, 0);
@@ -1143,7 +1143,7 @@ void CActor::shedule_Update(u32 DT)
 			else
 				m_BloodSnd.set_position(snd_pos);
 
-			float v = bs + 0.25f;
+			float v = bs + 0.5f;
 
 			m_BloodSnd.set_volume(v);
 		}

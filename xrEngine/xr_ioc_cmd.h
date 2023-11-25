@@ -17,7 +17,8 @@ enum
 extern ENGINE_API Flags32 ps_effectors_ls_flags;
 enum
 {
-	VIEW_BOBBING_ENABLED = (1ul << 1ul)
+	VIEW_BOBBING_ENABLED = (1ul << 1ul),
+	DYNAMIC_FOV_ENABLED = (1ul << 2ul)
 };
 
 extern ENGINE_API Flags32 ps_game_ls_flags;

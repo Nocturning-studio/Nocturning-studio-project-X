@@ -14,6 +14,7 @@
 
 #include "actor.h"
 #include "actor_defs.h"
+#include "../xrEngine/xr_ioc_cmd.h"
 
 #define BOBBING_SECT "bobbing_effector"
 
@@ -92,18 +93,19 @@ BOOL CEffectorBobbing::Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, 
 		M.i.crossproduct(n, d);
 		M.c.set(p);
 
-		if (dwMState & ACTOR_DEFS::mcSprint)
-			fFov *= SPRINT_FOV_MODIFIER_FACTOR;
-		if (dwMState & ACTOR_DEFS::mcFwd)
-			fFov *= WALK_FOV_MODIFIER_FACTOR;
-		if (dwMState & ACTOR_DEFS::mcBack)
-			fFov *= BACKWARD_WALK_FOV_MODIFIER_FACTOR;
-		if (dwMState & ACTOR_DEFS::mcCrouch)
-			fFov *= CROUCH_WALK_FOV_MODIFIER_FACTOR;
+		if (ps_effectors_ls_flags.test(DYNAMIC_FOV_ENABLED))
+		{
+			if (dwMState & ACTOR_DEFS::mcSprint)
+				fFov *= SPRINT_FOV_MODIFIER_FACTOR;
+			if (dwMState & ACTOR_DEFS::mcFwd)
+				fFov *= WALK_FOV_MODIFIER_FACTOR;
+			if (dwMState & ACTOR_DEFS::mcBack)
+				fFov *= BACKWARD_WALK_FOV_MODIFIER_FACTOR;
+			if (dwMState & ACTOR_DEFS::mcCrouch)
+				fFov *= CROUCH_WALK_FOV_MODIFIER_FACTOR;
+		}
 
 		// apply footstep bobbing effect
-		Fvector dangle;
-
 		float k = GLOBAL_VIEW_BOBBING_FACTOR;
 
 		if (dwMState & ACTOR_DEFS::mcCrouch)
@@ -147,6 +149,7 @@ BOOL CEffectorBobbing::Process(Fvector& p, Fvector& d, Fvector& n, float& fFov, 
 		float _sinA = _abs(_sin(ST * Intencity) * A) * fReminderFactor;
 		float _cosA = _cos(ST * Intencity) * A * fReminderFactor;
 
+		Fvector dangle;
 		dangle.x = _cosA;
 		dangle.y = _sinA;
 		dangle.z = _cosA;
