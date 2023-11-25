@@ -47,12 +47,15 @@ class CRenderTarget : public IRender_Target
 	xr_vector<Fplane> dbg_planes;
 #endif
 
-	// GBuffer
+	// Geometry Buffer
 	ref_rt rt_GBuffer_Position;
 	ref_rt rt_GBuffer_Normal;
 	ref_rt rt_GBuffer_Albedo;
 
-	ref_rt rt_Accumulator;		// 64bit		(r,g,b,specular)
+	// Accumulation Buffer
+	ref_rt rt_Diffuse_Accumulator;
+	ref_rt rt_Specular_Accumulator;
+
 	ref_rt rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	//	Igor: for volumetric lights
@@ -142,7 +145,6 @@ class CRenderTarget : public IRender_Target
 
 	ref_shader s_combine_dbg_0;
 	ref_shader s_combine_dbg_1;
-	ref_shader s_combine_dbg_Accumulator;
 	ref_shader s_combine;
 	ref_shader s_combine_volumetric;
 	ref_shader s_antialiasing;
@@ -254,6 +256,8 @@ class CRenderTarget : public IRender_Target
 	void antialiasing_phase_fxaa();
 	void antialiasing_phase_dlaa();
 	void antialiasing_phase_dlaa_with_edge_detecting();
+	void select_antialiasing_type();
+	int select_antialiasing_iterations_count();
 	void phase_antialiasing();
 
 	void phase_distortion();

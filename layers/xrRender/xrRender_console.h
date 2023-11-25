@@ -5,7 +5,9 @@
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
-extern ENGINE_API int ps_r_Supersample;
+extern ECORE_API u32 ps_r_aa;
+extern ECORE_API u32 ps_r_aa_iterations;
+
 extern ECORE_API int ps_r_LightSleepFrames;
 
 extern ECORE_API float ps_r_Detail_l_ambient;
@@ -96,7 +98,6 @@ extern ECORE_API float ps_r2_ls_dsm_kernel;
 extern ECORE_API float ps_r2_ls_psm_kernel;
 extern ECORE_API float ps_r2_ls_ssm_kernel;
 
-extern ECORE_API u32 ps_r2_aa;
 extern ECORE_API u32 ps_r2_aa_quality;
 extern ECORE_API Fvector ps_r2_aa_barier;
 extern ECORE_API Fvector ps_r2_aa_weight;

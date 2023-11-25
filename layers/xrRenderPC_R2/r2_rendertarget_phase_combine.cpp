@@ -257,7 +257,7 @@ void CRenderTarget::phase_combine()
 	//	PP-if required
 	if (PP_Complex)
 	{
-		if (RImplementation.o.advancedpp && ps_r2_aa)
+		if (RImplementation.o.advancedpp && ps_r_aa)
 			phase_antialiasing();
 
 		if (ps_render_flags.test(RFLAG_LENS_FLARES))

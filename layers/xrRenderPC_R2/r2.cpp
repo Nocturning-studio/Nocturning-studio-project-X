@@ -1073,16 +1073,16 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len] = '0' + (char)ps_r2_ao_quality;
 		++len;
 
-		if (ps_r2_aa)
+		if (ps_r_aa)
 		{
-			sprintf(c_aa, "%d", ps_r2_aa);
+			sprintf(c_aa, "%d", ps_r_aa);
 			defines[def_it].Name = "AA_TYPE";
 			defines[def_it].Definition = c_aa;
 			def_it++;
 			strcat(sh_name, c_aa);
 			len += 3;
 		}
-		sh_name[len] = '0' + (char)ps_r2_aa;
+		sh_name[len] = '0' + (char)ps_r_aa;
 		++len;
 
 		if (ps_r2_aa_quality)

@@ -21,9 +21,27 @@ xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, 
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32 ps_r2_aa = 1;
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_dlaa", 1},	  {"st_opt_dlaa_force_edge_detect", 2},
-					   {"st_opt_fxaa", 3},	   {"st_opt_fxaa_2x", 4}, {0, 0}};
+u32 ps_r_aa = 1;
+xr_token aa_token[] = {
+	{"st_opt_disabled", 0}, 
+#if RENDER == R_R1
+	{"st_opt_ssaa", 1},	
+#else
+	{"st_opt_dlaa", 1},	  
+	{"st_opt_dlaa_force_edge_detect", 2},
+	{"st_opt_fxaa", 3}, 
+#endif
+	{0, 0}
+};
+
+u32 ps_r_aa_iterations = 2;
+xr_token aa_iterations_token[] = {
+	{"st_opt_x1", 1}, 
+	{"st_opt_x2", 2}, 
+	{"st_opt_x4", 3}, 
+	//{"st_opt_x8", 4}, 
+	{0, 0}
+};
 
 u32 ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
@@ -94,7 +112,6 @@ xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"whit
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
-int ps_r_Supersample = 1;
 int ps_r_LightSleepFrames = 10;
 
 float ps_r_Detail_l_ambient = 0.9f;
@@ -602,7 +619,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r_wallmark_ttl", &ps_r_WallmarkTTL, 1.0f, 5.f * 60.f);
 	CMD1(CCC_ModelPoolStat, "stat_models");
 
-	CMD4(CCC_Integer, "r_supersample", &ps_r_Supersample, 1, 16);
+	CMD3(CCC_Token, "r_aa_type", &ps_r_aa, aa_token);
+	CMD3(CCC_Token, "r_aa_iterations", &ps_r_aa_iterations, aa_iterations_token);
 
 	CMD4(CCC_Float, "r_geometry_lod", &ps_r_LOD, 0.1f, 1.2f);
 
@@ -647,7 +665,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
 
-	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
 	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
 	tw_min.set(0, 0, 0);

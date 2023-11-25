@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "fstaticrender_rendertarget.h"
 #include "../xrEngine/IGame_Persistent.h"
+#include "../xrRender/xrRender_console.h"
 
 static LPCSTR RTname = "$user$rendertarget";
 static LPCSTR RTname_distort = "$user$distort";
@@ -37,16 +38,35 @@ BOOL CRenderTarget::Create()
 	curWidth = Device.dwWidth;
 	curHeight = Device.dwHeight;
 
-	// Select mode to operate in
-	float amount = ps_r_Supersample ? float(ps_r_Supersample) : 1;
-	float scale = _sqrt(amount);
-	rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 16384);
-	rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 16384);
-	while (rtWidth % 2)
-		rtWidth--;
-	while (rtHeight % 2)
-		rtHeight--;
-	Msg("* SSample: %dx%d", rtWidth, rtHeight);
+	if (ps_r_aa == 1 && ps_r_aa_iterations >= 2)
+	{
+		float amount = 1.0f;
+		switch (ps_r_aa_iterations)
+		{
+		case 2:
+			amount = 2.0f;
+			break;
+		case 3:
+			amount = 4.0f;
+			break;
+		case 4:
+			amount = 8.0f;
+			break;
+		}
+		float scale = _sqrt(amount);
+		rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 16384);
+		rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 16384);
+		while (rtWidth % 2)
+			rtWidth--;
+		while (rtHeight % 2)
+			rtHeight--;
+		Msg("* SSample: %dx%d", rtWidth, rtHeight);
+	}
+	else
+	{
+		rtWidth = Device.dwWidth;
+		rtHeight = Device.dwHeight;
+	}
 
 	// Bufferts
 	RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
@@ -179,7 +199,7 @@ BOOL CRenderTarget::NeedPostProcess()
 
 BOOL CRenderTarget::Perform()
 {
-	return Available() && (NeedPostProcess() || (ps_r_Supersample > 1) || (frame_distort == (Device.dwFrame - 1)));
+	return Available() && (NeedPostProcess() || (ps_r_aa == 1 && ps_r_aa_iterations >= 2) || (frame_distort == (Device.dwFrame - 1)));
 }
 
 #include <dinput.h>
