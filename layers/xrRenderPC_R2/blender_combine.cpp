@@ -23,7 +23,8 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler_rtf("s_autoexposure", r2_RT_luminance_cur);
 		C.r_Sampler_rtf("s_material", r2_material);
 		C.r_Sampler_clw("s_ao", r2_RT_ao);
@@ -35,7 +36,6 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf("sky_s0", r2_T_sky0);
 		C.r_Sampler_clf("sky_s1", r2_T_sky1);
 		C.r_Sampler_rtf("s_vollight", r2_RT_generic2);
-		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 
 		C.r_Sampler_tex("s_debug_mask", "ed\\debug_mask");
 		C.r_Sampler_tex("s_debug_diagonal_mask", "ed\\debug_diagonal_mask");

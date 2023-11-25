@@ -19,6 +19,7 @@ void CBlender_accum_reflected::Compile(CBlender_Compile& C)
 	C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 	C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 	C.r_Sampler_clw("s_material", r2_material);
-	C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+	C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+	C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 	C.r_End();
 }

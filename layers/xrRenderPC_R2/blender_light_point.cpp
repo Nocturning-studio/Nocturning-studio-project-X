@@ -23,48 +23,56 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_UNSHADOWED: // unshadowed
-		C.r_Pass("accum_volume", "accum_omni_unshadowed", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_unshadowed", false, FALSE, FALSE,
+				 TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_clf("s_lmap", *C.L_textures[0]);
-		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_End();
 		break;
 	case SE_L_NORMAL: // normal
-		C.r_Pass("accum_volume", "accum_omni_normal", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_normal", false, FALSE, FALSE, TRUE,
+				 D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0]);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		jitter(C);
 		C.r_End();
 		break;
 	case SE_L_FULLSIZE: // normal-fullsize
-		C.r_Pass("accum_volume", "accum_omni_normal", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_normal", false, FALSE, FALSE, TRUE,
+				 D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0]);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		jitter(C);
 		C.r_End();
 		break;
 	case SE_L_TRANSLUENT: // shadowed + transluency
-		C.r_Pass("accum_volume", "accum_omni_transluent", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_transluent", false, FALSE, FALSE,
+				 TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_clf("s_lmap", r2_RT_smap_surf); // diff here
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_accumulator", r2_RT_accum);
+		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
+		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		jitter(C);
 		C.r_End();
 		break;

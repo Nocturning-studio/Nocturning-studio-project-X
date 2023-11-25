@@ -11,7 +11,6 @@
 #include "blender_vignette.h"
 #include "blender_chromatic_abberation.h"
 #include "blender_frame_overlay.h"
-#include "blender_light_direct.h"
 #include "blender_light_direct_cascade.h"
 #include "blender_light_mask.h"
 #include "blender_light_occq.h"
@@ -245,7 +244,9 @@ CRenderTarget::CRenderTarget()
 	{
 		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-		rt_Accumulator.create(r2_RT_accum, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+
+		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 		{
@@ -378,7 +379,6 @@ CRenderTarget::CRenderTarget()
 		s_combine_volumetric.create("combine_volumetric");
 		s_combine_dbg_0.create("effects\\screen_set", r2_RT_smap_surf);
 		s_combine_dbg_1.create("effects\\screen_set", r2_RT_luminance_t8);
-		s_combine_dbg_Accumulator.create("effects\\screen_set", r2_RT_accum);
 		g_combine_VP.create(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_2UV.create(FVF::F_TL2uv, RCache.Vertex.Buffer(), RCache.QuadIB);

@@ -1,46 +1,52 @@
 #pragma once
 
+// Geometry Buffer
 #define r2_RT_GBuffer_Position "$user$gbuffer_position"
 #define r2_RT_GBuffer_Normal "$user$gbuffer_normal"
 #define r2_RT_GBuffer_Albedo "$user$gbuffer_albedo"
 
-// other
-#define r2_RT_accum "$user$accum"			// ---	16 bit fp or 16 bit fx
+// Light Accumulating
+#define r2_RT_Diffuse_Accumulator "$user$accumulator_diffuse"
+#define r2_RT_Specular_Accumulator "$user$accumulator_specular"
 
-#define r2_T_envs0 "$user$env_s0" // ---
-#define r2_T_envs1 "$user$env_s1" // ---
-
+// Environment
+#define r2_T_envs0 "$user$env_s0"
+#define r2_T_envs1 "$user$env_s1"
 #define r2_T_sky0 "$user$sky0"
 #define r2_T_sky1 "$user$sky1"
 
-#define r2_RT_generic0 "$user$generic0" // ---
-#define r2_RT_generic1 "$user$generic1" // ---
-#define r2_RT_generic2 "$user$generic2" // ---	//	Igor: for volumetric lights
+// Output textures
+#define r2_RT_generic0 "$user$generic0"
+#define r2_RT_generic1 "$user$generic1"
+#define r2_RT_generic2 "$user$generic2"	//	Igor: for volumetric lights
 
-#define r2_RT_mblur_saved_frame "$user$mblur_saved_frame" // ---
+// Motion blur previous frame
+#define r2_RT_mblur_saved_frame "$user$mblur_saved_frame"
 
-#define r2_RT_bloom1 "$user$bloom1" // ---
-#define r2_RT_bloom2 "$user$bloom2" // ---
+#define r2_RT_bloom1 "$user$bloom1"
+#define r2_RT_bloom2 "$user$bloom2"
 
-#define r2_RT_ao_base "$user$ao_base"		  // ---
-#define r2_RT_ao_blurred1 "$user$ao_blurred1" // ---
-#define r2_RT_ao_blurred2 "$user$ao_blurred2" // ---
-#define r2_RT_ao "$user$ao"					  // ---
+// Ambient occlusion
+#define r2_RT_ao_base "$user$ao_base" // Main effect
+#define r2_RT_ao_blurred1 "$user$ao_blurred1" // Blurring pipeline
+#define r2_RT_ao_blurred2 "$user$ao_blurred2" // Blurring pipeline
+#define r2_RT_ao "$user$ao" // Output blurred effect
 
-#define r2_RT_luminance_t64 "$user$lum_t64" // --- temp
-#define r2_RT_luminance_t8 "$user$lum_t8"	// --- temp
-
+// Autoexposure
+#define r2_RT_luminance_t64 "$user$lum_t64"
+#define r2_RT_luminance_t8 "$user$lum_t8"
 #define r2_RT_luminance_src "$user$autoexposure_src" // --- prev-frame-result
 #define r2_RT_luminance_cur "$user$autoexposure"	 // --- result
 #define r2_RT_luminance_pool "$user$luminance"		 // --- pool
 
+// Shadow map
 #define r2_RT_smap_surf "$user$smap_surf"	// --- directional
 #define r2_RT_smap_depth "$user$smap_depth" // ---directional
 
 #define r2_material "$user$material" // ---
-#define r2_ds2_fade "$user$ds2_fade" // ---
 
-#define r2_jitter "$user$jitter_" // --- dither
+#define r2_jitter "$user$jitter_"
+
 #define r2_sunmask "sunmask"
 
 #define JITTER(a) r2_jitter #a
@@ -83,11 +89,13 @@ const u32 LUMINANCE_size = 16;
 #define SE_SUN_FAR 2
 
 extern float ps_r2_gloss_factor;
+
 IC float u_diffuse2s(float x, float y, float z)
 {
 	float v = (x + y + z) / 3.f;
 	return ps_r2_gloss_factor * ((v < 1) ? powf(v, 2.f / 3.f) : v);
 }
+
 IC float u_diffuse2s(Fvector3& c)
 {
 	return u_diffuse2s(c.x, c.y, c.z);

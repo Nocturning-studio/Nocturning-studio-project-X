@@ -1071,7 +1071,6 @@
     <ClInclude Include="blender_deffer_model.h" />
     <ClInclude Include="Blender_depth_of_field.h" />
     <ClInclude Include="Blender_frame_overlay.h" />
-    <ClInclude Include="blender_light_direct.h" />
     <ClInclude Include="blender_light_direct_cascade.h" />
     <ClInclude Include="blender_light_mask.h" />
     <ClInclude Include="blender_light_occq.h" />
@@ -1207,7 +1206,6 @@
     <ClCompile Include="blender_deffer_model.cpp" />
     <ClCompile Include="Blender_depth_of_field.cpp" />
     <ClCompile Include="Blender_frame_overlay.cpp" />
-    <ClCompile Include="blender_light_direct.cpp" />
     <ClCompile Include="blender_light_direct_cascade.cpp" />
     <ClCompile Include="blender_light_mask.cpp" />
     <ClCompile Include="blender_light_occq.cpp" />

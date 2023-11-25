@@ -288,9 +288,6 @@
     <ClInclude Include="Blender_frame_overlay.h">
       <Filter>Blenders\Overlays stage</Filter>
     </ClInclude>
-    <ClInclude Include="blender_light_direct.h">
-      <Filter>Blenders\Light accumulating stage</Filter>
-    </ClInclude>
     <ClInclude Include="blender_light_direct_cascade.h">
       <Filter>Blenders\Light accumulating stage</Filter>
     </ClInclude>
@@ -571,9 +568,6 @@
     </ClCompile>
     <ClCompile Include="Blender_frame_overlay.cpp">
       <Filter>Blenders\Overlays stage</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_light_direct.cpp">
-      <Filter>Blenders\Light accumulating stage</Filter>
     </ClCompile>
     <ClCompile Include="blender_light_direct_cascade.cpp">
       <Filter>Blenders\Light accumulating stage</Filter>
