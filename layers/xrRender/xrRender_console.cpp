@@ -171,12 +171,12 @@ float ps_r2_autoexposure_adaptation = 1.f;
 float ps_r2_autoexposure_low_lum = 0.0001f;
 float ps_r2_autoexposure_amount = 0.5f;
 
-float ps_r2_bloom_kernel_g = 3.0f;
-float ps_r2_bloom_kernel_b = 0.7f;
-float ps_r2_bloom_speed = 100.f;
-float ps_r2_bloom_kernel_scale = 0.8f; // gauss
-float ps_r2_bloom_threshold = 0.2f;
-float ps_r2_bloom_factor = 0.5f;
+float ps_r2_bloom_kernel_g = 5.0f;
+float ps_r2_bloom_kernel_b = 1.0f;
+float ps_r2_bloom_speed = 1.f;
+float ps_r2_bloom_kernel_scale = 2.0f; // gauss
+float ps_r2_bloom_threshold = 0.8f;
+float ps_r2_bloom_factor = 0.4f;
 
 float ps_r2_ls_dsm_kernel = 0.7f;
 float ps_r2_ls_psm_kernel = 0.7f;

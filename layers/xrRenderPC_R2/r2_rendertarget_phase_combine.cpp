@@ -152,124 +152,82 @@ void CRenderTarget::phase_combine()
 	{
 		if ((0 == RImplementation.mapDistort.size()) && !_menu_pp)
 			bDistort = FALSE;
+
 		if (bDistort)
 		{
-			u_setrt(rt_Distortion_Mask, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
-			RCache.set_CullMode(CULL_CCW);
-			RCache.set_Stencil(FALSE);
-			RCache.set_ColorWriteEnable();
-			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
-			RImplementation.r_dsgraph_render_distort();
+			phase_create_distortion_mask();
 			if (g_pGamePersistent)
-				g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
+				g_pGamePersistent->OnRenderPPUI_PP();
+			phase_distortion();
 		}
 	}
 
 	// PP enabled ?
-	BOOL PP_Complex = TRUE; // u_need_PP();
+	BOOL PP_Complex = TRUE;
+
 	if (_menu_pp)
 		PP_Complex = FALSE;
 
-	// Combine everything + perform AA
 	if (PP_Complex)
-		u_setrt(rt_GBuffer_Albedo, 0, 0, HW.pBaseZB); // LDR RT
-	else
-		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-
-	RCache.set_CullMode(CULL_NONE);
-	RCache.set_Stencil(FALSE);
-
-	if (1)
 	{
-		struct v_aa
+		// Copy generic0 to albedo
 		{
-			Fvector4 p;
-			Fvector2 uv0;
-			Fvector2 uv1;
-			Fvector2 uv2;
-			Fvector2 uv3;
-			Fvector2 uv4;
-			Fvector4 uv5;
-			Fvector4 uv6;
-		};
+			u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
-		float _w = float(Device.dwWidth);
-		float _h = float(Device.dwHeight);
-		float ddw = 1.f / _w;
-		float ddh = 1.f / _h;
-		p0.set(.5f / _w, .5f / _h);
-		p1.set((_w + .5f) / _w, (_h + .5f) / _h);
+			RCache.set_CullMode(CULL_NONE);
+			RCache.set_Stencil(FALSE);
 
-		// Fill vertex buffer
-		v_aa* pv = (v_aa*)RCache.Vertex.Lock(4, g_aa_AA->vb_stride, Offset);
-		pv->p.set(EPS, float(_h + EPS), EPS, 1.f);
-		pv->uv0.set(p0.x, p1.y);
-		pv->uv1.set(p0.x - ddw, p1.y - ddh);
-		pv->uv2.set(p0.x + ddw, p1.y + ddh);
-		pv->uv3.set(p0.x + ddw, p1.y - ddh);
-		pv->uv4.set(p0.x - ddw, p1.y + ddh);
-		pv->uv5.set(p0.x - ddw, p1.y, p1.y, p0.x + ddw);
-		pv->uv6.set(p0.x, p1.y - ddh, p1.y + ddh, p0.x);
-		pv++;
-		pv->p.set(EPS, EPS, EPS, 1.f);
-		pv->uv0.set(p0.x, p0.y);
-		pv->uv1.set(p0.x - ddw, p0.y - ddh);
-		pv->uv2.set(p0.x + ddw, p0.y + ddh);
-		pv->uv3.set(p0.x + ddw, p0.y - ddh);
-		pv->uv4.set(p0.x - ddw, p0.y + ddh);
-		pv->uv5.set(p0.x - ddw, p0.y, p0.y, p0.x + ddw);
-		pv->uv6.set(p0.x, p0.y - ddh, p0.y + ddh, p0.x);
-		pv++;
-		pv->p.set(float(_w + EPS), float(_h + EPS), EPS, 1.f);
-		pv->uv0.set(p1.x, p1.y);
-		pv->uv1.set(p1.x - ddw, p1.y - ddh);
-		pv->uv2.set(p1.x + ddw, p1.y + ddh);
-		pv->uv3.set(p1.x + ddw, p1.y - ddh);
-		pv->uv4.set(p1.x - ddw, p1.y + ddh);
-		pv->uv5.set(p1.x - ddw, p1.y, p1.y, p1.x + ddw);
-		pv->uv6.set(p1.x, p1.y - ddh, p1.y + ddh, p1.x);
-		pv++;
-		pv->p.set(float(_w + EPS), EPS, EPS, 1.f);
-		pv->uv0.set(p1.x, p0.y);
-		pv->uv1.set(p1.x - ddw, p0.y - ddh);
-		pv->uv2.set(p1.x + ddw, p0.y + ddh);
-		pv->uv3.set(p1.x + ddw, p0.y - ddh);
-		pv->uv4.set(p1.x - ddw, p0.y + ddh);
-		pv->uv5.set(p1.x - ddw, p0.y, p0.y, p1.x + ddw);
-		pv->uv6.set(p1.x, p0.y - ddh, p0.y + ddh, p1.x);
-		pv++;
-		RCache.Vertex.Unlock(4, g_aa_AA->vb_stride);
+			// Constants
+			u32 Offset = 0;
+			u32 C = color_rgba(0, 0, 0, 255);
 
-		// Draw COLOR
-		RCache.set_Element(s_combine->E[bDistort ? 2 : 1]); // look at blender_combine.cpp
+			float w = float(Device.dwWidth);
+			float h = float(Device.dwHeight);
 
-		RCache.set_c("m_current", m_current);
-		RCache.set_c("m_previous", m_previous);
-		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
+			float d_Z = EPS_S;
+			float d_W = 1.f;
 
-		RCache.set_Geometry(g_aa_AA);
+			Fvector2 p0, p1;
+			p0.set(0.5f / w, 0.5f / h);
+			p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-	}
+			// Fill vertex buffer
+			FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+			pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+			pv++;
+			pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+			pv++;
+			pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+			pv++;
+			pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+			pv++;
+			RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	RCache.set_Stencil(FALSE);
+			// Set pass
+			RCache.set_Element(s_combine->E[1]);
 
-	//	PP-if required
-	if (PP_Complex)
-	{
-		if (RImplementation.o.advancedpp && ps_r_aa)
-			phase_antialiasing();
+			// Set geometry
+			RCache.set_Geometry(g_combine);
+
+			// Draw
+			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+
+			RCache.set_Stencil(FALSE);
+		}
 
 		if (ps_render_flags.test(RFLAG_LENS_FLARES))
 			g_pGamePersistent->Environment().RenderFlares();
 
-		phase_combine_bloom();
+		if (RImplementation.o.advancedpp && ps_r_aa)
+			phase_antialiasing();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
-			phase_depth_of_field();
+		phase_combine_bloom();
 
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 			phase_chromatic_abberation();
+
+		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
+			phase_depth_of_field();
 
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
 			phase_motion_blur();
@@ -286,6 +244,50 @@ void CRenderTarget::phase_combine()
 		draw_overlays();
 
 		phase_pp();
+	}
+	else
+	{
+		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
+
+		RCache.set_CullMode(CULL_NONE);
+		RCache.set_Stencil(FALSE);
+
+		// Constants
+		u32 Offset = 0;
+		u32 C = color_rgba(0, 0, 0, 255);
+
+		float w = float(Device.dwWidth);
+		float h = float(Device.dwHeight);
+
+		float d_Z = EPS_S;
+		float d_W = 1.f;
+
+		Fvector2 p0, p1;
+		p0.set(0.5f / w, 0.5f / h);
+		p1.set((w + 0.5f) / w, (h + 0.5f) / h);
+
+		// Fill vertex buffer
+		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+		pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+		pv++;
+		pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+		pv++;
+		pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+		pv++;
+		pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+		pv++;
+		RCache.Vertex.Unlock(4, g_combine->vb_stride);
+
+		// Set pass
+		RCache.set_Element(s_combine->E[2]);
+
+		// Set geometry
+		RCache.set_Geometry(g_combine);
+
+		// Draw
+		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+
+		RCache.set_Stencil(FALSE);
 	}
 
 	//	Re-adapt luminance

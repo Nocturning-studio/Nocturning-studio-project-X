@@ -136,6 +136,9 @@
     <Filter Include="Blenders\Forward rendering">
       <UniqueIdentifier>{ed178e34-be90-41d6-bc02-c215b6ccf8df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blenders\Postprocess stage\Distortion">
+      <UniqueIdentifier>{fca0c934-d1a8-4b80-85dc-2db7f68db37e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -353,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="..\xrRender\PSLibrary.h">
       <Filter>Core\Particle library</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_distortion.h">
+      <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -709,6 +715,12 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_combine_volumetric_lights.cpp">
       <Filter>Rendertargets\Render stages\Scene combine stage</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_distortion.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_distortion.cpp">
+      <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

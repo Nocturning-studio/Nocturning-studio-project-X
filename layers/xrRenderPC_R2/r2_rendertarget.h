@@ -24,6 +24,7 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_accum_spot;
 	IBlender* b_accum_reflected;
 	IBlender* b_bloom;
+	IBlender* b_distortion;
 	IBlender* b_ambient_occlusion;
 	IBlender* b_luminance;
 	IBlender* b_combine;
@@ -151,6 +152,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_combine_volumetric;
 	ref_shader s_antialiasing;
 	ref_shader s_dof;
+	ref_shader s_distortion;
 	ref_shader s_motion_blur;
 	ref_shader s_chromatic_abberation;
 	ref_shader s_sepia;
@@ -262,6 +264,7 @@ class CRenderTarget : public IRender_Target
 	int select_antialiasing_iterations_count();
 	void phase_antialiasing();
 
+	void phase_create_distortion_mask();
 	void phase_distortion();
 
 	void depth_of_field_pass_first();

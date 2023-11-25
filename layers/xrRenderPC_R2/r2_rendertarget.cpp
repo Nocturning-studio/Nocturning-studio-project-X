@@ -4,6 +4,7 @@
 #include "blender_bloom_build.h"
 #include "blender_antialiasing.h"
 #include "blender_combine.h"
+#include "blender_distortion.h"
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
 #include "blender_sepia.h"
@@ -233,6 +234,7 @@ CRenderTarget::CRenderTarget()
 	b_combine = xr_new<CBlender_combine>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_dof = xr_new<CBlender_depth_of_field>();
+	b_distortion = xr_new<CBlender_distortion>();
 	b_motion_blur = xr_new<CBlender_motion_blur>();
 	b_sepia = xr_new<CBlender_sepia>();
 	b_chromatic_abberation = xr_new<CBlender_chromatic_abberation>();
@@ -509,6 +511,8 @@ CRenderTarget::CRenderTarget()
 
 	s_dof.create(b_dof, "r2\\dof");
 
+	s_distortion.create(b_distortion, "r2\\distortion");
+
 	s_motion_blur.create(b_motion_blur, "r2\\motion_blur");
 
 	s_chromatic_abberation.create(b_chromatic_abberation, "r2\\chromatic_abberation");
@@ -574,6 +578,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_frame_overlay);
 	xr_delete(b_motion_blur);
 	xr_delete(b_dof);
+	xr_delete(b_distortion);
 	xr_delete(b_antialiasing);
 	xr_delete(b_combine);
 	xr_delete(b_luminance);

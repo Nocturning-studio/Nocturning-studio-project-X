@@ -46,21 +46,13 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case 1:
-		C.r_Pass("null", "combine_2", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
+		C.r_Pass("null", "scene_combine_stage_pass_copy_rendertarget", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_generic0);
-		C.r_Sampler_clf("s_bloom", r2_RT_bloom1);
-		C.r_Sampler_clf("s_distort", r2_RT_distortion_mask);
 		C.r_End();
 		break;
 	case 2:
-		C.r_Pass("null", "combine_2_distorted", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
+		C.r_Pass("null", "scene_combine_stage_pass_early_output_to_screen", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_generic0);
-		C.r_Sampler_clf("s_bloom", r2_RT_bloom1);
-		C.r_Sampler_clf("s_distort", r2_RT_distortion_mask);
 		C.r_End();
 		break;
 	}
