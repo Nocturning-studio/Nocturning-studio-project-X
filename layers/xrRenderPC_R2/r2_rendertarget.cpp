@@ -18,7 +18,7 @@
 #include "blender_light_point.h"
 #include "blender_light_reflected.h"
 #include "blender_light_spot.h"
-#include "blender_luminance.h"
+#include "blender_autoexposure.h"
 #include "stdafx.h"
 
 void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -230,7 +230,7 @@ CRenderTarget::CRenderTarget()
 	b_accum_reflected = xr_new<CBlender_accum_reflected>();
 	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
 	b_bloom = xr_new<CBlender_bloom_build>();
-	b_luminance = xr_new<CBlender_luminance>();
+	b_autoexposure = xr_new<CBlender_autoexposure>();
 	b_combine = xr_new<CBlender_combine>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_dof = xr_new<CBlender_depth_of_field>();
@@ -352,19 +352,19 @@ CRenderTarget::CRenderTarget()
 
 	// autoexposure
 	{
-		rt_LUM_64.create(r2_RT_luminance_t64, 64, 64, D3DFMT_A8R8G8B8);
-		rt_LUM_8.create(r2_RT_luminance_t8, 8, 8, D3DFMT_A8R8G8B8);
-		s_luminance.create(b_luminance, "r2\\luminance");
-		f_luminance_adapt = 0.5f;
+		rt_LUM_64.create(r2_RT_autoexposure_t64, 64, 64, D3DFMT_A8R8G8B8);
+		rt_LUM_8.create(r2_RT_autoexposure_t8, 8, 8, D3DFMT_A8R8G8B8);
+		s_autoexposure.create(b_autoexposure, "r2\\autoexposure");
+		f_autoexposure_adapt = 0.5f;
 
-		t_LUM_src.create(r2_RT_luminance_src);
-		t_LUM_dest.create(r2_RT_luminance_cur);
+		t_LUM_src.create(r2_RT_autoexposure_src);
+		t_LUM_dest.create(r2_RT_autoexposure_cur);
 
 		// create pool
 		for (u32 it = 0; it < HW.Caps.iGPUNum * 2; it++)
 		{
 			string256 name;
-			sprintf(name, "%s_%d", r2_RT_luminance_pool, it);
+			sprintf(name, "%s_%d", r2_RT_autoexposure_pool, it);
 			rt_LUM_pool[it].create(name, 1, 1, D3DFMT_R16F);
 			u_setrt(rt_LUM_pool[it], 0, 0, 0);
 			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L));
@@ -380,7 +380,7 @@ CRenderTarget::CRenderTarget()
 		s_combine.create(b_combine, "r2\\combine");
 		s_combine_volumetric.create("combine_volumetric");
 		s_combine_dbg_0.create("effects\\screen_set", r2_RT_smap_surf);
-		s_combine_dbg_1.create("effects\\screen_set", r2_RT_luminance_t8);
+		s_combine_dbg_1.create("effects\\screen_set", r2_RT_autoexposure_t8);
 		g_combine_VP.create(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_2UV.create(FVF::F_TL2uv, RCache.Vertex.Buffer(), RCache.QuadIB);
@@ -581,7 +581,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_distortion);
 	xr_delete(b_antialiasing);
 	xr_delete(b_combine);
-	xr_delete(b_luminance);
+	xr_delete(b_autoexposure);
 	xr_delete(b_bloom);
 	xr_delete(b_ambient_occlusion);
 	xr_delete(b_accum_reflected);

@@ -26,7 +26,7 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_bloom;
 	IBlender* b_distortion;
 	IBlender* b_ambient_occlusion;
-	IBlender* b_luminance;
+	IBlender* b_autoexposure;
 	IBlender* b_combine;
 	IBlender* b_antialiasing;
 	IBlender* b_dof;
@@ -135,8 +135,8 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_aa;
 
 	// Luminance
-	ref_shader s_luminance;
-	float f_luminance_adapt;
+	ref_shader s_autoexposure;
+	float f_autoexposure_adapt;
 
 	// Combine
 	ref_geom g_combine;
@@ -247,7 +247,7 @@ class CRenderTarget : public IRender_Target
 	void phase_blur();
 	void phase_ao();
 
-	void phase_luminance();
+	void phase_autoexposure();
 
 	void phase_combine();
 	void phase_combine_volumetric();

@@ -145,7 +145,6 @@ void CRenderTarget::phase_combine()
 
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil(FALSE);
-	phase_bloom(); // HDR RT invalidated here
 
 	// Distortion filter
 	BOOL bDistort = RImplementation.o.distortion_enabled; // This can be modified
@@ -221,7 +220,9 @@ void CRenderTarget::phase_combine()
 		if (RImplementation.o.advancedpp && ps_r_aa)
 			phase_antialiasing();
 
-		phase_combine_bloom();
+		phase_bloom();
+
+		phase_autoexposure();
 
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 			phase_chromatic_abberation();
@@ -290,7 +291,7 @@ void CRenderTarget::phase_combine()
 		RCache.set_Stencil(FALSE);
 	}
 
-	//	Re-adapt luminance
+	//	Re-adapt autoexposure
 	RCache.set_Stencil(FALSE);
 
 	//*** exposure-pipeline-clear

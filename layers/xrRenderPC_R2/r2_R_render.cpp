@@ -441,7 +441,7 @@ void CRender::render_forward()
 	RImplementation.o.distortion = RImplementation.o.distortion_enabled; // enable distorion
 
 	//******* Main render - second order geometry (the one, that doesn't support deffering)
-	//.todo: should be done inside "combine" with estimation of of luminance, tone-mapping, etc.
+	//.todo: should be done inside "combine" with estimation of of autoexposure, tone-mapping, etc.
 	{
 		// level
 		r_pmask(false, true); // enable priority "1"

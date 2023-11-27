@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #pragma pack(push, 4)
-struct v_build_luminance
+struct v_build_autoexposure
 {
 	Fvector4 p;
 	Fvector2 uv0;
@@ -10,14 +10,14 @@ struct v_build_luminance
 	Fvector2 uv3;
 };
 
-struct v_filter_luminance
+struct v_filter_autoexposure
 {
 	Fvector4 p;
 	Fvector4 uv[8];
 };
 #pragma pack(pop)
 
-void CRenderTarget::phase_luminance()
+void CRenderTarget::phase_autoexposure()
 {
 	u32 Offset = 0;
 	float eps = EPS_S;
@@ -32,8 +32,8 @@ void CRenderTarget::phase_luminance()
 	u_setrt(rt_LUM_64, NULL, NULL, NULL);
 	{
 		float ts = 64;
-		float _w = float(BLOOM_size_X);
-		float _h = float(BLOOM_size_Y);
+		float _w = float(Device.dwWidth);
+		float _h = float(Device.dwHeight);
 		Fvector2 one = {2.f / _w, 2.f / _h};  // two, infact
 		Fvector2 half = {1.f / _w, 1.f / _h}; // one, infact
 		Fvector2 a_0 = {half.x + 0, half.y + 0};
@@ -46,7 +46,7 @@ void CRenderTarget::phase_luminance()
 		Fvector2 b_3 = {1 + a_3.x, 1 + a_3.y};
 
 		// Fill vertex buffer
-		v_build_luminance* pv = (v_build_luminance*)RCache.Vertex.Lock(4, g_bloom_build->vb_stride, Offset);
+		v_build_autoexposure* pv = (v_build_autoexposure*)RCache.Vertex.Lock(4, g_bloom_build->vb_stride, Offset);
 		pv->p.set(eps, float(ts + eps), eps, 1.f);
 		pv->uv0.set(a_0.x, b_0.y);
 		pv->uv1.set(a_1.x, b_1.y);
@@ -72,7 +72,7 @@ void CRenderTarget::phase_luminance()
 		pv->uv3.set(b_3.x, a_3.y);
 		pv++;
 		RCache.Vertex.Unlock(4, g_bloom_build->vb_stride);
-		RCache.set_Element(s_luminance->E[0]);
+		RCache.set_Element(s_autoexposure->E[0]);
 		RCache.set_Geometry(g_bloom_build);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
@@ -93,7 +93,7 @@ void CRenderTarget::phase_luminance()
 		}
 
 		// Fill vertex buffer
-		v_filter_luminance* pv = (v_filter_luminance*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
+		v_filter_autoexposure* pv = (v_filter_autoexposure*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
 		pv->p.set(eps, float(_ts + eps), eps, 1.f);
 		for (int t = 0; t < 8; t++)
 			pv->uv[t].set(a[t].x, b[t].y, b[t + 8].y, a[t + 8].x); // xy/yx	- left+down
@@ -111,7 +111,7 @@ void CRenderTarget::phase_luminance()
 			pv->uv[t].set(b[t].x, a[t].y, a[t + 8].y, b[t + 8].x); // xy/yx	- right+up
 		pv++;
 		RCache.Vertex.Unlock(4, g_bloom_filter->vb_stride);
-		RCache.set_Element(s_luminance->E[1]);
+		RCache.set_Element(s_autoexposure->E[1]);
 		RCache.set_Geometry(g_bloom_filter);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
@@ -133,7 +133,7 @@ void CRenderTarget::phase_luminance()
 		}
 
 		// Fill vertex buffer
-		v_filter_luminance* pv = (v_filter_luminance*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
+		v_filter_autoexposure* pv = (v_filter_autoexposure*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
 		pv->p.set(eps, float(_ts + eps), eps, 1.f);
 		for (int t = 0; t < 8; t++)
 			pv->uv[t].set(a[t].x, b[t].y, b[t + 8].y, a[t + 8].x); // xy/yx	- left+down
@@ -152,16 +152,16 @@ void CRenderTarget::phase_luminance()
 		pv++;
 		RCache.Vertex.Unlock(4, g_bloom_filter->vb_stride);
 
-		f_luminance_adapt = .9f * f_luminance_adapt + .1f * Device.fTimeDelta * ps_r2_autoexposure_adaptation;
+		f_autoexposure_adapt = .9f * f_autoexposure_adapt + .1f * Device.fTimeDelta * ps_r2_autoexposure_adaptation;
 		float amount = ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE) ? ps_r2_autoexposure_amount : 0;
 		Fvector3 _none, _full, _result;
 		_none.set(1, 0, 1);
 		_full.set(ps_r2_autoexposure_middlegray, 1.f, ps_r2_autoexposure_low_lum);
 		_result.lerp(_none, _full, amount);
 
-		RCache.set_Element(s_luminance->E[2]);
+		RCache.set_Element(s_autoexposure->E[2]);
 		RCache.set_Geometry(g_bloom_filter);
-		RCache.set_c("MiddleGray", _result.x, _result.y, _result.z, f_luminance_adapt);
+		RCache.set_c("MiddleGray", _result.x, _result.y, _result.z, f_autoexposure_adapt);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 

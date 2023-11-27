@@ -139,6 +139,9 @@
     <Filter Include="Blenders\Postprocess stage\Distortion">
       <UniqueIdentifier>{fca0c934-d1a8-4b80-85dc-2db7f68db37e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blenders\Postprocess stage\Autoexposure">
+      <UniqueIdentifier>{9e8b1e52-a0d3-4e14-99b7-e34d9e132e01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -321,9 +324,6 @@
     <ClInclude Include="blender_bloom_build.h">
       <Filter>Blenders\Postprocess stage\Bloom</Filter>
     </ClInclude>
-    <ClInclude Include="blender_luminance.h">
-      <Filter>Blenders\Postprocess stage\Bloom</Filter>
-    </ClInclude>
     <ClInclude Include="Blender_motion_blur.h">
       <Filter>Blenders\Postprocess stage\Motion blur</Filter>
     </ClInclude>
@@ -360,6 +360,7 @@
     <ClInclude Include="Blender_distortion.h">
       <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClInclude>
+    <ClInclude Include="blender_autoexposure.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -542,9 +543,6 @@
     <ClCompile Include="r2_rendertarget_phase_depth_of_field.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_luminance.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_frame_overlay.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
@@ -603,9 +601,6 @@
       <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
     </ClCompile>
     <ClCompile Include="blender_bloom_build.cpp">
-      <Filter>Blenders\Postprocess stage\Bloom</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_luminance.cpp">
       <Filter>Blenders\Postprocess stage\Bloom</Filter>
     </ClCompile>
     <ClCompile Include="Blender_motion_blur.cpp">
@@ -722,6 +717,8 @@
     <ClCompile Include="Blender_distortion.cpp">
       <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClCompile>
+    <ClCompile Include="blender_autoexposure.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_autoexposure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />

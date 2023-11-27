@@ -138,9 +138,6 @@ void CRenderTarget::phase_bloom()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
-	// Capture luminance values
-	phase_luminance();
-
 	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM) || ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 	{
 		// FAST FILTER
@@ -363,47 +360,46 @@ void CRenderTarget::phase_bloom()
 
 	// re-enable z-buffer
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
-}
 
-void CRenderTarget::phase_combine_bloom()
-{
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	{
+		u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
-	RCache.set_CullMode(CULL_NONE);
-	RCache.set_Stencil(FALSE);
+		RCache.set_CullMode(CULL_NONE);
+		RCache.set_Stencil(FALSE);
 
-	// Constants
-	u32 Offset = 0;
-	u32 C = color_rgba(0, 0, 0, 255);
+		// Constants
+		u32 Offset = 0;
+		u32 C = color_rgba(0, 0, 0, 255);
 
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+		float w = float(Device.dwWidth);
+		float h = float(Device.dwHeight);
 
-	float d_Z = EPS_S;
-	float d_W = 1.f;
+		float d_Z = EPS_S;
+		float d_W = 1.f;
 
-	Fvector2 p0, p1;
-	p0.set(0.5f / w, 0.5f / h);
-	p1.set((w + 0.5f) / w, (h + 0.5f) / h);
+		Fvector2 p0, p1;
+		p0.set(0.5f / w, 0.5f / h);
+		p1.set((w + 0.5f) / w, (h + 0.5f) / h);
 
-	// Fill vertex buffer
-	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
-	pv++;
-	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
-	pv++;
-	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
-	pv++;
-	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
-	pv++;
-	RCache.Vertex.Unlock(4, g_combine->vb_stride);
+		// Fill vertex buffer
+		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+		pv->set(0, h, d_Z, d_W, C, p0.x, p1.y);
+		pv++;
+		pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y);
+		pv++;
+		pv->set(w, h, d_Z, d_W, C, p1.x, p1.y);
+		pv++;
+		pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y);
+		pv++;
+		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
-	// Set pass
-	RCache.set_Element(s_bloom->E[5]);
+		// Set pass
+		RCache.set_Element(s_bloom->E[5]);
 
-	// Set geometry
-	RCache.set_Geometry(g_combine);
+		// Set geometry
+		RCache.set_Geometry(g_combine);
 
-	// Draw
-	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+		// Draw
+		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+	}
 }

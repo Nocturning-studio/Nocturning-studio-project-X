@@ -34,11 +34,11 @@
 #define r2_RT_ao "$user$ao" // Output blurred effect
 
 // Autoexposure
-#define r2_RT_luminance_t64 "$user$lum_t64"
-#define r2_RT_luminance_t8 "$user$lum_t8"
-#define r2_RT_luminance_src "$user$autoexposure_src" // --- prev-frame-result
-#define r2_RT_luminance_cur "$user$autoexposure"	 // --- result
-#define r2_RT_luminance_pool "$user$luminance"		 // --- pool
+#define r2_RT_autoexposure_t64 "$user$lum_t64"
+#define r2_RT_autoexposure_t8 "$user$lum_t8"
+#define r2_RT_autoexposure_src "$user$autoexposure_src" // --- prev-frame-result
+#define r2_RT_autoexposure_cur "$user$autoexposure"	 // --- result
+#define r2_RT_autoexposure_pool "$user$autoexposure"		 // --- pool
 
 // Shadow map
 #define r2_RT_smap_surf "$user$smap_surf"	// --- directional

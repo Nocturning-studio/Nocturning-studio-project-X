@@ -1,11 +1,11 @@
 #pragma once
 
-class CBlender_luminance : public IBlender
+class CBlender_autoexposure : public IBlender
 {
   public:
 	virtual LPCSTR getComment()
 	{
-		return "INTERNAL: luminance estimate";
+		return "INTERNAL: autoexposure estimate";
 	}
 	virtual BOOL canBeDetailed()
 	{
@@ -18,6 +18,6 @@ class CBlender_luminance : public IBlender
 
 	virtual void Compile(CBlender_Compile& C);
 
-	CBlender_luminance();
-	virtual ~CBlender_luminance();
+	CBlender_autoexposure();
+	virtual ~CBlender_autoexposure();
 };
