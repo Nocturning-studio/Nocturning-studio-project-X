@@ -18,7 +18,7 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case 0: // combine
-		C.r_Pass("combine_1", "combine_1", FALSE, FALSE, FALSE, TRUE, D3DBLEND_INVSRCALPHA,
+		C.r_Pass("scene_combine_stage", "scene_combine_stage", FALSE, FALSE, FALSE, TRUE, D3DBLEND_INVSRCALPHA,
 				 D3DBLEND_SRCALPHA); //. MRT-blend?
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
