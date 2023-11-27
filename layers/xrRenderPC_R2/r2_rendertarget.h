@@ -267,9 +267,7 @@ class CRenderTarget : public IRender_Target
 	void phase_create_distortion_mask();
 	void phase_distortion();
 
-	void depth_of_field_pass_first();
-	void depth_of_field_pass_second();
-	void depth_of_field_pass_third();
+	void calculate_depth_of_field();
 	void phase_depth_of_field();
 
 	void motion_blur_phase_save_frame();
