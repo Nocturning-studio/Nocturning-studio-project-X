@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "Blender_light_spot.h"
+#include "r2_types.h"
 
 CBlender_accum_spot::CBlender_accum_spot()
 {
