@@ -747,6 +747,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 
 	char c_sun_shafts[32];
 
+	char c_ao_enabled[32];
 	char c_ao[32];
 	char c_ao_quality[32];
 
@@ -1049,16 +1050,16 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len] = '0' + (char)ps_r2_dof_quality;
 		++len;
 
-		if (ps_r2_ao)
+		if (ps_r2_ao && o.advancedpp)
 		{
-			sprintf(c_ao, "%d", ps_r2_ao);
-			defines[def_it].Name = "AO_TYPE";
-			defines[def_it].Definition = c_ao;
+			sprintf(c_ao_enabled, "%d", 1);
+			defines[def_it].Name = "AO_ENABLED";
+			defines[def_it].Definition = c_ao_enabled;
 			def_it++;
-			strcat(sh_name, c_ao);
+			strcat(sh_name, c_ao_enabled);
 			len += 4;
 		}
-		sh_name[len] = '0' + char(ps_r2_ao);
+		sh_name[len] = '0' + char(1);
 		++len;
 
 		if (ps_r2_ao_quality)
