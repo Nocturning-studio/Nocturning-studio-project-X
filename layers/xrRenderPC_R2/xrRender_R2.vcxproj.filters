@@ -142,6 +142,9 @@
     <Filter Include="Blenders\Postprocess stage\Autoexposure">
       <UniqueIdentifier>{9e8b1e52-a0d3-4e14-99b7-e34d9e132e01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blenders\Postprocess stage\Barrel blur">
+      <UniqueIdentifier>{06547e69-f2b8-47ff-95c2-b38d4d2ad8dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -361,6 +364,9 @@
       <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClInclude>
     <ClInclude Include="blender_autoexposure.h" />
+    <ClInclude Include="Blender_barrel_blur.h">
+      <Filter>Blenders\Postprocess stage\Barrel blur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -719,6 +725,12 @@
     </ClCompile>
     <ClCompile Include="blender_autoexposure.cpp" />
     <ClCompile Include="r2_rendertarget_phase_autoexposure.cpp" />
+    <ClCompile Include="r2_rendertarget_barrel_blur.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_barrel_blur.cpp">
+      <Filter>Blenders\Postprocess stage\Barrel blur</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />

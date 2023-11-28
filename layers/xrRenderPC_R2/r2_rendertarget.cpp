@@ -19,6 +19,7 @@
 #include "blender_light_reflected.h"
 #include "blender_light_spot.h"
 #include "blender_autoexposure.h"
+#include "blender_barrel_blur.h"
 #include "stdafx.h"
 
 void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
@@ -233,6 +234,7 @@ CRenderTarget::CRenderTarget()
 	b_autoexposure = xr_new<CBlender_autoexposure>();
 	b_combine = xr_new<CBlender_combine>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
+	b_barrel_blur = xr_new<CBlender_barrel_blur>();
 	b_dof = xr_new<CBlender_depth_of_field>();
 	b_distortion = xr_new<CBlender_distortion>();
 	b_motion_blur = xr_new<CBlender_motion_blur>();
@@ -509,6 +511,8 @@ CRenderTarget::CRenderTarget()
 
 	s_antialiasing.create(b_antialiasing, "r2\\antialiasing");
 
+	s_barrel_blur.create(b_barrel_blur, "r2\\barrel_blur");
+
 	s_dof.create(b_dof, "r2\\dof");
 
 	s_distortion.create(b_distortion, "r2\\distortion");
@@ -578,6 +582,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_frame_overlay);
 	xr_delete(b_motion_blur);
 	xr_delete(b_dof);
+	xr_delete(b_barrel_blur);
 	xr_delete(b_distortion);
 	xr_delete(b_antialiasing);
 	xr_delete(b_combine);

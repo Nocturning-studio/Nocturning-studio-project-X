@@ -30,6 +30,7 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_combine;
 	IBlender* b_antialiasing;
 	IBlender* b_dof;
+	IBlender* b_barrel_blur;
 	IBlender* b_motion_blur;
 	IBlender* b_sepia;
 	IBlender* b_chromatic_abberation;
@@ -151,6 +152,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_combine;
 	ref_shader s_combine_volumetric;
 	ref_shader s_antialiasing;
+	ref_shader s_barrel_blur;
 	ref_shader s_dof;
 	ref_shader s_distortion;
 	ref_shader s_motion_blur;
@@ -269,6 +271,9 @@ class CRenderTarget : public IRender_Target
 
 	void calculate_depth_of_field();
 	void phase_depth_of_field();
+
+	void calculate_barrel_blur();
+	void phase_barrel_blur();
 
 	void motion_blur_phase_save_frame();
 	void motion_blur_phase_combine();

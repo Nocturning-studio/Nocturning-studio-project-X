@@ -146,6 +146,8 @@ void CRenderTarget::phase_combine()
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil(FALSE);
 
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+
 	// Distortion filter
 	BOOL bDistort = RImplementation.o.distortion_enabled; // This can be modified
 	{
@@ -217,15 +219,20 @@ void CRenderTarget::phase_combine()
 		if (ps_render_flags.test(RFLAG_LENS_FLARES))
 			g_pGamePersistent->Environment().RenderFlares();
 
-		if (RImplementation.o.advancedpp && ps_r_aa)
+		if (ps_r_aa)
 			phase_antialiasing();
 
-		phase_bloom();
+		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))	
+			phase_bloom();
 
-		phase_autoexposure();
+		if (ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))	
+			phase_autoexposure();
 
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION))
 			phase_chromatic_abberation();
+
+		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
+			phase_barrel_blur();
 
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
 			phase_depth_of_field();

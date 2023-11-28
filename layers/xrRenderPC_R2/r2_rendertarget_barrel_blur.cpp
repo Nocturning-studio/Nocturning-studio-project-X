@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::calculate_depth_of_field()
+void CRenderTarget::calculate_barrel_blur()
 {
 	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
 
@@ -39,16 +39,7 @@ void CRenderTarget::calculate_depth_of_field()
 	RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 	// Set pass
-	RCache.set_Element(s_dof->E[0]);
-
-	Fvector3 dof;
-	Fvector2 vDofKernel;
-	g_pGamePersistent->GetCurrentDof(dof);
-	vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
-	vDofKernel.mul(ps_r2_dof_kernel_size);
-
-	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+	RCache.set_Element(s_barrel_blur->E[0]);
 
 	// Set geometry
 	RCache.set_Geometry(g_combine);
@@ -57,9 +48,9 @@ void CRenderTarget::calculate_depth_of_field()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_depth_of_field()
+void CRenderTarget::phase_barrel_blur()
 {
 	for (int i = 0; i < 2; i++)
-		calculate_depth_of_field();
+		calculate_barrel_blur();
 }
 ///////////////////////////////////////////////////////////////////////////////////
