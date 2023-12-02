@@ -46,7 +46,7 @@ void CBlender_deffer_aref::Compile(CBlender_Compile& C)
 		case SE_R2_NORMAL_LQ:
 			if (lmapped)
 			{
-				C.r_Pass("lmapE", "lmapE", TRUE, TRUE, FALSE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
+				C.r_Pass("alpha_blend_lightmap_lighted", "alpha_blend_lightmap_lighted", TRUE, TRUE, FALSE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
 						 oAREF.value);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_Sampler("s_lmap", C.L_textures[1]);
@@ -56,7 +56,7 @@ void CBlender_deffer_aref::Compile(CBlender_Compile& C)
 			}
 			else
 			{
-				C.r_Pass("vert", "vert", TRUE, TRUE, FALSE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
+				C.r_Pass("alpha_blend_vertex_lighted", "alpha_blend_vertex_lighted", TRUE, TRUE, FALSE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
 						 oAREF.value);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_End();

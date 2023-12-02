@@ -18,19 +18,25 @@ void CBlender_autoexposure::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case 0:
-		C.r_Pass("null", "postprocess_stage_autoexposure_1", false, FALSE, FALSE, FALSE);
-		C.r_Sampler_gaussian("s_image", r2_RT_generic0);
+		C.r_Pass("null", "postprocess_stage_autoexposure_pass_downsampling_step_1", false, FALSE, FALSE, FALSE);
+		C.r_Sampler_gaussian("s_image", r2_RT_GBuffer_Albedo);
 		C.r_End();
 		break;
 	case 1:
-		C.r_Pass("null", "postprocess_stage_autoexposure_2", false, FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_autoexposure_pass_downsampling_step_2", false, FALSE, FALSE, FALSE);
 		C.r_Sampler_gaussian("s_image", r2_RT_autoexposure_t64);
 		C.r_End();
 		break;
 	case 2:
-		C.r_Pass("null", "postprocess_stage_autoexposure_3", false, FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_autoexposure_pass_downsampling_step_3", false, FALSE, FALSE, FALSE);
 		C.r_Sampler_gaussian("s_image", r2_RT_autoexposure_t8);
 		C.r_Sampler_gaussian("s_autoexposure", r2_RT_autoexposure_src);
+		C.r_End();
+		break;
+	case 3:
+		C.r_Pass("null", "postprocess_stage_autoexposure_pass_combine", false, FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_gaussian("s_autoexposure", r2_RT_autoexposure_cur);
 		C.r_End();
 		break;
 	}

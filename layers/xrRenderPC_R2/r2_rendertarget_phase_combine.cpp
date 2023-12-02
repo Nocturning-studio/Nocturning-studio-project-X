@@ -225,6 +225,9 @@ void CRenderTarget::phase_combine()
 		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))	
 			phase_bloom();
 
+		if (ps_r2_postprocess_flags.test(R2FLAG_HDR))
+			phase_tonemapping();
+
 		if (ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))	
 			phase_autoexposure();
 

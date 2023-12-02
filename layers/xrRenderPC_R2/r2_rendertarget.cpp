@@ -19,6 +19,7 @@
 #include "blender_light_reflected.h"
 #include "blender_light_spot.h"
 #include "blender_autoexposure.h"
+#include "blender_tonemapping.h"
 #include "blender_barrel_blur.h"
 #include "stdafx.h"
 
@@ -232,6 +233,7 @@ CRenderTarget::CRenderTarget()
 	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_autoexposure = xr_new<CBlender_autoexposure>();
+	b_tonemapping = xr_new<CBlender_tonemapping>();
 	b_combine = xr_new<CBlender_combine>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_barrel_blur = xr_new<CBlender_barrel_blur>();
@@ -285,7 +287,7 @@ CRenderTarget::CRenderTarget()
 	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
 	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
 	if (RImplementation.o.advancedpp)
-		s_accum_direct_volumetric_cascade.create("accum_volumetric_sun_cascade");
+		s_accum_direct_volumetric_cascade.create("accumulating_light_stage_volumetric_sun_cascade");
 
 	// POINT
 	{
@@ -380,7 +382,7 @@ CRenderTarget::CRenderTarget()
 			{0, 0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0}, // pos+uv
 			D3DDECL_END()};
 		s_combine.create(b_combine, "r2\\combine");
-		s_combine_volumetric.create("combine_volumetric");
+		s_combine_volumetric.create("scene_combine_stage_pass_volumetric");
 		s_combine_dbg_0.create("effects\\screen_set", r2_RT_smap_surf);
 		s_combine_dbg_1.create("effects\\screen_set", r2_RT_autoexposure_t8);
 		g_combine_VP.create(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
@@ -527,6 +529,8 @@ CRenderTarget::CRenderTarget()
 
 	s_vignette.create(b_vignette, "r2\\vignette");
 
+	s_tonemapping.create(b_tonemapping, "r2\\tonemapping");
+
 	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
 
 	// PP
@@ -587,6 +591,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_antialiasing);
 	xr_delete(b_combine);
 	xr_delete(b_autoexposure);
+	xr_delete(b_tonemapping);
 	xr_delete(b_bloom);
 	xr_delete(b_ambient_occlusion);
 	xr_delete(b_accum_reflected);

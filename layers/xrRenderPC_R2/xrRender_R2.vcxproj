@@ -1083,6 +1083,7 @@
     <ClInclude Include="Blender_motion_blur.h" />
     <ClInclude Include="Blender_sepia.h" />
     <ClInclude Include="Blender_sharpen.h" />
+    <ClInclude Include="Blender_tonemapping.h" />
     <ClInclude Include="Blender_vignette.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="DetailFormat.h" />
@@ -1220,6 +1221,7 @@
     <ClCompile Include="Blender_motion_blur.cpp" />
     <ClCompile Include="Blender_sepia.cpp" />
     <ClCompile Include="Blender_sharpen.cpp" />
+    <ClCompile Include="Blender_tonemapping.cpp" />
     <ClCompile Include="Blender_vignette.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
     <ClCompile Include="light_GI.cpp" />
@@ -1273,6 +1275,7 @@
     <ClCompile Include="r2_rendertarget_phase_sharpen.cpp" />
     <ClCompile Include="r2_rendertarget_phase_smap_Direct.cpp" />
     <ClCompile Include="r2_rendertarget_phase_smap_Spot.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_tonemapping.cpp" />
     <ClCompile Include="r2_rendertarget_phase_vignette.cpp" />
     <ClCompile Include="r2_rendertarget_phase_wallmarks.cpp" />
     <ClCompile Include="r2_R_calculate.cpp" />

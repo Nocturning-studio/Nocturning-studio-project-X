@@ -101,31 +101,32 @@ BOOL CLevel::Load_GameSpecific_After()
 			Sounds_Random_dwNextTime = Device.TimerAsync() + 50000;
 			Sounds_Random_Enabled = FALSE;
 		}
-	}
 
-	if (!g_dedicated_server)
-	{
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 		if (pLevel->section_exist("level_scripts") && pLevel->line_exist("level_scripts", "script"))
+		{
 			ai().script_engine().add_script_process(
 				ScriptEngine::eScriptProcessorLevel,
 				xr_new<CScriptProcess>("level", pLevel->r_string("level_scripts", "script")));
+		}
 		else
+		{
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,
 													xr_new<CScriptProcess>("level", ""));
-	}
+		}
 
-	if (!g_dedicated_server && game && (GameID() != GAME_SINGLE))
-	{
-		CInifile& gameLtx = *pGameIni;
-		if (gameLtx.section_exist(Level().name()))
+		if (game && (GameID() != GAME_SINGLE))
 		{
-			if (gameLtx.line_exist(Level().name(), "weathers"))
+			CInifile& gameLtx = *pGameIni;
+			if (gameLtx.section_exist(Level().name()))
 			{
-				LPCSTR weathers_sect = gameLtx.r_string(Level().name(), "weathers");
-				GamePersistent().Environment().SetWeather(weathers_sect);
+				if (gameLtx.line_exist(Level().name(), "weathers"))
+				{
+					LPCSTR weathers_sect = gameLtx.r_string(Level().name(), "weathers");
+					GamePersistent().Environment().SetWeather(weathers_sect);
+				}
 			}
 		}
 	}

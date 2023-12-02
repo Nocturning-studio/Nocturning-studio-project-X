@@ -15,7 +15,7 @@ void CBlender_accum_reflected::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-	C.r_Pass("accum_volume", "accum_indirect", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+	C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_photon_mapping", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 	C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 	C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 	C.r_Sampler_clw("s_material", r2_material);
