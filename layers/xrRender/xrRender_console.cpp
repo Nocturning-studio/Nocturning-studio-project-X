@@ -15,34 +15,26 @@ u32 ps_EffPreset = 2;
 xr_token qeffpreset_token[] = {
 	{"st_opt_eff_disabled", 0}, {"st_opt_eff_default", 1}, {"st_opt_eff_cinematic", 2}, {0, 0}};
 
+u32 ps_r_aa = 1;
+#if RENDER == R_R1
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
+#else
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_dlaa", 1}, {"st_opt_dlaa_force_edge_detect", 2}, {"st_opt_fxaa", 3}, {0, 0}};
+#endif
+
+u32 ps_r_aa_iterations = 2;
+xr_token aa_iterations_token[] = {{"st_opt_x1", 1},
+								  {"st_opt_x2", 2},
+								  {"st_opt_x4", 3},
+								  //{"st_opt_x8", 4},
+								  {0, 0}};
+
 u32 ps_vignette_mode = 2;
 xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, {"st_opt_dynamic", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32 ps_r_aa = 1;
-xr_token aa_token[] = {
-	{"st_opt_disabled", 0}, 
-#if RENDER == R_R1
-	{"st_opt_ssaa", 1},	
-#else
-	{"st_opt_dlaa", 1},	  
-	{"st_opt_dlaa_force_edge_detect", 2},
-	{"st_opt_fxaa", 3}, 
-#endif
-	{0, 0}
-};
-
-u32 ps_r_aa_iterations = 2;
-xr_token aa_iterations_token[] = {
-	{"st_opt_x1", 1}, 
-	{"st_opt_x2", 2}, 
-	{"st_opt_x4", 3}, 
-	//{"st_opt_x8", 4}, 
-	{0, 0}
-};
-
 u32 ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
@@ -234,7 +226,7 @@ float ps_r2_gloss_factor = 1.0f;
 Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_SUN_IGNORE_PORTALS | R2FLAG_EXP_DONT_TEST_UNSHADOWED |
 								R2FLAG_SUN_FOCUS | R2FLAG_SUN_TSM};
 
-Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR | R2FLAG_HDR};
+Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR | RFLAG_HDR};
 
 Flags32 ps_r2_overlay_flags = {
 	0,
@@ -637,6 +629,11 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r_lens_flares", &ps_render_flags, RFLAG_LENS_FLARES);
 
+	CMD3(CCC_Mask, "r_sepia", &ps_render_flags, RFLAG_SEPIA);
+	CMD3(CCC_Token, "r_vignette_mode", &ps_vignette_mode, vignette_mode_token);
+	CMD3(CCC_Mask, "r_chromatic_abberation", &ps_render_flags, RFLAG_CHROMATIC_ABBERATION);
+	CMD3(CCC_Mask, "r_hdr", &ps_render_flags, RFLAG_HDR);
+
 	CMD3(CCC_Mask, "r_mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
 
 	CMD4(CCC_Integer, "r_wait_sleep", &ps_r_thread_wait_sleep, 0, 1);
@@ -672,11 +669,6 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_r2_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_r2_ao_quality, ao_quality_token);
-
-	CMD3(CCC_Mask, "r2_sepia", &ps_r2_postprocess_flags, R2FLAG_SEPIA);
-	CMD3(CCC_Token, "r2_vignette_mode", &ps_vignette_mode, vignette_mode_token);
-	CMD3(CCC_Mask, "r2_chromatic_abberation", &ps_r2_postprocess_flags, R2FLAG_CHROMATIC_ABBERATION);
-	CMD3(CCC_Mask, "r2_hdr", &ps_r2_postprocess_flags, R2FLAG_HDR);
 
 	CMD3(CCC_Mask, "r2_autoexposure", &ps_r2_postprocess_flags, R2FLAG_AUTOEXPOSURE);
 	CMD4(CCC_Float, "r2_autoexposure_middlegray", &ps_r2_autoexposure_middlegray, 0.0f, 2.0f);

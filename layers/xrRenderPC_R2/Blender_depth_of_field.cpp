@@ -30,13 +30,6 @@ void CBlender_depth_of_field::Compile(CBlender_Compile& C)
 		jitter(C);
 		C.r_End();
 		break;
-	case 1:
-		C.r_Pass("null", "postprocess_stage_barrrel_blur", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_gaussian("s_vignette", "vfx\\vfx_vignette");
-		jitter(C);
-		C.r_End();
-		break;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////

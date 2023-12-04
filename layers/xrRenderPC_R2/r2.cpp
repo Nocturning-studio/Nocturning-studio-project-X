@@ -101,7 +101,9 @@ void CRender::create()
 
 	///////////////////////////////////////////////////
 	// Smap resolution choosing
-#pragma todo(Deathman to Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot или point источников света)
+#pragma todo(                                                                                                          \
+	Deathman to                                                                                                        \
+		Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot или point источников света)
 	if (o.sunstatic)
 	{
 		o.smapsize = 1024;
@@ -132,18 +134,14 @@ void CRender::create()
 			break;
 		case 5:
 			o.smapsize = 2560;
-			o.sun_depth_far_bias = -0.0003f;
-			o.sun_depth_near_bias = -0.00004f;
+			o.sun_depth_far_bias = -0.002f;
+			o.sun_depth_near_bias = -0.0003f;
 			break;
 		}
 		o.sun_depth_far_scale = 1.0f;
 		o.sun_depth_near_scale = 1.0f;
 	}
 	///////////////////////////////////////////////////
-
-	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
-	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
-
 	// Check for NULL render target support
 	D3DFORMAT nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 	o.nullrt = HW.support(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
@@ -198,14 +196,34 @@ void CRender::create()
 			Msg("* ...and used");
 	};
 
-	// SMAP / DST
+	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
+	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 	o.HW_smap = HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	o.fp16_filter = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend = HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
+	u32 v_dev = CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
+	u32 v_need = CAP_VERSION(3, 0);
 
-	R_ASSERT2(o.mrt && o.mrtmixdepth && o.HW_smap && o.fp16_filter && o.fp16_blend &&
-				  (HW.Caps.raster.dwInstructions >= 256),
-			  "Hardware doesn't meet minimum feature-level");
+	R_ASSERT2(v_dev >= v_need,
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0c supporting)"));
+
+	R_ASSERT2(o.mrt,
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets)"));
+
+	R_ASSERT2(o.mrtmixdepth,
+			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets independent depths)"));
+
+	R_ASSERT2(o.HW_smap, 
+			make_string("Your graphics accelerator don`t meet minimal mod system requirements (D24X8 rendertarget format)"));
+
+	R_ASSERT2(o.fp16_filter,
+			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Floating point 16-bits rendertarget format)"));
+
+	R_ASSERT2(o.fp16_blend, 
+			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
+
+	R_ASSERT2((HW.Caps.raster.dwInstructions >= 256),
+			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions count less than 256)"));
 
 	// nvstencil on NV40 and up
 	o.nvstencil = FALSE;
@@ -220,16 +238,9 @@ void CRender::create()
 		Msg("* NV-DBT supported and used");
 
 	// options
-	o.bug = (strstr(Core.Params, "-bug")) ? TRUE : FALSE;
-	o.sunfilter = (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
-	// o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
 	o.sunstatic = r2_sun_static;
 	o.advancedpp = r2_advanced_pp;
-	o.sjitter = (strstr(Core.Params, "-sjitter")) ? TRUE : FALSE;
-	o.depth16 = (strstr(Core.Params, "-depth16")) ? TRUE : FALSE;
 	o.noshadows = (strstr(Core.Params, "-noshadows")) ? TRUE : FALSE;
-	o.Tshadows = (strstr(Core.Params, "-tsh")) ? TRUE : FALSE;
-	o.mblur = (strstr(Core.Params, "-mblur")) ? TRUE : FALSE;
 	o.distortion_enabled = (strstr(Core.Params, "-nodistort")) ? FALSE : TRUE;
 	o.distortion = o.distortion_enabled;
 	o.disasm = (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
@@ -893,7 +904,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		++len;
 	}
 
-	int sepia = ps_r2_postprocess_flags.test(R2FLAG_SEPIA);
+	int sepia = ps_render_flags.test(RFLAG_SEPIA);
 	if (sepia)
 	{
 		sprintf(c_sepia, "%d", sepia);
@@ -906,7 +917,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len] = '0' + char(sepia);
 	++len;
 
-	int chroma_abb = ps_r2_postprocess_flags.test(R2FLAG_CHROMATIC_ABBERATION);
+	int chroma_abb = ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION);
 	if (chroma_abb)
 	{
 		sprintf(c_chroma_abb, "%d", chroma_abb);
@@ -932,7 +943,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len] = '0' + char(bloom);
 	++len;
 
-	int HdrEnabled = ps_r2_postprocess_flags.test(R2FLAG_HDR);
+	int HdrEnabled = ps_render_flags.test(RFLAG_HDR);
 	if (HdrEnabled)
 	{
 		sprintf(c_hdr, "%d", HdrEnabled);

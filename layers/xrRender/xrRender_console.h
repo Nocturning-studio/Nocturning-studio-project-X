@@ -47,6 +47,9 @@ enum
 	RFLAG_LENS_FLARES = (1 << 0),
 	RFLAG_EXP_MT_CALC = (1 << 1),
 	RFLAG_EXP_HW_OCC = (1 << 2),
+	RFLAG_SEPIA = (1 << 3),
+	RFLAG_HDR = (1 << 4),
+	RFLAG_CHROMATIC_ABBERATION = (1 << 5)
 };
 
 /*-------------------------------------------------------------------------------*/
@@ -177,14 +180,11 @@ enum
 	R2FLAG_FASTBLOOM = (1 << 1),
 	R2FLAG_SOFT_WATER = (1 << 2),
 	R2FLAG_SOFT_PARTICLES = (1 << 3),
-	R2FLAG_CHROMATIC_ABBERATION = (1 << 4),
-	R2FLAG_BLOOM = (1 << 5),
-	R2FLAG_DOF = (1 << 6),
-	R2FLAG_MBLUR = (1 << 7),
-	R2FLAG_SEPIA = (1 << 8),
-	R2FLAG_HDR = (1 << 9),
-	R2FLAG_SHARPEN = (1 << 10),
-	R2FLAG_BARREL_BLUR = (1 << 11)
+	R2FLAG_BLOOM = (1 << 4),
+	R2FLAG_DOF = (1 << 5),
+	R2FLAG_MBLUR = (1 << 6),
+	R2FLAG_SHARPEN = (1 << 7),
+	R2FLAG_BARREL_BLUR = (1 << 8)
 };
 
 extern ECORE_API Flags32 ps_r2_overlay_flags;

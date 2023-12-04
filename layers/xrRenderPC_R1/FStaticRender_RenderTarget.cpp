@@ -88,10 +88,14 @@ BOOL CRenderTarget::Create()
 
 	// Shaders and stream
 	s_postprocess.create("postprocess");
-	if (RImplementation.o.distortion)
-		s_postprocess_D.create("postprocess_d");
+	s_postprocess_D.create("postprocess_d");
 	g_postprocess.create(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_SPECULAR | D3DFVF_TEX3, RCache.Vertex.Buffer(),
 						 RCache.QuadIB);
+
+	// Menu
+	s_menu.create("distort");
+	g_menu.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
+
 	return RT->valid() && RT_distort->valid();
 }
 
@@ -102,6 +106,8 @@ CRenderTarget::~CRenderTarget()
 	s_postprocess_D.destroy();
 	s_postprocess.destroy();
 	g_postprocess.destroy();
+	s_menu.destroy();
+	g_menu.destroy();
 	RT_distort.destroy();
 	RT.destroy();
 }
@@ -207,40 +213,11 @@ BOOL CRenderTarget::Perform()
 #define SHOWX(a) Msg("%s %x", #a, a);
 void CRenderTarget::Begin()
 {
-	/*
-	if (g_pGameLevel->IR_GetKeyState(DIK_LSHIFT))
-	{
-		Msg					("[%5d]------------------------",Device.dwFrame);
-		SHOW				(param_blur)
-		SHOW				(param_gray)
-		SHOW				(param_duality_h)
-		SHOW				(param_duality_v)
-		SHOW				(param_noise)
-		SHOW				(param_noise_scale)
-		SHOW				(param_noise_fps)
+	RCache.set_RT(RT->pRT);
+	RCache.set_ZB(ZB);
+	curWidth = rtWidth;
+	curHeight = rtHeight;
 
-		SHOWX				(param_color_base)
-		SHOWX				(param_color_gray)
-		SHOWX				(param_color_add)
-	}
-	*/
-
-	if (!Perform())
-	{
-		// Base RT
-		RCache.set_RT(HW.pBaseRT);
-		RCache.set_ZB(HW.pBaseZB);
-		curWidth = Device.dwWidth;
-		curHeight = Device.dwHeight;
-	}
-	else
-	{
-		// Our
-		RCache.set_RT(RT->pRT);
-		RCache.set_ZB(ZB);
-		curWidth = rtWidth;
-		curHeight = rtHeight;
-	}
 	Device.Clear();
 }
 
@@ -264,14 +241,15 @@ struct TL_2c3uv
 void CRenderTarget::End()
 {
 	if (g_pGamePersistent)
-		g_pGamePersistent->OnRenderPPUI_main(); // PP-UI
+		g_pGamePersistent->OnRenderPPUI_main();
 
-	// find if distortion is needed at all
-	BOOL bPerform = Perform();
-	BOOL bDistort = RImplementation.o.distortion;
+	BOOL bDistort = TRUE;
+
 	bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
+
 	if ((0 == RImplementation.mapDistort.size()) && !_menu_pp)
 		bDistort = FALSE;
+
 	if (bDistort)
 		phase_distortion();
 
@@ -281,20 +259,11 @@ void CRenderTarget::End()
 	curWidth = Device.dwWidth;
 	curHeight = Device.dwHeight;
 
-	if (!bPerform)
-		return;
-	RCache.set_Shader(bDistort ? s_postprocess_D : s_postprocess);
-
 	int gblend = clampr(iFloor((1 - param_gray) * 255.f), 0, 255);
 	int nblend = clampr(iFloor((1 - param_noise) * 255.f), 0, 255);
 	u32 p_color = subst_alpha(param_color_base, nblend);
 	u32 p_gray = subst_alpha(param_color_gray, gblend);
 	u32 p_brightness = param_color_add;
-	// Msg				("param_gray:%f(%d),param_noise:%f(%d)",param_gray,gblend,param_noise,nblend);
-	// Msg				("base: %d,%d,%d",	color_get_R(p_color),		color_get_G(p_color),
-	// color_get_B(p_color)); Msg				("gray: %d,%d,%d",	color_get_R(p_gray),		color_get_G(p_gray),
-	// color_get_B(p_gray)); Msg				("add:  %d,%d,%d",	color_get_R(p_brightness),
-	// color_get_G(p_brightness),	color_get_B(p_brightness));
 
 	// Draw full-screen quad textured with our scene image
 	u32 Offset;
@@ -318,10 +287,32 @@ void CRenderTarget::End()
 	pv++;
 	RCache.Vertex.Unlock(4, g_postprocess.stride());
 
+	if (_menu_pp)
+	{
+		RCache.set_Shader(s_menu);
+	}
+	else
+	{
+		if (bDistort)
+			RCache.set_Shader(s_postprocess_D);
+		else
+			RCache.set_Shader(s_postprocess);
+	}
+
 	// Actual rendering
 	static shared_str s_brightness = "c_brightness";
 	RCache.set_c(s_brightness, color_get_R(p_brightness) / 255.f, color_get_G(p_brightness) / 255.f,
 				 color_get_B(p_brightness) / 255.f, 0);
+
+	CEnvDescriptor* EnvironmentDescriptor = g_pGamePersistent->Environment().CurrentEnv;
+
+	Fvector3 SepiaColor = EnvironmentDescriptor->m_SepiaColor;
+	float SepiaPower = EnvironmentDescriptor->m_SepiaPower;
+	RCache.set_c("sepia_params", SepiaColor.x, SepiaColor.y, SepiaColor.z, SepiaPower);
+
+	float VignettePower = EnvironmentDescriptor->m_VignettePower;
+	RCache.set_c("vignette_power", VignettePower, VignettePower, VignettePower, VignettePower);
+
 	RCache.set_Geometry(g_postprocess);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }

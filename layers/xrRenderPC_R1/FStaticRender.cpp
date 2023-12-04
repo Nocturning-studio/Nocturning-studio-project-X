@@ -72,27 +72,19 @@ void CRender::create()
 	::Device.Resources->RegisterConstantSetup("L_dynamic_color", &r1_dlight_binder_color);
 	::Device.Resources->RegisterConstantSetup("L_dynamic_xform", &r1_dlight_binder_xform);
 
-	// distortion
 	u32 v_dev = CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
-	u32 v_need = CAP_VERSION(1, 4);
-	if (v_dev >= v_need)
-		o.distortion = TRUE;
-	else
-		o.distortion = FALSE;
-	if (strstr(Core.Params, "-nodistort"))
-		o.distortion = FALSE;
-	Msg("* distortion: %s, dev(%d),need(%d)", o.distortion ? "used" : "unavailable", v_dev, v_need);
+	u32 v_need = CAP_VERSION(2, 0);
+	R_ASSERT2(v_dev >= v_need,
+			  make_string ("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0a supporting)"));
+
 	m_skinning = -1;
 
-	// disasm
 	o.disasm = (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
 	o.forceskinw = (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 	c_ldynamic_props = "L_dynamic_props";
 
-	//---------
 	Target = xr_new<CRenderTarget>();
-	//---------
-	//
+
 	Models = xr_new<CModelPool>();
 	L_Dynamic = xr_new<CLightR_Manager>();
 	PSLibrary.OnCreate();
@@ -861,6 +853,11 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	D3DXMACRO defines[128]{};
 	int def_it = 0;
 
+	char c_vignette[32];
+	char c_chroma_abb[32];
+	char c_sepia[32];
+	char c_hdr[32];
+
 	char sh_name[MAX_PATH] = "";
 	size_t len = 0;
 
@@ -873,6 +870,58 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	}
 	sh_name[len] = '0' + char(o.forceskinw);
 	++len;
+
+	int sepia = ps_render_flags.test(RFLAG_SEPIA);
+	if (sepia)
+	{
+		sprintf(c_sepia, "%d", sepia);
+		defines[def_it].Name = "USE_SEPIA";
+		defines[def_it].Definition = c_sepia;
+		def_it++;
+		strcat(sh_name, c_sepia);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(sepia);
+	++len;
+
+	int HdrEnabled = ps_render_flags.test(RFLAG_HDR);
+	if (HdrEnabled)
+	{
+		sprintf(c_hdr, "%d", HdrEnabled);
+		defines[def_it].Name = "USE_HDR";
+		defines[def_it].Definition = c_hdr;
+		def_it++;
+		strcat(sh_name, c_hdr);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(HdrEnabled);
+	++len;
+
+	int chroma_abb = ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION);
+	if (chroma_abb)
+	{
+		sprintf(c_chroma_abb, "%d", chroma_abb);
+		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
+		defines[def_it].Definition = c_chroma_abb;
+		def_it++;
+		strcat(sh_name, c_chroma_abb);
+		len += 1;
+	}
+	sh_name[len] = '0' + char(chroma_abb);
+	++len;
+
+	int vignette = ps_vignette_mode;
+	if (vignette)
+	{
+		sprintf(c_vignette, "%d", vignette);
+		defines[def_it].Name = "VIGNETTE_MODE";
+		defines[def_it].Definition = c_vignette;
+		def_it++;
+		strcat(sh_name, c_vignette);
+		len += 1;
+		sh_name[len] = '0' + char(vignette);
+		++len;
+	}
 
 	if (m_skinning < 0)
 	{

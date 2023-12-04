@@ -18,6 +18,9 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_postprocess_D;
 	ref_geom g_postprocess;
 
+	ref_shader s_menu;
+	ref_geom g_menu;
+
 	float im_noise_time;
 	u32 im_noise_shift_w;
 	u32 im_noise_shift_h;

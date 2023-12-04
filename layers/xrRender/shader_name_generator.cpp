@@ -36,6 +36,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	string_path DetailBumpCorrectionTexture;
 
 	// Other textures
+	string_path HemisphereLightMapTexture;
 	string_path LightMapTexture;
 	string_path BakedAOTexture;
 
@@ -108,9 +109,12 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	}
 	else
 	{
-		pcstr LightMapTextureName = C.L_textures[2].c_str();
-		if (LightMapTextureName[0] == 'l' && LightMapTextureName[1] == 'm' && LightMapTextureName[2] == 'a' &&
-			LightMapTextureName[3] == 'p')
+		pcstr HemisphereLightMapTextureName = C.L_textures[2].c_str();
+		pcstr LightMapTextureName = C.L_textures[1].c_str();
+		if ((HemisphereLightMapTextureName[0] == 'l' && HemisphereLightMapTextureName[1] == 'm' &&
+			 HemisphereLightMapTextureName[2] == 'a' && HemisphereLightMapTextureName[3] == 'p') &&
+			(LightMapTextureName[0] == 'l' && LightMapTextureName[1] == 'm' &&
+			 LightMapTextureName[2] == 'a' && LightMapTextureName[3] == 'p'))
 		{
 			bUseLightMap = true;
 		}
@@ -122,7 +126,10 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	// Get LightMap texture
 	if (bUseLightMap)
-		strcpy_s(LightMapTexture, sizeof(LightMapTexture), *C.L_textures[2]);
+	{
+		strcpy_s(HemisphereLightMapTexture, sizeof(HemisphereLightMapTexture), *C.L_textures[2]);
+		strcpy_s(LightMapTexture, sizeof(LightMapTexture), *C.L_textures[1]);
+	}
 
 	// Get BakedAO texture
 	strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), AlbedoTexture);
@@ -184,8 +191,12 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 				D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 	if (bUseLightMap)
-		C.r_Sampler("s_hemi", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
+	{
+		C.r_Sampler("s_hemi", HemisphereLightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
 					D3DTEXF_LINEAR);
+		C.r_Sampler("s_lmap", LightMapTexture, false, D3DTADDRESS_CLAMP, D3DTEXF_GAUSSIANQUAD, D3DTEXF_NONE,
+					D3DTEXF_LINEAR);
+	}
 
 	jitter(C);
 

@@ -59,7 +59,7 @@ void CRenderTarget::calculate_depth_of_field()
 
 void CRenderTarget::phase_depth_of_field()
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 4; i++)
 		calculate_depth_of_field();
 }
 ///////////////////////////////////////////////////////////////////////////////////
