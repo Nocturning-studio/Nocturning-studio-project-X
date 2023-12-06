@@ -232,7 +232,7 @@ Flags32 ps_r2_overlay_flags = {
 	0,
 };
 
-Flags32 ps_r2_ls_flags = {R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE};
+Flags32 ps_r2_ls_flags = {};
 
 /*-------------------------------------------------------------------------------*/
 // Methods
@@ -714,7 +714,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_sun", &ps_r2_lighting_flags, R2FLAG_SUN);
 	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_lighting_flags, R2FLAG_SUN_DETAILS);
 	CMD3(CCC_Mask, "r2_sun_focus", &ps_r2_lighting_flags, R2FLAG_SUN_FOCUS);
-	CMD3(CCC_Mask, "r2_exp_splitscene", &ps_r2_ls_flags, R2FLAG_EXP_SPLIT_SCENE);
 	CMD3(CCC_Mask, "r2_exp_donttest_uns", &ps_r2_lighting_flags, R2FLAG_EXP_DONT_TEST_UNSHADOWED);
 	CMD3(CCC_Mask, "r2_sun_tsm", &ps_r2_lighting_flags, R2FLAG_SUN_TSM);
 	CMD4(CCC_Float, "r2_sun_tsm_proj", &ps_r2_sun_tsm_projection, .001f, 0.8f);
@@ -761,7 +760,7 @@ void xrRender_initconsole()
 
 	CMD4(CCC_Float, "r2_ssa_lod_a", &ps_r2_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r2_ssa_lod_b", &ps_r2_ssaLOD_B, 32, 64);
-	CMD4(CCC_Float, "r2_detalization_distance", &ps_r2_detalization_distance, 5.0f, 175.0f);
+	CMD4(CCC_Float, "r2_detalization_distance", &ps_r2_detalization_distance, 10.0f, 100.0f);
 
 	CMD2(CCC_tf_MipBias, "r2_tf_mipbias", &ps_r2_tf_Mipbias);
 

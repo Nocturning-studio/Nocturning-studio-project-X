@@ -128,14 +128,14 @@ void CRender::create()
 			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 4:
-			o.smapsize = 2048;
+			o.smapsize = 1536;
 			o.sun_depth_far_bias = -0.001f;
 			o.sun_depth_near_bias = -0.0001f;
 			break;
 		case 5:
-			o.smapsize = 2560;
-			o.sun_depth_far_bias = -0.002f;
-			o.sun_depth_near_bias = -0.0003f;
+			o.smapsize = 2048;
+			o.sun_depth_far_bias = -0.0002f;
+			o.sun_depth_near_bias = -0.00006f;
 			break;
 		}
 		o.sun_depth_far_scale = 1.0f;

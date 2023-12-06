@@ -328,8 +328,6 @@ CRenderTarget::CRenderTarget()
 		rt_Bloom_2.create(r2_RT_bloom2, w, h, fmt);
 		g_bloom_build.create(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_bloom_filter.create(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
-		s_bloom_dbg_1.create("effects\\screen_set", r2_RT_bloom1);
-		s_bloom_dbg_2.create("effects\\screen_set", r2_RT_bloom2);
 		s_bloom.create(b_bloom, "r2\\bloom");
 	}
 

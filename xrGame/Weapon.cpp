@@ -903,9 +903,10 @@ bool CWeapon::Action(s32 cmd, u32 flags)
 			if (psWpnZoomButtonMode == 1) // If zoom mode changing by button click
 			{
 				if (flags & CMD_START && !IsPending())
-					IsZoomed()
-						? OnZoomOut()
-						: OnZoomIn(); // Если актер в зуме то выходим из него по нажатию кнопки, если нет то входим
+					if (IsZoomed())
+						OnZoomOut();
+					else
+						OnZoomIn(); // Если актер в зуме то выходим из него по нажатию кнопки, если нет то входим
 			}
 			else if (psWpnZoomButtonMode == 2) // If zoom mode changing by button hold
 			{
