@@ -106,6 +106,8 @@ void CRender::level_Load(IReader* fs)
 
 	// signal loaded
 	b_loaded = TRUE;
+
+	Console->Execute("vid_restart");
 }
 
 void CRender::level_Unload()
@@ -187,8 +189,6 @@ void CRender::level_Unload()
 	// End
 	//	pApp->LoadEnd();
 	b_loaded = FALSE;
-
-	Console->Execute("vid_restart");
 }
 
 void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
