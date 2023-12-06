@@ -5,6 +5,7 @@
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrCore/stream_reader.h"
+#include "../xrEngine/xr_ioconsole.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4995)
@@ -93,6 +94,8 @@ void CRender::level_Load(IReader* fs)
 	// End
 	pApp->LoadEnd();
 	b_loaded = TRUE;
+
+	Console->Execute("vid_restart");
 }
 
 void CRender::level_Unload()
