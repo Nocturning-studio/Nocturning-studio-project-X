@@ -41,6 +41,8 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_tex("s_debug_triple_mask", "ed\\debug_triple_mask");
 		C.r_Sampler_tex("s_debug_quadro_mask", "ed\\debug_quadro_mask");
 
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
+
 		jitter(C);
 		C.r_End();
 		break;
