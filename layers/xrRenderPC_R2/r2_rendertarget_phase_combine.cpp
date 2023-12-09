@@ -128,7 +128,7 @@ void CRenderTarget::phase_combine()
 
 	// Forward rendering
 	{
-		u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB); // LDR RT
+		u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, HW.pBaseZB); // LDR RT
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_Stencil(FALSE);
 		RCache.set_ColorWriteEnable();
