@@ -741,19 +741,19 @@ void CWeaponMagazined::switch2_Reload()
 
 	if (GetAmmoElapsed() >= 1 && !IsMisfire())
 	{
-		Msg("Magazine has ammo, we are will reload partial");
+		//Msg("Magazine has ammo, we are will reload partial");
 		PlayPartialReloadSound();
 		PlayAnimPartialReload();
 	}
 	else if (IsMisfire())
 	{
-		Msg("Weapon is misfire, we are need give ему пизды");
+		//Msg("Weapon is misfire, we are need give ему пизды");
 		PlayMisfireReloadSound();
 		PlayAnimMisfireReload();
 	}
 	else
 	{
-		Msg("Magazine has't ammo, we are will full reload");
+		//Msg("Magazine has't ammo, we are will full reload");
 		PlayReloadSound();
 		PlayAnimReload();
 	}
