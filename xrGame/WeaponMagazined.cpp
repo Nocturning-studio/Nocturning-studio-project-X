@@ -42,6 +42,8 @@ CWeaponMagazined::~CWeaponMagazined()
 	HUD_SOUND::DestroySound(sndShot);
 	HUD_SOUND::DestroySound(sndEmptyClick);
 	HUD_SOUND::DestroySound(sndReload);
+	HUD_SOUND::DestroySound(sndReloadPartial);
+	HUD_SOUND::DestroySound(sndReloadMisfire);
 }
 
 void CWeaponMagazined::StopHUDSounds()
@@ -51,6 +53,8 @@ void CWeaponMagazined::StopHUDSounds()
 
 	HUD_SOUND::StopSound(sndEmptyClick);
 	HUD_SOUND::StopSound(sndReload);
+	HUD_SOUND::StopSound(sndReloadPartial);
+	HUD_SOUND::StopSound(sndReloadMisfire);
 
 	HUD_SOUND::StopSound(sndShot);
 	//.	if(sndShot.enable && sndShot.snd.feedback)
@@ -75,6 +79,16 @@ void CWeaponMagazined::Load(LPCSTR section)
 	HUD_SOUND::LoadSound(section, "snd_empty", sndEmptyClick, m_eSoundEmptyClick);
 	HUD_SOUND::LoadSound(section, "snd_reload", sndReload, m_eSoundReload);
 
+	if (pSettings->line_exist(*hud_sect, "snd_reload_partial"))
+		HUD_SOUND::LoadSound(section, "snd_reload_partial", sndReloadPartial, m_eSoundReload);
+	else
+		HUD_SOUND::LoadSound(section, "snd_reload", sndReloadPartial, m_eSoundReload);
+
+	if (pSettings->line_exist(*hud_sect, "snd_reload_misfire"))
+		HUD_SOUND::LoadSound(section, "snd_reload_misfire", sndReloadMisfire, m_eSoundReload);
+	else
+		HUD_SOUND::LoadSound(section, "snd_reload", sndReloadMisfire, m_eSoundReload);
+
 	m_pSndShotCurrent = &sndShot;
 
 	// HUD :: Anims
@@ -84,6 +98,16 @@ void CWeaponMagazined::Load(LPCSTR section)
 	animGet(mhud.mhud_show, pSettings->r_string(*hud_sect, "anim_draw"));
 	animGet(mhud.mhud_hide, pSettings->r_string(*hud_sect, "anim_holster"));
 	animGet(mhud.mhud_shots, pSettings->r_string(*hud_sect, "anim_shoot"));
+
+	if (pSettings->line_exist(*hud_sect, "anim_reload_partial"))
+		animGet(mhud.mhud_reload_partial, pSettings->r_string(*hud_sect, "anim_reload_partial"));
+	else
+		animGet(mhud.mhud_reload_partial, pSettings->r_string(*hud_sect, "anim_reload"));
+
+	if (pSettings->line_exist(*hud_sect, "anim_reload_misfire"))
+		animGet(mhud.mhud_reload_misfire, pSettings->r_string(*hud_sect, "anim_reload_misfire"));
+	else
+		animGet(mhud.mhud_reload_misfire, pSettings->r_string(*hud_sect, "anim_reload"));
 
 	if (pSettings->line_exist(*hud_sect, "anim_idle_sprint"))
 		animGet(mhud.mhud_idle_sprint, pSettings->r_string(*hud_sect, "anim_idle_sprint"));
@@ -475,6 +499,10 @@ void CWeaponMagazined::UpdateSounds()
 		sndShot.set_position(get_LastFP());
 	if (sndReload.playing())
 		sndReload.set_position(get_LastFP());
+	if (sndReloadPartial.playing())
+		sndReloadPartial.set_position(get_LastFP());
+	if (sndReloadMisfire.playing())
+		sndReloadMisfire.set_position(get_LastFP());
 	if (sndEmptyClick.playing())
 		sndEmptyClick.set_position(get_LastFP());
 }
@@ -673,19 +701,66 @@ void CWeaponMagazined::switch2_Empty()
 		inherited::FireEnd();
 	}
 }
+
 void CWeaponMagazined::PlayReloadSound()
 {
 	PlaySound(sndReload, get_LastFP());
+}
+
+void CWeaponMagazined::PlayAnimReload()
+{
+	VERIFY(GetState() == eReload);
+	m_pHUD->animPlay(random_anim(mhud.mhud_reload), TRUE, this, GetState());
+}
+
+void CWeaponMagazined::PlayPartialReloadSound()
+{
+	PlaySound(sndReloadPartial, get_LastFP());
+}
+
+void CWeaponMagazined::PlayAnimPartialReload()
+{
+	VERIFY(GetState() == eReload);
+	m_pHUD->animPlay(random_anim(mhud.mhud_reload_partial), TRUE, this, GetState());
+}
+
+void CWeaponMagazined::PlayMisfireReloadSound()
+{
+	PlaySound(sndReloadMisfire, get_LastFP());
+}
+
+void CWeaponMagazined::PlayAnimMisfireReload()
+{
+	VERIFY(GetState() == eReload);
+	m_pHUD->animPlay(random_anim(mhud.mhud_reload_misfire), TRUE, this, GetState());
 }
 
 void CWeaponMagazined::switch2_Reload()
 {
 	CWeapon::FireEnd();
 
-	PlayReloadSound();
-	PlayAnimReload();
+	if (GetAmmoElapsed() >= 1 && !IsMisfire())
+	{
+		Msg("Magazine has ammo, we are will reload partial");
+		PlayPartialReloadSound();
+		PlayAnimPartialReload();
+	}
+	else if (IsMisfire())
+	{
+		Msg("Weapon is misfire, we are need give ему пизды");
+		PlayMisfireReloadSound();
+		PlayAnimMisfireReload();
+	}
+	else
+	{
+		Msg("Magazine has't ammo, we are will full reload");
+		PlayReloadSound();
+		PlayAnimReload();
+	}
+
 	m_bPending = true;
 }
+
 void CWeaponMagazined::switch2_Hiding()
 {
 	CWeapon::FireEnd();
@@ -1003,12 +1078,6 @@ void CWeaponMagazined::PlayAnimHide()
 {
 	VERIFY(GetState() == eHiding);
 	m_pHUD->animPlay(random_anim(mhud.mhud_hide), TRUE, this, GetState());
-}
-
-void CWeaponMagazined::PlayAnimReload()
-{
-	VERIFY(GetState() == eReload);
-	m_pHUD->animPlay(random_anim(mhud.mhud_reload), TRUE, this, GetState());
 }
 
 bool CWeaponMagazined::TryPlayAnimIdle()

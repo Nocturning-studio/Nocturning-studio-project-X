@@ -24,6 +24,8 @@ class CWeaponMagazined : public CWeapon
 	HUD_SOUND sndShot;
 	HUD_SOUND sndEmptyClick;
 	HUD_SOUND sndReload;
+	HUD_SOUND sndReloadPartial;
+	HUD_SOUND sndReloadMisfire;
 	// звук текущего выстрела
 	HUD_SOUND* m_pSndShotCurrent;
 
@@ -44,6 +46,8 @@ class CWeaponMagazined : public CWeapon
 		MotionSVec mhud_idle;
 		MotionSVec mhud_idle_aim;
 		MotionSVec mhud_reload; //
+		MotionSVec mhud_reload_partial;
+		MotionSVec mhud_reload_misfire;
 		MotionSVec mhud_hide;	//
 		MotionSVec mhud_show;	//
 		MotionSVec mhud_shots;	//
@@ -154,7 +158,7 @@ class CWeaponMagazined : public CWeapon
 	// количество реально выстреляных патронов
 	int m_iShotNum;
 	//  [7/20/2005]
-	// после какого патрона, при непрерывной стрельбе, начинается отдача (сделано из-зи Абакана)
+	// после какого патрона, при непрерывной стрельбе, начинается отдача (сделано из-за Абакана)
 	int m_iShootEffectorStart;
 	Fvector m_vStartPos, m_vStartDir;
 	//  [7/20/2005]
@@ -200,6 +204,8 @@ class CWeaponMagazined : public CWeapon
 	virtual void load(IReader& input_packet);
 
   protected:
+	bool m_bNeedPartialReload;
+
 	virtual bool AllowFireWhileWorking()
 	{
 		return false;
@@ -209,9 +215,13 @@ class CWeaponMagazined : public CWeapon
 	virtual void PlayAnimShow();
 	virtual void PlayAnimHide();
 	virtual void PlayAnimReload();
+	virtual void PlayAnimPartialReload();
+	virtual void PlayAnimMisfireReload();
 	virtual void PlayAnimIdle();
 	virtual void PlayAnimShoot();
 	virtual void PlayReloadSound();
+	virtual void PlayPartialReloadSound();
+	virtual void PlayMisfireReloadSound();
 
 	virtual void StartIdleAnim();
 	virtual int ShotsFired()
