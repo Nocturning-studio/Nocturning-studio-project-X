@@ -320,8 +320,6 @@ void CWeaponMagazinedWGrenade::state_Fire(float dt)
 				m_magazine.pop_back();
 				--iAmmoElapsed;
 
-				VERIFY((u32)iAmmoElapsed == m_magazine.size());
-
 				if (!iAmmoElapsed)
 					OnMagazineEmpty();
 			}

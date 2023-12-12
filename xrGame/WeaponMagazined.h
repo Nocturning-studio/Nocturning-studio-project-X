@@ -178,6 +178,8 @@ class CWeaponMagazined : public CWeapon
 	// переменная блокирует использование
 	// только разных типов патронов
 	bool m_bLockType;
+	bool m_bAmmoInChamberAllowed;
+	bool m_bChamberHasAmmo;
 
 	//////////////////////////////////////////////
 	// режим приближения

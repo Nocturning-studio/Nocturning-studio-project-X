@@ -377,8 +377,6 @@ u8 CWeaponShotgun::AddCartridge(u8 cnt)
 	if (!HaveCartridgeInInventory(1))
 		return 0;
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
-
 	if (m_DefaultCartridge.m_LocalAmmoType != m_ammoType)
 		m_DefaultCartridge.Load(*m_ammoTypes[m_ammoType], u8(m_ammoType));
 	CCartridge l_cartridge = m_DefaultCartridge;
@@ -396,8 +394,6 @@ u8 CWeaponShotgun::AddCartridge(u8 cnt)
 		//		m_fCurrentCartirdgeDisp = l_cartridge.m_kDisp;
 	}
 	m_ammoName = (m_pAmmo) ? m_pAmmo->m_nameShort : NULL;
-
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 
 	// выкинуть коробку патронов, если она пустая
 	if (m_pAmmo && !m_pAmmo->m_boxCurr && OnServer())

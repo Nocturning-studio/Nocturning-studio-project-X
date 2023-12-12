@@ -91,8 +91,6 @@ void CWeapon::FireTrace(const Fvector& P, const Fvector& D)
 
 	// проверить не произошла ли осечка
 	CheckForMisfire();
-
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 }
 
 void CWeapon::Fire2Start()

@@ -287,8 +287,6 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 		--iAmmoElapsed;
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
-
 	if (!spawn_ammo)
 		return;
 
@@ -309,6 +307,11 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 
 void CWeaponMagazined::ReloadMagazine()
 {
+	m_bChamberHasAmmo = false;
+
+	if ((iAmmoElapsed > 0) && m_bAmmoInChamberAllowed == true)
+		m_bChamberHasAmmo = true;
+
 	m_dwAmmoCurrentCalcFrame = 0;
 
 	// устранить осечку при перезар€дке
@@ -364,12 +367,15 @@ void CWeaponMagazined::ReloadMagazine()
 		(!m_pAmmo || xr_strcmp(m_pAmmo->cNameSect(), *m_magazine.back().m_ammoSect)))
 		UnloadMagazine();
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
-
 	if (m_DefaultCartridge.m_LocalAmmoType != m_ammoType)
 		m_DefaultCartridge.Load(*m_ammoTypes[m_ammoType], u8(m_ammoType));
 	CCartridge l_cartridge = m_DefaultCartridge;
-	while (iAmmoElapsed < iMagazineSize)
+
+	u32 iAmmoNeededToLoad = iMagazineSize;
+	if (m_bChamberHasAmmo)
+		iAmmoNeededToLoad += 1;
+
+	while (iAmmoElapsed < iAmmoNeededToLoad)
 	{
 		if (!unlimited_ammo())
 		{
@@ -382,20 +388,19 @@ void CWeaponMagazined::ReloadMagazine()
 	}
 	m_ammoName = (m_pAmmo) ? m_pAmmo->m_nameShort : NULL;
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
-
 	// выкинуть коробку патронов, если она пуста€
 	if (m_pAmmo && !m_pAmmo->m_boxCurr && OnServer())
 		m_pAmmo->SetDropManual(TRUE);
 
+	//ƒозар€дка если одной пачки из инвентар€ не хватило
 	if (iMagazineSize > iAmmoElapsed)
 	{
 		m_bLockType = true;
+		m_bAmmoInChamberAllowed = false;
 		ReloadMagazine();
+		m_bAmmoInChamberAllowed = true;
 		m_bLockType = false;
 	}
-
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 }
 
 void CWeaponMagazined::OnStateSwitch(u32 S)

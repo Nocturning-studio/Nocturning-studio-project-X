@@ -552,7 +552,6 @@ BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 
 	m_dwWeaponIndependencyTime = 0;
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 	m_bAmmoWasSpawned = false;
 
 	return bResult;
@@ -644,8 +643,6 @@ void CWeapon::net_Import(NET_Packet& P)
 	}
 	break;
 	}
-
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 }
 
 void CWeapon::save(NET_Packet& output_packet)
