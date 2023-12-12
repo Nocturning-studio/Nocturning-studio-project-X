@@ -1227,6 +1227,64 @@ class CCC_SpawnToInventory : public IConsole_Command
 		}
 	}
 };
+
+class CCC_SetWeather : public IConsole_Command
+{
+  public:
+	CCC_SetWeather(LPCSTR N) : IConsole_Command(N)
+	{
+	}
+
+	void Execute(LPCSTR args) override
+	{
+		if (!strlen(args))
+			return;
+		if (!g_pGameLevel)
+			return;
+		if (!g_pGamePersistent)
+			return;
+
+		g_pGamePersistent->Environment().SetWeather(args, true);
+	}
+};
+
+class CCC_SetWeatherFX : public IConsole_Command
+{
+  public:
+	CCC_SetWeatherFX(LPCSTR N) : IConsole_Command(N)
+	{
+	}
+
+	void Execute(LPCSTR args) override
+	{
+		if (!strlen(args))
+			return;
+		if (!g_pGameLevel)
+			return;
+		if (!g_pGamePersistent)
+			return;
+
+		g_pGamePersistent->Environment().SetWeatherFX(args);
+	}
+};
+
+class CCC_StopWeatherFX : public IConsole_Command
+{
+  public:
+	CCC_StopWeatherFX(LPCSTR N) : IConsole_Command(N)
+	{
+	}
+
+	void Execute(LPCSTR args) override
+	{
+		if (!g_pGameLevel)
+			return;
+		if (!g_pGamePersistent)
+			return;
+
+		g_pGamePersistent->Environment().StopWFX();
+	}
+};
 #endif // MASTER_GOLD
 
 #include "GamePersistent.h"
@@ -1751,6 +1809,9 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD3(CCC_Mask, "g_autopickup", &psActorFlags, AF_AUTOPICKUP);
+	CMD1(CCC_SetWeather, "set_weather_cycle");
+	CMD1(CCC_SetWeatherFX, "set_weather_effect");
+	CMD1(CCC_StopWeatherFX, "stop_weather_effects");
 #endif // MASTER_GOLD
 
 #ifdef DEBUG

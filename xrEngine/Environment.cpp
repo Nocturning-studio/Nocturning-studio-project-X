@@ -198,11 +198,8 @@ float CEnvironment::NormalizeTime(float tm)
 
 void CEnvironment::SetWeather(shared_str name, bool forced)
 {
-	//.	static BOOL bAlready = FALSE;
-	//.	if(bAlready)	return;
 	if (name.size())
 	{
-		//.		bAlready = TRUE;
 		EnvsMapIt it = WeatherCycles.find(name);
 		if (it == WeatherCycles.end())
 		{
