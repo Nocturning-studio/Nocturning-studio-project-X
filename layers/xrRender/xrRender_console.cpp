@@ -163,12 +163,12 @@ float ps_r2_autoexposure_adaptation = 1.f;
 float ps_r2_autoexposure_low_lum = 0.0001f;
 float ps_r2_autoexposure_amount = 0.5f;
 
-float ps_r2_bloom_kernel_g = 3.5f;
+float ps_r2_bloom_kernel_g = 4.5f;
 float ps_r2_bloom_kernel_b = 1.0f;
-float ps_r2_bloom_speed = 0.1f;
+float ps_r2_bloom_speed = 0.01f;
 float ps_r2_bloom_kernel_scale = 2.0f;
 float ps_r2_bloom_threshold = 0.9f;
-float ps_r2_bloom_factor = 0.1f;
+float ps_r2_bloom_factor = 0.05f;
 
 float ps_r2_ls_dsm_kernel = 0.7f;
 float ps_r2_ls_psm_kernel = 0.7f;
