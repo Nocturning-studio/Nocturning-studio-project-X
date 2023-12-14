@@ -61,6 +61,7 @@ class CRender : public R_dsgraph_structure
 		u32 Tshadows : 1; // transluent shadows
 
 		u32 disasm : 1;
+		u32 forbidshadercahe : 1;
 
 		// Render specification
 		u32 advancedpp : 1; //	advanced post process (DOF, AO, etc.)

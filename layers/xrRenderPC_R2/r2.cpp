@@ -95,33 +95,39 @@ extern ENGINE_API BOOL r2_advanced_pp;
 void CheckHWSupporting()
 {
 	R_ASSERT2(CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor) >= CAP_VERSION(3, 0),
-		make_string("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0c supporting)"));
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0c supporting)"));
 
 	if (r2_advanced_pp)
 	{
 		R_ASSERT2(HW.Caps.raster.dwInstructions >= 512,
-			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions count less than 512)"));
+				  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions "
+							  "count less than 512)"));
 	}
 	else
 	{
 		R_ASSERT2(HW.Caps.raster.dwInstructions >= 256,
-			make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions count less than 256)"));
+				  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions "
+							  "count less than 256)"));
 	}
 
-	R_ASSERT2(HW.Caps.raster.dwMRT_count >= 3,
+	R_ASSERT2(
+		HW.Caps.raster.dwMRT_count >= 3,
 		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets)"));
 
-	R_ASSERT2(HW.Caps.raster.b_MRT_mixdepth,
-		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets independent depths)"));
+	R_ASSERT2(HW.Caps.raster.b_MRT_mixdepth, make_string("Your graphics accelerator don`t meet minimal mod system "
+														 "requirements (Multiple render targets independent depths)"));
 
 	R_ASSERT2(HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL),
-		make_string("Your graphics accelerator don`t meet minimal mod system requirements (D24X8 rendertarget format)"));
+			  make_string(
+				  "Your graphics accelerator don`t meet minimal mod system requirements (D24X8 rendertarget format)"));
 
-	R_ASSERT2(HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER), 
-		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Floating point 16-bits rendertarget format)"));
+	R_ASSERT2(HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER),
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Floating point "
+						  "16-bits rendertarget format)"));
 
 	R_ASSERT2(HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING),
-		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
+			  make_string(
+				  "Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
 }
 //////////////////////////////////////////////////////////////////////////
 void CRender::create()
@@ -235,6 +241,8 @@ void CRender::create()
 		o.nvstencil = TRUE;
 	if (strstr(Core.Params, "-nonvs"))
 		o.nvstencil = FALSE;
+
+	o.forbidshadercahe = (strstr(Core.Params, "-forbid_shader_cache")) ? TRUE : FALSE;
 
 	// nv-dbt
 	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);
@@ -1261,9 +1269,9 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	strcat(disasm_file_name, "\\");
 	strcat(disasm_file_name, name);
 
-	if (FS.exist(file_name))
+	if (FS.exist(file_name) && !o.forbidshadercahe)
 	{
-		// Msg("opening library or cache shader...");
+		DbgMsg("opening library or cache shader...");
 		IReader* file = FS.r_open(file_name);
 		if (file->length() > 4)
 		{
@@ -1285,13 +1293,12 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 
 	if (FAILED(_result))
 	{
-		//
 		if (0 == xr_strcmp(pFunctionName, "main"))
 		{
 			if ('v' == pTarget[0])
-				pTarget = D3DXGetVertexShaderProfile(HW.pDevice); // vertex	"vs_2_a"; //
+				pTarget = D3DXGetVertexShaderProfile(HW.pDevice);
 			else
-				pTarget = D3DXGetPixelShaderProfile(HW.pDevice); // pixel	"ps_2_a"; //
+				pTarget = D3DXGetPixelShaderProfile(HW.pDevice);
 		}
 
 		includer Includer;
@@ -1307,16 +1314,20 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 
 		if (SUCCEEDED(_result))
 		{
-			IWriter* file = FS.w_open(file_name);
 
-			boost::crc_32_type processor;
-			processor.process_block(pShaderBuf->GetBufferPointer(),
-									((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize());
-			u32 const crc = processor.checksum();
+			if (!o.forbidshadercahe)
+			{
+				IWriter* file = FS.w_open(file_name);
 
-			file->w_u32(crc);
-			file->w(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
-			FS.w_close(file);
+				boost::crc_32_type processor;
+				processor.process_block(pShaderBuf->GetBufferPointer(),
+										((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize());
+				u32 const crc = processor.checksum();
+
+				file->w_u32(crc);
+				file->w(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
+				FS.w_close(file);
+			}
 
 			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(),
 									file_name, result, o.disasm, disasm_file_name);
