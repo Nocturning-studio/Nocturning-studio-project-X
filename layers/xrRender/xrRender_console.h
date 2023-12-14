@@ -150,7 +150,7 @@ extern ECORE_API float ps_r2_slight_fade; // 1.f
 extern ECORE_API u32 ps_r2_ao;
 extern ECORE_API u32 ps_r2_ao_quality;
 
-extern ECORE_API u32 ps_r2_debug_frame_layers;
+extern ECORE_API u32 ps_r2_debug_render;
 
 extern ECORE_API float ps_r2_df_parallax_h;
 extern ECORE_API u32 ps_r2_bump_mode;

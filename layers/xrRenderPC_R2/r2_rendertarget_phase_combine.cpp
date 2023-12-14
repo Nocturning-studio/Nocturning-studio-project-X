@@ -216,41 +216,44 @@ void CRenderTarget::phase_combine()
 			RCache.set_Stencil(FALSE);
 		}
 
-		if (ps_r_aa)
-			phase_antialiasing();
+		if (ps_r2_debug_render == 0)
+		{
+			if (ps_r_aa)
+				phase_antialiasing();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))	
-			phase_bloom();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
+				phase_bloom();
 
-		if (ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION))
-			phase_chromatic_abberation();
+			if (ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION))
+				phase_chromatic_abberation();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
-			phase_depth_of_field();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
+				phase_depth_of_field();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
-			phase_barrel_blur();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
+				phase_barrel_blur();
 
-		if (ps_render_flags.test(RFLAG_LENS_FLARES))
-			g_pGamePersistent->Environment().RenderFlares();
+			if (ps_render_flags.test(RFLAG_LENS_FLARES))
+				g_pGamePersistent->Environment().RenderFlares();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
-			phase_motion_blur();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+				phase_motion_blur();
 
-		if (ps_render_flags.test(RFLAG_HDR))
-			phase_tonemapping();
+			if (ps_render_flags.test(RFLAG_HDR))
+				phase_tonemapping();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
-			phase_autoexposure();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
+				phase_autoexposure();
 
-		if (ps_render_flags.test(RFLAG_SEPIA))
-			phase_sepia();
+			if (ps_render_flags.test(RFLAG_SEPIA))
+				phase_sepia();
 
-		if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SHARPEN))
-			phase_sharpen();
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SHARPEN))
+				phase_sharpen();
 
-		if (ps_vignette_mode)
-			phase_vignette();
+			if (ps_vignette_mode)
+				phase_vignette();
+		}
 
 		draw_overlays();
 

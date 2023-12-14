@@ -851,16 +851,16 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len] = '0' + char(o.Tshadows);
 	++len;
 
-	if (ps_r2_debug_frame_layers)
+	if (ps_r2_debug_render)
 	{
-		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_frame_layers);
+		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_render);
 		defines[def_it].Name = "DEBUG_VIEW_MODE";
 		defines[def_it].Definition = c_debug_frame_layers;
 		def_it++;
 		strcat(sh_name, c_debug_frame_layers);
 		len += 4;
 	}
-	sh_name[len] = '0' + char(ps_r2_debug_frame_layers);
+	sh_name[len] = '0' + char(ps_r2_debug_render);
 	++len;
 
 	if (o.sunfilter)

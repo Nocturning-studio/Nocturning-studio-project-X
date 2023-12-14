@@ -19,7 +19,8 @@ u32 ps_r_aa = 1;
 #if RENDER == R_R1
 xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
 #else
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_dlaa", 1}, {"st_opt_dlaa_force_edge_detect", 2}, {"st_opt_fxaa", 3}, {0, 0}};
+xr_token aa_token[] = {
+	{"st_opt_disabled", 0}, {"st_opt_dlaa", 1}, {"st_opt_dlaa_force_edge_detect", 2}, {"st_opt_fxaa", 3}, {0, 0}};
 #endif
 
 u32 ps_r_aa_iterations = 2;
@@ -77,23 +78,24 @@ u32 ps_r2_fog_quality = 2;
 xr_token fog_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32 ps_r2_debug_frame_layers = 0;
-xr_token debug_frame_layers_token[] = {{"full_frame", 0},
-									   {"gbuffer_color", 1},
-									   {"gbuffer_position", 2},
-									   {"gbuffer_normal", 3},
-									   {"gbuffer_gloss", 4},
-									   {"gbuffer_lightmap_ao", 5},
-									   {"gbuffer_material", 6},
-									   {"gbuffer_split", 7},
-									   {"light_diffuse", 8},
-									   {"light_specular", 9},
-									   {"real_time_ao", 10},
-									   {"real_time_ao_with_lightmap_ao", 11},
-									   {"split_ao_blur_stages", 12},
-									   {"full_light", 13},
-									   {0, 0}};
-
+u32 ps_r2_debug_render = 0;
+xr_token debug_render_token[] = {{"disabled", 0},
+								 {"gbuffer_albedo", 1},
+								 {"gbuffer_position", 2},
+								 {"gbuffer_normal", 3},
+								 {"gbuffer_glossiness", 4},
+								 {"gbuffer_lightmap_ao", 5},
+								 {"gbuffer_material", 6},
+								 {"accumulator_diffuse", 7},
+								 {"accumulator_specular", 8},
+								 {"diffuse", 9},
+								 {"specular", 10},
+								 {"real_time_ao", 11},
+								 {"split_real_time_ao_blur", 12},
+								 {"ambient", 13},
+								 {"reflections", 14},
+								 {"lighting", 15},
+								 {0, 0}};
 u32 ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
 
@@ -749,7 +751,7 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
 
-	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_frame_layers, debug_frame_layers_token);
+	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
 
 	CMD3(CCC_Mask, "r2_hard_optimization", &ps_r2_ls_flags, R2FLAG_HARD_OPTIMIZATION);
