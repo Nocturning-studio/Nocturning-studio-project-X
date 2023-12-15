@@ -24,7 +24,7 @@ void HUD_SOUND::LoadSound(LPCSTR section, LPCSTR line, HUD_SOUND& hud_snd, int t
 		sprintf_s(sound_line, "%s%d", line, ++k);
 	} // while
 
-	R_ASSERT3(!hud_snd.sounds.empty(), "there is no sounds for:", section);
+	VERIFY3(!hud_snd.sounds.empty(), "there is no sounds for:", section);
 }
 
 void HUD_SOUND::LoadSound(LPCSTR section, LPCSTR line, ref_sound& snd, int type, float* volume, float* delay)

@@ -8,8 +8,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-int rsDVB_Size = 1024 * 4; // 512 + 1024;
-int rsDIB_Size = 2048 * 8; // 512 + 2048;
+int rsDVB_Size = 1024 * 4;
+int rsDIB_Size = 1024 * 4;
 
 void _VertexStream::Create()
 {
@@ -41,7 +41,7 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 
 	// Ensure there is enough space in the VB for this data
 	u32 bytes_need = vl_Count * Stride;
-	R_ASSERT((bytes_need <= mSize) && vl_Count);
+	VERIFY((bytes_need <= mSize) && vl_Count);
 
 	// Vertex-local info
 	u32 vl_mSize = mSize / Stride;

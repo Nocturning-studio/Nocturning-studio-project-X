@@ -53,7 +53,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		{
 			R_ASSERT(!tpExistedEntity);
 			//			VERIFY3			(smart_cast<CSE_ALifeItemBolt*>(E) ||
-			//smart_cast<CSE_ALifeItemGrenade*>(E),*E->s_name,E->name_replace());
+			// smart_cast<CSE_ALifeItemGrenade*>(E),*E->s_name,E->name_replace());
 			F_entity_Destroy(E);
 			return NULL;
 		}
@@ -129,7 +129,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 
 		if (0xffff != E->ID_Parent)
 		{
-			R_ASSERT(e_parent);
+			VERIFY(e_parent);
 
 			if (!smart_cast<game_sv_mp_script*>(game))
 				game->OnTouch(E->ID_Parent, E->ID);

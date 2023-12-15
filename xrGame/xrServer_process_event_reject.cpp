@@ -13,7 +13,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const ClientID sender, const 
 	Msg("sv reject. id_parent %s id_entity %s [%d]", ent_name_safe(id_parent).c_str(), ent_name_safe(id_entity).c_str(),
 		Device.dwFrame);
 #endif
-	R_ASSERT(e_parent && e_entity);
+	VERIFY(e_parent && e_entity);
 	game->OnDetach(id_parent, id_entity);
 
 	if (0xffff == e_entity->ID_Parent)
@@ -24,12 +24,12 @@ bool xrServer::Process_event_reject(NET_Packet& P, const ClientID sender, const 
 	}
 
 	// Rebuild parentness
-	R_ASSERT3(e_entity->ID_Parent == id_parent, e_entity->name_replace(), e_parent->name_replace());
+	VERIFY3(e_entity->ID_Parent == id_parent, e_entity->name_replace(), e_parent->name_replace());
 	e_entity->ID_Parent = 0xffff;
 	xr_vector<u16>& C = e_parent->children;
 
 	xr_vector<u16>::iterator c = std::find(C.begin(), C.end(), id_entity);
-	R_ASSERT3(C.end() != c, e_entity->name_replace(), e_parent->name_replace());
+	VERIFY3(C.end() != c, e_entity->name_replace(), e_parent->name_replace());
 	C.erase(c);
 
 	// Signal to everyone (including sender)
