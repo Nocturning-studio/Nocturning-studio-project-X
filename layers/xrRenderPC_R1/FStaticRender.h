@@ -52,7 +52,7 @@ class CRender : public R_dsgraph_structure
 	xrXRC Sectors_xrc;
 	CDB::MODEL* rmPortals;
 	CHOM HOM;
-	R_occlusion	HWOCC;
+	R_occlusion HWOCC;
 
 	// Global containers
 	xr_vector<FSlideWindowItem> SWIs;
@@ -140,7 +140,7 @@ class CRender : public R_dsgraph_structure
 	virtual void Statistics(CGameFont* F);
 	virtual LPCSTR getShaderPath()
 	{
-		return "sm_1_1\\";
+		return "sm_2_0\\";
 	}
 	virtual ref_shader getShader(int id);
 	virtual IRender_Sector* getSector(int id);
@@ -215,7 +215,7 @@ class CRender : public R_dsgraph_structure
 	CRender();
 	virtual ~CRender();
 
-		// HW-occlusion culling
+	// HW-occlusion culling
 	IC u32 occq_begin(u32& ID)
 	{
 		return HWOCC.occq_begin(ID);
