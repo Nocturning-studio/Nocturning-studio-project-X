@@ -82,24 +82,28 @@ CGamePersistent::CGamePersistent(void)
 	m_frame_counter = 0;
 	m_last_stats_frame = u32(-2);
 #endif
-	//
 	dSetAllocHandler(ode_alloc);
 	dSetReallocHandler(ode_realloc);
 	dSetFreeHandler(ode_free);
 
-	//
 	BOOL bDemoMode = (0 != strstr(Core.Params, "-demomode "));
 	if (bDemoMode)
 	{
 		string256 fname;
 		LPCSTR name = strstr(Core.Params, "-demomode ") + 10;
 		sscanf(name, "%s", fname);
-		R_ASSERT2(fname[0], "Missing filename for 'demomode'");
-		Msg("- playing in demo mode '%s'", fname);
-		pDemoFile = FS.r_open(fname);
-		Device.seqFrame.Add(this);
-		eDemoStart = Engine.Event.Handler_Attach("GAME:demo", this);
-		uTime2Change = 0;
+		if (!fname[0])
+		{
+			Msg("Missing filename for 'demomode'");
+		}
+		else
+		{
+			Msg("- playing in demo mode '%s'", fname);
+			pDemoFile = FS.r_open(fname);
+			Device.seqFrame.Add(this);
+			eDemoStart = Engine.Event.Handler_Attach("GAME:demo", this);
+			uTime2Change = 0;
+		}
 	}
 	else
 	{

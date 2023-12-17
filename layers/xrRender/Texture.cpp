@@ -455,7 +455,7 @@ _BUMP_from_base: {
 	//////////////////
 	if (strstr(fname, "_bump#"))
 	{
-		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump#", ".dds"), "ed_dummy_bump#");
+		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump#", ".dds"), "ed_dummy_bump# does't exist in path $game_textures$\\ed\\");
 		S = FS.r_open(fn);
 		R_ASSERT2(S, fn);
 		img_size = S->length();
@@ -463,7 +463,7 @@ _BUMP_from_base: {
 	}
 	if (strstr(fname, "_bump"))
 	{
-		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump", ".dds"), "ed_dummy_bump");
+		R_ASSERT2(FS.exist(fn, "$game_textures$", "ed\\ed_dummy_bump", ".dds"), "ed_dummy_bump does't exist in path $game_textures$\\ed\\");
 		S = FS.r_open(fn);
 
 		R_ASSERT2(S, fn);

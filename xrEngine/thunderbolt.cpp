@@ -68,7 +68,10 @@ void SThunderboltDesc::load(CInifile& pIni, shared_str const& sect)
 	m_name = pIni.r_string(sect, "lightning_model");
 	IReader* F = nullptr;
 	F = FS.r_open("$game_meshes$", m_name);
-	R_ASSERT2(F, "Empty 'lightning_model'.");
+
+	if(!F)
+		Msg("Empty 'lightning_model' in section %s", sect);
+
 	l_model = ::Render->model_CreateDM(F);
 	FS.r_close(F);
 

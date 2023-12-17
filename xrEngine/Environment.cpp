@@ -699,7 +699,7 @@ void CEnvironment::load_weathers()
 	EnvsMapIt _E = WeatherCycles.end();
 	for (; _I != _E; _I++)
 	{
-		R_ASSERT3(_I->second.size() > 1, "Environment in weather must >=2", *_I->first);
+		R_ASSERT3(_I->second.size() > 1, "One weather cycle must have implementations for at least two hours", *_I->first);
 		std::sort(_I->second.begin(), _I->second.end(), sort_env_etl_pred);
 	}
 	R_ASSERT2(!WeatherCycles.empty(), "Empty weathers.");

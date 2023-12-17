@@ -88,13 +88,16 @@ void CEngineAPI::Initialize(void)
 		Log("Loading DLL:", g_name);
 		hTuner = LoadLibrary(g_name);
 		if (0 == hTuner)
+		{
 			R_CHK(GetLastError());
-		R_ASSERT2(hTuner, "Intel vTune is not installed");
-		tune_enabled = TRUE;
-		tune_pause = (VTPause*)GetProcAddress(hTuner, "VTPause");
-		R_ASSERT(tune_pause);
-		tune_resume = (VTResume*)GetProcAddress(hTuner, "VTResume");
-		R_ASSERT(tune_resume);
+			Msg("Intel vTune is not installed");
+		}
+		else
+		{
+			tune_enabled = TRUE;
+			tune_pause = (VTPause*)GetProcAddress(hTuner, "VTPause");
+			tune_resume = (VTResume*)GetProcAddress(hTuner, "VTResume");
+		}
 	}
 }
 

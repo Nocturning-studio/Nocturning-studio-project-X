@@ -80,24 +80,8 @@ void CLight_DB::Load(IReader* fs)
 
 		F->close();
 	}
-	R_ASSERT2(sun_original && sun_adapted, "Where is sun?");
-
-	// fake spot
-	/*
-	if (0)
-	{
-		Fvector	P;			P.set(-5.58f,	-0.00f + 2, -3.63f);
-		Fvector	D;			D.set(0,-1,0);
-		light*	fake		= Create();
-		fake->set_type		(IRender_Light::SPOT);
-		fake->set_color		(1,1,1);
-		fake->set_cone		(deg2rad(60.f));
-		fake->set_direction	(D);
-		fake->set_position	(P);
-		fake->set_range		(3.f);
-		fake->set_active	(true);
-	}
-	*/
+	if(!sun_original && !sun_adapted)
+		Msg("Where is sun?");
 }
 
 void CLight_DB::Unload()

@@ -47,23 +47,6 @@ void CActorMP::fill_state(actor_mp_state& state)
 	SPHNetState State;
 	PHGetSyncItem(0)->get_State(State);
 
-//	static test = false;
-//	if (test) {
-#if 0
-		Msg							("Frame [%d], object [%d]",Device.dwFrame,ID());
-//		Msg							("quaternion   : [%f][%f][%f][%f]",State.quaternion.x,State.quaternion.y,State.quaternion.z,State.quaternion.w);
-//		Msg							("angular      : [%f][%f][%f]",State.angular_vel.x,State.angular_vel.y,State.angular_vel.z);
-		Msg							("linear       : [%f][%f][%f]",State.linear_vel.x,State.linear_vel.y,State.linear_vel.z);
-//		Msg							("force        : [%f][%f][%f]",State.force.x,State.force.y,State.force.z);
-//		Msg							("torque       : [%f][%f][%f]",State.torque.x,State.torque.y,State.torque.z);
-//		Msg							("acceleration : [%f][%f][%f]",NET_SavedAccel.x,NET_SavedAccel.y,NET_SavedAccel.z);
-		Msg							("model_yaw    : [%f]",angle_normalize(r_model_yaw));
-		Msg							("camera_yaw   : [%f]",angle_normalize(unaffected_r_torso.yaw));
-//		Msg							("camera_pitch : [%f]",angle_normalize(unaffected_r_torso.pitch));
-//		Msg							("camera_roll  : [%f]",angle_normalize(unaffected_r_torso.roll));
-//	}
-#endif // 0
-
 	state.physics_quaternion = State.quaternion;
 	state.physics_angular_velocity = State.angular_vel;
 	state.physics_linear_velocity = State.linear_vel;

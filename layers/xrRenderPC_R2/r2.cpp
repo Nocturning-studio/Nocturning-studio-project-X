@@ -1357,8 +1357,8 @@ static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_
 								size_t const mask_length)
 {
 	size_t const full_shader_id_length = xr_strlen(full_shader_id);
-	R_ASSERT2(full_shader_id_length == mask_length,
-			  make_string("bad cache for shader %s, [%s], [%s]", debug_shader_id, mask, full_shader_id));
+	if(!full_shader_id_length == mask_length)
+			  Msg("Bad cache for shader %s, [%s], [%s]", debug_shader_id, mask, full_shader_id);
 	char const* i = full_shader_id;
 	char const* const e = full_shader_id + full_shader_id_length;
 	char const* j = mask;

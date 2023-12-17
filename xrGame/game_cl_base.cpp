@@ -231,7 +231,7 @@ void game_cl_GameState::TranslateGameMessage(u32 msg, NET_Packet& P)
 	}
 	break;
 	default: {
-		R_ASSERT2(0, "Unknown Game Message");
+		Msg("Unknown Game Message");
 	}
 	break;
 	};

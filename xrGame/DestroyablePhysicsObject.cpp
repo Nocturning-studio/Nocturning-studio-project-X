@@ -52,7 +52,6 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 	BOOL res = inherited::net_Spawn(DC);
 	CKinematics* K = smart_cast<CKinematics*>(Visual());
 	CInifile* ini = K->LL_UserData();
-	// R_ASSERT2(ini->section_exist("destroyed"),"destroyable_object must have -destroyed- section in model user data");
 	CPHDestroyable::Init();
 	if (ini && ini->section_exist("destroyed"))
 		CPHDestroyable::Load(ini, "destroyed");

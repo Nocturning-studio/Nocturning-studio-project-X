@@ -104,23 +104,19 @@ void CPortal::Setup(Fvector* V, int vcnt, CSector* face, CSector* back)
 			_cnt++;
 		}
 	}
-	R_ASSERT2(_cnt, "Invalid portal detected");
+
+	if(!_cnt)
+		Msg("Invalid portal detected!");
+
 	N.div(float(_cnt));
 	P.build(poly[0], N);
 	FPU::m24r();
-
-	/*
-	if (_abs(1-P.n.magnitude())<EPS)
-	Debug.fatal		(DEBUG_INFO,"Degenerated portal found at {%3.2f,%3.2f,%3.2f}.",VPUSH(poly[0]));
-	*/
 }
 
-//
 CSector::~CSector()
 {
 }
 
-//
 extern float r_ssaDISCARD;
 extern float r_ssaLOD_A, r_ssaLOD_B;
 

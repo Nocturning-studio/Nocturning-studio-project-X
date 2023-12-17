@@ -249,7 +249,6 @@ static void UpdateLimits(Fvector& p, Fvector& min, Fvector& max)
 	{
 		if (p[k] < min[k] || p[k] > max[k])
 		{
-			R_ASSERT2(0, "Fuck");
 			UpdateLimits(p, min, max);
 		}
 	}
@@ -1303,7 +1302,7 @@ void CActor::make_Interpolation()
 			}
 			break;
 			default: {
-				R_ASSERT2(0, "Unknown interpolation curve type!");
+				Msg("Unknown interpolation curve type!");
 			}
 			}
 			character_physics_support()->movement()->SetPosition(ResPosition);

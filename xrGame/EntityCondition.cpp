@@ -410,7 +410,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		m_fDeltaPower -= hit_power * m_fPowerHitPart;
 		break;
 	default: {
-		R_ASSERT2(0, "unknown hit type");
+		Msg("Unknown hit type");
 	}
 	break;
 	}
