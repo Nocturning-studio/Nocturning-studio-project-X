@@ -148,6 +148,9 @@
     <Filter Include="Blenders\Postprocess stage\Tonemapping">
       <UniqueIdentifier>{df15c777-de25-47d1-9d98-aa02566ea18c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blenders\Postprocess stage\Contrast adaptive sharpening">
+      <UniqueIdentifier>{07b95237-ced3-4caf-aa54-fda5aa06453c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="Blender_tonemapping.h">
       <Filter>Blenders\Postprocess stage\Tonemapping</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_contrast_adaptive_sharpening.h">
+      <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,7 +737,7 @@
     <ClCompile Include="Blender_distortion.cpp">
       <Filter>Blenders\Postprocess stage\Distortion</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_barrel_blur.cpp">
+    <ClCompile Include="r2_rendertarget_phase_barrel_blur.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
     <ClCompile Include="Blender_barrel_blur.cpp">
@@ -748,6 +754,12 @@
     </ClCompile>
     <ClCompile Include="Blender_tonemapping.cpp">
       <Filter>Blenders\Postprocess stage\Tonemapping</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_contrast_adaptive_sharpening.cpp">
+      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_contrast_adaptive_sharpening.cpp">
+      <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -101,6 +101,9 @@ extern ECORE_API float ps_r2_ls_dsm_kernel;
 extern ECORE_API float ps_r2_ls_psm_kernel;
 extern ECORE_API float ps_r2_ls_ssm_kernel;
 
+extern ECORE_API float ps_cas_contrast;
+extern ECORE_API float ps_cas_sharpening;
+
 extern ECORE_API u32 ps_r2_aa_quality;
 extern ECORE_API Fvector ps_r2_aa_barier;
 extern ECORE_API Fvector ps_r2_aa_weight;
@@ -184,7 +187,8 @@ enum
 	R2FLAG_DOF = (1 << 5),
 	R2FLAG_MBLUR = (1 << 6),
 	R2FLAG_SHARPEN = (1 << 7),
-	R2FLAG_BARREL_BLUR = (1 << 8)
+	R2FLAG_BARREL_BLUR = (1 << 8),
+	R2FLAG_CONTRAST_ADAPTIVE_SHARPENING = (1 << 9)
 };
 
 extern ECORE_API Flags32 ps_r2_overlay_flags;

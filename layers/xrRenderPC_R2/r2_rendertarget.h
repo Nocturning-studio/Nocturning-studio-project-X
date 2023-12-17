@@ -28,6 +28,7 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_ambient_occlusion;
 	IBlender* b_autoexposure;
 	IBlender* b_combine;
+	IBlender* b_contrast_adaptive_sharpening;
 	IBlender* b_antialiasing;
 	IBlender* b_tonemapping;
 	IBlender* b_dof;
@@ -152,6 +153,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_combine_dbg_1;
 	ref_shader s_combine;
 	ref_shader s_combine_volumetric;
+	ref_shader s_contrast_adaptive_sharpening;
 	ref_shader s_antialiasing;
 	ref_shader s_barrel_blur;
 	ref_shader s_dof;
@@ -255,6 +257,8 @@ class CRenderTarget : public IRender_Target
 
 	void phase_combine();
 	void phase_combine_volumetric();
+
+	void phase_contrast_adaptive_sharpening();
 
 	void photo_grid();
 	void cinema_borders();

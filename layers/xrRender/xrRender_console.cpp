@@ -224,6 +224,9 @@ float ps_r2_slight_fade = 1.f;
 
 float ps_r2_gloss_factor = 1.0f;
 
+float ps_cas_contrast = 0.1f;
+float ps_cas_sharpening = 0.1f;
+
 // R2-specific flags
 Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_SUN_IGNORE_PORTALS | R2FLAG_EXP_DONT_TEST_UNSHADOWED |
 								R2FLAG_SUN_FOCUS | R2FLAG_SUN_TSM};
@@ -705,6 +708,10 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_barrel_blur", &ps_r2_postprocess_flags, R2FLAG_BARREL_BLUR);
 
 	CMD3(CCC_Mask, "r2_sharpen", &ps_r2_postprocess_flags, R2FLAG_SHARPEN);
+
+	CMD3(CCC_Mask, "r2_cas_enabled", &ps_r2_postprocess_flags, R2FLAG_CONTRAST_ADAPTIVE_SHARPENING);
+	CMD4(CCC_Float, "r2_cas_contrast", &ps_cas_contrast, 0.0f, 1.0f);
+	CMD4(CCC_Float, "r2_cas_sharpening", &ps_cas_sharpening, 0.0f, 1.0f);
 
 	CMD3(CCC_Mask, "r2_photo_grid", &ps_r2_overlay_flags, R2FLAG_PHOTO_GRID);
 	CMD3(CCC_Mask, "r2_cinema_borders", &ps_r2_overlay_flags, R2FLAG_CINEMA_BORDERS);

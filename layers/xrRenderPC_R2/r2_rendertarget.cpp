@@ -4,6 +4,7 @@
 #include "blender_bloom_build.h"
 #include "blender_antialiasing.h"
 #include "blender_combine.h"
+#include "blender_contrast_adaptive_sharpening.h"
 #include "blender_distortion.h"
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
@@ -235,6 +236,7 @@ CRenderTarget::CRenderTarget()
 	b_autoexposure = xr_new<CBlender_autoexposure>();
 	b_tonemapping = xr_new<CBlender_tonemapping>();
 	b_combine = xr_new<CBlender_combine>();
+	b_contrast_adaptive_sharpening = xr_new<CBlender_contrast_adaptive_sharpening>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
 	b_barrel_blur = xr_new<CBlender_barrel_blur>();
 	b_dof = xr_new<CBlender_depth_of_field>();
@@ -513,6 +515,7 @@ CRenderTarget::CRenderTarget()
 			}
 		}
 	}
+	s_contrast_adaptive_sharpening.create(b_contrast_adaptive_sharpening, "r2\\contrast_adaptive_sharpening");
 
 	s_antialiasing.create(b_antialiasing, "r2\\antialiasing");
 
@@ -593,6 +596,7 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_distortion);
 	xr_delete(b_antialiasing);
 	xr_delete(b_combine);
+	xr_delete(b_contrast_adaptive_sharpening);
 	xr_delete(b_autoexposure);
 	xr_delete(b_tonemapping);
 	xr_delete(b_bloom);

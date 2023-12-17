@@ -221,6 +221,9 @@ void CRenderTarget::phase_combine()
 			if (ps_r_aa)
 				phase_antialiasing();
 
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
+				phase_contrast_adaptive_sharpening();
+
 			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
 				phase_bloom();
 
