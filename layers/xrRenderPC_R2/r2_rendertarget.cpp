@@ -338,6 +338,11 @@ CRenderTarget::CRenderTarget()
 
 		if (ps_r2_ao_quality <= 2)
 		{
+			AOTexWeight *= 0.5f;
+			AOTexHeight *= 0.5f;
+		}
+		else
+		{
 			AOTexWeight *= 0.85f;
 			AOTexHeight *= 0.85f;
 		}

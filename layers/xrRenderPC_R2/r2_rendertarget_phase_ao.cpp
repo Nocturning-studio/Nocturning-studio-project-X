@@ -15,6 +15,11 @@ void CRenderTarget::phase_create_ao()
 
 	if (ps_r2_ao_quality <= 2)
 	{
+		w *= 0.5f;
+		h *= 0.5f;
+	}
+	else
+	{
 		w *= 0.85f;
 		h *= 0.85f;
 	}
@@ -82,6 +87,11 @@ void CRenderTarget::phase_diagonal_filter()
 
 	if (ps_r2_ao_quality <= 2)
 	{
+		w *= 0.5f;
+		h *= 0.5f;
+	}
+	else
+	{
 		w *= 0.85f;
 		h *= 0.85f;
 	}
@@ -137,6 +147,11 @@ void CRenderTarget::phase_strided_filter()
 	float h = float(Device.dwHeight);
 
 	if (ps_r2_ao_quality <= 2)
+	{
+		w *= 0.5f;
+		h *= 0.5f;
+	}
+	else
 	{
 		w *= 0.85f;
 		h *= 0.85f;
