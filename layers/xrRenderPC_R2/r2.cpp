@@ -774,6 +774,8 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_ao[32];
 	char c_ao_quality[32];
 
+	char c_bloom_quality[32];
+
 	char c_aa[32];
 	char c_aa_quality[32];
 
@@ -1119,6 +1121,18 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			len += 4;
 		}
 		sh_name[len] = '0' + (char)ps_r2_aa_quality;
+		++len;
+
+		if (ps_r2_bloom_quality)
+		{
+			sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
+			defines[def_it].Name = "BLOOM_QUALITY";
+			defines[def_it].Definition = c_bloom_quality;
+			def_it++;
+			strcat(sh_name, c_bloom_quality);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_bloom_quality;
 		++len;
 
 		int bUseSharpen = (ps_r2_postprocess_flags.test(R2FLAG_SHARPEN));

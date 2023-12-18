@@ -10,6 +10,9 @@ extern ECORE_API u32 ps_r_aa_iterations;
 
 extern ECORE_API int ps_r_LightSleepFrames;
 
+extern ECORE_API float ps_r_hdr_white_intensity;
+extern ECORE_API float ps_r_hdr_gamma;
+
 extern ECORE_API float ps_r_Detail_l_ambient;
 extern ECORE_API float ps_r_Detail_l_aniso;
 extern ECORE_API float ps_r_Detail_density;
@@ -90,6 +93,7 @@ extern ECORE_API float ps_r2_autoexposure_adaptation;
 extern ECORE_API float ps_r2_autoexposure_low_lum;
 extern ECORE_API float ps_r2_autoexposure_amount;
 
+extern ECORE_API u32 ps_r2_bloom_quality;
 extern ECORE_API float ps_r2_bloom_kernel_scale; // gauss
 extern ECORE_API float ps_r2_bloom_kernel_g;	 // gauss
 extern ECORE_API float ps_r2_bloom_kernel_b;	 // bilinear
@@ -180,15 +184,14 @@ extern ECORE_API Flags32 ps_r2_postprocess_flags;
 enum
 {
 	R2FLAG_AUTOEXPOSURE = (1 << 0),
-	R2FLAG_FASTBLOOM = (1 << 1),
-	R2FLAG_SOFT_WATER = (1 << 2),
-	R2FLAG_SOFT_PARTICLES = (1 << 3),
-	R2FLAG_BLOOM = (1 << 4),
-	R2FLAG_DOF = (1 << 5),
-	R2FLAG_MBLUR = (1 << 6),
-	R2FLAG_SHARPEN = (1 << 7),
-	R2FLAG_BARREL_BLUR = (1 << 8),
-	R2FLAG_CONTRAST_ADAPTIVE_SHARPENING = (1 << 9)
+	R2FLAG_SOFT_WATER = (1 << 1),
+	R2FLAG_SOFT_PARTICLES = (1 << 2),
+	R2FLAG_BLOOM = (1 << 3),
+	R2FLAG_DOF = (1 << 4),
+	R2FLAG_MBLUR = (1 << 5),
+	R2FLAG_SHARPEN = (1 << 6),
+	R2FLAG_BARREL_BLUR = (1 << 7),
+	R2FLAG_CONTRAST_ADAPTIVE_SHARPENING = (1 << 8)
 };
 
 extern ECORE_API Flags32 ps_r2_overlay_flags;

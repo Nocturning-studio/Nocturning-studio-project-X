@@ -426,7 +426,7 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	if (ps_r2_ao >= 1 && RImplementation.o.advancedpp)
+	if (ps_r2_ao && RImplementation.o.advancedpp)
 		Target->phase_ao();
 
 	// Postprocess

@@ -47,6 +47,10 @@ u32 ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
+u32 ps_r2_bloom_quality = 2;
+xr_token bloom_quality_token[] = {
+	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
+
 u32 ps_r2_sun_quality = 1;
 xr_token sun_quality_token[] = {{"st_opt_low", 1},	   {"st_opt_medium", 2}, {"st_opt_high", 3},
 								{"st_opt_extreme", 4}, {"st_opt_ultra", 5},	 {0, 0}};
@@ -103,6 +107,9 @@ xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"whit
 // Render common values
 /*-------------------------------------------------------------------------------*/
 int ps_r_LightSleepFrames = 10;
+
+float ps_r_hdr_white_intensity = 1.2f;
+float ps_r_hdr_gamma = 2.0f;
 
 float ps_r_Detail_l_ambient = 0.9f;
 float ps_r_Detail_l_aniso = 0.25f;
@@ -638,6 +645,8 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r_vignette_mode", &ps_vignette_mode, vignette_mode_token);
 	CMD3(CCC_Mask, "r_chromatic_abberation", &ps_render_flags, RFLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r_hdr", &ps_render_flags, RFLAG_HDR);
+	CMD4(CCC_Float, "r_hdr_white_intensity", &ps_r_hdr_white_intensity, 0, 2);
+	CMD4(CCC_Float, "r_hdr_gamma", &ps_r_hdr_gamma, 0, 2);
 
 	CMD3(CCC_Mask, "r_mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
 
@@ -682,13 +691,13 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_autoexposure_amount", &ps_r2_autoexposure_amount, 0.0000f, 1.0f);
 
 	CMD3(CCC_Mask, "r2_bloom", &ps_r2_postprocess_flags, R2FLAG_BLOOM);
+	CMD3(CCC_Token, "r2_bloom_quality", &ps_r2_bloom_quality, bloom_quality_token);
 	CMD4(CCC_Float, "r2_bloom_kernel_scale", &ps_r2_bloom_kernel_scale, 0.5f, 2.0f);
 	CMD4(CCC_Float, "r2_bloom_kernel_g", &ps_r2_bloom_kernel_g, 1.0f, 7.0f);
 	CMD4(CCC_Float, "r2_bloom_kernel_b", &ps_r2_bloom_kernel_b, 0.01f, 1.0f);
 	CMD4(CCC_Float, "r2_bloom_threshold", &ps_r2_bloom_threshold, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_bloom_speed", &ps_r2_bloom_speed, 0.0f, 100.0f);
 	CMD4(CCC_Float, "r2_bloom_factor", &ps_r2_bloom_factor, 0.0f, 1.0f);
-	CMD3(CCC_Mask, "r2_bloom_fast", &ps_r2_postprocess_flags, R2FLAG_FASTBLOOM);
 
 	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_postprocess_flags, R2FLAG_MBLUR);
 	CMD4(CCC_Float, "r2_mblur_power", &ps_r2_mblur, 0.0f, 1.0f);

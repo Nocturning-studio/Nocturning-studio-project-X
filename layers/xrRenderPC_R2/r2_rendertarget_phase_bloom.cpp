@@ -138,7 +138,7 @@ void CRenderTarget::phase_bloom()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
-	if (ps_r2_postprocess_flags.test(R2FLAG_FASTBLOOM))
+	if (ps_r2_bloom_quality <= 2)
 	{
 		// FAST FILTER
 		float _w = BLOOM_size_X;

@@ -237,17 +237,13 @@ class CRenderTarget : public IRender_Target
 	void accum_point(light* L);
 	void accum_spot(light* L);
 
-	//	Igor: for volumetric lights
-	void accum_volumetric(light* L);
-
 	void accum_reflected(light* L);
 
 	void phase_bloom();
-	void phase_combine_bloom();
 
 	void phase_create_ao();
-	void phase_diagonal_filter();
-	void phase_strided_filter();
+	void phase_filter_step_1();
+	void phase_filter_step_2();
 	void phase_finalize();
 	void phase_blur();
 	void phase_ao();

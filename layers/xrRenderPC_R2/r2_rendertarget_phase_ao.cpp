@@ -76,7 +76,7 @@ void CRenderTarget::phase_create_ao()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_diagonal_filter()
+void CRenderTarget::phase_filter_step_1()
 {
 	// Constants
 	u32 Offset = 0;
@@ -137,7 +137,7 @@ void CRenderTarget::phase_diagonal_filter()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_strided_filter()
+void CRenderTarget::phase_filter_step_2()
 {
 	// Constants
 	u32 Offset = 0;
@@ -250,9 +250,9 @@ void CRenderTarget::phase_finalize()
 
 void CRenderTarget::phase_blur()
 {
-	phase_diagonal_filter();
+	phase_filter_step_1();
 
-	phase_strided_filter();
+	phase_filter_step_2();
 
 	phase_finalize();
 }
