@@ -3,6 +3,7 @@
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
+#include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::phase_create_ao()
 {
@@ -76,7 +77,7 @@ void CRenderTarget::phase_create_ao()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_filter_step_1()
+void CRenderTarget::phase_vertical_filter()
 {
 	// Constants
 	u32 Offset = 0;
@@ -137,7 +138,7 @@ void CRenderTarget::phase_filter_step_1()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_filter_step_2()
+void CRenderTarget::phase_horizontal_filter()
 {
 	// Constants
 	u32 Offset = 0;
@@ -198,7 +199,7 @@ void CRenderTarget::phase_filter_step_2()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_finalize()
+void CRenderTarget::phase_upscale()
 {
 	// Constants
 	u32 Offset = 0;
@@ -248,18 +249,16 @@ void CRenderTarget::phase_finalize()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::phase_blur()
+void CRenderTarget::phase_filtering()
 {
-	phase_filter_step_1();
-
-	phase_filter_step_2();
-
-	phase_finalize();
+	phase_vertical_filter();
+	phase_horizontal_filter();
+	phase_upscale();
 }
 
 void CRenderTarget::phase_ao()
 {
 	phase_create_ao();
-	phase_blur();
+	phase_filtering();
 }
 ///////////////////////////////////////////////////////////////////////////////////

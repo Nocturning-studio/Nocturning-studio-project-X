@@ -242,10 +242,10 @@ class CRenderTarget : public IRender_Target
 	void phase_bloom();
 
 	void phase_create_ao();
-	void phase_filter_step_1();
-	void phase_filter_step_2();
-	void phase_finalize();
-	void phase_blur();
+	void phase_vertical_filter();
+	void phase_horizontal_filter();
+	void phase_upscale();
+	void phase_filtering();
 	void phase_ao();
 
 	void phase_autoexposure();
