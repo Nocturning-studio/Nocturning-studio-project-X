@@ -154,7 +154,6 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		string_path cname;
 		strconcat(sizeof(cname), cname, ::Render->getShaderPath(), _name, ".vs");
 		FS.update_path(cname, "$game_shaders$", cname);
-		//		LPCSTR						target		= NULL;
 
 		IReader* fs = FS.r_open(cname);
 		R_ASSERT3(fs, "shader file doesnt exist", cname);
@@ -162,7 +161,9 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		// Select target
 		LPCSTR c_target = "vs_2_0";
 		LPCSTR c_entry = "main";
-		if (HW.Caps.geometry_major >= 2)
+		if (HW.Caps.geometry_major >= 3)
+			c_target = "vs_3_0";
+		else if (HW.Caps.geometry_major == 2)
 			c_target = "vs_2_0";
 		else
 			c_target = "vs_1_1";
@@ -186,6 +187,11 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 			c_target = "vs_2_0";
 			c_entry = "main_vs_2_0";
 		}
+		if (strstr(data, "main_vs_3_0"))
+		{
+			c_target = "vs_3_0";
+			c_entry = "main_vs_3_0";
+		}
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
@@ -197,12 +203,6 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		{
 			FlushLog();
 		}
-
-		// CHECK_OR_EXIT(
-		//	!FAILED(_hr),
-		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-		//);
-		// R_ASSERT(!FAILED(_hr));
 
 		return _vs;
 	}
@@ -285,6 +285,11 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 			c_target = "ps_2_0";
 			c_entry = "main_ps_2_0";
 		}
+		if (strstr(data, "main_ps_3_0"))
+		{
+			c_target = "ps_3_0";
+			c_entry = "main_ps_3_0";
+		}
 
 #ifdef DEBUG
 		Msg("compiling shader %s", name);
@@ -297,13 +302,6 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 		{
 			FlushLog();
 		}
-
-		// CHECK_OR_EXIT(
-		//	!FAILED(_hr),
-		//	make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-		//);
-
-		// R_ASSERT(!FAILED(_hr));
 
 		return _ps;
 	}
