@@ -26,7 +26,7 @@ int CRenderTarget::select_antialiasing_iterations_count()
 	}
 }
 
-void CRenderTarget::antialiasing_phase_dlaa()
+void CRenderTarget::antialiasing_phase_rgaa()
 {
 	for (int i = 0; i < select_antialiasing_iterations_count(); i++)
 	{
@@ -72,7 +72,7 @@ void CRenderTarget::antialiasing_phase_dlaa()
 	}
 }
 
-void CRenderTarget::antialiasing_phase_dlaa_with_edge_detecting()
+void CRenderTarget::antialiasing_phase_dlaa()
 {
 	for (int i = 0; i < select_antialiasing_iterations_count(); i++)
 	{
@@ -109,10 +109,6 @@ void CRenderTarget::antialiasing_phase_dlaa_with_edge_detecting()
 
 		// Set pass
 		RCache.set_Element(s_antialiasing->E[1]);
-
-		RCache.set_c("e_barrier", ps_r2_aa_barier.x, ps_r2_aa_barier.y, ps_r2_aa_barier.z, 0);
-		RCache.set_c("e_weights", ps_r2_aa_weight.x, ps_r2_aa_weight.y, ps_r2_aa_weight.z, 0);
-		RCache.set_c("e_kernel", ps_r2_aa_kernel, ps_r2_aa_kernel, ps_r2_aa_kernel, 0);
 
 		// Set geometry
 		RCache.set_Geometry(g_combine);
@@ -173,10 +169,10 @@ void CRenderTarget::select_antialiasing_type()
 	switch (ps_r_aa)
 	{
 	case 1:
-		return antialiasing_phase_dlaa();
+		return antialiasing_phase_rgaa();
 		break;
 	case 2:
-		return antialiasing_phase_dlaa_with_edge_detecting();
+		return antialiasing_phase_dlaa();
 		break;
 	case 3:
 		return antialiasing_phase_fxaa();

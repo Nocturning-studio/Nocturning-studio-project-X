@@ -261,9 +261,9 @@ class CRenderTarget : public IRender_Target
 	void watermark();
 	void draw_overlays();
 
+	void antialiasing_phase_rgaa();
 	void antialiasing_phase_fxaa();
 	void antialiasing_phase_dlaa();
-	void antialiasing_phase_dlaa_with_edge_detecting();
 	void select_antialiasing_type();
 	int select_antialiasing_iterations_count();
 	void phase_antialiasing();
@@ -271,6 +271,8 @@ class CRenderTarget : public IRender_Target
 	void phase_create_distortion_mask();
 	void phase_distortion();
 
+	void depth_of_field_pass_vertical();
+	void depth_of_field_pass_horizontal();
 	void calculate_depth_of_field();
 	void phase_depth_of_field();
 

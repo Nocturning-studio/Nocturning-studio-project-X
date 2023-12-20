@@ -19,8 +19,8 @@ u32 ps_r_aa = 1;
 #if RENDER == R_R1
 xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
 #else
-xr_token aa_token[] = {
-	{"st_opt_disabled", 0}, {"st_opt_dlaa", 1}, {"st_opt_dlaa_force_edge_detect", 2}, {"st_opt_fxaa", 3}, {0, 0}};
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1},
+					   {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
 #endif
 
 u32 ps_r_aa_iterations = 2;
