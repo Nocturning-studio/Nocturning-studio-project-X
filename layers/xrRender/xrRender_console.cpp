@@ -109,7 +109,8 @@ xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"whit
 int ps_r_LightSleepFrames = 10;
 
 float ps_r_hdr_white_intensity = 1.2f;
-float ps_r_hdr_gamma = 2.0f;
+float ps_r_hdr_gamma = 1.0f;
+float ps_r_hdr_brightness = 1.2f;
 
 float ps_r_Detail_l_ambient = 0.9f;
 float ps_r_Detail_l_aniso = 0.25f;
@@ -646,7 +647,8 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r_chromatic_abberation", &ps_render_flags, RFLAG_CHROMATIC_ABBERATION);
 	CMD3(CCC_Mask, "r_hdr", &ps_render_flags, RFLAG_HDR);
 	CMD4(CCC_Float, "r_hdr_white_intensity", &ps_r_hdr_white_intensity, 0, 2);
-	CMD4(CCC_Float, "r_hdr_gamma", &ps_r_hdr_gamma, 0, 2);
+	CMD4(CCC_Float, "r_hdr_gamma", &ps_r_hdr_gamma, 1, 1.75);
+	CMD4(CCC_Float, "r_hdr_brightness", &ps_r_hdr_brightness, 1, 1.75);
 
 	CMD3(CCC_Mask, "r_mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
 

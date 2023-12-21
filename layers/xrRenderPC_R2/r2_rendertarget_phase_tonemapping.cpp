@@ -45,7 +45,7 @@ void CRenderTarget::phase_tonemapping()
 	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, 0, 0);
+	RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, ps_r_hdr_brightness, 0);
 
 	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);

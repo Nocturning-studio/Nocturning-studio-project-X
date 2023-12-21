@@ -12,6 +12,7 @@ extern ECORE_API int ps_r_LightSleepFrames;
 
 extern ECORE_API float ps_r_hdr_white_intensity;
 extern ECORE_API float ps_r_hdr_gamma;
+extern ECORE_API float ps_r_hdr_brightness;
 
 extern ECORE_API float ps_r_Detail_l_ambient;
 extern ECORE_API float ps_r_Detail_l_aniso;
