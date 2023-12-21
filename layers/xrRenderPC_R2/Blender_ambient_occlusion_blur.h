@@ -1,0 +1,30 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#pragma once
+///////////////////////////////////////////////////////////////////////////////////
+class CBlender_ambient_occlusion_blur : public IBlender
+{
+  public:
+	virtual LPCSTR getComment()
+	{
+		return "INTERNAL: Ambient occlusion blurring";
+	}
+
+	virtual BOOL canBeDetailed()
+	{
+		return FALSE;
+	}
+
+	virtual BOOL canBeLMAPped()
+	{
+		return FALSE;
+	}
+
+	virtual void Compile(CBlender_Compile& C);
+
+	CBlender_ambient_occlusion_blur();
+	virtual ~CBlender_ambient_occlusion_blur();
+};
+///////////////////////////////////////////////////////////////////////////////////

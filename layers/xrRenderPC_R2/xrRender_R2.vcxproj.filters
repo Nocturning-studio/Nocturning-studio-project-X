@@ -151,6 +151,12 @@
     <Filter Include="Blenders\Postprocess stage\Contrast adaptive sharpening">
       <UniqueIdentifier>{07b95237-ced3-4caf-aa54-fda5aa06453c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blenders\Postprocess stage\Ambient occlusion\AO Calculating">
+      <UniqueIdentifier>{6f21101e-47c3-4c6d-841f-3ad5bf5ca868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blenders\Postprocess stage\Ambient occlusion\AO Blurring">
+      <UniqueIdentifier>{aa118207-a781-4186-b83b-b58067ad2813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -327,9 +333,6 @@
     <ClInclude Include="..\xrRender\Blender_Editor_Wire.h">
       <Filter>Blenders\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Blender_ambient_occlusion.h">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
-    </ClInclude>
     <ClInclude Include="blender_bloom_build.h">
       <Filter>Blenders\Postprocess stage\Bloom</Filter>
     </ClInclude>
@@ -380,6 +383,12 @@
     </ClInclude>
     <ClInclude Include="Blender_contrast_adaptive_sharpening.h">
       <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_ambient_occlusion.h">
+      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Calculating</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender_ambient_occlusion_blur.h">
+      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Blurring</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -617,9 +626,6 @@
     <ClCompile Include="..\xrRender\Blender_Editor_Wire.cpp">
       <Filter>Blenders\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Blender_ambient_occlusion.cpp">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
-    </ClCompile>
     <ClCompile Include="blender_bloom_build.cpp">
       <Filter>Blenders\Postprocess stage\Bloom</Filter>
     </ClCompile>
@@ -760,6 +766,12 @@
     </ClCompile>
     <ClCompile Include="Blender_contrast_adaptive_sharpening.cpp">
       <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_ambient_occlusion.cpp">
+      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Calculating</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_ambient_occlusion_blur.cpp">
+      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Blurring</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

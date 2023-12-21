@@ -1061,6 +1061,7 @@
     <ClInclude Include="..\xrRender\WallmarksEngine.h" />
     <ClInclude Include="..\xrRender\xrRender_console.h" />
     <ClInclude Include="..\xrRender\xrStripify.h" />
+    <ClInclude Include="Blender_ambient_occlusion_blur.h" />
     <ClInclude Include="Blender_antialiasing.h" />
     <ClInclude Include="Blender_ambient_occlusion.h" />
     <ClInclude Include="Blender_barrel_blur.h" />
@@ -1200,6 +1201,7 @@
     <ClCompile Include="..\xrRender\WallmarksEngine.cpp" />
     <ClCompile Include="..\xrRender\xrRender_console.cpp" />
     <ClCompile Include="..\xrRender\xrStripify.cpp" />
+    <ClCompile Include="Blender_ambient_occlusion_blur.cpp" />
     <ClCompile Include="Blender_antialiasing.cpp" />
     <ClCompile Include="Blender_ambient_occlusion.cpp" />
     <ClCompile Include="Blender_barrel_blur.cpp" />
