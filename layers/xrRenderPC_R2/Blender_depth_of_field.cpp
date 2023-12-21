@@ -24,13 +24,20 @@ void CBlender_depth_of_field::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case 0:
-		C.r_Pass("null", "postprocess_stage_depth_of_field_pass_vertical_filter", FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_depth_of_field_pass_poisson_filter", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		jitter(C);
 		C.r_End();
 		break;
 	case 1:
+		C.r_Pass("null", "postprocess_stage_depth_of_field_pass_vertical_filter", FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
+		jitter(C);
+		C.r_End();
+		break;
+	case 2:
 		C.r_Pass("null", "postprocess_stage_depth_of_field_pass_horizontal_filter", FALSE, FALSE, FALSE);
 		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
