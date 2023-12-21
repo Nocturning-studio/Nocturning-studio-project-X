@@ -106,8 +106,6 @@ void CRender::level_Load(IReader* fs)
 
 	// signal loaded
 	b_loaded = TRUE;
-
-	Console->Execute("vid_restart");
 }
 
 void CRender::level_Unload()

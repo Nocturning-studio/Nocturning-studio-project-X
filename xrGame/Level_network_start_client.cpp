@@ -8,6 +8,7 @@
 #include "../xrEngine/igame_persistent.h"
 #include "PhysicsGamePars.h"
 #include "ai_space.h"
+#include "../xrEngine/xr_ioconsole.h"
 
 extern pureFrame* g_pNetProcessor;
 
@@ -149,19 +150,17 @@ bool CLevel::net_start_client5()
 {
 	if (connected_to_server)
 	{
-		// HUD
-
 		// Textures
 		if (!g_dedicated_server)
 		{
-			pHUD->Load();
+#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
 			g_pGamePersistent->LoadTitle("st_loading_textures");
+			Device.Resources->DeferredUnload();
 			Device.Resources->DeferredLoad(FALSE);
 			Device.Resources->DeferredUpload();
-			// Device.Resources->DeferredUnload();
-			// Device.Resources->DeferredLoad(FALSE);
-			// Device.Resources->DeferredUpload();
+			pHUD->Load();
 			LL_CheckTextures();
+			Console->Execute("vid_restart");
 		}
 	}
 	return true;

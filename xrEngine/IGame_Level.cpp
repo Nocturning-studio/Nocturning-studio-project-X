@@ -9,6 +9,7 @@
 #include "gamefont.h"
 #include "xrLevel.h"
 #include "CameraManager.h"
+#include "../xrEngine/xr_ioconsole.h"
 
 ENGINE_API IGame_Level* g_pGameLevel = NULL;
 
@@ -49,6 +50,9 @@ IGame_Level::~IGame_Level()
 	Device.seqFrame.Remove(this);
 
 	CCameraManager::ResetPP();
+
+#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
+	Console->Execute("vid_restart");
 }
 
 void IGame_Level::net_Stop()
