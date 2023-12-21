@@ -313,6 +313,7 @@ CRenderTarget::CRenderTarget()
 	}
 
 	// BLOOM
+	if (RImplementation.o.advancedpp)
 	{
 		D3DFORMAT fmt;
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
@@ -320,7 +321,25 @@ CRenderTarget::CRenderTarget()
 		else
 			fmt = D3DFMT_A16B16G16R16F;
 
-		u32 w = BLOOM_size_X, h = BLOOM_size_Y;
+		float BloomResolutionMultiplier = 0.0f;
+
+		switch (ps_r2_bloom_quality)
+		{
+		case 1:
+			BloomResolutionMultiplier = 0.2f;
+			break;
+		case 2:
+			BloomResolutionMultiplier = 0.25f;
+			break;
+		case 3:
+			BloomResolutionMultiplier = 0.3f;
+			break;
+		case 4:
+			BloomResolutionMultiplier = 0.35f;
+			break;
+		}
+
+		u32 w = dwWidth * BloomResolutionMultiplier, h = dwHeight * BloomResolutionMultiplier;
 		u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) |
 						D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
 		u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) |

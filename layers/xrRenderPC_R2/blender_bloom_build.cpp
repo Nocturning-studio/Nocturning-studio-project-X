@@ -33,12 +33,12 @@ void CBlender_bloom_build::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case 3: // FF-filter_P0
-		C.r_Pass("null", "postprocess_stage_bloom_filter_f", FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_bloom_filter_vertical", FALSE, FALSE, FALSE);
 		C.r_Sampler_clf("s_bloom", r2_RT_bloom1);
 		C.r_End();
 		break;
 	case 4: // FF-filter_P1
-		C.r_Pass("null", "postprocess_stage_bloom_filter_f", FALSE, FALSE, FALSE);
+		C.r_Pass("null", "postprocess_stage_bloom_filter_horizontal", FALSE, FALSE, FALSE);
 		C.r_Sampler_clf("s_bloom", r2_RT_bloom2);
 		C.r_End();
 		break;

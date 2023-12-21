@@ -67,6 +67,24 @@ void CalcGauss_wave(Fvector4& w0,		   // weight
 
 void CRenderTarget::phase_bloom()
 {
+	float BloomResolutionMultiplier = 0.0f;
+
+	switch (ps_r2_bloom_quality)
+	{
+	case 1:
+		BloomResolutionMultiplier = 0.2f;
+		break;
+	case 2:
+		BloomResolutionMultiplier = 0.25f;
+		break;
+	case 3:
+		BloomResolutionMultiplier = 0.3f;
+		break;
+	case 4:
+		BloomResolutionMultiplier = 0.35f;
+		break;
+	}
+
 	u32 Offset;
 
 	// Targets
@@ -82,9 +100,9 @@ void CRenderTarget::phase_bloom()
 		float _w = float(Device.dwWidth);
 		float _h = float(Device.dwHeight);
 		float _2w = _w / 2;
-		float tw = BLOOM_size_X;
+		float tw = _w * BloomResolutionMultiplier;
 		float _2h = _h / 2;
-		float th = BLOOM_size_Y;
+		float th = _h * BloomResolutionMultiplier;
 		float _aspect_w = _2w / tw;
 		float _aspect_h = _2h / th;
 		Fvector2 one = {1.f / _w, 1.f / _h};
@@ -129,152 +147,99 @@ void CRenderTarget::phase_bloom()
 		RCache.Vertex.Unlock(4, g_bloom_build->vb_stride);
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
-		float s = ps_r2_bloom_threshold;															 // scale
 		float bloom_factor = .9f * ps_r2_bloom_factor + .1f * ps_r2_bloom_speed * Device.fTimeDelta; // speed
 		RCache.set_Element(s_bloom->E[0]);
-		RCache.set_c("bloom_parameters", s, bloom_factor, s, bloom_factor);
+		RCache.set_c("bloom_parameters", ps_r2_bloom_threshold, bloom_factor, 0, 0);
 		RCache.set_c("bloom_resolution", one.x, one.y, 1.0f / one.x, 1.0f / one.y);
 		RCache.set_Geometry(g_bloom_build);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
-	if (ps_r2_bloom_quality <= 2)
+	// SLOW FILTER
+	// Transfer into Bloom2, horizontal filter
 	{
-		// FAST FILTER
-		float _w = BLOOM_size_X;
-		float _h = BLOOM_size_Y;
-		float ddw = (1.f / _w) * ps_r2_bloom_kernel_b;
-		float ddh = (1.f / _h) * ps_r2_bloom_kernel_b;
-		Fvector2 p0;
-		p0.set(.5f / _w, .5f / _h);
-		Fvector2 p1;
-		p1.set((_w + .5f) / _w, (_h + .5f) / _h);
+		float _w = Device.dwWidth * BloomResolutionMultiplier;
+		float _h = Device.dwHeight * BloomResolutionMultiplier;
+		Fvector2 two = {2.f / _w, 2.f / _h};
+		Fvector2 one = {1.f / _w, 1.f / _h};
+		Fvector2 half = {.5f / _w, .5f / _h};
+		Fvector4 a_0 = {half.x, half.y, half.y, half.x};								 // center
+		Fvector4 a_1 = {a_0.x - one.x - half.x, half.y, half.y, a_0.w + one.x + half.x}; // -1,+1i
+		Fvector4 a_2 = {a_1.x - two.x, half.y, half.y, a_1.w + two.x};					 // -2,+2i
+		Fvector4 a_3 = {a_2.x - two.x, half.y, half.y, a_2.w + two.x};					 // -3,+3i
+		Fvector4 a_4 = {a_3.x - two.x, half.y, half.y, a_3.w + two.x};					 // -4,+4i
+		Fvector4 a_5 = {a_4.x - two.x, half.y, half.y, a_4.w + two.x};					 // -5,+5i
+		Fvector4 a_6 = {a_5.x - two.x, half.y, half.y, a_5.w + two.x};					 // -6,+6i
+		Fvector4 a_7 = {a_6.x - two.x, half.y, half.y, a_6.w + two.x};					 // -7,+7i
 
-		v_build_bloom* pv = (v_build_bloom*)RCache.Vertex.Lock(4, g_bloom_build->vb_stride, Offset);
+		// Fill vertex buffer
+		v_filter_bloom* pv = (v_filter_bloom*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
+
+		// 0 - LB
 		pv->p.set(EPS, float(_h + EPS), EPS, 1.f);
-		pv->uv0.set(p0.x - ddw, p1.y - ddh);
-		pv->uv1.set(p0.x + ddw, p1.y + ddh);
-		pv->uv2.set(p0.x + ddw, p1.y - ddh);
-		pv->uv3.set(p0.x - ddw, p1.y + ddh);
+		pv->uv0.set(a_0.x, 1 + a_0.y, 0, 0);
+		pv->uv1.set(a_1.x, 1 + a_1.y, 1 + a_1.z, a_1.w);
+		pv->uv2.set(a_2.x, 1 + a_2.y, 1 + a_2.z, a_2.w);
+		pv->uv3.set(a_3.x, 1 + a_3.y, 1 + a_3.z, a_3.w);
+		pv->uv4.set(a_4.x, 1 + a_4.y, 1 + a_4.z, a_4.w);
+		pv->uv5.set(a_5.x, 1 + a_5.y, 1 + a_5.z, a_5.w);
+		pv->uv6.set(a_6.x, 1 + a_6.y, 1 + a_6.z, a_6.w);
+		pv->uv7.set(a_7.x, 1 + a_7.y, 1 + a_7.z, a_7.w);
 		pv++;
+
+		// 1 - LT
 		pv->p.set(EPS, EPS, EPS, 1.f);
-		pv->uv0.set(p0.x - ddw, p0.y - ddh);
-		pv->uv1.set(p0.x + ddw, p0.y + ddh);
-		pv->uv2.set(p0.x + ddw, p0.y - ddh);
-		pv->uv3.set(p0.x - ddw, p0.y + ddh);
+		pv->uv0.set(a_0.x, a_0.y, 0, 0);
+		pv->uv1.set(a_1.x, a_1.y, a_1.z, a_1.w);
+		pv->uv2.set(a_2.x, a_2.y, a_2.z, a_2.w);
+		pv->uv3.set(a_3.x, a_3.y, a_3.z, a_3.w);
+		pv->uv4.set(a_4.x, a_4.y, a_4.z, a_4.w);
+		pv->uv5.set(a_5.x, a_5.y, a_5.z, a_5.w);
+		pv->uv6.set(a_6.x, a_6.y, a_6.z, a_6.w);
+		pv->uv7.set(a_7.x, a_7.y, a_7.z, a_7.w);
 		pv++;
+
+		// 2 - RB
 		pv->p.set(float(_w + EPS), float(_h + EPS), EPS, 1.f);
-		pv->uv0.set(p1.x - ddw, p1.y - ddh);
-		pv->uv1.set(p1.x + ddw, p1.y + ddh);
-		pv->uv2.set(p1.x + ddw, p1.y - ddh);
-		pv->uv3.set(p1.x - ddw, p1.y + ddh);
+		pv->uv0.set(1 + a_0.x, 1 + a_0.y, 0, 0);
+		pv->uv1.set(1 + a_1.x, 1 + a_1.y, 1 + a_1.z, 1 + a_1.w);
+		pv->uv2.set(1 + a_2.x, 1 + a_2.y, 1 + a_2.z, 1 + a_2.w);
+		pv->uv3.set(1 + a_3.x, 1 + a_3.y, 1 + a_3.z, 1 + a_3.w);
+		pv->uv4.set(1 + a_4.x, 1 + a_4.y, 1 + a_4.z, 1 + a_4.w);
+		pv->uv5.set(1 + a_5.x, 1 + a_5.y, 1 + a_5.z, 1 + a_5.w);
+		pv->uv6.set(1 + a_6.x, 1 + a_6.y, 1 + a_6.z, 1 + a_6.w);
+		pv->uv7.set(1 + a_7.x, 1 + a_7.y, 1 + a_7.z, 1 + a_7.w);
 		pv++;
+
+		// 3 - RT
 		pv->p.set(float(_w + EPS), EPS, EPS, 1.f);
-		pv->uv0.set(p1.x - ddw, p0.y - ddh);
-		pv->uv1.set(p1.x + ddw, p0.y + ddh);
-		pv->uv2.set(p1.x + ddw, p0.y - ddh);
-		pv->uv3.set(p1.x - ddw, p0.y + ddh);
+		pv->uv0.set(1 + a_0.x, a_0.y, 0, 0);
+		pv->uv1.set(1 + a_1.x, a_1.y, a_1.z, 1 + a_1.w);
+		pv->uv2.set(1 + a_2.x, a_2.y, a_2.z, 1 + a_2.w);
+		pv->uv3.set(1 + a_3.x, a_3.y, a_3.z, 1 + a_3.w);
+		pv->uv4.set(1 + a_4.x, a_4.y, a_4.z, 1 + a_4.w);
+		pv->uv5.set(1 + a_5.x, a_5.y, a_5.z, 1 + a_5.w);
+		pv->uv6.set(1 + a_6.x, a_6.y, a_6.z, 1 + a_6.w);
+		pv->uv7.set(1 + a_7.x, a_7.y, a_7.z, 1 + a_7.w);
 		pv++;
-		RCache.Vertex.Unlock(4, g_bloom_build->vb_stride);
-		RCache.set_Geometry(g_bloom_build);
+		RCache.Vertex.Unlock(4, g_bloom_filter->vb_stride);
 
-		// P0
+		// Perform filtering
+		Fvector4 w0, w1;
+		float kernel = ps_r2_bloom_kernel_g;
+		CalcGauss_wave(w0, w1, kernel, kernel / 3.f, ps_r2_bloom_kernel_scale);
 		u_setrt(rt_Bloom_2, NULL, NULL, NULL); // No need for ZBuffer at all
-		RCache.set_Element(s_bloom->E[3]);
+		RCache.set_Element(s_bloom->E[1]);
+		RCache.set_ca("weight", 0, w0);
+		RCache.set_ca("weight", 1, w1);
+		RCache.set_c("bloom_resolution", _w, _h, one.x, one.y);
+		RCache.set_Geometry(g_bloom_filter);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-
-		// P1
-		u_setrt(rt_Bloom_1, NULL, NULL, NULL); // No need for ZBuffer at all
-		RCache.set_Element(s_bloom->E[4]);
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-	}
-	else
-	{
-		// SLOW FILTER
-		// Transfer into Bloom2, horizontal filter
-		{
-			float _w = BLOOM_size_X;
-			float _h = BLOOM_size_Y;
-			Fvector2 two = {2.f / _w, 2.f / _h};
-			Fvector2 one = {1.f / _w, 1.f / _h};
-			Fvector2 half = {.5f / _w, .5f / _h};
-			Fvector4 a_0 = {half.x, half.y, half.y, half.x};								 // center
-			Fvector4 a_1 = {a_0.x - one.x - half.x, half.y, half.y, a_0.w + one.x + half.x}; // -1,+1i
-			Fvector4 a_2 = {a_1.x - two.x, half.y, half.y, a_1.w + two.x};					 // -2,+2i
-			Fvector4 a_3 = {a_2.x - two.x, half.y, half.y, a_2.w + two.x};					 // -3,+3i
-			Fvector4 a_4 = {a_3.x - two.x, half.y, half.y, a_3.w + two.x};					 // -4,+4i
-			Fvector4 a_5 = {a_4.x - two.x, half.y, half.y, a_4.w + two.x};					 // -5,+5i
-			Fvector4 a_6 = {a_5.x - two.x, half.y, half.y, a_5.w + two.x};					 // -6,+6i
-			Fvector4 a_7 = {a_6.x - two.x, half.y, half.y, a_6.w + two.x};					 // -7,+7i
-
-			// Fill vertex buffer
-			v_filter_bloom* pv = (v_filter_bloom*)RCache.Vertex.Lock(4, g_bloom_filter->vb_stride, Offset);
-
-			// 0 - LB
-			pv->p.set(EPS, float(_h + EPS), EPS, 1.f);
-			pv->uv0.set(a_0.x, 1 + a_0.y, 0, 0);
-			pv->uv1.set(a_1.x, 1 + a_1.y, 1 + a_1.z, a_1.w);
-			pv->uv2.set(a_2.x, 1 + a_2.y, 1 + a_2.z, a_2.w);
-			pv->uv3.set(a_3.x, 1 + a_3.y, 1 + a_3.z, a_3.w);
-			pv->uv4.set(a_4.x, 1 + a_4.y, 1 + a_4.z, a_4.w);
-			pv->uv5.set(a_5.x, 1 + a_5.y, 1 + a_5.z, a_5.w);
-			pv->uv6.set(a_6.x, 1 + a_6.y, 1 + a_6.z, a_6.w);
-			pv->uv7.set(a_7.x, 1 + a_7.y, 1 + a_7.z, a_7.w);
-			pv++;
-
-			// 1 - LT
-			pv->p.set(EPS, EPS, EPS, 1.f);
-			pv->uv0.set(a_0.x, a_0.y, 0, 0);
-			pv->uv1.set(a_1.x, a_1.y, a_1.z, a_1.w);
-			pv->uv2.set(a_2.x, a_2.y, a_2.z, a_2.w);
-			pv->uv3.set(a_3.x, a_3.y, a_3.z, a_3.w);
-			pv->uv4.set(a_4.x, a_4.y, a_4.z, a_4.w);
-			pv->uv5.set(a_5.x, a_5.y, a_5.z, a_5.w);
-			pv->uv6.set(a_6.x, a_6.y, a_6.z, a_6.w);
-			pv->uv7.set(a_7.x, a_7.y, a_7.z, a_7.w);
-			pv++;
-
-			// 2 - RB
-			pv->p.set(float(_w + EPS), float(_h + EPS), EPS, 1.f);
-			pv->uv0.set(1 + a_0.x, 1 + a_0.y, 0, 0);
-			pv->uv1.set(1 + a_1.x, 1 + a_1.y, 1 + a_1.z, 1 + a_1.w);
-			pv->uv2.set(1 + a_2.x, 1 + a_2.y, 1 + a_2.z, 1 + a_2.w);
-			pv->uv3.set(1 + a_3.x, 1 + a_3.y, 1 + a_3.z, 1 + a_3.w);
-			pv->uv4.set(1 + a_4.x, 1 + a_4.y, 1 + a_4.z, 1 + a_4.w);
-			pv->uv5.set(1 + a_5.x, 1 + a_5.y, 1 + a_5.z, 1 + a_5.w);
-			pv->uv6.set(1 + a_6.x, 1 + a_6.y, 1 + a_6.z, 1 + a_6.w);
-			pv->uv7.set(1 + a_7.x, 1 + a_7.y, 1 + a_7.z, 1 + a_7.w);
-			pv++;
-
-			// 3 - RT
-			pv->p.set(float(_w + EPS), EPS, EPS, 1.f);
-			pv->uv0.set(1 + a_0.x, a_0.y, 0, 0);
-			pv->uv1.set(1 + a_1.x, a_1.y, a_1.z, 1 + a_1.w);
-			pv->uv2.set(1 + a_2.x, a_2.y, a_2.z, 1 + a_2.w);
-			pv->uv3.set(1 + a_3.x, a_3.y, a_3.z, 1 + a_3.w);
-			pv->uv4.set(1 + a_4.x, a_4.y, a_4.z, 1 + a_4.w);
-			pv->uv5.set(1 + a_5.x, a_5.y, a_5.z, 1 + a_5.w);
-			pv->uv6.set(1 + a_6.x, a_6.y, a_6.z, 1 + a_6.w);
-			pv->uv7.set(1 + a_7.x, a_7.y, a_7.z, 1 + a_7.w);
-			pv++;
-			RCache.Vertex.Unlock(4, g_bloom_filter->vb_stride);
-
-			// Perform filtering
-			Fvector4 w0, w1;
-			float kernel = ps_r2_bloom_kernel_g;
-			CalcGauss_wave(w0, w1, kernel, kernel / 3.f, ps_r2_bloom_kernel_scale);
-			u_setrt(rt_Bloom_2, NULL, NULL, NULL); // No need for ZBuffer at all
-			RCache.set_Element(s_bloom->E[1]);
-			RCache.set_ca("weight", 0, w0);
-			RCache.set_ca("weight", 1, w1);
-			RCache.set_Geometry(g_bloom_filter);
-			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-		}
 
 		// Transfer into Bloom1, vertical filter
 		{
-			float _w = BLOOM_size_X;
-			float _h = BLOOM_size_Y;
+			float _w = Device.dwWidth * BloomResolutionMultiplier;
+			float _h = Device.dwHeight * BloomResolutionMultiplier;
 			Fvector2 two = {2.f / _w, 2.f / _h};
 			Fvector2 one = {1.f / _w, 1.f / _h};
 			Fvector2 half = {.5f / _w, .5f / _h};
@@ -347,6 +312,7 @@ void CRenderTarget::phase_bloom()
 			RCache.set_Element(s_bloom->E[2]);
 			RCache.set_ca("weight", 0, w0);
 			RCache.set_ca("weight", 1, w1);
+			RCache.set_c("bloom_resolution", _w, _h, one.x, one.y);
 			RCache.set_Geometry(g_bloom_filter);
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		}
