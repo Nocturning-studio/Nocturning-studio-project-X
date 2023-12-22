@@ -260,18 +260,18 @@ CRenderTarget::CRenderTarget()
 
 		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 
+		rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 		}
 		else
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		}
 	}
@@ -318,8 +318,8 @@ CRenderTarget::CRenderTarget()
 	if (RImplementation.o.advancedpp)
 	{
 		D3DFORMAT fmt;
-		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
-			fmt = D3DFMT_X8R8G8B8;
+		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION) || ps_r2_bloom_quality <= 2)
+			fmt = D3DFMT_R8G8B8;
 		else
 			fmt = D3DFMT_A16B16G16R16F;
 
@@ -371,10 +371,10 @@ CRenderTarget::CRenderTarget()
 		}
 
 		// Create rendertarget
-		rt_ao_base.create(r2_RT_ao_base, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao_blurred1.create(r2_RT_ao_blurred1, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao_blurred2.create(r2_RT_ao_blurred2, AOTexWeight, AOTexHeight, D3DFMT_X8R8G8B8);
-		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_X8R8G8B8);
+		rt_ao_base.create(r2_RT_ao_base, AOTexWeight, AOTexHeight, D3DFMT_A8);
+		rt_ao_blurred1.create(r2_RT_ao_blurred1, AOTexWeight, AOTexHeight, D3DFMT_A8);
+		rt_ao_blurred2.create(r2_RT_ao_blurred2, AOTexWeight, AOTexHeight, D3DFMT_A8);
+		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_A8);
 
 		// Create shader resource
 		s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
