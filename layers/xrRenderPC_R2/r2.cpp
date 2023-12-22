@@ -766,7 +766,7 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_smapsize[32];
 	char c_gloss[32];
 
-	char c_hard_optimization[32];
+	char c_rt_format[32];
 
 	char c_sun_shafts[32];
 
@@ -892,17 +892,13 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len] = '0' + char(o.advancedpp);
 	++len;
 
-	int HardOptimization = ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION);
-	if (HardOptimization)
-	{
-		sprintf(c_hard_optimization, "%d", HardOptimization);
-		defines[def_it].Name = "USE_R2_HARD_OPTIMIZATION";
-		defines[def_it].Definition = c_hard_optimization;
-		def_it++;
-		strcat(sh_name, c_hard_optimization);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(HardOptimization);
+	sprintf(c_rt_format, "%d", ps_r2_rt_format);
+	defines[def_it].Name = "RT_FORMAT";
+	defines[def_it].Definition = c_rt_format;
+	def_it++;
+	strcat(sh_name, c_rt_format);
+	len += 4;
+	sh_name[len] = '0' + char(ps_r2_rt_format);
 	++len;
 
 	int vignette = ps_vignette_mode;

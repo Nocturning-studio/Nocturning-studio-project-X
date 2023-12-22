@@ -103,6 +103,9 @@ xr_token debug_render_token[] = {{"disabled", 0},
 u32 ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
 
+u32 ps_r2_rt_format = 0;
+xr_token ps_rt_format[] = {{"ARGB8", 1}, {"ARGB16F", 2}, {0, 0}};
+
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
@@ -760,7 +763,7 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
 
-	CMD3(CCC_Mask, "r2_hard_optimization", &ps_r2_ls_flags, R2FLAG_HARD_OPTIMIZATION);
+	CMD3(CCC_Token, "r2_rt_format", &ps_r2_rt_format, ps_rt_format);
 
 #if RENDER == R_R2
 	CMD1(CCC_BuildSSA, "build_ssa");

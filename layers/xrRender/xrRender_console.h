@@ -160,6 +160,8 @@ extern ECORE_API u32 ps_r2_bump_quality;
 
 extern ECORE_API u32 ps_r2_fog_quality;
 
+extern ECORE_API u32 ps_r2_rt_format;
+
 // R2/R2a/R2.5-specific flags
 extern ECORE_API Flags32 ps_r2_lighting_flags;
 enum
@@ -199,8 +201,7 @@ enum
 {
 	R2FLAG_GLOBALMATERIAL = (1 << 0),
 	R2FLAG_ZFILL = (1 << 1),
-	R2FLAG_USE_NVDBT = (1 << 2),
-	R2FLAG_HARD_OPTIMIZATION = (1 << 3)
+	R2FLAG_USE_NVDBT = (1 << 2)
 };
 
 /*-------------------------------------------------------------------------------*/

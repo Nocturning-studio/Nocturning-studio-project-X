@@ -262,7 +262,7 @@ CRenderTarget::CRenderTarget()
 
 		rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 
-		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION))
+		if (ps_r2_rt_format == 1)
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
@@ -318,7 +318,7 @@ CRenderTarget::CRenderTarget()
 	if (RImplementation.o.advancedpp)
 	{
 		D3DFORMAT fmt;
-		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION) || ps_r2_bloom_quality <= 2)
+		if (ps_r2_rt_format == 1 || ps_r2_bloom_quality <= 2)
 			fmt = D3DFMT_A8R8G8B8;
 		else
 			fmt = D3DFMT_A16B16G16R16F;
