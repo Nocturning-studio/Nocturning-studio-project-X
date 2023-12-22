@@ -104,7 +104,7 @@ u32 ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
 
 u32 ps_r2_rt_format = 0;
-xr_token ps_rt_format[] = {{"ARGB8", 1}, {"ARGB16F", 2}, {0, 0}};
+xr_token ps_rt_format[] = {{"st_opt_rgba_32", 1}, {"st_opt_rgba_64", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
 // Render common values
