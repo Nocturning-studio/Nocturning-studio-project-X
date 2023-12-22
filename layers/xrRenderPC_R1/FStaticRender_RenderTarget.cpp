@@ -313,6 +313,8 @@ void CRenderTarget::End()
 	float VignettePower = EnvironmentDescriptor->m_VignettePower;
 	RCache.set_c("vignette_power", VignettePower, VignettePower, VignettePower, VignettePower);
 
+	RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, ps_r_hdr_brightness, 0);
+
 	RCache.set_Geometry(g_postprocess);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
