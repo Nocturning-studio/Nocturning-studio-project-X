@@ -130,6 +130,7 @@ class ENGINE_API CConsole : public pureRender, public pureFrame
 
 	void Show();
 	void Hide();
+	bool GetVisibility();
 
 	void Execute(LPCSTR cmd);
 	void ExecuteScript(LPCSTR str);
