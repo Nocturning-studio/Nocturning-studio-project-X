@@ -161,9 +161,7 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		// Select target
 		LPCSTR c_target = "vs_2_0";
 		LPCSTR c_entry = "main";
-		if (HW.Caps.geometry_major >= 3)
-			c_target = "vs_3_0";
-		else if (HW.Caps.geometry_major == 2)
+		if (HW.Caps.geometry_major == 2)
 			c_target = "vs_2_0";
 		else
 			c_target = "vs_1_1";
