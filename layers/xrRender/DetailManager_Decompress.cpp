@@ -220,9 +220,6 @@ void CDetailManager::cache_Decompress(Slot* S)
 			Item.c_hemi = DS.r_qclr(DS.c_hemi, 15);
 			Item.c_sun = DS.r_qclr(DS.c_dir, 15);
 
-			//? hack: RGB = hemi
-			//? Item.c_rgb.add					(ps_r_Detail_rainbow_hemi*Item.c_hemi);
-
 			// Vis-sorting
 			if (!UseVS())
 			{

@@ -115,7 +115,6 @@ float ps_r_hdr_brightness = 1.2f;
 float ps_r_Detail_l_ambient = 0.9f;
 float ps_r_Detail_l_aniso = 0.25f;
 float ps_r_Detail_density = 0.3f;
-float ps_r_Detail_rainbow_hemi = 0.75f;
 
 float ps_r_Tree_w_rot = 10.0f;
 float ps_r_Tree_w_speed = 1.00f;
@@ -180,10 +179,6 @@ float ps_r2_bloom_kernel_scale = 2.0f;
 float ps_r2_bloom_threshold = 0.9f;
 float ps_r2_bloom_factor = 0.05f;
 
-float ps_r2_ls_dsm_kernel = 0.7f;
-float ps_r2_ls_psm_kernel = 0.7f;
-float ps_r2_ls_ssm_kernel = 0.7f;
-
 Fvector ps_r2_aa_barier = {0.8f, 0.1f, 0.0f};
 Fvector ps_r2_aa_weight = {0.25f, 0.25f, 0.0f};
 float ps_r2_aa_kernel = 0.5f;
@@ -203,11 +198,9 @@ float ps_r2_ls_depth_scale = 1.00001f;
 float ps_r2_ls_depth_bias = -0.0001f;
 float ps_r2_ls_squality = 1.0f;
 
-float ps_r2_sun_tsm_projection = 0.18f;
 float ps_r2_sun_tsm_bias = -0.05f;
 float ps_r2_sun_near = 12.f;
 float ps_r2_sun_far = 150.f;
-float ps_r2_sun_near_border = 1.0f;
 float ps_r2_sun_depth_far_scale = 1.00000f;
 float ps_r2_sun_depth_far_bias = -0.00004f;
 float ps_r2_sun_depth_near_scale = 1.00001f;
@@ -236,8 +229,7 @@ float ps_cas_contrast = 0.1f;
 float ps_cas_sharpening = 0.1f;
 
 // R2-specific flags
-Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_SUN_IGNORE_PORTALS | R2FLAG_EXP_DONT_TEST_UNSHADOWED |
-								R2FLAG_SUN_FOCUS | R2FLAG_SUN_TSM};
+Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_EXP_DONT_TEST_UNSHADOWED};
 
 Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR | RFLAG_HDR};
 
@@ -733,14 +725,10 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_shadow_filtering", &ps_r2_shadow_filtering, shadow_filter_token);
 	CMD3(CCC_Mask, "r2_sun", &ps_r2_lighting_flags, R2FLAG_SUN);
 	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_lighting_flags, R2FLAG_SUN_DETAILS);
-	CMD3(CCC_Mask, "r2_sun_focus", &ps_r2_lighting_flags, R2FLAG_SUN_FOCUS);
 	CMD3(CCC_Mask, "r2_exp_donttest_uns", &ps_r2_lighting_flags, R2FLAG_EXP_DONT_TEST_UNSHADOWED);
-	CMD3(CCC_Mask, "r2_sun_tsm", &ps_r2_lighting_flags, R2FLAG_SUN_TSM);
-	CMD4(CCC_Float, "r2_sun_tsm_proj", &ps_r2_sun_tsm_projection, .001f, 0.8f);
 	CMD4(CCC_Float, "r2_sun_tsm_bias", &ps_r2_sun_tsm_bias, -0.5, +0.5);
 	CMD4(CCC_Float, "r2_sun_near", &ps_r2_sun_near, 1.f, 50.f);
 	CMD4(CCC_Float, "r2_sun_far", &ps_r2_sun_far, 100.f, 360.f);
-	CMD4(CCC_Float, "r2_sun_near_border", &ps_r2_sun_near_border, .5f, 1.0f);
 	CMD4(CCC_Float, "r2_sun_depth_far_scale", &ps_r2_sun_depth_far_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_sun_depth_far_bias", &ps_r2_sun_depth_far_bias, -0.5, +0.5);
 	CMD4(CCC_Float, "r2_sun_depth_near_scale", &ps_r2_sun_depth_near_scale, 0.5, 1.5);
@@ -788,9 +776,6 @@ void xrRender_initconsole()
 	CMD2(CCC_R2GM, "r2_global_material", &ps_r2_gmaterial);
 #endif
 
-	CMD4(CCC_Float, "r2_ls_dsm_kernel", &ps_r2_ls_dsm_kernel, .1f, 3.f);
-	CMD4(CCC_Float, "r2_ls_psm_kernel", &ps_r2_ls_psm_kernel, .1f, 3.f);
-	CMD4(CCC_Float, "r2_ls_ssm_kernel", &ps_r2_ls_ssm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_squality", &ps_r2_ls_squality, .5f, 1.f);
 
 	CMD3(CCC_Mask, "r2_zfill", &ps_r2_ls_flags, R2FLAG_ZFILL);
