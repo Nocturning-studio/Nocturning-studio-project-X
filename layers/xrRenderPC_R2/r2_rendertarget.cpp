@@ -266,7 +266,7 @@ CRenderTarget::CRenderTarget()
 		{
 			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_R8G8B8);
 		}
 		else
 		{
@@ -319,7 +319,7 @@ CRenderTarget::CRenderTarget()
 	{
 		D3DFORMAT fmt;
 		if (ps_r2_ls_flags.test(R2FLAG_HARD_OPTIMIZATION) || ps_r2_bloom_quality <= 2)
-			fmt = D3DFMT_R8G8B8;
+			fmt = D3DFMT_A8R8G8B8;
 		else
 			fmt = D3DFMT_A16B16G16R16F;
 
@@ -366,8 +366,8 @@ CRenderTarget::CRenderTarget()
 		}
 		else
 		{
-			AOTexWeight *= 0.85f;
-			AOTexHeight *= 0.85f;
+			AOTexWeight *= 0.75f;
+			AOTexHeight *= 0.75f;
 		}
 
 		// Create rendertarget

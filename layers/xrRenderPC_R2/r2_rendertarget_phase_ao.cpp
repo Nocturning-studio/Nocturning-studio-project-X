@@ -21,8 +21,8 @@ void CRenderTarget::phase_create_ao()
 	}
 	else
 	{
-		w *= 0.85f;
-		h *= 0.85f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -93,8 +93,8 @@ void CRenderTarget::phase_vertical_filter()
 	}
 	else
 	{
-		w *= 0.85f;
-		h *= 0.85f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -154,8 +154,8 @@ void CRenderTarget::phase_horizontal_filter()
 	}
 	else
 	{
-		w *= 0.85f;
-		h *= 0.85f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -215,8 +215,8 @@ void CRenderTarget::phase_vertical_filter_pass_2()
 	}
 	else
 	{
-		w *= 0.85f;
-		h *= 0.85f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
@@ -276,8 +276,8 @@ void CRenderTarget::phase_horizontal_filter_pass_2()
 	}
 	else
 	{
-		w *= 0.85f;
-		h *= 0.85f;
+		w *= 0.75f;
+		h *= 0.75f;
 	}
 
 	float d_Z = EPS_S;
