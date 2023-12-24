@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <thread>
 #pragma hdrstop
 
 struct auth_options
@@ -18,11 +19,10 @@ void CLocatorAPI::auth_generate(xr_vector<xr_string>& ignore, xr_vector<xr_strin
 	_o->ignore = ignore;
 	_o->important = important;
 
-#if 1
+if (std::thread::hardware_concurrency() <= 3)
 	FS.auth_runtime(_o);
-#else
+else
 	thread_spawn(auth_entry, "checksum", 0, _o);
-#endif
 }
 
 u64 CLocatorAPI::auth_get()

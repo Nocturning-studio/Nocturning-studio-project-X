@@ -10,6 +10,7 @@
 #define MMNOMIXER
 #define MMNOJOY
 #include <mmsystem.h>
+#include <thread>
 
 // Initialized on startup
 XRCORE_API Fmatrix Fidentity;
@@ -265,7 +266,10 @@ void _initialize_cpu(void)
 		strcat(features, ", SSE");
 	if (CPU::ID.feature & _CPU_FEATURE_SSE2)
 		strcat(features, ", SSE2");
-	Msg("* CPU Features: %s\n", features);
+	Msg("* CPU Features: %s", features);
+
+	int ThreadCount = std::thread::hardware_concurrency();
+	Msg("* CPU Thread count: %d\n", ThreadCount);
 
 	Fidentity.identity();  // Identity matrix
 	Didentity.identity();  // Identity matrix

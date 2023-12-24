@@ -323,7 +323,7 @@ void CResourceManager::DeferredUpload()
 	CTimer timer;
 	timer.Start();
 
-	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load"))
+	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load") || (std::thread::hardware_concurrency() <= 2))
 	{
 		Msg("* Phase info: Texture Loading -> Use one thread");
 
