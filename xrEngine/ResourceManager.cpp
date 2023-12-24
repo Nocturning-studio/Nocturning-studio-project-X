@@ -290,7 +290,7 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-#define MT_TEXTURES
+//#define MT_TEXTURES - Deathman: Ќе эффективно при работе с жесткими дисками - мы ограничены возможностью чтени€. ћы не можем грузить текстуры четырьм€ потоками, потому что они все тупо ждут
 
 #ifdef MT_TEXTURES
 // «агрузка текстур несколькими потоками.
@@ -387,7 +387,7 @@ void CResourceManager::DeferredUnload()
 		Msg("* Phase info: Texture Unloading -> Use one thread");
 
 		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-			t->second->Load();
+			t->second->Unload();
 	}
 	else
 	{
@@ -423,18 +423,36 @@ void CResourceManager::DeferredUpload()
 {
 	if (!Device.b_is_Ready)
 		return;
+
+	Msg("* New phase started: Texture loading, size = %d", m_textures.size());
+
+	CTimer timer;
+	timer.Start();
+
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 	{
 		t->second->Load();
 	}
+
+	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
 
 void CResourceManager::DeferredUnload()
 {
 	if (!Device.b_is_Ready)
 		return;
+
+	Msg("* New phase started: Texture unloading, size = %d", m_textures.size());
+
+	CTimer timer;
+	timer.Start();
+
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+	{
 		t->second->Unload();
+	}
+
+	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
 #endif // MT_TEXTURES
 
