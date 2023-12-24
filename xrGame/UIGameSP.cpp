@@ -264,7 +264,7 @@ void CChangeLevelWnd::Show()
 	Device.Pause(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
 	bShowPauseString = FALSE;
 
-	GamePersistent().SetPickableEffectorDOF(true);
+	GamePersistent().SetEffectorDOF(GamePersistent().m_DofUI);
 }
 
 void CChangeLevelWnd::Hide()
@@ -272,5 +272,5 @@ void CChangeLevelWnd::Hide()
 	g_block_pause = false;
 	Device.Pause(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
 
-	GamePersistent().SetPickableEffectorDOF(false);
+	GamePersistent().RestoreEffectorDOF();
 }

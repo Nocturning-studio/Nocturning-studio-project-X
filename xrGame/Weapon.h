@@ -298,7 +298,6 @@ class CWeapon : public CHudItemObject, public CShootingObject
 	float m_fZoomRotationFactor;
 	bool m_bHideCrosshairInZoom;
 	// dof
-	bool m_bZoomDofEnabled;
 	Fvector m_ZoomDof;
 	Fvector4 m_ReloadDof;
 

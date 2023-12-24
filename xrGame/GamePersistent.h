@@ -27,6 +27,9 @@ class CGamePersistent : public IGame_Persistent, public IEventReceiver
 	EVENT eQuickLoad;
 
 	bool m_bPickableDOF;
+	float m_PickDofFar;
+	float m_PickDofNear;
+	float m_DofChangeSpeed;
 	Fvector m_dof[4]; // 0-dest 1-current 2-from 3-original
 
 	fastdelegate::FastDelegate0<> m_intro_event;
@@ -78,6 +81,8 @@ class CGamePersistent : public IGame_Persistent, public IEventReceiver
 	virtual void LoadTitle(LPCSTR str);
 
 	virtual bool CanBePaused();
+
+	Fvector3 m_DofUI;
 
 	virtual void SetPickableEffectorDOF(bool bSet);
 	virtual void SetEffectorDOF(const Fvector& needed_dof);

@@ -115,6 +115,11 @@ CGamePersistent::CGamePersistent(void)
 
 	eQuickLoad = Engine.Event.Handler_Attach("Game:QuickLoad", this);
 
+	m_PickDofFar = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "far", 70);
+	m_PickDofNear = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "near", -70);
+	m_DofChangeSpeed = READ_IF_EXISTS(pSettings, r_float, "dof_params", "change_speed", 0.2);
+	m_DofUI = READ_IF_EXISTS(pSettings, r_fvector3, "ui_dof", "dof", Fvector().set(0.0, 0.5, 1));
+
 	Fvector3* DofValue = Console->GetFVectorPtr("r2_dof");
 	SetBaseDof(*DofValue);
 }
@@ -743,25 +748,25 @@ void CGamePersistent::RestoreEffectorDOF()
 //	m_dof		[4];	// 0-dest 1-current 2-from 3-original
 void CGamePersistent::UpdateDof()
 {
-	static float diff_far = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "far", 70);
-	static float diff_near = READ_IF_EXISTS(pSettings, r_float, "zone_pick_dof", "near", -70);
-
 	if (m_bPickableDOF)
 	{
 		Fvector pick_dof;
 		pick_dof.y = HUD().GetCurrentRayQuery().range;
-		pick_dof.x = pick_dof.y + diff_near;
-		pick_dof.z = pick_dof.y + diff_far;
+		pick_dof.x = pick_dof.y + m_PickDofNear;
+		pick_dof.z = pick_dof.y + m_PickDofFar;
 		m_dof[0] = pick_dof;
 		m_dof[2] = m_dof[1]; // current
 	}
+
 	if (m_dof[1].similar(m_dof[0]))
+	{
 		return;
+	}
 
 	float td = Device.fTimeDelta;
 	Fvector diff;
 	diff.sub(m_dof[0], m_dof[2]);
-	diff.mul(td / 0.2f); // 0.2 sec
+	diff.mul(td / m_DofChangeSpeed);
 	m_dof[1].add(diff);
 	(m_dof[0].x < m_dof[2].x) ? clamp(m_dof[1].x, m_dof[0].x, m_dof[2].x) : clamp(m_dof[1].x, m_dof[2].x, m_dof[0].x);
 	(m_dof[0].y < m_dof[2].y) ? clamp(m_dof[1].y, m_dof[0].y, m_dof[2].y) : clamp(m_dof[1].y, m_dof[2].y, m_dof[0].y);

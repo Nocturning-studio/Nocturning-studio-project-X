@@ -461,10 +461,7 @@ void CWeapon::Load(LPCSTR section)
 	if (pSettings->line_exist(hud_sect, "zoom_hide_crosshair"))
 		m_bHideCrosshairInZoom = !!pSettings->r_bool(hud_sect, "zoom_hide_crosshair");
 
-	Fvector def_dof;
-	def_dof.set(-1, -1, -1);
 	m_ZoomDof = READ_IF_EXISTS(pSettings, r_fvector3, section, "zoom_dof", Fvector().set(0.5, 1.0, 180));
-	m_bZoomDofEnabled = !def_dof.similar(m_ZoomDof);
 
 	m_ReloadDof = READ_IF_EXISTS(pSettings, r_fvector4, section, "reload_dof", Fvector4().set(0.0, 0.5, 5, 1.7));
 
@@ -1300,8 +1297,8 @@ void CWeapon::OnZoomIn()
 	m_fZoomFactor = CurrentZoomFactor();
 	StopHudInertion();
 
-	if (m_bZoomDofEnabled && !IsScopeAttached())
-		GamePersistent().SetPickableEffectorDOF(true); // GamePersistent().SetEffectorDOF(m_ZoomDof);
+	if (!IsScopeAttached())
+		GamePersistent().SetPickableEffectorDOF(true);
 }
 
 void CWeapon::OnZoomOut()
@@ -1310,7 +1307,7 @@ void CWeapon::OnZoomOut()
 	m_fZoomFactor = g_fov;
 
 	StartHudInertion();
-	GamePersistent().SetPickableEffectorDOF(false); // GamePersistent().RestoreEffectorDOF();
+	GamePersistent().SetPickableEffectorDOF(false);
 }
 
 CUIStaticItem* CWeapon::ZoomTexture()

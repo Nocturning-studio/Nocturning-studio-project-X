@@ -337,7 +337,7 @@ void CUIInventoryWnd::Show()
 	Update();
 	PlaySnd(eInvSndOpen);
 
-	GamePersistent().SetPickableEffectorDOF(true);
+	GamePersistent().SetEffectorDOF(GamePersistent().m_DofUI);
 }
 
 void CUIInventoryWnd::Hide()
@@ -365,7 +365,7 @@ void CUIInventoryWnd::Hide()
 		pActor->SetWeaponHideState(INV_STATE_INV_WND, false);
 	}
 
-	GamePersistent().SetPickableEffectorDOF(false);
+	GamePersistent().RestoreEffectorDOF();
 }
 
 void CUIInventoryWnd::AttachAddon(PIItem item_to_upgrade)
