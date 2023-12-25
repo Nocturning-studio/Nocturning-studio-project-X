@@ -23,7 +23,7 @@ ENGINE_API extern Flags32 psEnvFlags;
 							
 class ENGINE_API CEnvironment
 {
-	struct str_pred : public std::binary_function<shared_str, shared_str, bool>
+	struct str_pred
 	{
 		IC bool operator()(const shared_str& x, const shared_str& y) const
 		{

@@ -32,7 +32,7 @@ class XRCORE_API CLocatorAPI
 	};
 
   private:
-	struct file_pred : public std::binary_function<file&, file&, bool>
+	struct file_pred
 	{
 		IC bool operator()(const file& x, const file& y) const
 		{
