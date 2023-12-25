@@ -376,8 +376,11 @@ void CRenderTarget::phase_filtering()
 	phase_vertical_filter();
 	phase_horizontal_filter();
 
-	phase_vertical_filter_pass_2();
-	phase_horizontal_filter_pass_2();
+	for (int i = 0; i < 3; i++)
+	{
+		phase_vertical_filter_pass_2();
+		phase_horizontal_filter_pass_2();
+	}
 
 	phase_upscale();
 }
