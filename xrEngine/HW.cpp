@@ -82,13 +82,13 @@ void CHW::CreateD3D()
 
 	hD3D9 = LoadLibrary(_name);
 	if (!hD3D9)
-	make_string("Can't find 'd3d9.dll'\nPlease install latest version of DirectX before running this program");
+		make_string("Can't find 'd3d9.dll'\nPlease install latest version of DirectX before running this program");
 
 	typedef IDirect3D9* WINAPI _Direct3DCreate9(UINT SDKVersion);
 	_Direct3DCreate9* createD3D = (_Direct3DCreate9*)GetProcAddress(hD3D9, "Direct3DCreate9");
 	R_ASSERT2(createD3D, "There was a problem with Direct3DCreate9");
 	this->pD3D = createD3D(D3D_SDK_VERSION);
-	if(!this->pD3D)
+	if (!this->pD3D)
 		make_string("Please install DirectX 9.0c");
 }
 
@@ -453,8 +453,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	// Set window properties depending on what mode were in.
 	if (bWindowed || strstr(Core.Params, "-windowed"))
 	{
-		SetWindowLong(m_hWnd, GWL_STYLE,
-					  dwWindowStyle = (WS_POPUP));
+		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_POPUP));
 		// When moving from fullscreen to windowed mode, it is important to
 		// adjust the window size after recreating the device rather than
 		// beforehand to ensure that you get the window size you want.  For
@@ -465,28 +464,13 @@ void CHW::updateWindowProps(HWND m_hWnd)
 		// desktop.
 
 		RECT m_rcWindowBounds;
-		BOOL bCenter = FALSE;
-		if (strstr(Core.Params, "-center_screen"))
-			bCenter = TRUE;
+		RECT DesktopRect;
 
-#ifdef DEDICATED_SERVER
-		bCenter = TRUE;
-#endif
+		GetClientRect(GetDesktopWindow(), &DesktopRect);
 
-		if (bCenter)
-		{
-			RECT DesktopRect;
-
-			GetClientRect(GetDesktopWindow(), &DesktopRect);
-
-			SetRect(&m_rcWindowBounds, (DesktopRect.right - DevPP.BackBufferWidth) / 2,
-					(DesktopRect.bottom - DevPP.BackBufferHeight) / 2, (DesktopRect.right + DevPP.BackBufferWidth) / 2,
-					(DesktopRect.bottom + DevPP.BackBufferHeight) / 2);
-		}
-		else
-		{
-			SetRect(&m_rcWindowBounds, 0, 0, DevPP.BackBufferWidth, DevPP.BackBufferHeight);
-		};
+		SetRect(&m_rcWindowBounds, (DesktopRect.right - DevPP.BackBufferWidth) / 2,
+				(DesktopRect.bottom - DevPP.BackBufferHeight) / 2, (DesktopRect.right + DevPP.BackBufferWidth) / 2,
+				(DesktopRect.bottom + DevPP.BackBufferHeight) / 2);
 
 		AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
 
