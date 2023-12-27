@@ -767,7 +767,6 @@ void CActor::Die(CObject* who)
 		};
 	};
 
-	cam_Set(eacFreeLook);
 	mstate_wishful &= ~mcAnyMove;
 	mstate_real &= ~mcAnyMove;
 
