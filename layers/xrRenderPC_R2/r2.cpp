@@ -803,6 +803,8 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 
 	char c_bump_quality[32];
 
+	char c_alpha_test_aa[32];
+
 	char sh_name[MAX_PATH] = "";
 
 	for (u32 i = 0; i < m_ShaderOptions.size(); ++i)
@@ -1220,6 +1222,18 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			len += 4;
 		}
 		sh_name[len] = '0' + (char)ps_r2_bump_quality;
+		++len;
+
+		if (ps_r2_alpha_test_aa)
+		{
+			sprintf(c_alpha_test_aa, "%d", ps_r2_alpha_test_aa);
+			defines[def_it].Name = "ALPHA_TEST_AA";
+			defines[def_it].Definition = c_alpha_test_aa;
+			def_it++;
+			strcat(sh_name, c_alpha_test_aa);
+			len += 4;
+		}
+		sh_name[len] = '0' + (char)ps_r2_alpha_test_aa;
 		++len;
 	}
 

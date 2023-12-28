@@ -70,6 +70,10 @@ u32 ps_r2_bump_quality = 1;
 xr_token bump_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
+u32 ps_r2_alpha_test_aa = 1;
+xr_token alpha_test_aa_token[] = {
+	{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
+
 u32 ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
@@ -759,6 +763,8 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
 	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
+
+	CMD3(CCC_Token, "r2_alpha_test_aa", &ps_r2_alpha_test_aa, alpha_test_aa_token);
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);

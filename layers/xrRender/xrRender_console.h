@@ -158,6 +158,8 @@ extern ECORE_API float ps_r2_df_parallax_h;
 extern ECORE_API u32 ps_r2_bump_mode;
 extern ECORE_API u32 ps_r2_bump_quality;
 
+extern ECORE_API u32 ps_r2_alpha_test_aa;
+
 extern ECORE_API u32 ps_r2_fog_quality;
 
 extern ECORE_API u32 ps_r2_rt_format;
