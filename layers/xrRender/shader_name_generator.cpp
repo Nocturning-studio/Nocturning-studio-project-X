@@ -66,9 +66,17 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	// Get bump map texture
 	if (bUseBump)
+	{
 		strcpy_s(BumpTexture, sizeof(BumpTexture), refAlbedoTexture.bump_get().c_str());
+	}
 	else
-		strcpy_s(BumpTexture, sizeof(BumpTexture), "ed\\ed_dummy_bump");
+	{
+		strcpy_s(BumpTexture, sizeof(BumpTexture), AlbedoTexture);
+		strconcat(sizeof(BumpTexture), BumpTexture, BumpTexture, "_bump");
+
+		if (!FS.exist(Dummy, "$game_textures$", BumpTexture, ".dds"))
+			strcpy_s(BumpTexture, sizeof(BumpTexture), "ed\\ed_dummy_bump");
+	}
 
 	// Get bump decompression map
 	strcpy_s(BumpCorrectionTexture, sizeof(BumpCorrectionTexture), BumpTexture);
@@ -91,7 +99,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	// Get bump for detail texture
 	strcpy_s(DetailBumpTexture, sizeof(DetailBumpTexture), DetailAlbedoTexture);
 
-	// Checking for existace
+	// Checking for existance
 	if (FS.exist(Dummy, "$game_textures$", DetailBumpTexture, ".dds"))
 		strconcat(sizeof(DetailBumpTexture), DetailBumpTexture, DetailBumpTexture, "_bump");
 	else
@@ -169,7 +177,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	// Create shader pass
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);
 
-	C.r_Sampler("s_base", AlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
+	C.r_Sampler("s_base", AlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_POINT,
 				D3DTEXF_ANISOTROPIC);
 
 	C.r_Sampler("s_baked_ao", BakedAOTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
