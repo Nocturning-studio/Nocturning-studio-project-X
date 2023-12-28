@@ -349,6 +349,7 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 		N.set(m_Camera.j);
 		D.set(m_Camera.k);
 		P.set(m_Camera.c);
+		fFov = m_fFov;
 	}
 	else if (m_bMakeLevelMap)
 	{
