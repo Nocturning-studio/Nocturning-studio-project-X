@@ -94,10 +94,7 @@ void CBlender_deffer_model::Compile(CBlender_Compile& C)
 			}
 			else
 			{
-				if (RImplementation.o.HW_smap)
-					C.r_Pass("shadow_direct_dynamic_mesh", "dumb", FALSE, TRUE, TRUE, FALSE);
-				else
-					C.r_Pass("shadow_direct_dynamic_mesh", "shadow_direct_static_mesh", FALSE);
+				C.r_Pass("shadow_direct_dynamic_mesh", "shadow_direct_static_mesh", FALSE, TRUE, TRUE, FALSE);
 				C.r_Sampler("s_base", C.L_textures[0]);
 				C.r_End();
 				break;

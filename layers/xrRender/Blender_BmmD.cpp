@@ -246,7 +246,7 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_R2_SHADOW: // smap
-		C.r_Pass("shadow_direct_static_mesh", "dumb", FALSE, TRUE, TRUE, FALSE);
+		C.r_Pass("shadow_direct_static_mesh", "shadow_direct_static_mesh", FALSE, TRUE, TRUE, FALSE);
 		C.r_Sampler("s_base", C.L_textures[0]);
 		C.r_End();
 		break;
