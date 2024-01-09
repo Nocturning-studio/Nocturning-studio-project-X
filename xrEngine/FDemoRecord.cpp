@@ -301,12 +301,14 @@ void CDemoRecord::SwitchShowInputInfo()
 
 void CDemoRecord::ShowInputInfo()
 {
-	pApp->pFontSystem->SetColor(color_rgba(255, 255, 255, 127));
+	pApp->pFontSystem->SetColor(color_rgba(215, 195, 170, 175));
 	pApp->pFontSystem->SetAligment(CGameFont::alCenter);
-	pApp->pFontSystem->OutSetI(0, -.05f);
+	pApp->pFontSystem->OutSetI(0, -.22f);
 
 	pApp->pFontSystem->OutNext("%s", "RECORDING");
 	pApp->pFontSystem->OutNext("Key frames count: %d", iCount);
+	pApp->pFontSystem->OutNext("Depth of field focus distance: %f", m_fDOF.z);
+	pApp->pFontSystem->OutNext("Field of view: %f", m_fFov);
 
 	pApp->pFontSystem->SetAligment(CGameFont::alLeft);
 	pApp->pFontSystem->OutSetI(-0.2f, +.05f);
@@ -656,7 +658,8 @@ void CDemoRecord::ChangeDepthOfField(int direction)
 			dof_params_actual.z = 5.0f;
 		}
 
-		g_pGamePersistent->SetBaseDof(dof_params_actual);
+		m_fDOF = dof_params_actual;
+		g_pGamePersistent->SetBaseDof(m_fDOF);
 
 #ifdef DEBUG_DEMO_RECORD
 		Msg("CDemoRecord::ChangeDepthOfField - method successfully change depth of field parameters");

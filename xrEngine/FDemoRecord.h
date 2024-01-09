@@ -25,6 +25,7 @@ class ENGINE_API CDemoRecord : public CEffectorCam, public IInputReceiver
 	Fvector m_vVelocity;
 	Fvector m_vAngularVelocity;
 	float m_fFov;
+	Fvector3 m_fDOF;
 	Fvector m_vGlobalDepthOfFieldParameters;
 	bool m_bAutofocusEnabled;
 	bool m_bGridEnabled;
