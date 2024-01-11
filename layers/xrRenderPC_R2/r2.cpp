@@ -89,6 +89,29 @@ static class cl_sun_far : public R_constant_setup
 	}
 } binder_sun_far;
 //////////////////////////////////////////////////////////////////////////
+static class cl_sun_dir : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		light* sun = (light*)RImplementation.Lights.sun_adapted._get();
+
+		Fvector L_dir;
+		Device.mView.transform_dir(L_dir, sun->direction);
+		L_dir.normalize();
+
+		RCache.set_c(C, L_dir.x, L_dir.y, L_dir.z, 0);
+	}
+} binder_sun_dir;
+//////////////////////////////////////////////////////////////////////////
+static class cl_sun_color : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		light* sun = (light*)RImplementation.Lights.sun_adapted._get();
+		RCache.set_c(C, sun->color.r, sun->color.g, sun->color.b, 0);
+	}
+} binder_sun_color;
+//////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -261,6 +284,8 @@ void CRender::create()
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax_heigt", &binder_parallax);
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
+	::Device.Resources->RegisterConstantSetup("sun_dir", &binder_sun_dir);
+	::Device.Resources->RegisterConstantSetup("sun_color", &binder_sun_color);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
