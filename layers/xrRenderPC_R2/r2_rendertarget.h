@@ -281,7 +281,8 @@ class CRenderTarget : public IRender_Target
 	void calculate_depth_of_field();
 	void phase_depth_of_field();
 
-	void calculate_barrel_blur();
+	void calculate_barrel_blur_vertical_pass();
+	void calculate_barrel_blur_horizontal_pass();
 	void phase_barrel_blur();
 
 	void motion_blur_phase_save_frame();
