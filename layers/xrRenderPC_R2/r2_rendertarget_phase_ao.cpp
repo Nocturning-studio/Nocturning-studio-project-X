@@ -21,8 +21,8 @@ void CRenderTarget::phase_create_ao()
 	}
 	else
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.9f;
+		h *= 0.9f;
 	}
 
 	float d_Z = EPS_S;
@@ -93,8 +93,8 @@ void CRenderTarget::phase_vertical_filter()
 	}
 	else
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.9f;
+		h *= 0.9f;
 	}
 
 	float d_Z = EPS_S;
@@ -154,8 +154,8 @@ void CRenderTarget::phase_horizontal_filter()
 	}
 	else
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.9f;
+		h *= 0.9f;
 	}
 
 	float d_Z = EPS_S;
@@ -215,8 +215,8 @@ void CRenderTarget::phase_vertical_filter_pass_2()
 	}
 	else
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.9f;
+		h *= 0.9f;
 	}
 
 	float d_Z = EPS_S;
@@ -276,8 +276,8 @@ void CRenderTarget::phase_horizontal_filter_pass_2()
 	}
 	else
 	{
-		w *= 0.75f;
-		h *= 0.75f;
+		w *= 0.9f;
+		h *= 0.9f;
 	}
 
 	float d_Z = EPS_S;
@@ -376,11 +376,8 @@ void CRenderTarget::phase_filtering()
 	phase_vertical_filter();
 	phase_horizontal_filter();
 
-	for (int i = 0; i < 3; i++)
-	{
-		phase_vertical_filter_pass_2();
-		phase_horizontal_filter_pass_2();
-	}
+	//phase_vertical_filter_pass_2();
+	//phase_horizontal_filter_pass_2();
 
 	phase_upscale();
 }

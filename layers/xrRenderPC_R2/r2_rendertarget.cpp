@@ -366,8 +366,8 @@ CRenderTarget::CRenderTarget()
 		}
 		else
 		{
-			AOTexWeight *= 0.75f;
-			AOTexHeight *= 0.75f;
+			AOTexWeight *= 0.9f;
+			AOTexHeight *= 0.9f;
 		}
 
 		// Create rendertarget
