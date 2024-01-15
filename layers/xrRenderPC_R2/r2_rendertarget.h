@@ -61,16 +61,16 @@ class CRenderTarget : public IRender_Target
 	ref_rt rt_Diffuse_Accumulator;
 	ref_rt rt_Specular_Accumulator;
 
-	ref_rt rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+	ref_rt rt_Generic_0; // 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	//	Igor: for volumetric lights
 	ref_rt rt_Generic_2; // 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 
 	ref_rt rt_Distortion_Mask;
 
-	ref_rt rt_Bloom_1;	 // 32bit, dim/4	(r,g,b,?)
-	ref_rt rt_Bloom_2;	 // 32bit, dim/4	(r,g,b,?)
-	ref_rt rt_LUM_64;	 // 64bit, 64x64,	log-average in all components
-	ref_rt rt_LUM_8;	 // 64bit, 8x8,		log-average in all components
+	ref_rt rt_Bloom_1; // 32bit, dim/4	(r,g,b,?)
+	ref_rt rt_Bloom_2; // 32bit, dim/4	(r,g,b,?)
+	ref_rt rt_LUM_64;  // 64bit, 64x64,	log-average in all components
+	ref_rt rt_LUM_8;   // 64bit, 8x8,		log-average in all components
 
 	ref_rt rt_LUM_pool[4];	// 1xfp32,1x1,		exp-result -> scaler
 	ref_texture t_LUM_src;	// source
@@ -78,8 +78,6 @@ class CRenderTarget : public IRender_Target
 
 	// ao
 	ref_rt rt_ao_base;
-	ref_rt rt_ao_blurred1;
-	ref_rt rt_ao_blurred2;
 	ref_rt rt_ao;
 
 	// env
@@ -151,6 +149,8 @@ class CRenderTarget : public IRender_Target
 	ref_geom g_aa_blur;
 	ref_geom g_aa_AA;
 
+	ref_geom g_simple_quad;
+
 	ref_shader s_combine_dbg_0;
 	ref_shader s_combine_dbg_1;
 	ref_shader s_combine;
@@ -167,6 +167,7 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_vignette;
 	ref_shader s_frame_overlay;
 	ref_shader s_tonemapping;
+
   public:
 	ref_shader s_postprocess;
 	ref_geom g_postprocess;
@@ -205,6 +206,7 @@ class CRenderTarget : public IRender_Target
 	void u_stencil_optimize(BOOL common_stencil = TRUE);
 	void u_compute_texgen_screen(Fmatrix& dest);
 	void u_compute_texgen_jitter(Fmatrix& dest);
+	float hclip(float v, float dim);
 	void u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb);
 	void u_setrt(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurface9* _2, IDirect3DSurface9* _3,
 				 IDirect3DSurface9* zb);
@@ -246,10 +248,9 @@ class CRenderTarget : public IRender_Target
 	void phase_create_ao();
 	void phase_vertical_filter();
 	void phase_horizontal_filter();
-	void phase_vertical_filter_pass_2();
-	void phase_horizontal_filter_pass_2();
-	void phase_upscale();
-	void phase_filtering();
+
+	void phase_bilinear_filter();
+	void phase_blurring();
 	void phase_ao();
 
 	void phase_autoexposure();
@@ -269,7 +270,6 @@ class CRenderTarget : public IRender_Target
 	void antialiasing_phase_fxaa();
 	void antialiasing_phase_dlaa();
 	void select_antialiasing_type();
-	int select_antialiasing_iterations_count();
 	void phase_antialiasing();
 
 	void phase_create_distortion_mask();

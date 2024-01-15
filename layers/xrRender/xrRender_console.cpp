@@ -19,8 +19,7 @@ u32 ps_r_aa = 1;
 #if RENDER == R_R1
 xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
 #else
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1},
-					   {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
 #endif
 
 u32 ps_r_aa_iterations = 2;
@@ -41,7 +40,7 @@ xr_token aa_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
 u32 ps_r2_ao = 2;
-xr_token ao_token[] = {{"st_opt_off", 0}, {"st_opt_ssao", 1}, {"st_opt_hdao", 2}, {"st_opt_hbao", 3}, {0, 0}};
+xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssao", 1}, {"st_opt_hbao", 2}, {"st_opt_hbao_plus", 3}, {0, 0}};
 
 u32 ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
@@ -60,7 +59,7 @@ xr_token shadow_filter_token[] = {
 	{"st_opt_disable", 0}, {"st_opt_min", 1}, {"st_opt_mid", 2}, {"st_opt_max", 3}, {0, 0}};
 
 u32 ps_r2_sun_shafts = 2;
-xr_token qsun_shafts_token[] = {{"st_opt_off", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
+xr_token qsun_shafts_token[] = {{"st_opt_disabled", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
 
 u32 ps_r2_bump_mode = 2;
 xr_token bump_mode_token[] = {
@@ -71,8 +70,7 @@ xr_token bump_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
 u32 ps_r2_alpha_test_aa = 1;
-xr_token alpha_test_aa_token[] = {
-	{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
+xr_token alpha_test_aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
 
 u32 ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
@@ -186,9 +184,9 @@ float ps_r2_bloom_kernel_scale = 2.0f;
 float ps_r2_bloom_threshold = 0.9f;
 float ps_r2_bloom_factor = 0.05f;
 
-Fvector ps_r2_aa_barier = {0.8f, 0.1f, 0.0f};
-Fvector ps_r2_aa_weight = {0.25f, 0.25f, 0.0f};
-float ps_r2_aa_kernel = 0.5f;
+float ps_r2_fxaa_subpix = 0.6f;
+float ps_r2_fxaa_edge_treshold = 0.063f;
+float ps_r2_fxaa_edge_treshold_min = 0.0f;
 
 float ps_r2_mblur = 0.5f;
 
@@ -674,13 +672,9 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
 
 	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
-	CMD4(CCC_Float, "r2_aa_kernel", &ps_r2_aa_kernel, 0.3f, 0.7f);
-	tw_min.set(0, 0, 0);
-	tw_max.set(1, 1, 1);
-	CMD4(CCC_Vector3, "r2_aa_break", &ps_r2_aa_barier, tw_min, tw_max);
-	tw_min.set(0, 0, 0);
-	tw_max.set(1, 1, 1);
-	CMD4(CCC_Vector3, "r2_aa_weight", &ps_r2_aa_weight, tw_min, tw_max);
+	CMD4(CCC_Float, "r2_fxaa_subpix", &ps_r2_fxaa_subpix, 0.0f, 1.0f);
+	CMD4(CCC_Float, "r2_fxaa_treshold", &ps_r2_fxaa_edge_treshold, 0.0f, 1.0f);
+	CMD4(CCC_Float, "r2_fxaa_treshold_min", &ps_r2_fxaa_edge_treshold_min, 0.0f, 1.0f);
 
 	CMD3(CCC_Token, "r2_ao_type", &ps_r2_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_r2_ao_quality, ao_quality_token);

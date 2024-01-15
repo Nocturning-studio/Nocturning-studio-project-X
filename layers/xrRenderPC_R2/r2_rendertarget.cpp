@@ -25,6 +25,11 @@
 #include "blender_barrel_blur.h"
 #include "stdafx.h"
 
+float CRenderTarget::hclip(float v, float dim)
+{
+	return 2.f * v / dim - 1.f;
+}
+
 void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
 {
 	VERIFY(_1);
@@ -361,19 +366,17 @@ CRenderTarget::CRenderTarget()
 
 		if (ps_r2_ao_quality <= 2)
 		{
-			AOTexWeight *= 0.5f;
-			AOTexHeight *= 0.5f;
+			AOTexWeight *= 0.85f;
+			AOTexHeight *= 0.85f;
 		}
 		else
 		{
-			AOTexWeight *= 0.9f;
-			AOTexHeight *= 0.9f;
+			AOTexWeight *= 1.0f;
+			AOTexHeight *= 1.0f;
 		}
 
 		// Create rendertarget
 		rt_ao_base.create(r2_RT_ao_base, AOTexWeight, AOTexHeight, D3DFMT_A8);
-		rt_ao_blurred1.create(r2_RT_ao_blurred1, AOTexWeight, AOTexHeight, D3DFMT_A8);
-		rt_ao_blurred2.create(r2_RT_ao_blurred2, AOTexWeight, AOTexHeight, D3DFMT_A8);
 		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_A8);
 
 		// Create shader resource
@@ -425,6 +428,9 @@ CRenderTarget::CRenderTarget()
 						D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3) | D3DFVF_TEXCOORDSIZE2(4) |
 						D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6);
 		g_aa_AA.create(fvf_aa_AA, RCache.Vertex.Buffer(), RCache.QuadIB);
+
+		// Create simple screen quad geom for postprocess shaders
+		g_simple_quad.create(D3DFVF_XYZRHW | D3DFVF_TEX1, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 		t_envmap_0.create(r2_T_envs0);
 		t_envmap_1.create(r2_T_envs1);

@@ -76,7 +76,7 @@ static class cl_parallax : public R_constant_setup
 	virtual void setup(R_constant* C)
 	{
 		float h = ps_r2_df_parallax_h;
-		RCache.set_c(C, h, -h / 2.f, 1.f / r_dtex_range, 1.f / r_dtex_range);
+		RCache.set_c(C, h, -(h / 2.0f), 1.f / r_dtex_range, 1.f / r_dtex_range);
 	}
 } binder_parallax;
 //////////////////////////////////////////////////////////////////////////

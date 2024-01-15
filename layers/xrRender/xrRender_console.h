@@ -106,9 +106,10 @@ extern ECORE_API float ps_cas_contrast;
 extern ECORE_API float ps_cas_sharpening;
 
 extern ECORE_API u32 ps_r2_aa_quality;
-extern ECORE_API Fvector ps_r2_aa_barier;
-extern ECORE_API Fvector ps_r2_aa_weight;
-extern ECORE_API float ps_r2_aa_kernel;
+
+extern ECORE_API float ps_r2_fxaa_subpix;
+extern ECORE_API float ps_r2_fxaa_edge_treshold;
+extern ECORE_API float ps_r2_fxaa_edge_treshold_min;
 
 extern ECORE_API float ps_r2_mblur; // .5f
 extern ECORE_API u32 ps_r2_mblur_quality;
