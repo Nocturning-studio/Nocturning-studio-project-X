@@ -141,7 +141,8 @@ void CSoundRender_CoreA::_initialize(u64 window)
 	A_CHK(alListenerf(AL_GAIN, 1.f));
 
 	// Check for EAX extension
-	bEAX = true; // deviceDesc.eax && !deviceDesc.eax_unwanted;
+#pragma todo("Deathman to ALL: Починить EAX без хардкода")
+	bEAX = true;//deviceDesc.eax && !deviceDesc.eax_unwanted;
 	eaxSet = (EAXSet)alGetProcAddress((const ALchar*)"EAXSet");
 	if (eaxSet == NULL)
 		bEAX = false;
@@ -215,12 +216,14 @@ void CSoundRender_CoreA::_clear()
 
 void CSoundRender_CoreA::i_eax_set(const GUID* guid, u32 prop, void* val, u32 sz)
 {
-	eaxSet(guid, prop, 0, val, sz);
+	if (bEAX)
+		eaxSet(guid, prop, 0, val, sz);
 }
 
 void CSoundRender_CoreA::i_eax_get(const GUID* guid, u32 prop, void* val, u32 sz)
 {
-	eaxGet(guid, prop, 0, val, sz);
+	if (bEAX)
+		eaxGet(guid, prop, 0, val, sz);
 }
 
 void CSoundRender_CoreA::update_listener(const Fvector& P, const Fvector& D, const Fvector& N, float dt)
@@ -232,6 +235,7 @@ void CSoundRender_CoreA::update_listener(const Fvector& P, const Fvector& D, con
 		Listener.position.set(P);
 		bListenerMoved = TRUE;
 	}
+
 	Listener.orientation[0].set(D.x, D.y, -D.z);
 	Listener.orientation[1].set(N.x, N.y, -N.z);
 
@@ -239,35 +243,40 @@ void CSoundRender_CoreA::update_listener(const Fvector& P, const Fvector& D, con
 	A_CHK(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f));
 	A_CHK(alListenerfv(AL_ORIENTATION, &Listener.orientation[0].x));
 
-	EAXLISTENERPROPERTIES ep;
-	ep.lRoom = DSPROPERTY_EAXLISTENER_ROOM;
-	ep.lRoomHF = DSPROPERTY_EAXLISTENER_ROOMHF;
-	ep.flRoomRolloffFactor = DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR;
-	ep.flDecayTime = DSPROPERTY_EAXLISTENER_DECAYTIME;
-	ep.flDecayHFRatio = DSPROPERTY_EAXLISTENER_DECAYHFRATIO;
-	ep.lReflections = DSPROPERTY_EAXLISTENER_REFLECTIONS;
-	ep.flReflectionsDelay = DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY;
-	ep.lReverb = DSPROPERTY_EAXLISTENER_REVERB;
-	ep.flReverbDelay = DSPROPERTY_EAXLISTENER_REVERBDELAY;
-	ep.flEnvironmentDiffusion = DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION;
-	ep.flAirAbsorptionHF = DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF;
-	ep.dwFlags = DSPROPERTY_EAXLISTENER_FLAGS;
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOM, &ep.lRoom, sizeof(LONG));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMHF, &ep.lRoomHF, sizeof(LONG));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR, &ep.flRoomRolloffFactor,
-			  sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYTIME, &ep.flDecayTime, sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYHFRATIO, &ep.flDecayHFRatio,
-			  sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONS, &ep.lReflections, sizeof(LONG));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY, &ep.flReflectionsDelay,
-			  sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERB, &ep.lReverb, sizeof(LONG));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERBDELAY, &ep.flReverbDelay,
-			  sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION,
-			  &ep.flEnvironmentDiffusion, sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF, &ep.flAirAbsorptionHF,
-			  sizeof(float));
-	i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_FLAGS, &ep.dwFlags, sizeof(DWORD));
+	if (bEAX)
+	{
+		EAXLISTENERPROPERTIES ep;
+		ep.lRoom = DSPROPERTY_EAXLISTENER_ROOM;
+		ep.lRoomHF = DSPROPERTY_EAXLISTENER_ROOMHF;
+		ep.flRoomRolloffFactor = DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR;
+		ep.flDecayTime = DSPROPERTY_EAXLISTENER_DECAYTIME;
+		ep.flDecayHFRatio = DSPROPERTY_EAXLISTENER_DECAYHFRATIO;
+		ep.lReflections = DSPROPERTY_EAXLISTENER_REFLECTIONS;
+		ep.flReflectionsDelay = DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY;
+		ep.lReverb = DSPROPERTY_EAXLISTENER_REVERB;
+		ep.flReverbDelay = DSPROPERTY_EAXLISTENER_REVERBDELAY;
+		ep.flEnvironmentDiffusion = DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION;
+		ep.flAirAbsorptionHF = DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF;
+		ep.dwFlags = DSPROPERTY_EAXLISTENER_FLAGS;
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOM, &ep.lRoom, sizeof(LONG));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMHF, &ep.lRoomHF, sizeof(LONG));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR,
+				  &ep.flRoomRolloffFactor, sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYTIME, &ep.flDecayTime,
+				  sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYHFRATIO, &ep.flDecayHFRatio,
+				  sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONS, &ep.lReflections,
+				  sizeof(LONG));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY, &ep.flReflectionsDelay,
+				  sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERB, &ep.lReverb, sizeof(LONG));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERBDELAY, &ep.flReverbDelay,
+				  sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION,
+				  &ep.flEnvironmentDiffusion, sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF, &ep.flAirAbsorptionHF,
+				  sizeof(float));
+		i_eax_set(&DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_FLAGS, &ep.dwFlags, sizeof(DWORD));
+	}
 }
