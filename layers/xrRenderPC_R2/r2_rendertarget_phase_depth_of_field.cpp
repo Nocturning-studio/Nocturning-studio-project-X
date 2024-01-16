@@ -178,10 +178,8 @@ void CRenderTarget::phase_depth_of_field()
 {
 	int IterationsCount = 1;
 
-	if (ps_r2_dof_quality == 3)
+	if (ps_r2_dof_quality >= 3)
 		IterationsCount = 2;
-	else if (ps_r2_dof_quality == 4)
-		IterationsCount = 3;
 
 	for (int i = 0; i < IterationsCount; i++)
 		calculate_depth_of_field();
