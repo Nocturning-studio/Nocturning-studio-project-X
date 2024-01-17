@@ -27,9 +27,6 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler_rtf("s_material", r2_material);
 		C.r_Sampler_rtf("s_ao", r2_RT_ao);
-		C.r_Sampler_rtf("s_ao_base", r2_RT_ao_base);
-		C.r_Sampler_rtf("s_ao_blurred1", r2_RT_ao_blurred1);
-		C.r_Sampler_rtf("s_ao_blurred2", r2_RT_ao_blurred2);
 		C.r_Sampler_clf("env_s0", r2_T_envs0);
 		C.r_Sampler_clf("env_s1", r2_T_envs1);
 		C.r_Sampler_clf("sky_s0", r2_T_sky0);

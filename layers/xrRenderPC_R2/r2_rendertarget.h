@@ -26,7 +26,6 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_bloom;
 	IBlender* b_distortion;
 	IBlender* b_ambient_occlusion;
-	IBlender* b_ambient_occlusion_blur;
 	IBlender* b_autoexposure;
 	IBlender* b_combine;
 	IBlender* b_contrast_adaptive_sharpening;
@@ -132,7 +131,6 @@ class CRenderTarget : public IRender_Target
 
 	// AO
 	ref_shader s_ambient_occlusion;
-	ref_shader s_ambient_occlusion_blur;
 
 	// AA
 	ref_shader s_aa;
@@ -246,11 +244,7 @@ class CRenderTarget : public IRender_Target
 	void phase_bloom();
 
 	void phase_create_ao();
-	void phase_vertical_filter();
-	void phase_horizontal_filter();
-
-	void phase_bilinear_filter();
-	void phase_blurring();
+	void phase_filtering();
 	void phase_ao();
 
 	void phase_autoexposure();

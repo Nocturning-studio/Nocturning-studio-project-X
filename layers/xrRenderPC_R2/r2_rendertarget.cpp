@@ -1,7 +1,6 @@
 #include "r2_rendertarget.h"
 #include "..\xrEngine\resourcemanager.h"
 #include "blender_ambient_occlusion.h"
-#include "blender_ambient_occlusion_blur.h"
 #include "blender_bloom_build.h"
 #include "blender_antialiasing.h"
 #include "blender_combine.h"
@@ -238,7 +237,6 @@ CRenderTarget::CRenderTarget()
 	b_accum_spot = xr_new<CBlender_accum_spot>();
 	b_accum_reflected = xr_new<CBlender_accum_reflected>();
 	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
-	b_ambient_occlusion_blur = xr_new<CBlender_ambient_occlusion_blur>();
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_autoexposure = xr_new<CBlender_autoexposure>();
 	b_tonemapping = xr_new<CBlender_tonemapping>();
@@ -362,26 +360,11 @@ CRenderTarget::CRenderTarget()
 	// AO
 	if (RImplementation.o.advancedpp)
 	{
-		u32 AOTexWeight = dwWidth, AOTexHeight = dwHeight;
-
-		if (ps_r2_ao_quality <= 2)
-		{
-			AOTexWeight *= 0.85f;
-			AOTexHeight *= 0.85f;
-		}
-		else
-		{
-			AOTexWeight *= 1.0f;
-			AOTexHeight *= 1.0f;
-		}
-
 		// Create rendertarget
-		rt_ao_base.create(r2_RT_ao_base, AOTexWeight, AOTexHeight, D3DFMT_A8);
 		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_A8);
 
 		// Create shader resource
 		s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
-		s_ambient_occlusion_blur.create(b_ambient_occlusion_blur, "r2\\ambient_occlusion_blur");
 	}
 
 	// autoexposure
@@ -629,7 +612,6 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_tonemapping);
 	xr_delete(b_bloom);
 	xr_delete(b_ambient_occlusion);
-	xr_delete(b_ambient_occlusion_blur);
 	xr_delete(b_accum_reflected);
 	xr_delete(b_accum_spot);
 	xr_delete(b_accum_point);

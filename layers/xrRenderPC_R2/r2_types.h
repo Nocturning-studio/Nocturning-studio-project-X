@@ -28,10 +28,7 @@
 #define r2_RT_bloom2 "$user$bloom2"
 
 // Ambient occlusion
-#define r2_RT_ao_base "$user$ao_base" // Main effect
-#define r2_RT_ao_blurred1 "$user$ao_blurred1" // Blurring pipeline
-#define r2_RT_ao_blurred2 "$user$ao_blurred2" // Blurring pipeline
-#define r2_RT_ao "$user$ao" // Output blurred effect
+#define r2_RT_ao "$user$ao"
 
 // Autoexposure
 #define r2_RT_autoexposure_t64 "$user$lum_t64"

@@ -151,12 +151,6 @@
     <Filter Include="Blenders\Postprocess stage\Contrast adaptive sharpening">
       <UniqueIdentifier>{07b95237-ced3-4caf-aa54-fda5aa06453c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blenders\Postprocess stage\Ambient occlusion\AO Calculating">
-      <UniqueIdentifier>{6f21101e-47c3-4c6d-841f-3ad5bf5ca868}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Blenders\Postprocess stage\Ambient occlusion\AO Blurring">
-      <UniqueIdentifier>{aa118207-a781-4186-b83b-b58067ad2813}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -385,10 +379,7 @@
       <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
     </ClInclude>
     <ClInclude Include="Blender_ambient_occlusion.h">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Calculating</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_ambient_occlusion_blur.h">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Blurring</Filter>
+      <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -768,10 +759,7 @@
       <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
     </ClCompile>
     <ClCompile Include="Blender_ambient_occlusion.cpp">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Calculating</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_ambient_occlusion_blur.cpp">
-      <Filter>Blenders\Postprocess stage\Ambient occlusion\AO Blurring</Filter>
+      <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
