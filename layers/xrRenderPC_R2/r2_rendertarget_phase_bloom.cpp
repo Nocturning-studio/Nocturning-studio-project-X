@@ -85,8 +85,6 @@ void CRenderTarget::phase_bloom()
 		break;
 	}
 
-	float bloom_factor = .9f * ps_r2_bloom_factor + .1f * ps_r2_bloom_speed * Device.fTimeDelta;
-
 	u32 Offset;
 
 	// Targets
@@ -150,7 +148,7 @@ void CRenderTarget::phase_bloom()
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
 		RCache.set_Element(s_bloom->E[0]);
-		RCache.set_c("bloom_parameters", ps_r2_bloom_threshold, bloom_factor, 0, 0);
+		RCache.set_c("bloom_parameters", ps_r2_bloom_threshold, ps_r2_bloom_factor, 0, 0);
 		RCache.set_c("bloom_resolution", one.x, one.y, 1.0f / one.x, 1.0f / one.y);
 		RCache.set_Geometry(g_bloom_build);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
@@ -367,7 +365,7 @@ void CRenderTarget::phase_bloom()
 		RCache.set_Geometry(g_combine);
 
 		// Set constants
-		RCache.set_c("bloom_parameters", ps_r2_bloom_threshold, bloom_factor, 0, 0);
+		RCache.set_c("bloom_parameters", ps_r2_bloom_threshold, ps_r2_bloom_factor, 0, 0);
 
 		// Draw
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
