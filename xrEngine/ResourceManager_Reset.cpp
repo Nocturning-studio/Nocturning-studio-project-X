@@ -26,6 +26,8 @@ void CResourceManager::reset_begin()
 	_RELEASE(RCache.QuadIB);
 	RCache.Index.reset_begin();
 	RCache.Vertex.reset_begin();
+
+	DeferredUnload();
 }
 
 bool cmp_rt(const CRT* A, const CRT* B)
@@ -97,6 +99,8 @@ void CResourceManager::reset_end()
 		for (u32 _it = 0; _it < v_states.size(); _it++)
 			v_states[_it]->state = v_states[_it]->state_code.record();
 	}
+
+	DeferredUpload();
 
 	// create everything, renderer may use
 	::Render->reset_end();

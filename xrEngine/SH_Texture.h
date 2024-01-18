@@ -19,7 +19,8 @@ class ENGINE_API CTexture : public xr_resource_named
 	} flags;
 	fastdelegate::FastDelegate1<u32> bind;
 
-	IDirect3DBaseTexture9* pSurface;
+	IDirect3DBaseTexture9* pSurface{};
+	IDirect3DBaseTexture9* pTempSurface{};
 	CAviPlayerCustom* pAVI;
 	CTheoraSurface* pTheora;
 	float m_material;

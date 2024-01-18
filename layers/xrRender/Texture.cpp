@@ -124,7 +124,7 @@ IDirect3DTexture9* TW_LoadTextureFromTexture(IDirect3DTexture9* t_from, D3DFORMA
 	// Create HW-surface
 	if (D3DX_DEFAULT == t_dest_fmt)
 		t_dest_fmt = t_from_desc0.Format;
-	R_CHK(D3DXCreateTexture(HW.pDevice, top_width, top_height, levels_exist, 0, t_dest_fmt, D3DPOOL_MANAGED, &t_dest));
+	R_CHK(D3DXCreateTexture(HW.pDevice, top_width, top_height, levels_exist, 0, t_dest_fmt, D3DPOOL_DEFAULT, &t_dest));
 
 	// Copy surfaces & destroy temporary
 	IDirect3DTexture9* T_src = t_from;
@@ -322,7 +322,7 @@ _DDS: {
 
 _DDS_CUBE: {
 	HRESULT const result = D3DXCreateCubeTextureFromFileInMemoryEx(
-		HW.pDevice, S->pointer(), S->length(), D3DX_DEFAULT, IMG.MipLevels, 0, IMG.Format, D3DPOOL_MANAGED,
+		HW.pDevice, S->pointer(), S->length(), D3DX_DEFAULT, IMG.MipLevels, 0, IMG.Format, D3DPOOL_DEFAULT,
 		D3DX_DEFAULT, D3DX_DEFAULT, 0, &IMG, 0, &pTextureCUBE);
 	FS.r_close(S);
 
