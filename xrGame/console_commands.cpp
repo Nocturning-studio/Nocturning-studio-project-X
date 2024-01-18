@@ -149,6 +149,8 @@ class CCC_MemStats : public IConsole_Command
 		if (Device.Resources)
 			Device.Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
 
+		Msg("\n* Memory usage:");
+
 		log_vminfo();
 
 		Msg("* [ D3D ]: textures[%d K]", (m_base + m_lmaps) / 1024);
@@ -160,11 +162,11 @@ class CCC_MemStats : public IConsole_Command
 			_crt_heap / 1024, _process_heap / 1024, _game_lua / 1024, _engine_lua / 1024, _render / 1024);
 #endif // SEVERAL_ALLOCATORS
 
-		Msg("* [x-ray]: economy: strings[%d K], smem[%d K]", _eco_strings / 1024, _eco_smem);
+		Msg("* [x-ray]: economy: strings[%d K], smem[%d K]\n", _eco_strings / 1024, _eco_smem);
 
 #ifdef DEBUG
-		Msg("* [x-ray]: file mapping: memory[%d K], count[%d]", g_file_mapped_memory / 1024, g_file_mapped_count);
-		dump_file_mappings();
+		//Msg("* [x-ray]: file mapping: memory[%d K], count[%d]", g_file_mapped_memory / 1024, g_file_mapped_count);
+		//dump_file_mappings();
 #endif // DEBUG
 	}
 };

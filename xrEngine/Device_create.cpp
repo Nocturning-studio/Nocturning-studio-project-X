@@ -94,7 +94,7 @@ void CRenderDevice::Create()
 	if (b_is_Ready)
 		return; // prevent double call
 	Statistic = xr_new<CStats>();
-	Log("Starting RENDER device...");
+	Log("\nStarting RENDER device...");
 
 #ifdef _EDITOR
 	psCurrentVidMode[0] = dwWidth;

@@ -243,9 +243,14 @@ void Detect()
 //------------------------------------------------------------------------------------
 void _initialize_cpu(void)
 {
-	Msg("* Detected CPU: %s %s, F%d/M%d/S%d, %.2f mhz, %d-clk 'rdtsc'", CPU::ID.v_name, CPU::ID.model_name,
-		CPU::ID.family, CPU::ID.model, CPU::ID.stepping, float(CPU::clk_per_second / u64(1000000)),
-		u32(CPU::clk_overhead));
+	//Msg("* Detected CPU: %s %s, F%d/M%d/S%d, %.2f mhz, %d-clk 'rdtsc'", CPU::ID.v_name, CPU::ID.model_name,
+	//	CPU::ID.family, CPU::ID.model, CPU::ID.stepping, float(CPU::clk_per_second / u64(1000000)),
+	//	u32(CPU::clk_overhead));
+	Msg("* CPU Info:");
+	Msg("* CPU Frequency: %.2f mhz", float(CPU::clk_per_second / u64(1000000)));
+	Msg("* CPU CLK Overheat: %d-clk 'rdtsc'", u32(CPU::clk_overhead));
+	int ThreadCount = std::thread::hardware_concurrency();
+	Msg("* CPU Thread count: %d", ThreadCount);
 
 	//	DUMP_PHASE;
 
@@ -266,10 +271,7 @@ void _initialize_cpu(void)
 		strcat(features, ", SSE");
 	if (CPU::ID.feature & _CPU_FEATURE_SSE2)
 		strcat(features, ", SSE2");
-	Msg("* CPU Features: %s", features);
-
-	int ThreadCount = std::thread::hardware_concurrency();
-	Msg("* CPU Thread count: %d\n", ThreadCount);
+	Msg("* CPU Features: %s\n", features);
 
 	Fidentity.identity();  // Identity matrix
 	Didentity.identity();  // Identity matrix

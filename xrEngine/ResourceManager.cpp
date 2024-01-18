@@ -319,13 +319,13 @@ void CResourceManager::DeferredUpload()
 	const u32 MinTexturesCntToUseMT = 100;
 
 	tex_to_load.clear();
-	Msg("* New phase started: Texture Loading, size = %d", m_textures.size());
+	Msg("* Texture Loading, size = %d", m_textures.size());
 	CTimer timer;
 	timer.Start();
 
 	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load") || (std::thread::hardware_concurrency() <= 2))
 	{
-		Msg("* Phase info: Texture Loading -> Use one thread");
+		Msg("* Texture Loading -> Use one thread");
 
 		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 			t->second->Load();
@@ -378,13 +378,13 @@ void CResourceManager::DeferredUnload()
 	const u32 MinTexturesCntToUseMT = 100;
 
 	tex_to_load.clear();
-	Msg("* New phase started: Texture Unloading, size = %d", m_textures.size());
+	Msg("* Texture Unloading, size = %d", m_textures.size());
 	CTimer timer;
 	timer.Start();
 
 	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load"))
 	{
-		Msg("* Phase info: Texture Unloading -> Use one thread");
+		Msg("* Texture Unloading -> Use one thread");
 
 		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 			t->second->Unload();
@@ -424,7 +424,7 @@ void CResourceManager::DeferredUpload()
 	if (!Device.b_is_Ready)
 		return;
 
-	Msg("* New phase started: Texture loading, size = %d", m_textures.size());
+	Msg("* Texture loading, size = %d", m_textures.size());
 
 	CTimer timer;
 	timer.Start();
@@ -442,7 +442,7 @@ void CResourceManager::DeferredUnload()
 	if (!Device.b_is_Ready)
 		return;
 
-	Msg("* New phase started: Texture unloading, size = %d", m_textures.size());
+	Msg("* Texture unloading, size = %d", m_textures.size());
 
 	CTimer timer;
 	timer.Start();
@@ -501,6 +501,7 @@ void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 		}
 	}
 }
+
 void CResourceManager::_DumpMemoryUsage()
 {
 	xr_multimap<u32, std::pair<u32, shared_str>> mtex;

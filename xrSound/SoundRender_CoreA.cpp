@@ -82,6 +82,8 @@ void CSoundRender_CoreA::_restart()
 
 void CSoundRender_CoreA::_initialize(u64 window)
 {
+	Msg("\nStarting Sound Sngine...");
+
 	bPresent = FALSE;
 
 	pDeviceList = xr_new<ALDeviceList>();
@@ -95,7 +97,6 @@ void CSoundRender_CoreA::_initialize(u64 window)
 
 	pDeviceList->SelectBestDevice();
 
-	pDeviceList->SelectBestDevice();
 	R_ASSERT(snd_device_id >= 0 && snd_device_id < pDeviceList->GetNumDevices());
 	const ALDeviceDesc& deviceDesc = pDeviceList->GetDeviceDesc(snd_device_id);
 
@@ -104,7 +105,7 @@ void CSoundRender_CoreA::_initialize(u64 window)
 
 	if (!pDevice)
 	{
-		Log("SOUND: OpenAL: Failed to create device.");
+		Log(" OpenAL: Failed to create device.");
 		bPresent = FALSE;
 		return;
 	}
@@ -112,14 +113,15 @@ void CSoundRender_CoreA::_initialize(u64 window)
 	// Get the device specifier.
 	const ALCchar* deviceSpecifier;
 	deviceSpecifier = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
-	Msg("SOUND: OpenAL: Required device: %s. Created device: %s.", deviceDesc.name.c_str(), deviceSpecifier);
+	Msg("OpenAL: Required device: %s", deviceDesc.name.c_str());
+	Msg("OpenAL: Created device: %s", deviceSpecifier);
 
 	// Create context
 	pContext = alcCreateContext(pDevice, NULL);
 
 	if (!pContext)
 	{
-		Log("SOUND: OpenAL: Failed to create context.");
+		Log(" OpenAL: Failed to create context.");
 		bPresent = FALSE;
 		alcCloseDevice(pDevice);
 		pDevice = 0;
@@ -156,11 +158,11 @@ void CSoundRender_CoreA::_initialize(u64 window)
 		bEAX = EAXTestSupport(FALSE);
 
 		if (bEAX)
-			Msg("- SOUND: OpenAL: EAX Supported");
+			Msg("-  OpenAL: EAX Supported");
 		else
-			Msg("! SOUND: OpenAL: EAX Unsupported");
+			Msg("!  OpenAL: EAX Unsupported");
 		if (bDeferredEAX)
-			Msg("! SOUND: OpenAL: EAX Deffered");
+			Msg("!  OpenAL: EAX Deffered");
 	}
 
 	// inherited initialize
@@ -177,7 +179,7 @@ void CSoundRender_CoreA::_initialize(u64 window)
 		}
 		else
 		{
-			Log("! SOUND: OpenAL: Max targets - ", tit);
+			Log("!  OpenAL: Max targets - ", tit);
 			T->_destroy();
 			xr_delete(T);
 			break;

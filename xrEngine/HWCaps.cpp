@@ -40,7 +40,7 @@ u32 GetNVGpuNum()
 	status = NvAPI_EnumLogicalGPUs(logicalGPUs, &logicalGPUCount);
 	if (status != NVAPI_OK)
 	{
-		Msg("* NvAPI_EnumLogicalGPUs failed!");
+		//Msg("* NvAPI_EnumLogicalGPUs failed!");
 		return iGpuNum;
 		// error
 	}
@@ -49,12 +49,12 @@ u32 GetNVGpuNum()
 	status = NvAPI_EnumPhysicalGPUs(physicalGPUs, &physicalGPUCount);
 	if (status != NVAPI_OK)
 	{
-		Msg("* NvAPI_EnumPhysicalGPUs failed!");
+		//Msg("* NvAPI_EnumPhysicalGPUs failed!");
 		return iGpuNum;
 		// error
 	}
 
-	Msg("* NVidia MGPU: Logical(%d), Physical(%d)", physicalGPUCount, logicalGPUCount);
+	Msg("* NVidia MGPU: Logical(%d), Physical(%d)", logicalGPUCount, physicalGPUCount);
 
 	//	Assume that we are running on logical GPU with most physical GPUs connected.
 	for (u32 i = 0; i < logicalGPUCount; ++i)
@@ -91,7 +91,7 @@ u32 GetGpuNum()
 
 	res = _max(res, GetATIGpuNum());
 
-	res = _max(res, 2);
+	//res = _max(res, 2);
 
 	res = _min(res, CHWCaps::MAX_GPUS);
 

@@ -22,7 +22,7 @@ void _VertexStream::Create()
 	mPosition = 0;
 	mDiscardID = 0;
 
-	Msg("* DVB created: %dK", mSize / 1024);
+	Msg("* Dynamic vertex buffer created: %dK", mSize / 1024);
 }
 
 void _VertexStream::Destroy()
@@ -108,7 +108,7 @@ void _IndexStream::Create()
 	mPosition = 0;
 	mDiscardID = 0;
 
-	Msg("* DIB created: %dK", mSize / 1024);
+	Msg("* Dynamic index buffer created: %dK\n", mSize / 1024);
 }
 
 void _IndexStream::Destroy()

@@ -388,7 +388,7 @@ CCC_LoadCFG::CCC_LoadCFG(LPCSTR N) : IConsole_Command(N){};
 
 void CCC_LoadCFG::Execute(LPCSTR args)
 {
-	Msg("Executing config-script \"%s\"...", args);
+	DbgMsg("Executing config-script \"%s\"...", args);
 	string_path cfg_name;
 
 	strcpy_s(cfg_name, args);
@@ -415,7 +415,7 @@ void CCC_LoadCFG::Execute(LPCSTR args)
 				Console->Execute(str);
 		}
 		FS.r_close(F);
-		Msg("[%s] successfully loaded.", cfg_full_name);
+		DbgMsg("[%s] successfully loaded.", cfg_full_name);
 	}
 	else
 	{

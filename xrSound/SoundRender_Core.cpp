@@ -62,8 +62,8 @@ CSoundRender_Core::~CSoundRender_Core()
 
 void CSoundRender_Core::_initialize(u64 window)
 {
-	Log("* sound: EAX 2.0 extension:", bEAX ? "present" : "absent");
-	Log("* sound: EAX 2.0 deferred:", bDeferredEAX ? "present" : "absent");
+	Log("* Sound: EAX 2.0 extension:", bEAX ? "present" : "absent");
+	Log("* Sound: EAX 2.0 deferred:", bDeferredEAX ? "present" : "absent");
 	Timer.Start();
 
 	// load environment
@@ -524,7 +524,7 @@ void CSoundRender_Core::i_eax_listener_set(CSound_environment* _E)
 	ep.dwEnvironment = EAXLISTENER_DEFAULTENVIRONMENT;	 // sets all listener properties
 	ep.flEnvironmentSize = E->EnvironmentSize;			 // environment size in meters
 	ep.flEnvironmentDiffusion = E->EnvironmentDiffusion; // environment diffusion
-	ep.flAirAbsorptionHF = E->AirAbsorptionHF - (sound_env_fog_density * 2 - 1) * 5;// change in level per meter at 5 kHz
+	ep.flAirAbsorptionHF = E->AirAbsorptionHF;			 // change in level per meter at 5 kHz
 	ep.dwFlags = EAXLISTENER_DEFAULTFLAGS;				 // modifies the behavior of properties
 
 	u32 deferred = bDeferredEAX ? DSPROPERTY_EAXLISTENER_DEFERRED : 0;

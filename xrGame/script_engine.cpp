@@ -265,7 +265,7 @@ void CScriptEngine::process_file_if_exists(LPCSTR file_name, bool warn_if_not_ex
 			return;
 		}
 #ifndef MASTER_GOLD
-		Msg("* loading script %s", S1);
+		//Msg("* loading script %s", S1);
 #endif // MASTER_GOLD
 		m_reload_modules = false;
 		load_file_into_namespace(S, *file_name ? file_name : "_G");

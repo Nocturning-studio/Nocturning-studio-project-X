@@ -705,7 +705,7 @@ void CLocatorAPI::_initialize(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 
 	m_Flags.set(flReady, TRUE);
 
-	Msg("Init FileSystem %f sec", t.GetElapsed_sec());
+	Msg("Init FileSystem %f sec \n", t.GetElapsed_sec());
 	//-----------------------------------------------------------
 	if (strstr(Core.Params, "-overlaypath"))
 	{

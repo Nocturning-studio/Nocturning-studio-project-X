@@ -167,7 +167,7 @@ void CRenderDevice::PreCache(u32 amount)
 #ifdef DEDICATED_SERVER
 	amount = 0;
 #endif
-	Msg("* LIGHT PRECACHE: start for %d...", amount);
+	//Msg("* LIGHT PRECACHE: start for %d...", amount);
 	dwPrecacheFrame = dwPrecacheTotal = amount;
 	if (amount && !precache_light && g_pGameLevel)
 	{
@@ -190,7 +190,10 @@ void CRenderDevice::Run()
 	g_bLoaded = FALSE;
 	MSG msg;
 	BOOL bGotMsg;
-	Log("Starting engine...");
+	Log("\nStarting engine...");
+
+	Msg("\nSpawning Threads:");
+	Msg("Spawning X-RAY Primary thread");
 	thread_name("X-RAY Primary thread");
 
 	// Startup timers and calculate timer delta
@@ -210,6 +213,7 @@ void CRenderDevice::Run()
 	//	InitializeCriticalSection	(&mt_csLeave);
 	mt_csEnter.lock();
 	mt_bMustExit = FALSE;
+	Msg("Spawning X-RAY Secondary thread\n");
 	thread_spawn(mt_Thread, "X-RAY Secondary thread", 0, 0);
 
 	// Message cycle
