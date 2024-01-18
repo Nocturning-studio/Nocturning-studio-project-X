@@ -56,9 +56,6 @@ void CRenderTarget::phase_create_ao()
 	// Set geometry
 	RCache.set_Geometry(g_combine);
 
-	// Set constants
-	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
-
 	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
@@ -102,9 +99,6 @@ void CRenderTarget::phase_filtering()
 
 	// Set geometry
 	RCache.set_Geometry(g_combine);
-
-	// Set constants
-	RCache.set_c("ao_resolution", w, h, 1 / w, 1 / h);
 
 	// Draw
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
