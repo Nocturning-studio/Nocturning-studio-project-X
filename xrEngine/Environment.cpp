@@ -506,6 +506,8 @@ void CEnvironment::OnFrame()
 	CHK_DX(HW.pDevice->SetRenderState(
 		D3DRS_FOGCOLOR, color_rgba_f(CurrentEnv->fog_color.x, CurrentEnv->fog_color.y, CurrentEnv->fog_color.z, 0)));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGDENSITY, CurrentEnv->fog_density));
+
+	sound_env_fog_density = CurrentEnv->fog_density;
 }
 
 void CEnvironment::calculate_dynamic_sun_dir()

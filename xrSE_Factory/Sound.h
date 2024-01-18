@@ -46,6 +46,8 @@ XRSOUND_API extern Flags32			psSoundFlags			;
 XRSOUND_API extern int				psSoundTargets			;
 XRSOUND_API extern int				psSoundCacheSizeMB		;
 
+XRSOUND_API extern float sound_env_fog_density;
+
 // Flags
 enum {
 	ss_Hardware			= (1ul<<1ul),	//!< Use hardware mixing only
