@@ -650,7 +650,7 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 	g_temporary_stuff = &trivial_encryptor::decode;
 
 	compute_build_id();
-	Core._initialize("xray", NULL, TRUE, fsgame[0] ? fsgame : NULL);
+	Core._initialize("X-Ray_Engine", NULL, TRUE, fsgame[0] ? fsgame : NULL);
 	InitSettings();
 
 #ifndef DEDICATED_SERVER
@@ -697,7 +697,7 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 		}
 
 		Engine.External.Initialize();
-		Console->Execute("stat_memory");
+		//Console->Execute("stat_memory");
 		Startup();
 		Core._destroy();
 
@@ -909,7 +909,10 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			//-----------------------------------------------------------
 			g_pGameLevel = (IGame_Level*)NEW_INSTANCE(CLSID_GAME_LEVEL);
 			pApp->LoadBegin();
+			Msg("\nStart level loading...");
+			Msg("Start Game Persistent... ");
 			g_pGamePersistent->Start(op_server);
+			Msg("Start Game Level... ");
 			g_pGameLevel->net_Start(op_server, op_client);
 			pApp->LoadEnd();
 		}

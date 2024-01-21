@@ -37,6 +37,7 @@
  */
 ALDeviceList::ALDeviceList()
 {
+	Msg("OpenAL: Initializing EnumerationExtension...");
 	snd_device_id = u32(-1);
 	Enumerate();
 }
@@ -60,7 +61,7 @@ void ALDeviceList::Enumerate()
 	int major, minor, index;
 	LPCSTR actualDeviceName;
 
-	Msg("OpenAL: enumerate devices...");
+	Msg("OpenAL: Start enumerating devices...");
 	// have a set of vectors storing the device list, selection status, spec version #, and XRAM support status
 	// -- empty all the lists and reserve space for 10 devices
 	m_devices.clear();
@@ -69,7 +70,7 @@ void ALDeviceList::Enumerate()
 	// grab function pointers for 1.0-API functions, and if successful proceed to enumerate all devices
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT"))
 	{
-		Msg("OpenAL: EnumerationExtension Present");
+		//Msg("OpenAL: EnumerationExtension Present");
 
 		devices = (char*)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
 		//Msg("Devices %s", devices);
@@ -85,11 +86,12 @@ void ALDeviceList::Enumerate()
 		// Also we assume that if "Generic Hardware" exists, than "Generic Software" is also exists
 		// Maybe wrong
 
-		//if (0 == stricmp(m_defaultDeviceName.c_str(), AL_GENERIC_HARDWARE))
-		//{
-		//	m_defaultDeviceName = AL_GENERIC_SOFTWARE;
-		//	Msg("OpenAL: default SndDevice name set to %s", m_defaultDeviceName.c_str());
-		//}
+		#pragma todo("Deathman to All: Починить выбор аудиоустройства");
+		if (0 == stricmp(m_defaultDeviceName.c_str(), AL_GENERIC_HARDWARE))
+		{
+			m_defaultDeviceName = AL_GENERIC_SOFTWARE;
+			Msg("OpenAL: default SndDevice name set to %s", m_defaultDeviceName.c_str());
+		}
 
 		index = 0;
 		// go through device list (each device terminated with a single NULL, list terminated with double NULL)
@@ -141,7 +143,9 @@ void ALDeviceList::Enumerate()
 		}
 	}
 	else
+	{
 		Msg("OpenAL: EnumerationExtension NOT Present");
+	}
 
 	// make token
 	u32 _cnt = GetNumDevices();

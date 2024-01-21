@@ -210,7 +210,6 @@ void CRender::create()
 
 	if (o.nullrt)
 	{
-		Msg("* NULLRT supported");
 		if (0)
 		{
 			u32 device_id = HW.Caps.id_device;
@@ -255,7 +254,7 @@ void CRender::create()
 				o.nullrt = false;
 		};
 		if (o.nullrt)
-			Msg("* ...and used");
+			Msg("* Nullrt supported and used");
 	};
 
 	// nvstencil on NV40 and up

@@ -29,11 +29,13 @@ extern u32 renderer_value; // con cmd
 
 void CEngineAPI::Initialize(void)
 {
+	Msg("Initializing Engine API...");
 	//////////////////////////////////////////////////////////////////////////
 	// render
 	LPCSTR r1_name = "xrRender_R1.dll";
 	LPCSTR r2_name = "xrRender_R2.dll";
 
+	Msg("Initializing Renderer...");
 #ifndef DEDICATED_SERVER
 	if (psDeviceFlags.test(rsR2))
 	{
@@ -67,6 +69,7 @@ void CEngineAPI::Initialize(void)
 
 	// game
 	{
+		Msg("Initializing Game API...");
 		LPCSTR g_name = "xrGame.dll";
 		Log("Loading DLL:", g_name);
 		hGame = LoadLibrary(g_name);

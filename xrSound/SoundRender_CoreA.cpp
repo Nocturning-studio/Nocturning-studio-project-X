@@ -86,6 +86,7 @@ void CSoundRender_CoreA::_initialize(u64 window)
 
 	bPresent = FALSE;
 
+	Msg("Initializing OpenAL...");
 	pDeviceList = xr_new<ALDeviceList>();
 
 	if (0 == pDeviceList->GetNumDevices())

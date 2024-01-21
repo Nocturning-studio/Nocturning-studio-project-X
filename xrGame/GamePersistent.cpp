@@ -705,7 +705,7 @@ void CGamePersistent::OnRenderPPUI_PP()
 void CGamePersistent::LoadTitle(LPCSTR str)
 {
 	string512 buff;
-	sprintf_s(buff, "%s...", CStringTable().translate(str).c_str());
+	sprintf_s(buff, "%s", CStringTable().translate(str).c_str());
 	pApp->LoadTitleInt(buff);
 }
 

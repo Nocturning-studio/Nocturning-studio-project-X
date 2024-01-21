@@ -19,6 +19,7 @@ void CRender::level_Load(IReader* fs)
 
 	// Begin
 	pApp->LoadBegin();
+
 	Device.Resources->DeferredLoad(TRUE);
 	IReader* chunk;
 
