@@ -781,11 +781,15 @@ static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_
 static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id,
 								   FS_FileSet const& file_set, string_path& result);
 
+XRCORE_API u32 build_id;
+
 HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
 								LPCSTR pTarget, DWORD Flags, void*& result)
 {
 	D3DXMACRO defines[512]{};
 	int def_it = 0;
+
+	char c_build_id[32];
 
 	char c_smapsize[32];
 	char c_gloss[32];
@@ -841,6 +845,19 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// R2a/R2/R2.5 defines
 	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Automatic shader cache recompilation
+	{
+		sprintf(c_build_id, "%d", build_id);
+		defines[def_it].Name = "BUILD_ID";
+		defines[def_it].Definition = c_build_id;
+		def_it++;
+		strcat(sh_name, c_build_id);
+		len += 4;
+	}
+	sh_name[len] = '0' + char(build_id);
+	++len;
+
 	{
 		sprintf(c_smapsize, "%d", u32(o.smapsize));
 		defines[def_it].Name = "SMAP_size";

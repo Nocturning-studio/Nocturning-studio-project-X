@@ -847,6 +847,8 @@ static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 cons
 	return _result;
 }
 
+XRCORE_API u32 build_id;
+
 HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
 								LPCSTR pTarget, DWORD Flags, void*& result)
 {
@@ -857,11 +859,25 @@ HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_chroma_abb[32];
 	char c_sepia[32];
 	char c_hdr[32];
+	char c_build_id[32];
 
 	char sh_name[MAX_PATH] = "";
 	size_t len = 0;
 
 	// options
+
+	//Automatic shader cache recompilation
+	{
+		sprintf(c_build_id, "%d", build_id);
+		defines[def_it].Name = "BUILD_ID";
+		defines[def_it].Definition = c_build_id;
+		def_it++;
+		strcat(sh_name, c_build_id);
+		len += 4;
+	}
+	sh_name[len] = '0' + char(build_id);
+	++len;
+
 	if (o.forceskinw)
 	{
 		defines[def_it].Name = "SKIN_COLOR";
