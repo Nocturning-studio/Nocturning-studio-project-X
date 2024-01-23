@@ -3,6 +3,8 @@
 #include "..\xrRender\tga.h"
 #include "..\xrEngine\xrImage_Resampler.h"
 
+XRCORE_API u32 build_id;
+
 #define GAMESAVE_SIZE 128
 
 IC u32 convert(float c)
@@ -125,8 +127,8 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 		string_path buf;
 		if (strstr(Core.Params, "-ss_jpg"))
 		{
-			sprintf_s(buf, sizeof(buf), "ssq_%s_%s_(%s).jpg", Core.UserName, timestamp(t_stemp),
-					  (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
+			sprintf_s(buf, sizeof(buf), "Xray (build id - %d) (user - %s) (time - %s) (%s).jpg", build_id,
+					  Core.UserName, timestamp(t_stemp), (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
 			ID3DXBuffer* saved = 0;
 			CHK_DX(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_JPG, pFB, 0, 0));
 			IWriter* fs = FS.w_open("$screenshots$", buf);
@@ -137,7 +139,8 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 		}
 		else
 		{
-			sprintf_s(buf, sizeof(buf), "ss_%s_%s_(%s).png", Core.UserName, timestamp(t_stemp),
+			sprintf_s(buf, sizeof(buf), "Xray (build id - %d) (user - %s) (time - %s) (%s).png", build_id, Core.UserName,
+					  timestamp(t_stemp),
 					  (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
 			ID3DXBuffer* saved = 0;
 			CHK_DX(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_PNG, pFB, 0, 0));
