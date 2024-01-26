@@ -4,7 +4,6 @@
 #if RENDER == R_R2
 #include "light_package.h"
 #include "light_smapvis.h"
-#include "light_GI.h"
 #endif
 
 class light : public IRender_Light, public ISpatial
@@ -29,8 +28,6 @@ class light : public IRender_Light, public ISpatial
 
 #if RENDER == R_R2
 	light* omnipart[6];
-	xr_vector<light_indirect> indirect;
-	u32 indirect_photons;
 
 	smapvis svis; // used for 6-cubemap faces
 
@@ -117,7 +114,6 @@ class light : public IRender_Light, public ISpatial
 
 	vis_data& get_homdata();
 #if RENDER == R_R2
-	void gi_generate();
 	void xform_calc();
 	void vis_prepare();
 	void vis_update();

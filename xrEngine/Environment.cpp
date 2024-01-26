@@ -629,8 +629,7 @@ void CEnvironment::load_level_specific_ambients()
 		shared_str section_name = ambient->name();
 
 		// choose a source ini file
-		CInifile* source =
-			(level_ambients && level_ambients->section_exist(section_name)) ? level_ambients : m_ambients_config;
+		CInifile* source = (level_ambients && level_ambients->section_exist(section_name)) ? level_ambients : m_ambients_config;
 
 		// check and reload if needed
 		if (xr_strcmp(ambient->get_ambients_config_filename().c_str(), source->fname()))

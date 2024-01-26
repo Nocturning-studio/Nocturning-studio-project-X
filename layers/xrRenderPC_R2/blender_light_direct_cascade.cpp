@@ -25,10 +25,9 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler("s_lmap", r2_sunmask);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
 		// 		{
 		// 			u32 s = C.i_Sampler("s_smap");
@@ -43,10 +42,9 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler("s_lmap", r2_sunmask);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
 		{
 			u32 s = C.i_Sampler("s_smap");

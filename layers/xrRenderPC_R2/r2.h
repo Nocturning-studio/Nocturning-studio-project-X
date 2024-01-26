@@ -49,8 +49,6 @@ class CRender : public R_dsgraph_structure
 		u32 nvstencil : 1;
 		u32 nvdbt : 1;
 
-		u32 nullrt : 1;
-
 		u32 distortion : 1;
 		u32 distortion_enabled : 1;
 		u32 mblur : 1;
@@ -147,7 +145,6 @@ class CRender : public R_dsgraph_structure
   public:
 	void render_main(Fmatrix& mCombined, bool _fportals);
 	void render_forward();
-	void render_indirect(light* L);
 	void render_lights(light_Package& LP);
 	void render_menu();
 	void render_sun_cascade(u32 cascade_ind);

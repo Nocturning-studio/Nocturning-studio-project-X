@@ -93,8 +93,15 @@ void CRenderTarget::phase_combine()
 		_RELEASE(e1);
 
 		// Draw
-		RCache.set_Element(s_combine->E[0]);
+		if(ps_r2_debug_render)
+			RCache.set_Element(s_combine->E[3]);
+		else
+			RCache.set_Element(s_combine->E[0]);
+
 		RCache.set_Geometry(g_combine_VP);
+
+		Fvector4 debug_mode = {ps_r2_debug_render, 0, 0, 0};
+		RCache.set_c("debug_mode", debug_mode);
 
 		RCache.set_c("L_ambient", ambclr);
 
@@ -209,14 +216,14 @@ void CRenderTarget::phase_combine()
 			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
 				phase_barrel_blur();
 
+			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
+				phase_autoexposure();
+
 			if (ps_render_flags.test(RFLAG_HDR))
 				phase_tonemapping();
 
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
 				g_pGamePersistent->Environment().RenderFlares();
-
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
-				phase_autoexposure();
 
 			if (ps_render_flags.test(RFLAG_SEPIA))
 				phase_sepia();

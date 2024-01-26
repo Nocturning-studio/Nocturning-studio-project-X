@@ -207,9 +207,6 @@
     <ClInclude Include="..\xrRender\Light_DB.h">
       <Filter>Lights</Filter>
     </ClInclude>
-    <ClInclude Include="light_gi.h">
-      <Filter>Lights</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\Light_Package.h">
       <Filter>Lights</Filter>
     </ClInclude>
@@ -313,9 +310,6 @@
       <Filter>Blenders\Light accumulating stage</Filter>
     </ClInclude>
     <ClInclude Include="blender_light_point.h">
-      <Filter>Blenders\Light accumulating stage</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_light_reflected.h">
       <Filter>Blenders\Light accumulating stage</Filter>
     </ClInclude>
     <ClInclude Include="blender_light_spot.h">
@@ -470,9 +464,6 @@
     <ClCompile Include="..\xrRender\Light_DB.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
-    <ClCompile Include="light_GI.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\Light_Package.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
@@ -605,9 +596,6 @@
     <ClCompile Include="blender_light_point.cpp">
       <Filter>Blenders\Light accumulating stage</Filter>
     </ClCompile>
-    <ClCompile Include="blender_light_reflected.cpp">
-      <Filter>Blenders\Light accumulating stage</Filter>
-    </ClCompile>
     <ClCompile Include="blender_light_spot.cpp">
       <Filter>Blenders\Light accumulating stage</Filter>
     </ClCompile>
@@ -693,9 +681,6 @@
       <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_accum_point_geom.cpp">
-      <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_accum_reflected.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage\Spot%255cOmni</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_accum_spot.cpp">

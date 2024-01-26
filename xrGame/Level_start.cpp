@@ -101,9 +101,15 @@ bool CLevel::net_start1()
 		params& p = g_pGamePersistent->m_game_params;
 		// Connect
 		if (!xr_strcmp(p.m_game_type, "single"))
+		{
+			Msg("Initializing xrServer...");
 			Server = xr_new<xrServer>();
+		}
 		else
+		{
+			Msg("Initializing xrGameSpyServer...");
 			Server = xr_new<xrGameSpyServer>();
+		}
 
 		//		if (!strstr(*m_caServerOptions,"/alife"))
 		if (xr_strcmp(p.m_alife, "alife"))

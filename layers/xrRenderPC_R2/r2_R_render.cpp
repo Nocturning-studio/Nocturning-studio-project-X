@@ -201,6 +201,7 @@ void CRender::render_menu()
 extern u32 g_r;
 void CRender::Render()
 {
+	Device.Statistic->RenderCALC.Begin();
 	g_r = 1;
 	VERIFY(0 == mapDistort.size());
 
@@ -239,7 +240,6 @@ void CRender::Render()
 	//******* Z-prefill calc - DEFERRER RENDERER
 	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))
 	{
-		Device.Statistic->RenderCALC.Begin();
 		float z_distance = ps_r2_zfill;
 		Fmatrix m_zfill, m_project;
 		m_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR,
@@ -250,7 +250,6 @@ void CRender::Render()
 		phase = PHASE_SMAP;
 		render_main(m_zfill, false);
 		r_pmask(true, false); // disable priority "1"
-		Device.Statistic->RenderCALC.End();
 
 		// flush
 		Target->clear_gbuffer();
@@ -289,8 +288,6 @@ void CRender::Render()
 
 	//******* Main calc - DEFERRER RENDERER
 	// Main calc
-	Device.Statistic->RenderCALC.Begin();
-
 	r_pmask(true, false, true); // enable priority "0",+ capture wmarks
 
 	if (bSUN)
@@ -302,10 +299,11 @@ void CRender::Render()
 	render_main(Device.mFullTransform, true);
 	set_Recorder(NULL);
 	r_pmask(true, false); // disable priority "1"
-	Device.Statistic->RenderCALC.End();
 
 	//******* Main render :: PART-0	-- first
 	// level, SPLIT
+	Target->enable_anisotropy_filtering();
+
 	Target->create_gbuffer();
 
 	r_dsgraph_render_graph(0);
@@ -314,8 +312,10 @@ void CRender::Render()
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
+
 	LP_normal.clear();
 	LP_pending.clear();
+
 	{
 		// perform tests
 		u32 count = 0;
@@ -330,6 +330,7 @@ void CRender::Render()
 		count = _max(count, LP.v_point.size());
 		count = _max(count, LP.v_spot.size());
 		count = _max(count, LP.v_shadowed.size());
+
 		for (u32 it = 0; it < count; it++)
 		{
 			if (it < LP.v_point.size())
@@ -361,12 +362,15 @@ void CRender::Render()
 			}
 		}
 	}
+
 	LP_normal.sort();
 	LP_pending.sort();
 
 	//******* Main render :: PART-1 (second)
 	// level
 	PortalTraverser.fade_render();
+
+	Target->enable_anisotropy_filtering();
 
 	Target->create_gbuffer();
 
@@ -411,11 +415,14 @@ void CRender::Render()
 	// Directional light - sun
 	if (bSUN)
 	{
+		Device.Statistic->RenderCALC_SUN.Begin();
 		RImplementation.stats.l_visible++;
 		render_sun_cascades();
 		Target->dwLightMarkerID += 2;
+		Device.Statistic->RenderCALC_SUN.End();
 	}
 
+	Device.Statistic->RenderCALC_LIGHTS.Begin();
 	// Lighting, non dependant on OCCQ
 	Target->phase_accumulator();
 
@@ -423,16 +430,25 @@ void CRender::Render()
 
 	// Lighting, dependant on OCCQ
 	render_lights(LP_pending);
+	Device.Statistic->RenderCALC_LIGHTS.End();
 
 	HOM.Disable();
 
 	if (ps_r2_ao && RImplementation.o.advancedpp)
+	{
+		Device.Statistic->RenderCALC_AO.Begin();
 		Target->phase_ao();
+		Device.Statistic->RenderCALC_AO.End();
+	}
 
 	// Postprocess
+	Device.Statistic->RenderCALC_POSTPROCESS.Begin();
 	Target->phase_combine();
+	Device.Statistic->RenderCALC_POSTPROCESS.End();
 
 	VERIFY(0 == mapDistort.size());
+
+	Device.Statistic->RenderCALC.End();
 }
 
 void CRender::render_forward()

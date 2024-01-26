@@ -204,59 +204,6 @@ void CRender::create()
 		o.sun_depth_near_scale = 1.0f;
 	}
 	///////////////////////////////////////////////////
-	// Check for NULL render target support
-	D3DFORMAT nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
-	o.nullrt = HW.support(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
-
-	if (o.nullrt)
-	{
-		if (0)
-		{
-			u32 device_id = HW.Caps.id_device;
-			bool disable_nullrt = false;
-			switch (device_id)
-			{
-			case 0x190:
-			case 0x191:
-			case 0x192:
-			case 0x193:
-			case 0x194:
-			case 0x197:
-			case 0x19D:
-			case 0x19E: {
-				disable_nullrt = true; // G80
-				break;
-			}
-			case 0x400:
-			case 0x401:
-			case 0x402:
-			case 0x403:
-			case 0x404:
-			case 0x405:
-			case 0x40E:
-			case 0x40F: {
-				disable_nullrt = true; // G84
-				break;
-			}
-			case 0x420:
-			case 0x421:
-			case 0x422:
-			case 0x423:
-			case 0x424:
-			case 0x42D:
-			case 0x42E:
-			case 0x42F: {
-				disable_nullrt = true; // G86
-				break;
-			}
-			}
-			if (disable_nullrt)
-				o.nullrt = false;
-		};
-		if (o.nullrt)
-			Msg("* Nullrt supported and used");
-	};
-
 	// nvstencil on NV40 and up
 	o.nvstencil = FALSE;
 	if ((HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40))

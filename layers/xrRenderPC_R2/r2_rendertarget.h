@@ -22,7 +22,6 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_accum_direct_cascade;
 	IBlender* b_accum_point;
 	IBlender* b_accum_spot;
-	IBlender* b_accum_reflected;
 	IBlender* b_bloom;
 	IBlender* b_distortion;
 	IBlender* b_ambient_occlusion;
@@ -107,7 +106,6 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_accum_direct_volumetric_cascade;
 	ref_shader s_accum_point;
 	ref_shader s_accum_spot;
-	ref_shader s_accum_reflected;
 
 	ref_geom g_accum_point;
 	ref_geom g_accum_spot;
@@ -238,8 +236,6 @@ class CRenderTarget : public IRender_Target
 	void accum_direct_volumetric(u32 sub_phase, const u32 Offset, const Fmatrix& mShadow);
 	void accum_point(light* L);
 	void accum_spot(light* L);
-
-	void accum_reflected(light* L);
 
 	void phase_bloom();
 

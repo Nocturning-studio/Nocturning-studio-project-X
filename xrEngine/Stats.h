@@ -46,6 +46,10 @@ class ENGINE_API CStats : public pureRender
 	CStatTimer RenderTOTAL_Real;
 	CStatTimer RenderCALC;			 // portal traversal, frustum culling, entities "renderable_Render"
 	CStatTimer RenderCALC_HOM;		 // HOM rendering
+	CStatTimer RenderCALC_SUN;
+	CStatTimer RenderCALC_LIGHTS;
+	CStatTimer RenderCALC_AO;
+	CStatTimer RenderCALC_POSTPROCESS;
 	CStatTimer Animation;			 // skeleton calculation
 	CStatTimer RenderDUMP;			 // actual primitive rendering
 	CStatTimer RenderDUMP_Wait;		 // ...waiting something back (queries results, etc.)

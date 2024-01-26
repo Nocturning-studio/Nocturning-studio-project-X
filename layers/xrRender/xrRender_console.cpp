@@ -94,13 +94,7 @@ xr_token debug_render_token[] = {{"disabled", 0},
 								 {"gbuffer_material", 6},
 								 {"accumulator_diffuse", 7},
 								 {"accumulator_specular", 8},
-								 {"diffuse", 9},
-								 {"specular", 10},
-								 {"real_time_ao", 11},
-								 {"split_real_time_ao_blur", 12},
-								 {"ambient", 13},
-								 {"reflections", 14},
-								 {"lighting", 15},
+								 {"real_time_ao", 9},
 								 {0, 0}};
 u32 ps_r2_debug_textures = 0;
 xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
@@ -193,11 +187,6 @@ float ps_r2_mblur = 0.5f;
 Fvector3 ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f); //	x - min (0), y - focus (1.4), z - max (100)
 float ps_r2_dof_sky = 300;								  //	distance to sky
 float ps_r2_dof_kernel_size = 5.0f;
-
-int ps_r2_GI_depth = 1;		 // 1..5
-int ps_r2_GI_photons = 16;	 // 8..64
-float ps_r2_GI_clip = EPS_L; // EPS
-float ps_r2_GI_refl = .9f;
 
 float ps_r2_ls_depth_scale = 1.00001f;
 float ps_r2_ls_depth_bias = -0.0001f;
@@ -747,12 +736,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer, "r2_dhemi_count", &ps_r2_dhemi_count, 4, 25);
 	CMD4(CCC_Float, "r2_dhemi_scale", &ps_r2_dhemi_scale, .5f, 3.f);
 	CMD4(CCC_Float, "r2_dhemi_smooth", &ps_r2_lt_smooth, 0.f, 10.f);
-
-	CMD3(CCC_Mask, "r2_gi", &ps_r2_lighting_flags, R2FLAG_GI);
-	CMD4(CCC_Float, "r2_gi_clip", &ps_r2_GI_clip, EPS, 0.1f);
-	CMD4(CCC_Integer, "r2_gi_depth", &ps_r2_GI_depth, 1, 5);
-	CMD4(CCC_Integer, "r2_gi_photons", &ps_r2_GI_photons, 8, 256);
-	CMD4(CCC_Float, "r2_gi_refl", &ps_r2_GI_refl, EPS_L, 0.99f);
 
 	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
 	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);

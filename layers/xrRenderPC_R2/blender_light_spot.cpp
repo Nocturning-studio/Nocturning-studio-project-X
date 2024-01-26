@@ -31,8 +31,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0], false, D3DTADDRESS_CLAMP);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		C.r_End();
 		break;
 	case SE_L_NORMAL: // normal
@@ -44,8 +43,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0], false, D3DTADDRESS_CLAMP);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
 		C.r_End();
 		break;
@@ -58,8 +56,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0], false, D3DTADDRESS_CLAMP);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
 		C.r_End();
 		break;
@@ -72,8 +69,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_clf("s_lmap", r2_RT_smap_surf); // diff here
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
-		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
-		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
+		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
 		C.r_End();
 		break;

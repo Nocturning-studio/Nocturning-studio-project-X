@@ -25,8 +25,6 @@ void CRenderTarget::clear_gbuffer()
 
 void CRenderTarget::create_gbuffer()
 {
-	enable_anisotropy_filtering();
-
 	u_setrt(rt_GBuffer_Position, rt_GBuffer_Normal, rt_GBuffer_Albedo, HW.pBaseZB);
 
 	// Stencil - write 0x1 at pixel pos

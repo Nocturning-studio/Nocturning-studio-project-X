@@ -117,6 +117,10 @@ void CStats::Show()
 		RenderTOTAL.FrameEnd();
 		RenderCALC.FrameEnd();
 		RenderCALC_HOM.FrameEnd();
+		RenderCALC_SUN.FrameEnd();
+		RenderCALC_LIGHTS.FrameEnd();
+		RenderCALC_AO.FrameEnd();
+		RenderCALC_POSTPROCESS.FrameEnd();
 		RenderDUMP.FrameEnd();
 		RenderDUMP_RT.FrameEnd();
 		RenderDUMP_SKIN.FrameEnd();
@@ -222,7 +226,8 @@ void CStats::Show()
 		F.SetColor(0xFFFFFFFF);
 
 		F.OutSet(0, 0);
-		F.OutNext("FPS/RFPS:    %3.1f/%3.1f", fFPS, fRFPS);
+		F.OutNext("FPS:			%3.1ff", fFPS);
+		F.OutNext("RFPS:		%3.1f", fRFPS);
 		F.OutNext("TPS:         %2.2f M", fTPS);
 		F.OutNext("VERT:        %d/%d", RCache.stat.verts,
 				  RCache.stat.calls ? RCache.stat.verts / RCache.stat.calls : 0);
@@ -273,10 +278,14 @@ void CStats::Show()
 		F.OutNext("*** RENDER:  %2.2fms", RenderTOTAL.result);
 		F.OutNext("R_CALC:      %2.2fms, %2.1f%%", RenderCALC.result, PPP(RenderCALC.result));
 		F.OutNext("  HOM:       %2.2fms, %d", RenderCALC_HOM.result, RenderCALC_HOM.count);
+		F.OutNext("  SMAP SUN:  %2.2fms, %d", RenderCALC_SUN.result, RenderCALC_SUN.count);
+		F.OutNext("  SMAP Lights: %2.2fms, %d", RenderCALC_LIGHTS.result, RenderCALC_LIGHTS.count);
+		F.OutNext("  AO:        %2.2fms, %d", RenderCALC_AO.result, RenderCALC_AO.count);
+		F.OutNext("  Postprocess: %2.2fms, %d", RenderCALC_POSTPROCESS.result, RenderCALC_POSTPROCESS.count);
 		F.OutNext("  Skeletons: %2.2fms, %d", Animation.result, Animation.count);
 		F.OutNext("R_DUMP:      %2.2fms, %2.1f%%", RenderDUMP.result, PPP(RenderDUMP.result));
-		F.OutNext("  Wait-L:    %2.2fms", RenderDUMP_Wait.result);
-		F.OutNext("  Wait-S:    %2.2fms", RenderDUMP_Wait_S.result);
+		F.OutNext("  Occq Wait-L:    %2.2fms", RenderDUMP_Wait.result);
+		F.OutNext("  Occq Wait-S:    %2.2fms", RenderDUMP_Wait_S.result);
 		F.OutNext("  Skinning:  %2.2fms", RenderDUMP_SKIN.result);
 		F.OutNext("  DT_Vis/Cnt:%2.2fms", RenderDUMP_DT_VIS.result, RenderDUMP_DT_Count);
 		F.OutNext("  DT_Render: %2.2fms", RenderDUMP_DT_Render.result);
@@ -432,6 +441,10 @@ void CStats::Show()
 		RenderTOTAL.FrameStart();
 		RenderCALC.FrameStart();
 		RenderCALC_HOM.FrameStart();
+		RenderCALC_SUN.FrameStart();
+		RenderCALC_LIGHTS.FrameStart();
+		RenderCALC_AO.FrameStart();
+		RenderCALC_POSTPROCESS.FrameStart();
 		RenderDUMP.FrameStart();
 		RenderDUMP_RT.FrameStart();
 		RenderDUMP_SKIN.FrameStart();

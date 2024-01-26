@@ -17,7 +17,6 @@
 #include "blender_light_mask.h"
 #include "blender_light_occq.h"
 #include "blender_light_point.h"
-#include "blender_light_reflected.h"
 #include "blender_light_spot.h"
 #include "blender_autoexposure.h"
 #include "blender_tonemapping.h"
@@ -235,7 +234,6 @@ CRenderTarget::CRenderTarget()
 	b_accum_direct_cascade = xr_new<CBlender_accum_direct_cascade>();
 	b_accum_point = xr_new<CBlender_accum_point>();
 	b_accum_spot = xr_new<CBlender_accum_spot>();
-	b_accum_reflected = xr_new<CBlender_accum_reflected>();
 	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_autoexposure = xr_new<CBlender_autoexposure>();
@@ -258,8 +256,8 @@ CRenderTarget::CRenderTarget()
 		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
-		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
 
 		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 
@@ -273,9 +271,9 @@ CRenderTarget::CRenderTarget()
 		}
 		else
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
 		}
 	}
 
@@ -283,13 +281,10 @@ CRenderTarget::CRenderTarget()
 	s_occq.create(b_occq, "r2\\occq");
 
 	// DIRECT (spot)
-	D3DFORMAT nullrt = D3DFMT_R5G6B5;
-	if (RImplementation.o.nullrt)
-		nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 
 	u32 size = RImplementation.o.smapsize;
 	rt_smap_depth.create(r2_RT_smap_depth, size, size, D3DFMT_D24X8);
-	rt_smap_surf.create(r2_RT_smap_surf, size, size, nullrt);
+	rt_smap_surf.create(r2_RT_smap_surf, size, size, D3DFMT_R5G6B5);
 	rt_smap_ZB = NULL;
 	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
 	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
@@ -312,11 +307,6 @@ CRenderTarget::CRenderTarget()
 		g_accum_spot.create(D3DFVF_XYZ, g_accum_spot_vb, g_accum_spot_ib);
 	}
 
-	// REFLECTED
-	{
-		s_accum_reflected.create(b_accum_reflected, "r2\\accum_refl");
-	}
-
 	// BLOOM
 	if (RImplementation.o.advancedpp)
 	{
@@ -324,7 +314,7 @@ CRenderTarget::CRenderTarget()
 		if (ps_r2_rt_format == 1 || ps_r2_bloom_quality <= 2)
 			fmt = D3DFMT_A8R8G8B8;
 		else
-			fmt = D3DFMT_A16B16G16R16F;
+			fmt = D3DFMT_A2R10G10B10;
 
 		float BloomResolutionMultiplier = 0.0f;
 
@@ -361,7 +351,7 @@ CRenderTarget::CRenderTarget()
 	if (RImplementation.o.advancedpp)
 	{
 		// Create rendertarget
-		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_A8);
+		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_L8);
 
 		// Create shader resource
 		s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
@@ -612,7 +602,6 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_tonemapping);
 	xr_delete(b_bloom);
 	xr_delete(b_ambient_occlusion);
-	xr_delete(b_accum_reflected);
 	xr_delete(b_accum_spot);
 	xr_delete(b_accum_point);
 	xr_delete(b_accum_direct_cascade);

@@ -1078,7 +1078,6 @@
     <ClInclude Include="blender_light_mask.h" />
     <ClInclude Include="blender_light_occq.h" />
     <ClInclude Include="blender_light_point.h" />
-    <ClInclude Include="blender_light_reflected.h" />
     <ClInclude Include="blender_light_spot.h" />
     <ClInclude Include="blender_autoexposure.h" />
     <ClInclude Include="Blender_motion_blur.h" />
@@ -1091,7 +1090,6 @@
     <ClInclude Include="doug_lea_memory_allocator.h" />
     <ClInclude Include="du_sphere_part.h" />
     <ClInclude Include="light.h" />
-    <ClInclude Include="light_gi.h" />
     <ClInclude Include="Light_Render_Direct.h" />
     <ClInclude Include="light_smapvis.h" />
     <ClInclude Include="r2.h" />
@@ -1217,7 +1215,6 @@
     <ClCompile Include="blender_light_mask.cpp" />
     <ClCompile Include="blender_light_occq.cpp" />
     <ClCompile Include="blender_light_point.cpp" />
-    <ClCompile Include="blender_light_reflected.cpp" />
     <ClCompile Include="blender_light_spot.cpp" />
     <ClCompile Include="blender_autoexposure.cpp" />
     <ClCompile Include="Blender_motion_blur.cpp" />
@@ -1226,7 +1223,6 @@
     <ClCompile Include="Blender_tonemapping.cpp" />
     <ClCompile Include="Blender_vignette.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
-    <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="Light_Render_Direct.cpp" />
     <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
@@ -1252,7 +1248,6 @@
     <ClCompile Include="r2_rendertarget_accum_omnipart_geom.cpp" />
     <ClCompile Include="r2_rendertarget_accum_point.cpp" />
     <ClCompile Include="r2_rendertarget_accum_point_geom.cpp" />
-    <ClCompile Include="r2_rendertarget_accum_reflected.cpp" />
     <ClCompile Include="r2_rendertarget_accum_spot.cpp" />
     <ClCompile Include="r2_rendertarget_accum_spot_geom.cpp" />
     <ClCompile Include="r2_rendertarget_phase_barrel_blur.cpp" />
