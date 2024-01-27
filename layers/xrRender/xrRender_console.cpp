@@ -59,7 +59,8 @@ xr_token shadow_filter_token[] = {
 	{"st_opt_disable", 0}, {"st_opt_min", 1}, {"st_opt_mid", 2}, {"st_opt_max", 3}, {0, 0}};
 
 u32 ps_r2_sun_shafts = 2;
-xr_token qsun_shafts_token[] = {{"st_opt_disabled", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
+xr_token qsun_shafts_token[] = {
+	{"st_opt_disabled", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
 
 u32 ps_r2_bump_mode = 2;
 xr_token bump_mode_token[] = {
@@ -169,7 +170,7 @@ float ps_r2_df_parallax_h = 0.02f;
 float ps_r2_autoexposure_middlegray = 1.f;
 float ps_r2_autoexposure_adaptation = 1.f;
 float ps_r2_autoexposure_low_lum = 0.0001f;
-float ps_r2_autoexposure_amount = 0.5f;
+float ps_r2_autoexposure_amount = 0.25f;
 
 float ps_r2_bloom_kernel_g = 4.5f;
 float ps_r2_bloom_kernel_b = 1.0f;
