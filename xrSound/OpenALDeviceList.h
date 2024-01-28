@@ -2,7 +2,7 @@
 #define ALDEVICELIST_H
 
 #define AL_GENERIC_HARDWARE "Generic Hardware"
-#define AL_GENERIC_SOFTWARE "Generic Software"
+#define AL_GENERIC_SOFTWARE "OpenAL Soft"
 
 struct ALDeviceDesc
 {
