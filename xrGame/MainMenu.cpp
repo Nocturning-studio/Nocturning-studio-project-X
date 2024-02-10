@@ -695,21 +695,13 @@ void CMainMenu::OnConnectToMasterServerOkClicked(CUIWindow*, void*)
 	Hide_CTMS_Dialog();
 }
 
+XRCORE_API u32 build_id;
+
 LPCSTR CMainMenu::GetGSVer()
 {
-	static string256 buff;
-	static string256 buff2;
+	static string256 Version;
 
-	if (m_pGameSpyFull)
-	{
-#pragma todo("Deathman to Deathman: Сделать свою функцию версии NSPX")
-		strcpy(buff2, "1.4.1"); // m_pGameSpyFull->GetGameVersion(buff));
-	}
-	else
-	{
-		buff[0] = 0;
-		buff2[0] = 0;
-	}
+	sprintf(Version, "%d", build_id);
 
-	return buff2;
+	return Version;
 }
