@@ -240,6 +240,10 @@ class CRenderTarget : public IRender_Target
 	void phase_bloom();
 
 	void phase_create_ao();
+	void billinear_filter();
+	void depth_based_filtering();
+	void vertical_filter();
+	void horizontal_filter();
 	void phase_filtering();
 	void phase_ao();
 

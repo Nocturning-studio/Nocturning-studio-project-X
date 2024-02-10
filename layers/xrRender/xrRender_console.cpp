@@ -40,7 +40,7 @@ xr_token aa_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
 u32 ps_r2_ao = 2;
-xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssao", 1}, {"st_opt_hbao", 2}, {"st_opt_hbao_plus", 3}, {0, 0}};
+xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_hbao", 1}, {"st_opt_hbao_plus", 2}, {0, 0}};
 
 u32 ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
