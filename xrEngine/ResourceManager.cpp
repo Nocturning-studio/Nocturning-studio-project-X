@@ -22,20 +22,6 @@ void fix_texture_name(LPSTR fn)
 		*_ext = 0;
 }
 //--------------------------------------------------------------------------------------------------------------
-template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
-{
-	xr_vector<T*>::iterator it = vec.begin();
-	xr_vector<T*>::iterator end = vec.end();
-	for (; it != end; it++)
-		if (*it == ptr)
-		{
-			vec.erase(it);
-			return TRUE;
-		}
-	return FALSE;
-}
-
-//--------------------------------------------------------------------------------------------------------------
 IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);

@@ -58,4 +58,6 @@ class CSpaceRestrictionHolder
 	IC shared_str default_in_restrictions() const;
 };
 
+extern const u32 time_to_delete;
+
 #include "space_restriction_holder_inline.h"

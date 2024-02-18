@@ -40,6 +40,7 @@
 #include "../xrEngine/resourcemanager.h"
 #include "doug_lea_memory_allocator.h"
 #include "cameralook.h"
+#include "ai_object_location.h"
 
 #include "GameSpy/GameSpy_Full.h"
 #include "GameSpy/GameSpy_Patching.h"
@@ -1215,6 +1216,7 @@ class CCC_SpawnToInventory : public IConsole_Command
 			CSE_Abstract* item =
 				tpGame->alife().spawn_item(args, Actor()->Position(), Actor()->ai_location().level_vertex_id(),
 										   Actor()->ai_location().game_vertex_id(), 0, false);
+
 			item->Spawn_Write(packet, FALSE);
 			tpGame->alife().server().FreeID(item->ID, 0);
 			F_entity_Destroy(item);

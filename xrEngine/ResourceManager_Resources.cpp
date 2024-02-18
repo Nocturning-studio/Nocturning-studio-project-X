@@ -16,8 +16,6 @@
 
 void fix_texture_name(LPSTR fn);
 
-template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr);
-
 //--------------------------------------------------------------------------------------------------------------
 SState* CResourceManager::_CreateState(SimulatorStates& state_code)
 {

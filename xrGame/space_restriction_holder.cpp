@@ -20,8 +20,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-extern const u32 time_to_delete;
-
 CSpaceRestrictionHolder::~CSpaceRestrictionHolder()
 {
 	clear();
