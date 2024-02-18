@@ -161,7 +161,7 @@ void CRenderTarget::depth_of_field_pass_horizontal()
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::calculate_depth_of_field()
+void CRenderTarget::phase_depth_of_field()
 {
 	if (ps_r2_dof_quality <= 2)
 	{
@@ -169,19 +169,11 @@ void CRenderTarget::calculate_depth_of_field()
 	}
 	else
 	{
-		depth_of_field_pass_vertical();
-		depth_of_field_pass_horizontal();
+		for (int i = 0; i < 2; i++)
+		{
+			depth_of_field_pass_vertical();
+			depth_of_field_pass_horizontal();
+		}
 	}
-}
-
-void CRenderTarget::phase_depth_of_field()
-{
-	int IterationsCount = 1;
-
-	if (ps_r2_dof_quality >= 3)
-		IterationsCount = 2;
-
-	for (int i = 0; i < IterationsCount; i++)
-		calculate_depth_of_field();
 }
 ///////////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 {
 	g_exclusive = !!bExclusive;
 
-	Log("Starting INPUT device...");
+	Log("Initializing Input...");
 
 	pDI = NULL;
 	pMouse = NULL;

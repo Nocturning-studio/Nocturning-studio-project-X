@@ -19,18 +19,24 @@ void CEnvAmbient::SSndChannel::load(CInifile& config, LPCSTR sect)
 	m_sound_period.w = config.r_s32(m_load_section, "period3");
 
 	if (!(m_sound_period.x <= m_sound_period.y))
-		Msg("period0 should be less than period1, error in section with name %s", sect);
+		Msg("! Environment Ambient: Sound Channels - period0 should be less than period1, error in section with name %s", sect);
 		
 	if (!(m_sound_period.z <= m_sound_period.w))
-		Msg("period2 should be less than period3, error in section with name %s", sect);
+		Msg("! Environment Ambient: Sound Channels - period2 should be less than period3, error in section with name %s", sect);
 
 	if(!(m_sound_dist.y > m_sound_dist.x))
-		Msg("min_distance should be less than max_distance, error in section with name %s", sect);
+		Msg("! Environment Ambient: Sound Channels - min_distance should be less than max_distance, error in section with name %s", sect);
 
 	LPCSTR snds = config.r_string(sect, "sounds");
 	u32 cnt = _GetItemCount(snds);
 	string_path tmp;
-	R_ASSERT3(cnt, "sounds empty", sect);
+
+	if (cnt == 0)
+	{
+		Msg("! Environment Ambient: Sound Channels - sounds array empty, error in section with name %s", sect);
+		snds = "$no_sound";
+		cnt = 1;
+	}
 
 	m_sounds.resize(cnt);
 

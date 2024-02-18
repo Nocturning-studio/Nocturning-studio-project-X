@@ -91,7 +91,7 @@ void CSoundRender_CoreA::_initialize(u64 window)
 
 	if (0 == pDeviceList->GetNumDevices())
 	{
-		Log("OpenAL: Can't create sound device.");
+		Log("* OpenAL: Can't create sound device.");
 		xr_delete(pDeviceList);
 		return;
 	}
@@ -114,8 +114,8 @@ void CSoundRender_CoreA::_initialize(u64 window)
 	// Get the device specifier.
 	const ALCchar* deviceSpecifier;
 	deviceSpecifier = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
-	Msg("OpenAL: Required device: %s", deviceDesc.name.c_str());
-	Msg("OpenAL: Created device: %s", deviceSpecifier);
+	Msg("* OpenAL: Required device: %s", deviceDesc.name.c_str());
+	Msg("* OpenAL: Created device: %s", deviceSpecifier);
 
 	// Create context
 	pContext = alcCreateContext(pDevice, NULL);

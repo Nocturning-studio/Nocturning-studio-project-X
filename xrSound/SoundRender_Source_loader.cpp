@@ -165,7 +165,6 @@ void CSoundRender_Source::load(LPCSTR name)
 	if (!FS.exist(fn))
 	{
 		Msg("! Can't find sound '%s'", name);
-		R_ASSERT3(FS.exist(fn), "! Can't find sound", name);
 		FS.update_path(fn, "$game_sounds$", "$no_sound.ogg");
 	}
 
