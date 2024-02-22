@@ -306,6 +306,9 @@ void CRender::Render()
 
 	Target->create_gbuffer();
 
+	if (Details)
+		Details->Render();
+
 	r_dsgraph_render_graph(0);
 
 	Target->disable_anisotropy_filtering();
@@ -377,9 +380,6 @@ void CRender::Render()
 	r_dsgraph_render_hud();
 
 	r_dsgraph_render_lods(true, true);
-
-	if (Details)
-		Details->Render();
 
 	Target->disable_anisotropy_filtering();
 
