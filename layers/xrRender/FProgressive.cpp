@@ -1,7 +1,6 @@
 // FProgressive.cpp: implementation of the FProgressive class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

@@ -1,7 +1,6 @@
 // LightShadows.cpp: implementation of the CLightShadows class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "LightShadows.h"
 #include "..\xrRender\LightTrack.h"

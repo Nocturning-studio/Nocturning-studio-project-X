@@ -1,7 +1,6 @@
 // BlenderDefault.cpp: implementation of the CBlender_LmEbB class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

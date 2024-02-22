@@ -1,7 +1,6 @@
 // Blender_Vertex_aref.cpp: implementation of the CBlender_Detail_Still class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

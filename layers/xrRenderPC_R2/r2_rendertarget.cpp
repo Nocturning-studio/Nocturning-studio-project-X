@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "r2_rendertarget.h"
 #include "..\xrEngine\resourcemanager.h"
 #include "blender_ambient_occlusion.h"
@@ -21,7 +23,6 @@
 #include "blender_autoexposure.h"
 #include "blender_tonemapping.h"
 #include "blender_barrel_blur.h"
-#include "stdafx.h"
 
 float CRenderTarget::hclip(float v, float dim)
 {

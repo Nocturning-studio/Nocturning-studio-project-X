@@ -1,7 +1,6 @@
 // LightPPA.cpp: implementation of the CLightPPA class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "LightPPA.h"
 #include "..\xrEngine\igame_persistent.h"

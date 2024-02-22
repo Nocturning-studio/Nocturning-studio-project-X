@@ -1,7 +1,6 @@
 // HOM.cpp: implementation of the CHOM class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "HOM.h"
 #include "occRasterizer.h"
