@@ -1207,7 +1207,10 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			RCache.set_xform_project(sun->X.D.combine);
 			r_dsgraph_render_graph(0);
 			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))
+			{
+				Details->UpdateVisibleM();
 				Details->Render();
+			}
 			sun->X.D.transluent = FALSE;
 			if (bSpecial)
 			{
