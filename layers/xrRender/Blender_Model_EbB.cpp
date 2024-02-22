@@ -1,7 +1,6 @@
 // BlenderDefault.cpp: implementation of the CBlender_Model_EbB class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

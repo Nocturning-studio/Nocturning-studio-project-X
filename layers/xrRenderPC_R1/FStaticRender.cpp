@@ -1,7 +1,6 @@
 // CRender.cpp: implementation of the CRender class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "../xrEngine/device.h"
 #include "..\xrEngine\igame_persistent.h"

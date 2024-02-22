@@ -1,7 +1,6 @@
 // SkeletonX.cpp: implementation of the CSkeletonX class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

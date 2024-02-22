@@ -1,7 +1,6 @@
 // LightProjector.cpp: implementation of the CLightProjector class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "LightProjector.h"
 #include "..\xrEngine\xr_object.h"

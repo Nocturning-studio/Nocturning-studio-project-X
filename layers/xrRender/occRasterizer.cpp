@@ -1,7 +1,6 @@
 // occRasterizer.cpp: implementation of the occRasterizer class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "occRasterizer.h"
 

@@ -1,7 +1,6 @@
 // Blender_default_aref.cpp: implementation of the CBlender_default_aref class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

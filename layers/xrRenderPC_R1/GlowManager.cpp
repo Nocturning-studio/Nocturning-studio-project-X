@@ -1,7 +1,6 @@
 // GlowManager.cpp: implementation of the CGlowManager class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "..\xrEngine\igame_persistent.h"
 #include "..\xrEngine\environment.h"

@@ -1,7 +1,6 @@
 // Portal.cpp: implementation of the CPortal class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "r_sector.h"
 #include "..\xrEngine\xrLevel.h"
