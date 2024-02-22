@@ -5,6 +5,8 @@
 /*-------------------------------------------------------------------------------*/
 // Render common values
 /*-------------------------------------------------------------------------------*/
+extern ECORE_API u32 ps_r_cubemap_size;
+
 extern ECORE_API u32 ps_r_aa;
 extern ECORE_API u32 ps_r_aa_iterations;
 

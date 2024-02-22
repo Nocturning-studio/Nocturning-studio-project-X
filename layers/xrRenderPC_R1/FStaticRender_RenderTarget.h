@@ -42,6 +42,10 @@ class CRenderTarget : public IRender_Target
   public:
 	IDirect3DSurface9* pTempZB;
 
+	IDirect3DSurface9* surf_screenshot_normal;	 // HW.fTarget, SM_NORMAL
+	IDirect3DTexture9* tex_screenshot_gamesave;	 // Container of "surf_screenshot_gamesave"
+	IDirect3DSurface9* surf_screenshot_gamesave; // DXT1, SM_FOR_GAMESAVE
+	
   private:
 	BOOL Create();
 	BOOL NeedPostProcess();

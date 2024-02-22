@@ -252,6 +252,14 @@ CRenderTarget::CRenderTarget()
 	b_vignette = xr_new<CBlender_vignette>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
 
+	// SCREENSHOT
+	{
+		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
+		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
+		R_CHK(HW.pDevice->CreateTexture(256, 256, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
+		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
+	}
+
 	//	NORMAL
 	{
 		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
@@ -574,6 +582,10 @@ CRenderTarget::~CRenderTarget()
 	t_envmap_1.destroy();
 
 	_RELEASE(rt_smap_ZB);
+
+	_RELEASE(surf_screenshot_normal);
+	_RELEASE(surf_screenshot_gamesave);
+	_RELEASE(tex_screenshot_gamesave);
 
 	// Jitter
 	for (int it = 0; it < TEX_jitter_count; it++)
