@@ -203,10 +203,9 @@ void CEnvironment::SetWeather(shared_str name, bool forced)
 		EnvsMapIt it = WeatherCycles.find(name);
 		if (it == WeatherCycles.end())
 		{
-			Msg("! Invalid weather name: %s", name.c_str());
+			Msg("! Can't find weather effect with name: %s", name.c_str());
 			return;
 		}
-		R_ASSERT3(it != WeatherCycles.end(), "Invalid weather name.", *name);
 		CurrentCycleName = it->first;
 		if (forced)
 		{
@@ -228,7 +227,8 @@ void CEnvironment::SetWeather(shared_str name, bool forced)
 	else
 	{
 #ifndef _EDITOR
-		FATAL("! Empty weather name");
+		Msg("! Empty weather name");
+		return;
 #endif
 	}
 }
@@ -237,10 +237,17 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 {
 	if (bWFX)
 		return false;
+
 	if (name.size())
 	{
 		EnvsMapIt it = WeatherFXs.find(name);
-		R_ASSERT3(it != WeatherFXs.end(), "Invalid weather effect name.", *name);
+
+		if (it == WeatherFXs.end())
+		{
+			Msg("! Can't find weather effect with name: %s", name.c_str());
+			return false;
+		}
+
 		EnvVec* PrevWeather = CurrentWeather;
 		VERIFY(PrevWeather);
 		CurrentWeather = &it->second;
@@ -290,14 +297,13 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 		Current[1] = C1;
 #ifdef WEATHER_LOGGING
 		Msg("Starting WFX: '%s' - %3.2f sec", *name, wfx_time);
-		//		for (EnvIt l_it=CurrentWeather->begin(); l_it!=CurrentWeather->end(); l_it++)
-		//			Msg				(". Env: '%s' Tm: %3.2f",*(*l_it)->m_identifier.c_str(),(*l_it)->exec_time);
 #endif
 	}
 	else
 	{
 #ifndef _EDITOR
-		FATAL("! Empty weather effect name");
+		Msg("! Empty weather effect name");
+		return false;
 #endif
 	}
 	return true;
