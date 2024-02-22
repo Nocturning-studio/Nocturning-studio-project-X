@@ -463,8 +463,10 @@ void CRender::render_forward()
 		r_pmask(false, true); // enable priority "1"
 		phase = PHASE_NORMAL;
 		render_main(Device.mFullTransform, false);	   //
+		Target->enable_anisotropy_filtering();
 		r_dsgraph_render_graph(1);					   // normal level, secondary priority
 		r_dsgraph_render_sorted();					   // strict-sorted geoms
+		Target->disable_anisotropy_filtering();
 		g_pGamePersistent->Environment().RenderLast(); // rain/thunder-bolts
 	}
 
