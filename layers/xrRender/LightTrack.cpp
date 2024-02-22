@@ -1,7 +1,6 @@
 // LightTrack.cpp: implementation of the CROS_impl class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "LightTrack.h"
 #include "..\xrEngine\xr_object.h"

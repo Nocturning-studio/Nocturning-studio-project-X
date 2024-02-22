@@ -1,7 +1,6 @@
 // Texture.cpp: implementation of the CTexture class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 

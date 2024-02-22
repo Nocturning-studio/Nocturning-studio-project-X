@@ -1,7 +1,6 @@
 // Blender_Vertex.cpp: implementation of the CBlender_Vertex class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #pragma hdrstop
 
