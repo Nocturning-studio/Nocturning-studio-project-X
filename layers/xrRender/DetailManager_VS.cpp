@@ -258,24 +258,7 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 				RCache.stat.r.s_details.add(dwCNT_verts);
 			}
 			// Clean up
-
-			//	KD: we must not clear vis on r2 since we want details shadows
-#if RENDER == R_R2
-			//			if ((ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_SMAP ==
-			// RImplementation.phase))										// phase smap with shadows
-			//				|| (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_NORMAL ==
-			// RImplementation.phase) && (!RImplementation.is_sun()))		// phase normal with shadows without sun
-			//				|| (!ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_NORMAL ==
-			// RImplementation.phase)))									// phase normal without shadows
-
-			if ((ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS) &&
-				 (RImplementation.PHASE_NORMAL == RImplementation.phase) &&
-				 (!RImplementation.is_sun())) // phase normal with shadows without sun
-				|| (!ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS) &&
-					(RImplementation.PHASE_NORMAL == RImplementation.phase)))
-#endif
-
-				vis.clear_not_free();
+			vis.clear_not_free();
 		}
 		vOffset += hw_BatchSize * Object.number_vertices;
 		iOffset += hw_BatchSize * Object.number_indices;
