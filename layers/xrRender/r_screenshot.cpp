@@ -141,16 +141,6 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	break;
 	case IRender_interface::SM_FOR_CUBEMAP: 
 	{
-		float fov_min, fov_max, fov;
-		fov = Console->GetFloat("fov", fov_min, fov_max);
-
-		if ((int)fov != 90)
-		{
-			if (name[0] == '1')
-				Msg("! Can't capture cubemap, fov != 90 (%d != 90), please set 'fov' to '90'", (int)fov);
-			return;
-		}
-
 		u32 face_size = ps_r_cubemap_size / 4;
 
 		static IDirect3DCubeTexture9* cubemap = NULL;
@@ -199,4 +189,3 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	break;
 	}
 }
-

@@ -360,6 +360,7 @@ BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float
 	}
 	else if (m_bMakeCubeMap)
 	{
+		fFov = 90.0f;
 		MakeCubeMapFace(D, N);
 		P.set(m_Camera.c);
 		fAspect = 1.f;
