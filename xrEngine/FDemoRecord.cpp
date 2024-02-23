@@ -185,9 +185,10 @@ void CDemoRecord::MakeLevelMapProcess()
 	case 0:
 		s_dev_flags = psDeviceFlags;
 		psDeviceFlags.zero();
-		psDeviceFlags.set(rsClearBB | rsFullscreen | rsDrawStatic, TRUE);
-		if (!psDeviceFlags.equal(s_dev_flags, rsFullscreen))
-			Device.Reset();
+		psDeviceFlags.set(rsClearBB | rsDrawStatic, TRUE);
+		psDeviceFlags.set(rsFullscreen, s_dev_flags.test(rsFullscreen));
+		//if (!psDeviceFlags.equal(s_dev_flags, rsFullscreen))
+		//	Device.Reset();
 		break;
 	case DEVICE_RESET_PRECACHE_FRAME_COUNT + 1: {
 		m_bOverlapped = TRUE;
@@ -239,10 +240,10 @@ void CDemoRecord::MakeLevelMapProcess()
 				  bb.max.x, bb.max.z);
 		Render->Screenshot(IRender_interface::SM_FOR_LEVELMAP, tmp);
 		psHUD_Flags.assign(s_hud_flag);
-		BOOL bDevReset = !psDeviceFlags.equal(s_dev_flags, rsFullscreen);
+		//BOOL bDevReset = !psDeviceFlags.equal(s_dev_flags, rsFullscreen);
 		psDeviceFlags = s_dev_flags;
-		if (bDevReset)
-			Device.Reset();
+		//if (bDevReset)
+		//	Device.Reset();
 		m_bMakeLevelMap = FALSE;
 	}
 	break;

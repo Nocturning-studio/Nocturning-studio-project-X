@@ -22,6 +22,10 @@ xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
 xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
 #endif
 
+u32 ps_r_cubemap_size = 2048;
+xr_token cubemap_size_token[] = {{"1024", 1024}, {"2048", 2048}, {"3072", 3072}, 
+					   {"4096", 4096}, {"6144", 6144}, {"8192", 8192}, {0, 0}};
+
 u32 ps_r_aa_iterations = 2;
 xr_token aa_iterations_token[] = {{"st_opt_x1", 1},
 								  {"st_opt_x2", 2},
@@ -606,6 +610,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r_wallmark_shift_v", &ps_r_WallmarkSHIFT_V, 0.0f, 1.f);
 	CMD4(CCC_Float, "r_wallmark_ttl", &ps_r_WallmarkTTL, 1.0f, 5.f * 60.f);
 	CMD1(CCC_ModelPoolStat, "stat_models");
+
+	CMD3(CCC_Token, "r_cubemap_size", &ps_r_cubemap_size, cubemap_size_token);
 
 	CMD3(CCC_Token, "r_aa_type", &ps_r_aa, aa_token);
 	CMD3(CCC_Token, "r_aa_iterations", &ps_r_aa_iterations, aa_iterations_token);
