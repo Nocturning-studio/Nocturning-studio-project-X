@@ -64,14 +64,4 @@ XRGAMESPY_API const char* xrGS_GetGameVersion	(const char*KeyValue)
 XRGAMESPY_API void xrGS_GetGameID	(int* GameID, int verID)
 {
 	*GameID = int(GAMESPY_GAMEID);
-
-#ifdef DEMO_BUILD
-	switch (verID)
-	{
-	case 1: *GameID = int(1067); break;
-	case 2: *GameID = int(1576); break;
-	case 3: *GameID = int(1620); break;
-	default: *GameID = int(GAMESPY_GAMEID); break;
-	}	
-#endif
 }

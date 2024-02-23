@@ -2,14 +2,7 @@
 #include "RegistryFuncs.h"
 
 #define REGISTRY_BASE HKEY_LOCAL_MACHINE
-
-// #define DEMO_BUILD
-
-#ifdef DEMO_BUILD
-#define REGISTRY_PATH "Software\\GSC Game World\\STALKER-SoC\\"
-#else
 #define REGISTRY_PATH "Software\\GSC Game World\\STALKER-SHOC\\"
-#endif
 
 bool ReadRegistryValue(LPCSTR rKeyName, DWORD rKeyType, void* value)
 {

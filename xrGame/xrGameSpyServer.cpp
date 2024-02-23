@@ -6,8 +6,6 @@
 #include "GameSpy/GameSpy_Base_Defs.h"
 #include "GameSpy/GameSpy_Available.h"
 
-// #define DEMO_BUILD
-
 xrGameSpyServer::xrGameSpyServer()
 {
 	m_iReportToMasterServer = 0;
@@ -104,10 +102,7 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str& session_name)
 
 		//------ Init of CDKey SDK -----------
 
-#ifndef DEMO_BUILD
 		if (m_bCheckCDKey)
-#endif
-
 			CDKey_Init();
 	};
 

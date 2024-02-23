@@ -19,8 +19,6 @@
 
 #include "object_broker.h"
 
-// #define DEMO_BUILD
-
 string128 ErrMsgBoxTemplate[] = {"message_box_invalid_pass",
 								 "message_box_invalid_host",
 								 "message_box_session_full",
@@ -649,19 +647,8 @@ bool CMainMenu::IsCDKeyIsValid()
 	string64 CDKey = "";
 	GetCDKey(CDKey);
 
-#ifndef DEMO_BUILD
 	if (!xr_strlen(CDKey))
 		return true;
-#endif
-
-	int GameID = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		m_pGameSpyFull->m_pGS_HTTP->xrGS_GetGameID(&GameID, i);
-		if (VerifyClientCheck(CDKey, unsigned short(GameID)) == 1)
-			return true;
-	};
-	return false;
 }
 
 bool CMainMenu::ValidateCDKey()

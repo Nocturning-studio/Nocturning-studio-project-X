@@ -136,13 +136,19 @@ void CRenderTarget::watermark()
 
 void CRenderTarget::draw_overlays()
 {
+#ifndef DEMO_BUILD
 	if (ps_r2_overlay_flags.test(R2FLAG_PHOTO_GRID))
+#endif
 		photo_grid();
 
+#ifndef DEMO_BUILD
 	if (ps_r2_overlay_flags.test(R2FLAG_CINEMA_BORDERS))
+#endif
 		cinema_borders();
 
+#ifndef DEMO_BUILD
 	if (ps_r2_overlay_flags.test(R2FLAG_WATERMARK))
+#endif
 		watermark();
 }
 ///////////////////////////////////////////////////////////////////////////////////
