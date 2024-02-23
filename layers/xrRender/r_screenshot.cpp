@@ -151,7 +151,7 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 		// begin
 		if (id == 0)
 		{
-			HW.pDevice->CreateCubeTexture(face_size, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &cubemap, NULL);
+			HW.pDevice->CreateCubeTexture(face_size, 1, NULL, D3DFMT_DXT5, D3DPOOL_SYSTEMMEM, &cubemap, NULL);
 		}
 
 		D3DCUBEMAP_FACES face = (D3DCUBEMAP_FACES)id;
