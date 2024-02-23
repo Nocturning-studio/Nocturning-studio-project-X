@@ -256,7 +256,7 @@ CRenderTarget::CRenderTarget()
 	{
 		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
 		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
-		R_CHK(HW.pDevice->CreateTexture(256, 256, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
+		R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
 		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
