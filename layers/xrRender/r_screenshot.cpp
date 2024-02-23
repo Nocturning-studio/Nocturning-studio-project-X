@@ -87,11 +87,21 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	break;
 	case IRender_interface::SM_NORMAL: 
 	{
-		sprintf_s(file_name, sizeof(string_path), "xray_%d_%s_%s_%s.jpg", build_id, Core.UserName, timestamp(t_stemp),
-				  (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
+		sprintf_s(file_name, sizeof(file_name), "Xray (build id - %d) (user - %s) (time - %s) (%s)", build_id,
+				  Core.UserName, timestamp(t_stemp), (g_pGameLevel) ? g_pGameLevel->name().c_str() : "mainmenu");
 
 		ID3DXBuffer* saved = 0;
-		R_CHK(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_JPG, Target->surf_screenshot_normal, NULL, NULL));
+
+		if (strstr(Core.Params, "-screenshot_format_png"))
+		{
+			strconcat(sizeof(file_name), file_name, file_name, ".png");
+			R_CHK(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_PNG, Target->surf_screenshot_normal, NULL, NULL));
+		}
+		else
+		{
+			strconcat(sizeof(file_name), file_name, file_name, ".jpg");
+			R_CHK(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_JPG, Target->surf_screenshot_normal, NULL, NULL));
+		}
 
 		IWriter* fs = FS.w_open("$screenshots$", file_name);
 		R_ASSERT(fs);
