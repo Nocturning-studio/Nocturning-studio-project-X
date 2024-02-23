@@ -92,7 +92,13 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 
 		ID3DXBuffer* saved = 0;
 
-		if (strstr(Core.Params, "-screenshot_format_png"))
+#ifndef DEMO_BUILD
+		bool UsePngFormat = strstr(Core.Params, "-screenshot_format_png");
+#else
+		bool UsePngFormat = true;
+#endif
+
+		if (UsePngFormat)
 		{
 			strconcat(sizeof(file_name), file_name, file_name, ".png");
 			R_CHK(D3DXSaveSurfaceToFileInMemory(&saved, D3DXIFF_PNG, Target->surf_screenshot_normal, NULL, NULL));
