@@ -122,6 +122,7 @@ void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, 
 		Msg("Build date: %s", build_date);
 
 		string256 BuildType;
+		strcpy(BuildType, "");
 #if DEBUG
 		strconcat(sizeof(BuildType), BuildType, BuildType, "Debug");
 #elif DEMO_BUILD

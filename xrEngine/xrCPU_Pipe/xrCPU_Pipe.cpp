@@ -35,12 +35,6 @@ extern "C"
 	__declspec(dllexport) void __cdecl xrBind_PSGP(xrDispatchTable* T, DWORD dwFeatures)
 #endif
 	{
-		// analyze features
-		// DWORD dwFeatures = CPU::ID.feature & CPU::ID.os_support;
-
-		if (strstr(strlwr(GetCommandLine()), "-x86"))
-			dwFeatures &= ~(_CPU_FEATURE_SSE + _CPU_FEATURE_3DNOW);
-
 		// generic
 		T->skin1W = xrSkin1W_x86;
 		T->skin2W = xrSkin2W_x86;
@@ -52,14 +46,14 @@ extern "C"
 		T->memFill32 = xrMemFill32_MMX;
 
 		// SSE
-		if (dwFeatures & _CPU_FEATURE_SSE)
+		if (CPU::ID.hasFeature(CpuFeature::Sse))
 		{
 			T->memCopy = xrMemCopy_MMXSSE3DNow;
-			// T->skin2W	= xrSkin2W_SSE;
+			//T->skin2W	= xrSkin2W_SSE;
 		}
 
 		// 3dnow!
-		if (dwFeatures & _CPU_FEATURE_3DNOW)
+		if (CPU::ID.hasFeature(CpuFeature::_3dNow))
 		{
 			// T->skin1W	= xrSkin1W_3DNow;
 			//  T->blerp	= xrBoneLerp_3DNow;

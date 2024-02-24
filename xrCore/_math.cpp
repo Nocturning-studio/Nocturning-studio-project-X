@@ -154,7 +154,7 @@ XRCORE_API u64 qpc_freq = 0;
 XRCORE_API u64 qpc_overhead = 0;
 XRCORE_API u32 qpc_counter = 0;
 
-XRCORE_API _processor_info ID;
+XRCORE_API processor_info ID;
 
 XRCORE_API u64 QPC()
 {
@@ -174,13 +174,6 @@ u64 __fastcall GetCLK(void)
 
 void Detect()
 {
-	// General CPU identification
-	if (!_cpuid(&ID))
-	{
-		// Core.Fatal		("Fatal error: can't detect CPU/FPU.");
-		abort();
-	}
-
 	// Timers & frequency
 	u64 start, end;
 	u32 dwStart, dwTest;
@@ -243,35 +236,38 @@ void Detect()
 //------------------------------------------------------------------------------------
 void _initialize_cpu(void)
 {
-	//Msg("* Detected CPU: %s %s, F%d/M%d/S%d, %.2f mhz, %d-clk 'rdtsc'", CPU::ID.v_name, CPU::ID.model_name,
-	//	CPU::ID.family, CPU::ID.model, CPU::ID.stepping, float(CPU::clk_per_second / u64(1000000)),
-	//	u32(CPU::clk_overhead));
+	// General CPU identification
+	if (!query_processor_info(&CPU::ID))
+		FATAL("! Can't detect CPU/FPU");
+
 	Msg("* CPU Info:");
 	Msg("* CPU Frequency: %.2f mhz", float(CPU::clk_per_second / u64(1000000)));
-	Msg("* CPU CLK Overheat: %d-clk 'rdtsc'", u32(CPU::clk_overhead));
-	int ThreadCount = std::thread::hardware_concurrency();
-	Msg("* CPU Thread count: %d", ThreadCount);
+	Msg("* CPU Thread count: %d", std::thread::hardware_concurrency());
 
-	//	DUMP_PHASE;
-
-	if (strstr(Core.Params, "-x86"))
-	{
-		CPU::ID.feature &= ~_CPU_FEATURE_3DNOW;
-		CPU::ID.feature &= ~_CPU_FEATURE_SSE;
-		CPU::ID.feature &= ~_CPU_FEATURE_SSE2;
-	};
-
-	string128 features;
-	strcpy_s(features, sizeof(features), "RDTSC");
-	if (CPU::ID.feature & _CPU_FEATURE_MMX)
-		strcat(features, ", MMX");
-	if (CPU::ID.feature & _CPU_FEATURE_3DNOW)
-		strcat(features, ", 3DNow!");
-	if (CPU::ID.feature & _CPU_FEATURE_SSE)
+    string256 features;
+	strcpy(features, "RDTSC");
+	if (CPU::ID.hasFeature(CpuFeature::Sse))
 		strcat(features, ", SSE");
-	if (CPU::ID.feature & _CPU_FEATURE_SSE2)
+	if (CPU::ID.hasFeature(CpuFeature::Sse2))
 		strcat(features, ", SSE2");
-	Msg("* CPU Features: %s\n", features);
+	if (CPU::ID.hasFeature(CpuFeature::Sse3))
+		strcat(features, ", SSE3");
+	if (CPU::ID.hasFeature(CpuFeature::Sse41))
+		strcat(features, ", SSE4.1");
+	if (CPU::ID.hasFeature(CpuFeature::Sse42))
+		strcat(features, ", SSE4.2");
+	if (CPU::ID.hasFeature(CpuFeature::Ssse3))
+		strcat(features, ", SSSE3");
+	if (CPU::ID.hasFeature(CpuFeature::Mmx))
+		strcat(features, ", MMX");
+	if (CPU::ID.hasFeature(CpuFeature::_3dNow))
+		strcat(features, ", 3DNow!");
+	if (CPU::ID.hasFeature(CpuFeature::MWait))
+		strcat(features, ", MONITOR/MWAIT");
+	if (CPU::ID.hasFeature(CpuFeature::HT))
+		strcat(features, ", HTT");
+
+	Msg("* CPU features: %s \n", features);
 
 	Fidentity.identity();  // Identity matrix
 	Didentity.identity();  // Identity matrix
@@ -303,7 +299,7 @@ void _initialize_cpu_thread()
 	// fpu & sse
 	FPU::m24r();
 #endif // XRCORE_STATIC
-	if (CPU::ID.feature & _CPU_FEATURE_SSE)
+	if (CPU::ID.hasFeature(CpuFeature::Sse))
 	{
 		//_mm_setcsr ( _mm_getcsr() | (_MM_FLUSH_ZERO_ON+_MM_DENORMALS_ZERO_ON) );
 		_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
