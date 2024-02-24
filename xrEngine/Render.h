@@ -4,6 +4,7 @@
 #include "frustum.h"
 #include "vis_common.h"
 #include "IRenderDetailModel.h"
+#include "ShaderMacros.h"
 
 #ifdef _EDITOR
 #error you cant include this file in borland
@@ -193,8 +194,10 @@ class ENGINE_API IRender_interface
 	{
 		m_skinning = mode;
 	}
-	virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
-								   LPCSTR pTarget, DWORD Flags, void*& result) = 0;
+	//virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
+	//							   LPCSTR pTarget, DWORD Flags, void*& result) = 0;
+
+	virtual CShaderMacros FetchShaderMacros() = 0;
 
 	// Information
 	virtual void Statistics(CGameFont* F){};

@@ -373,7 +373,7 @@
     <OutDir>$(SolutionDir)..\bin\</OutDir>
     <IntDir>$(SolutionDir)..\intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)third-party\include\;$(SolutionDir)xrLua\src\;$(SolutionDir)xrCore\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
+    <IncludePath>.;$(SolutionDir)third-party\include\;$(SolutionDir)xrLua\src\;$(SolutionDir)xrCore\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\$(LibrariesArchitecture)\;$(SolutionDir)third-party\lib\;$(SolutionDir)..\libraries\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Master Gold|Win32'">
@@ -1887,6 +1887,9 @@
     <ClInclude Include="r_constants_cache.h" />
     <ClInclude Include="R_DStreams.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderCompile.h" />
+    <ClInclude Include="ShaderMacros.h" />
+    <ClInclude Include="ShaderResourceTraits.h" />
     <ClInclude Include="Shader_xrLC.h" />
     <ClInclude Include="SH_Atomic.h" />
     <ClInclude Include="SH_Constant.h" />
@@ -2117,6 +2120,7 @@
     <ClCompile Include="r_constants_cache.cpp" />
     <ClCompile Include="R_DStreams.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderMacros.cpp" />
     <ClCompile Include="SH_Atomic.cpp" />
     <ClCompile Include="SH_Constant.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug_Dedicated|Win32'">AssemblyAndSourceCode</AssemblerOutput>

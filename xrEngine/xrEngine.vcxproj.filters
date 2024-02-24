@@ -549,6 +549,15 @@
     <ClInclude Include="xrHemisphere.h">
       <Filter>Game API\Environment\Hemisphere</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderCompile.h">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceTraits.h">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderMacros.h">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -955,6 +964,9 @@
     </ClCompile>
     <ClCompile Include="xrHemisphere.cpp">
       <Filter>Game API\Environment\Hemisphere</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMacros.cpp">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
