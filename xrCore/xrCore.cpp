@@ -117,10 +117,24 @@ void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, 
 #endif
 #endif
 		FS._initialize(flags, 0, fs_fname);
-		//Msg("'%s' build %d, %s\n", "xrCore", build_id, build_date);
 		Msg("X-Ray Engine v0.4 (NS Edited)");
 		Msg("Build ID: %d", build_id);
-		Msg("Build date: %s\n", build_date);
+		Msg("Build date: %s", build_date);
+
+		string256 BuildType;
+#if DEBUG
+		strconcat(sizeof(BuildType), BuildType, BuildType, "Debug");
+#elif DEMO_BUILD
+		strconcat(sizeof(BuildType), BuildType, BuildType, "Demo");
+#elif MASTER_GOLD
+		strconcat(sizeof(BuildType), BuildType, BuildType, "Gold master");
+#elif NDEBUG
+		strconcat(sizeof(BuildType), BuildType, BuildType, "Release");
+#else
+		strconcat(sizeof(BuildType), BuildType, BuildType, "Release");
+#endif
+		Msg("Build type: %s\n", BuildType);
+
 		EFS._initialize();
 #ifdef DEBUG
 #ifndef _EDITOR
