@@ -82,9 +82,9 @@ void CRender::create()
 	::Device.Resources->RegisterConstantSetup("L_dynamic_xform", &r1_dlight_binder_xform);
 
 	u32 v_dev = CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
-	u32 v_need = CAP_VERSION(2, 0);
+	u32 v_need = CAP_VERSION(3, 0);
 	R_ASSERT2(v_dev >= v_need,
-			  make_string ("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0a supporting)"));
+			  make_string ("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0c supporting)"));
 
 	m_skinning = -1;
 

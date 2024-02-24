@@ -101,10 +101,7 @@ void CRender::render_lights(light_Package& LP)
 
 			// render
 			phase = PHASE_SMAP;
-			if (RImplementation.o.Tshadows)
-				r_pmask(true, true);
-			else
-				r_pmask(true, false);
+			r_pmask(true, false);
 			L->svis.begin();
 			r_dsgraph_render_subspace(L->spatial.sector, L->X.S.combine, L->position, TRUE);
 			bool bNormal = mapNormal[0].size() || mapMatrix[0].size();
