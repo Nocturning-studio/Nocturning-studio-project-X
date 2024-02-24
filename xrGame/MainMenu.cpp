@@ -642,13 +642,7 @@ extern void GetCDKey(char* CDKeyStr);
 
 bool CMainMenu::IsCDKeyIsValid()
 {
-	if (!m_pGameSpyFull || !m_pGameSpyFull->m_pGS_HTTP)
-		return false;
-	string64 CDKey = "";
-	GetCDKey(CDKey);
-
-	if (!xr_strlen(CDKey))
-		return true;
+	return true;
 }
 
 bool CMainMenu::ValidateCDKey()
