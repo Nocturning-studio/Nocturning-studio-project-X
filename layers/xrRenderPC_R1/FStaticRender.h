@@ -19,6 +19,8 @@
 
 #include "../xrEngine/Fmesh.h"
 
+#include "../../xrEngine/ShaderMacros.h"
+
 // definition
 class CRender : public R_dsgraph_structure
 {
@@ -34,9 +36,15 @@ class CRender : public R_dsgraph_structure
 		u32 vis_intersect : 1; // config
 
 		u32 distortion : 1; // run-time modified
-		u32 disasm : 1;		// config
 		u32 forceskinw : 1; // config
+
 	} o;
+	// string
+	string32 c_build_id;
+	string32 c_vignette;
+
+	void update_options();
+
 	struct _stats
 	{
 		u32 o_queries, o_culled;
@@ -133,8 +141,8 @@ class CRender : public R_dsgraph_structure
 	virtual void level_Unload();
 
 	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
-	virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
-								   LPCSTR pTarget, DWORD Flags, void*& result);
+	//virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
+	//							   LPCSTR pTarget, DWORD Flags, void*& result);
 
 	// Information
 	virtual void Statistics(CGameFont* F);
@@ -229,6 +237,8 @@ class CRender : public R_dsgraph_structure
 		return HWOCC.occq_get(ID);
 	}
 
+	CShaderMacros FetchShaderMacros();
+	CShaderMacros m_blender_macros;
   private:
 	FS_FileSet m_file_set;
 };

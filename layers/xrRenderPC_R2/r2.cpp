@@ -9,6 +9,8 @@
 #include "..\xrRender\LightTrack.h"
 #include <boost/crc.hpp>
 #include "../xrEngine\r_constants.h"
+
+#pragma comment(lib, "d3dx9.lib")
 //////////////////////////////////////////////////////////////////////////
 CRender RImplementation;
 //////////////////////////////////////////////////////////////////////////
@@ -153,6 +155,38 @@ void CheckHWSupporting()
 				  "Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
 }
 //////////////////////////////////////////////////////////////////////////
+// update with vid_restart
+void CRender::update_options()
+{
+	o.smapsize = ps_r2_sun_quality <= 1 ? 1024 :
+				 ps_r2_sun_quality <= 4 ? 1536 :
+				 ps_r2_sun_quality <= 5 ? 2048 : 0;
+
+	o.sun_depth_near_bias = -0.0001f;
+	o.sun_depth_near_scale = 1.0f;
+
+	o.sun_depth_far_bias = -0.001f;
+	o.sun_depth_far_scale = 1.0f;
+
+	o.nvstencil = (HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40);
+	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);
+
+	o.use_ssao = ps_r2_ao > 0;
+	o.use_soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
+	o.use_soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
+	o.use_atest_aa = ps_r2_alpha_test_aa > 0;
+
+	sprintf(c_smapsize, "%d", o.smapsize);
+	sprintf(c_debugview, "%d", ps_r2_debug_render);
+	sprintf(c_vignette, "%d", ps_vignette_mode);
+	sprintf(c_aa_type, "%d", ps_r_aa);
+	sprintf(c_fxaa_quality, "%d", ps_r2_aa_quality);
+	sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
+	sprintf(c_shadow_filter, "%d", ps_r2_shadow_filtering);
+	sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
+}
+//////////////////////////////////////////////////////////////////////////
+extern XRCORE_API u32 build_id;
 void CRender::create()
 {
 	CheckHWSupporting();
@@ -161,62 +195,7 @@ void CRender::create()
 
 	m_skinning = -1;
 
-	///////////////////////////////////////////////////
-	// Smap resolution choosing
-#pragma todo(                                                                                                          \
-	Deathman to                                                                                                        \
-		Deathman : Ќеобходимо разделить разрешение shadow map на разрешение дл€ sun и spot или point источников света)
-	if (o.sunstatic)
-	{
-		o.smapsize = 1024;
-	}
-	else
-	{
-		switch (ps_r2_sun_quality)
-		{
-		case 1:
-			o.smapsize = 1024;
-			o.sun_depth_far_bias = -0.001f;
-			o.sun_depth_near_bias = -0.0001f;
-			break;
-		case 2:
-			o.smapsize = 1536;
-			o.sun_depth_far_bias = -0.001f;
-			o.sun_depth_near_bias = -0.0001f;
-			break;
-		case 3:
-			o.smapsize = 1536;
-			o.sun_depth_far_bias = -0.001f;
-			o.sun_depth_near_bias = -0.0001f;
-			break;
-		case 4:
-			o.smapsize = 1536;
-			o.sun_depth_far_bias = -0.001f;
-			o.sun_depth_near_bias = -0.0001f;
-			break;
-		case 5:
-			o.smapsize = 2048;
-			o.sun_depth_far_bias = -0.0002f;
-			o.sun_depth_near_bias = -0.00006f;
-			break;
-		}
-		o.sun_depth_far_scale = 1.0f;
-		o.sun_depth_near_scale = 1.0f;
-	}
-	///////////////////////////////////////////////////
-	// nvstencil on NV40 and up
-	o.nvstencil = FALSE;
-	if ((HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40))
-		o.nvstencil = TRUE;
-	if (strstr(Core.Params, "-nonvs"))
-		o.nvstencil = FALSE;
-
-	o.forbidshadercahe = (strstr(Core.Params, "-forbid_shader_cache")) ? TRUE : FALSE;
-
-	// nv-dbt
-	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);
-	if (o.nvdbt)
-		Msg("* NV-DBT supported and used");
+	sprintf(c_build_id, "%d", build_id);
 
 	// options
 	o.sunstatic = r2_sun_static;
@@ -224,7 +203,6 @@ void CRender::create()
 	o.noshadows = (strstr(Core.Params, "-noshadows")) ? TRUE : FALSE;
 	o.distortion_enabled = (strstr(Core.Params, "-nodistort")) ? FALSE : TRUE;
 	o.distortion = o.distortion_enabled;
-	o.disasm = (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
 	o.forceskinw = (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 
 	// constants
@@ -236,6 +214,7 @@ void CRender::create()
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";
 
+	update_options();
 	Target = xr_new<CRenderTarget>(); // Main target
 
 	Models = xr_new<CModelPool>();
@@ -299,6 +278,7 @@ void CRender::reset_end()
 		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
 	HWOCC.occq_create(occq_size);
 
+	update_options();
 	Target = xr_new<CRenderTarget>();
 
 	xrRender_apply_tf();
@@ -598,828 +578,49 @@ void CRender::Statistics(CGameFont* _F)
 #endif
 }
 
-/////////
-#pragma comment(lib, "d3dx9.lib")
-/*
-extern "C"
+//////////////////////////////////////////////////////////////////////
+CShaderMacros CRender::FetchShaderMacros()
 {
-LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
-LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
-};
-*/
-void CRender::addShaderOption(const char* name, const char* value)
-{
-	D3DXMACRO macro = {name, value};
-	m_ShaderOptions.push_back(macro);
-}
+	CShaderMacros macros;
+	macros.add(m_blender_macros);
 
-void CRender::clearAllShaderOptions()
-{
-	m_ShaderOptions.clear();
-}
+	// build id
+	macros.add("BUILD_ID", c_build_id);
 
-static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 const buffer_size, LPCSTR const file_name,
-							 void*& result, bool const disasm, LPCSTR const disasm_file_name)
-{
-	HRESULT _result = E_FAIL;
-	if (pTarget[0] == 'p')
-	{
-		SPS* sps_result = (SPS*)result;
-		_result = HW.pDevice->CreatePixelShader(buffer, &sps_result->ps);
-		if (!SUCCEEDED(_result))
-		{
-			Log("! PS: ", file_name);
-			Msg("! CreatePixelShader hr == 0x%08x", _result);
-			return E_FAIL;
-		}
+	// debug view
+	macros.add("DEBUG_VIEW_MODE", c_debugview);
 
-		LPCVOID data = NULL;
-		_result = D3DXFindShaderComment(buffer, MAKEFOURCC('C', 'T', 'A', 'B'), &data, NULL);
-		if (SUCCEEDED(_result) && data)
-		{
-			LPD3DXSHADER_CONSTANTTABLE pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
-			sps_result->constants.parse(pConstants, 0x1);
-		}
-		else
-		{
-			Log("! PS: ", file_name);
-			Msg("! D3DXFindShaderComment hr == 0x%08x", _result);
-		}
-	}
-	else
-	{
-		SVS* svs_result = (SVS*)result;
-		_result = HW.pDevice->CreateVertexShader(buffer, &svs_result->vs);
-		if (!SUCCEEDED(_result))
-		{
-			Log("! VS: ", file_name);
-			Msg("! CreatePixelShader hr == 0x%08x", _result);
-			return E_FAIL;
-		}
+	// skinning
+	macros.add(m_skinning < 0, "SKIN_NONE", "1");
+	macros.add(0 == m_skinning, "SKIN_0", "1");
+	macros.add(1 == m_skinning, "SKIN_1", "1");
+	macros.add(2 == m_skinning, "SKIN_2", "1");
+	macros.add(3 == m_skinning, "SKIN_3", "1");
+	macros.add(4 == m_skinning, "SKIN_4", "1");
 
-		LPCVOID data = NULL;
-		_result = D3DXFindShaderComment(buffer, MAKEFOURCC('C', 'T', 'A', 'B'), &data, NULL);
-		if (SUCCEEDED(_result) && data)
-		{
-			LPD3DXSHADER_CONSTANTTABLE pConstants = LPD3DXSHADER_CONSTANTTABLE(data);
-			svs_result->constants.parse(pConstants, 0x2);
-		}
-		else
-		{
-			Log("! VS: ", file_name);
-			Msg("! D3DXFindShaderComment hr == 0x%08x", _result);
-		}
-	}
+	macros.add(o.forceskinw, "SKIN_COLOR", "1");
 
-	if (disasm)
-	{
-		ID3DXBuffer* _disasm = 0;
-		D3DXDisassembleShader(LPDWORD(buffer), TRUE, 0, &_disasm);
-		string_path dname;
-		strconcat(sizeof(dname), dname, "disassemblied_shaders\\", disasm_file_name,
-				  ('v' == pTarget[0]) ? "_vertex_shader.html" : "_pixel_shader.html");
-		IWriter* W = FS.w_open("$app_data_root$", dname);
-		W->w(_disasm->GetBufferPointer(), _disasm->GetBufferSize());
-		FS.w_close(W);
-		_RELEASE(_disasm);
-	}
+	macros.add("SMAP_SIZE", c_smapsize);
+	macros.add("SHADOW_FILTER", c_shadow_filter);
 
-	return _result;
-}
+	macros.add("VIGNETTE_MODE", c_vignette);
 
-//--------------------------------------------------------------------------------------------------------------
-class includer : public ID3DXInclude
-{
-  public:
-	HRESULT __stdcall Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData,
-						   UINT* pBytes)
-	{
-		string_path pname;
-		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
-		IReader* R = FS.r_open("$game_shaders$", pname);
-		if (0 == R)
-		{
-			// possibly in shared directory or somewhere else - open directly
-			R = FS.r_open("$game_shaders$", pFileName);
-			if (0 == R)
-				return E_FAIL;
-		}
+	macros.add("BLOOM_QUALITY", c_bloom_quality);
 
-		// duplicate and zero-terminate
-		size_t size = R->length();
-		u8* data = xr_alloc<u8>(size + 1);
-		CopyMemory(data, R->pointer(), size);
-		data[size] = 0;
-		FS.r_close(R);
-
-		*ppData = data;
-		*pBytes = static_cast<u32>(size);
-		return D3D_OK;
-	}
-	HRESULT __stdcall Close(LPCVOID pData)
-	{
-		xr_free(pData);
-		return D3D_OK;
-	}
-};
-
-static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask,
-								size_t const mask_length);
-static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id,
-								   FS_FileSet const& file_set, string_path& result);
-
-XRCORE_API u32 build_id;
-
-HRESULT CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
-								LPCSTR pTarget, DWORD Flags, void*& result)
-{
-	D3DXMACRO defines[512]{};
-	int def_it = 0;
-
-	char c_build_id[32];
-
-	char c_smapsize[32];
-	char c_gloss[32];
-
-	char c_rt_format[32];
-
-	char c_sun_shafts[32];
-
-	char c_ao_enabled[32];
-	char c_ao[32];
-	char c_ao_quality[32];
-
-	char c_bloom_quality[32];
-
-	char c_aa[32];
-	char c_aa_quality[32];
-
-	char c_debug_frame_layers[32];
-
-	char c_ps_shadow_filtering[32];
-
-	char c_vignette[32];
-	char c_chroma_abb[32];
-	char c_sepia[32];
-	char c_bloom[32];
-	char c_hdr[32];
-
-	char c_soft_water[32];
-	char c_soft_particles[32];
-
-	char c_fog_quality[32];
-
-	char c_mblur[32];
-	char c_mblur_quality[32];
-	char c_dof[32];
-	char c_dof_quality[32];
-
-	char c_sharpen[32];
-
-	char c_bump_quality[32];
-
-	char c_alpha_test_aa[32];
-
-	char sh_name[MAX_PATH] = "";
-
-	for (u32 i = 0; i < m_ShaderOptions.size(); ++i)
-	{
-		defines[def_it++] = m_ShaderOptions[i];
-	}
-
-	size_t len = 0;
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// R2a/R2/R2.5 defines
-	//////////////////////////////////////////////////////////////////////////////////////////////
-
-	// Automatic shader cache recompilation
-	{
-		sprintf(c_build_id, "%d", build_id);
-		defines[def_it].Name = "BUILD_ID";
-		defines[def_it].Definition = c_build_id;
-		def_it++;
-		strcat(sh_name, c_build_id);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(build_id);
-	++len;
-
-	{
-		sprintf(c_smapsize, "%d", u32(o.smapsize));
-		defines[def_it].Name = "SMAP_size";
-		defines[def_it].Definition = c_smapsize;
-		def_it++;
-		strcat(sh_name, c_smapsize);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(o.smapsize);
-	++len;
-
-	if (HW.Caps.raster_major >= 3)
-	{
-		defines[def_it].Name = "USE_BRANCHING";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(HW.Caps.raster_major >= 3);
-	++len;
-
-	if (HW.Caps.geometry.bVTF)
-	{
-		defines[def_it].Name = "USE_VTF";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(HW.Caps.geometry.bVTF);
-	++len;
-
-	if (o.Tshadows)
-	{
-		defines[def_it].Name = "USE_TSHADOWS";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.Tshadows);
-	++len;
-
-	if (ps_r2_debug_render)
-	{
-		sprintf(c_debug_frame_layers, "%d", ps_r2_debug_render);
-		defines[def_it].Name = "DEBUG_VIEW_MODE";
-		defines[def_it].Definition = c_debug_frame_layers;
-		def_it++;
-		strcat(sh_name, c_debug_frame_layers);
-		len += 4;
-	}
-	sh_name[len] = '0' + char(ps_r2_debug_render);
-	++len;
-
-	if (o.sunfilter)
-	{
-		defines[def_it].Name = "USE_SUNFILTER";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.sunfilter);
-	++len;
-
-	if (o.sunstatic)
-	{
-		defines[def_it].Name = "USE_R2_STATIC_SUN";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.sunstatic);
-	++len;
+	macros.add("BUMP_QUALITY", c_bump_quality);
 
 	if (o.advancedpp)
 	{
-		defines[def_it].Name = "USE_R2_ADVANCED_POSTPROCESS";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.advancedpp);
-	++len;
-
-	sprintf(c_rt_format, "%d", ps_r2_rt_format);
-	defines[def_it].Name = "RT_FORMAT";
-	defines[def_it].Definition = c_rt_format;
-	def_it++;
-	strcat(sh_name, c_rt_format);
-	len += 4;
-	sh_name[len] = '0' + char(ps_r2_rt_format);
-	++len;
-
-	int vignette = ps_vignette_mode;
-	if (vignette)
-	{
-		sprintf(c_vignette, "%d", vignette);
-		defines[def_it].Name = "VIGNETTE_MODE";
-		defines[def_it].Definition = c_vignette;
-		def_it++;
-		strcat(sh_name, c_vignette);
-		len += 1;
-		sh_name[len] = '0' + char(vignette);
-		++len;
-	}
-
-	int sepia = ps_render_flags.test(RFLAG_SEPIA);
-	if (sepia)
-	{
-		sprintf(c_sepia, "%d", sepia);
-		defines[def_it].Name = "USE_SEPIA";
-		defines[def_it].Definition = c_sepia;
-		def_it++;
-		strcat(sh_name, c_sepia);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(sepia);
-	++len;
-
-	int chroma_abb = ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION);
-	if (chroma_abb)
-	{
-		sprintf(c_chroma_abb, "%d", chroma_abb);
-		defines[def_it].Name = "USE_CHROMATIC_ABBERATION";
-		defines[def_it].Definition = c_chroma_abb;
-		def_it++;
-		strcat(sh_name, c_chroma_abb);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(chroma_abb);
-	++len;
-
-	int bloom = ps_r2_postprocess_flags.test(R2FLAG_BLOOM);
-	if (bloom)
-	{
-		sprintf(c_bloom, "%d", bloom);
-		defines[def_it].Name = "USE_BLOOM";
-		defines[def_it].Definition = c_bloom;
-		def_it++;
-		strcat(sh_name, c_bloom);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(bloom);
-	++len;
-
-	int HdrEnabled = ps_render_flags.test(RFLAG_HDR);
-	if (HdrEnabled)
-	{
-		sprintf(c_hdr, "%d", HdrEnabled);
-		defines[def_it].Name = "USE_HDR";
-		defines[def_it].Definition = c_hdr;
-		def_it++;
-		strcat(sh_name, c_hdr);
-		len += 1;
-	}
-	sh_name[len] = '0' + char(HdrEnabled);
-	++len;
-
-	if (o.forceskinw)
-	{
-		defines[def_it].Name = "SKIN_COLOR";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.forceskinw);
-	++len;
-
-	// skinning
-	if (m_skinning < 0)
-	{
-		defines[def_it].Name = "SKIN_NONE";
-		defines[def_it].Definition = "1";
-		def_it++;
-		sh_name[len] = '1';
-		++len;
-	}
-	else
-	{
-		sh_name[len] = '0';
-		++len;
-	}
-
-	if (0 == m_skinning)
-	{
-		defines[def_it].Name = "SKIN_0";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(0 == m_skinning);
-	++len;
-
-	if (1 == m_skinning)
-	{
-		defines[def_it].Name = "SKIN_1";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(1 == m_skinning);
-	++len;
-
-	if (2 == m_skinning)
-	{
-		defines[def_it].Name = "SKIN_2";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(2 == m_skinning);
-	++len;
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// R2.5 only defines
-	//////////////////////////////////////////////////////////////////////////////////////////////
-
-	if (RImplementation.o.advancedpp)
-	{
-		if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
-		{
-			sprintf(c_mblur, "%d", 1);
-			defines[def_it].Name = "USE_MBLUR";
-			defines[def_it].Definition = c_mblur;
-			def_it++;
-			strcat(sh_name, c_mblur);
-			len += 4;
-		}
-		sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_MBLUR));
-		++len;
-
-		if (ps_r2_mblur_quality)
-		{
-			sprintf(c_mblur_quality, "%d", ps_r2_mblur_quality);
-			defines[def_it].Name = "MBLUR_QUALITY";
-			defines[def_it].Definition = c_mblur_quality;
-			def_it++;
-			strcat(sh_name, c_mblur_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_mblur_quality;
-		++len;
-
-		if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
-		{
-			sprintf(c_dof, "%d", 1);
-			defines[def_it].Name = "USE_DOF";
-			defines[def_it].Definition = c_dof;
-			def_it++;
-			strcat(sh_name, c_dof);
-			len += 4;
-		}
-		sh_name[len] = '0' + char(ps_r2_postprocess_flags.test(R2FLAG_DOF));
-		++len;
-
-		if (ps_r2_dof_quality)
-		{
-			sprintf(c_dof_quality, "%d", ps_r2_dof_quality);
-			defines[def_it].Name = "DOF_QUALITY";
-			defines[def_it].Definition = c_dof_quality;
-			def_it++;
-			strcat(sh_name, c_dof_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_dof_quality;
-		++len;
-
-		if (ps_r2_ao && o.advancedpp)
-		{
-			sprintf(c_ao_enabled, "%d", 1);
-			defines[def_it].Name = "AO_ENABLED";
-			defines[def_it].Definition = c_ao_enabled;
-			def_it++;
-			strcat(sh_name, c_ao_enabled);
-			len += 4;
-		}
-		sh_name[len] = '0' + char(1);
-		++len;
-
-		if (ps_r2_ao_quality)
-		{
-			sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
-			defines[def_it].Name = "AO_QUALITY";
-			defines[def_it].Definition = c_ao_quality;
-			def_it++;
-			strcat(sh_name, c_ao_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_ao_quality;
-		++len;
-
-		if (ps_r_aa)
-		{
-			sprintf(c_aa, "%d", ps_r_aa);
-			defines[def_it].Name = "AA_TYPE";
-			defines[def_it].Definition = c_aa;
-			def_it++;
-			strcat(sh_name, c_aa);
-			len += 3;
-		}
-		sh_name[len] = '0' + (char)ps_r_aa;
-		++len;
-
-		if (ps_r2_aa_quality)
-		{
-			sprintf(c_aa_quality, "%d", ps_r2_aa_quality);
-			defines[def_it].Name = "AA_QUALITY";
-			defines[def_it].Definition = c_aa_quality;
-			def_it++;
-			strcat(sh_name, c_aa_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_aa_quality;
-		++len;
-
-		if (ps_r2_bloom_quality)
-		{
-			sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
-			defines[def_it].Name = "BLOOM_QUALITY";
-			defines[def_it].Definition = c_bloom_quality;
-			def_it++;
-			strcat(sh_name, c_bloom_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_bloom_quality;
-		++len;
-
-		int bUseSharpen = (ps_r2_postprocess_flags.test(R2FLAG_SHARPEN));
-		if (bUseSharpen)
-		{
-			sprintf(c_sharpen, "%d", bUseSharpen);
-			defines[def_it].Name = "USE_SHARPEN";
-			defines[def_it].Definition = c_sharpen;
-			def_it++;
-			strcat(sh_name, c_sharpen);
-			len += 4;
-		}
-		sh_name[len] = '0' + char(bUseSharpen);
-		++len;
-
-		int soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER);
-		if (ps_r2_postprocess_flags.test(R2FLAG_SOFT_WATER))
-		{
-			sprintf(c_soft_water, "%d", soft_water);
-			defines[def_it].Name = "USE_SOFT_WATER";
-			defines[def_it].Definition = c_soft_water;
-			def_it++;
-			strcat(sh_name, c_soft_water);
-			len += 1;
-		}
-		sh_name[len] = '0' + char(soft_water);
-		++len;
-
-		int soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
-		if (ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES))
-		{
-			sprintf(c_soft_particles, "%d", soft_particles);
-			defines[def_it].Name = "USE_SOFT_PARTICLES";
-			defines[def_it].Definition = c_soft_particles;
-			def_it++;
-			strcat(sh_name, c_soft_particles);
-			len += 1;
-		}
-		sh_name[len] = '0' + char(soft_particles);
-		++len;
-
-		if (ps_r2_shadow_filtering)
-		{
-			sprintf(c_ps_shadow_filtering, "%d", ps_r2_shadow_filtering);
-			defines[def_it].Name = "SHADOW_FILTER";
-			defines[def_it].Definition = c_ps_shadow_filtering;
-			def_it++;
-			strcat(sh_name, c_ps_shadow_filtering);
-			len += 4;
-		}
-		sh_name[len] = '0' + char(ps_r2_shadow_filtering);
-		++len;
-
-		if (ps_r2_fog_quality)
-		{
-			sprintf(c_fog_quality, "%d", ps_r2_fog_quality);
-			defines[def_it].Name = "FOG_QUALITY";
-			defines[def_it].Definition = c_fog_quality;
-			def_it++;
-			strcat(sh_name, c_fog_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_fog_quality;
-		++len;
-
-		if (ps_r2_sun_shafts)
-		{
-			sprintf(c_sun_shafts, "%d", ps_r2_sun_shafts);
-			defines[def_it].Name = "SUN_SHAFTS_QUALITY";
-			defines[def_it].Definition = c_sun_shafts;
-			def_it++;
-			sh_name[len] = '0' + char(ps_r2_sun_shafts);
-			++len;
-		}
-		else
-		{
-			sh_name[len] = '0';
-			++len;
-		}
-		//////////////////////////////////////////////////////////////////////////
-
-		if (ps_r2_bump_quality)
-		{
-			sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
-			defines[def_it].Name = "BUMP_QUALITY";
-			defines[def_it].Definition = c_bump_quality;
-			def_it++;
-			strcat(sh_name, c_bump_quality);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_bump_quality;
-		++len;
-
-		if (ps_r2_alpha_test_aa)
-		{
-			sprintf(c_alpha_test_aa, "%d", ps_r2_alpha_test_aa);
-			defines[def_it].Name = "ALPHA_TEST_AA";
-			defines[def_it].Definition = c_alpha_test_aa;
-			def_it++;
-			strcat(sh_name, c_alpha_test_aa);
-			len += 4;
-		}
-		sh_name[len] = '0' + (char)ps_r2_alpha_test_aa;
-		++len;
+		macros.add(o.use_ssao, "AO_ENABLED", "1");
+		macros.add(o.use_soft_water, "USE_SOFT_WATER", "1");
+		macros.add(o.use_soft_particles, "USE_SOFT_PARTICLES", "1");
+		macros.add(o.use_atest_aa, "ALPHA_TEST_AA", "1");
+		macros.add("AA_TYPE", c_aa_type);
+		macros.add("AA_QUALITY", c_fxaa_quality);
 	}
 
 	// finish
-	defines[def_it].Name = 0;
-	defines[def_it].Definition = 0;
-	def_it++;
+	macros.add(TRUE, NULL, NULL);
 
-	// Precache
-
-	HRESULT _result = E_FAIL;
-
-	char extension[3];
-	strncpy_s(extension, pTarget, 2);
-
-	string_path folder_name, folder = {0};
-	strcpy(folder, "precompiled_shaders\\");
-	strcat(folder, getShaderPath());
-	strcat(folder, "\\");
-	strcat(folder, name);
-	strcat(folder, ".");
-	strcat(folder, extension);
-	strcat(folder, "_");
-	strcat(folder, sh_name);
-	strcat(folder, ".xrprecompiledshader");
-
-	FS.update_path(folder_name, "$game_shaders$", folder);
-	strcat(folder_name, "\\");
-
-	m_file_set.clear();
-	FS.file_list(m_file_set, folder_name, FS_ListFiles | FS_RootOnly, "*");
-
-	string_path temp_file_name, file_name;
-	if (!match_shader_id(name, sh_name, m_file_set, temp_file_name))
-	{
-		//		Msg				( "no library shader found" );
-		string_path file = {0};
-		strcpy(file, "shaders_cache\\");
-		strcat(file, getShaderPath());
-		strcat(file, "\\");
-		strcat(file, name);
-		strcat(file, ".");
-		strcat(file, extension);
-		strcat(file, "_");
-		strcat(file, sh_name);
-		strcat(file, ".xrprecompiledshader");
-		FS.update_path(file_name, "$app_data_root$", file);
-	}
-	else
-	{
-		strcpy(file_name, folder_name);
-		strcat(file_name, temp_file_name);
-	}
-
-	string_path disasm_file_name = {0};
-	strcat(disasm_file_name, getShaderPath());
-	strcat(disasm_file_name, "\\");
-	strcat(disasm_file_name, name);
-
-	if (FS.exist(file_name) && !o.forbidshadercahe)
-	{
-		DbgMsg("opening library or cache shader...");
-		IReader* file = FS.r_open(file_name);
-		if (file->length() > 4)
-		{
-			u32 crc = 0;
-			crc = file->r_u32();
-
-			boost::crc_32_type processor;
-			processor.process_block(file->pointer(), ((char*)file->pointer()) + file->elapsed());
-			u32 const real_crc = processor.checksum();
-
-			if (real_crc == crc)
-			{
-				_result = create_shader(pTarget, (DWORD*)file->pointer(), static_cast<u32>(file->elapsed()), file_name,
-										result, o.disasm, disasm_file_name);
-			}
-		}
-		file->close();
-	}
-
-	if (FAILED(_result))
-	{
-		if (0 == xr_strcmp(pFunctionName, "main"))
-		{
-			if ('v' == pTarget[0])
-				pTarget = D3DXGetVertexShaderProfile(HW.pDevice);
-			else
-				pTarget = D3DXGetPixelShaderProfile(HW.pDevice);
-		}
-
-		includer Includer;
-		LPD3DXBUFFER pShaderBuf = NULL;
-		LPD3DXBUFFER pErrorBuf = NULL;
-		LPD3DXCONSTANTTABLE pConstants = NULL;
-		LPD3DXINCLUDE pInclude = (LPD3DXINCLUDE)&Includer;
-
-		_result = D3DXCompileShader((LPCSTR)pSrcData, SrcDataLen, defines, pInclude, pFunctionName, pTarget,
-									Flags | D3DXSHADER_USE_LEGACY_D3DX9_31_DLL | D3DXSHADER_PACKMATRIX_ROWMAJOR |
-										D3DXSHADER_PACKMATRIX_COLUMNMAJOR,
-									&pShaderBuf, &pErrorBuf, &pConstants);
-
-		if (SUCCEEDED(_result))
-		{
-
-			if (!o.forbidshadercahe)
-			{
-				IWriter* file = FS.w_open(file_name);
-
-				boost::crc_32_type processor;
-				processor.process_block(pShaderBuf->GetBufferPointer(),
-										((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize());
-				u32 const crc = processor.checksum();
-
-				file->w_u32(crc);
-				file->w(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
-				FS.w_close(file);
-			}
-
-			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(),
-									file_name, result, o.disasm, disasm_file_name);
-
-			if (pErrorBuf)
-			{
-				Log("! ", file_name);
-				Log("! Warning: ", (LPCSTR)pErrorBuf->GetBufferPointer());
-			}
-		}
-		else
-		{
-			Log("! ", file_name);
-			R_ASSERT2(SUCCEEDED(_result),
-					  make_string("! Can't compile shader: %s, %s", file_name, (LPCSTR)pErrorBuf->GetBufferPointer()));
-			if (pErrorBuf)
-				Log("! Error: ", (LPCSTR)pErrorBuf->GetBufferPointer());
-			else
-				Msg("Can't compile shader hr=0x%08x", _result);
-		}
-	}
-
-	return _result;
-}
-
-static inline bool match_shader(LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask,
-								size_t const mask_length)
-{
-	size_t const full_shader_id_length = xr_strlen(full_shader_id);
-	if(!full_shader_id_length == mask_length)
-			  Msg("Bad cache for shader %s, [%s], [%s]", debug_shader_id, mask, full_shader_id);
-	char const* i = full_shader_id;
-	char const* const e = full_shader_id + full_shader_id_length;
-	char const* j = mask;
-	for (; i != e; ++i, ++j)
-	{
-		if (*i == *j)
-			continue;
-
-		if (*j == '_')
-			continue;
-
-		return false;
-	}
-
-	return true;
-}
-
-static inline bool match_shader_id(LPCSTR const debug_shader_id, LPCSTR const full_shader_id,
-								   FS_FileSet const& file_set, string_path& result)
-{
-#ifdef DEBUG
-	LPCSTR temp = "";
-	bool found = false;
-	FS_FileSet::const_iterator i = file_set.begin();
-	FS_FileSet::const_iterator const e = file_set.end();
-	for (; i != e; ++i)
-	{
-		if (match_shader(debug_shader_id, full_shader_id, (*i).name.c_str(), (*i).name.size()))
-		{
-			VERIFY(!found);
-			found = true;
-			temp = (*i).name.c_str();
-		}
-	}
-
-	strcpy(result, temp);
-	return found;
-#else  // #ifdef DEBUG
-	FS_FileSet::const_iterator i = file_set.begin();
-	FS_FileSet::const_iterator const e = file_set.end();
-	for (; i != e; ++i)
-	{
-		if (match_shader(debug_shader_id, full_shader_id, (*i).name.c_str(), (*i).name.size()))
-		{
-			strcpy(result, (*i).name.c_str());
-			return true;
-		}
-	}
-
-	return false;
-#endif // #ifdef DEBUG
+	return macros;
 }

@@ -155,8 +155,8 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(IRender_Visual* pVisual, Fvec
 	mapMatrixVS::TNode* Nvs = map.insert(pass.vs);
 	mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps);
 #else
-	mapMatrixVS::TNode* Nvs = map.insert(pass.vs->vs);
-	mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps->ps);
+	mapMatrixVS::TNode* Nvs = map.insert(pass.vs->sh);
+	mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
 #endif
 	mapMatrixCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
 	mapMatrixStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
@@ -286,8 +286,8 @@ void R_dsgraph_structure::r_dsgraph_insert_static(IRender_Visual* pVisual)
 	mapNormalVS::TNode* Nvs = map.insert(pass.vs);
 	mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps);
 #else
-	mapNormalVS::TNode* Nvs = map.insert(pass.vs->vs);
-	mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps->ps);
+	mapNormalVS::TNode* Nvs = map.insert(pass.vs->sh);
+	mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
 #endif
 	mapNormalCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
 	mapNormalStates::TNode* Nstate = Ncs->val.insert(pass.state->state);

@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////
 struct ENGINE_API SVS : public xr_resource_named
 {
-	IDirect3DVertexShader9* vs;
+	IDirect3DVertexShader9* sh;
 	R_constant_table constants;
 	~SVS();
 };
@@ -20,7 +20,7 @@ typedef resptr_core<SVS, resptr_base<SVS>> ref_vs;
 //////////////////////////////////////////////////////////////////////////
 struct ENGINE_API SPS : public xr_resource_named
 {
-	IDirect3DPixelShader9* ps;
+	IDirect3DPixelShader9* sh;
 	R_constant_table constants;
 	~SPS();
 };

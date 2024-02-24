@@ -36,42 +36,41 @@ class CRender : public R_dsgraph_structure
   public:
 	struct _options
 	{
-		u32 bug : 1;
-
 		u32 smapsize : 16;
-		u32 depth16 : 1;
-		u32 mrt : 1;
-		u32 mrtmixdepth : 1;
-		u32 fp16_filter : 1;
-		u32 fp16_blend : 1;
-		u32 HW_smap : 1;
-
 		u32 nvstencil : 1;
 		u32 nvdbt : 1;
-
 		u32 distortion : 1;
 		u32 distortion_enabled : 1;
-		u32 mblur : 1;
-
-		u32 sunfilter : 1;
-		u32 sjitter : 1;
-		u32 noshadows : 1;
-		u32 Tshadows : 1; // transluent shadows
-
-		u32 disasm : 1;
-		u32 forbidshadercahe : 1;
-
-		// Render specification
 		u32 advancedpp : 1; //	advanced post process (DOF, AO, etc.)
 		u32 sunstatic : 1;
-
 		u32 forceskinw : 1;
+		u32 noshadows : 1;
 
 		float sun_depth_near_scale;
 		float sun_depth_near_bias;
 		float sun_depth_far_scale;
 		float sun_depth_far_bias;
+
+		bool use_ssao;
+		bool use_soft_water;
+		bool use_soft_particles;
+		bool use_atest_aa;
 	} o;
+
+	// string
+	string32 c_build_id;
+	string32 c_smapsize;
+	string32 c_debugview;
+	string32 c_vignette;
+	string32 c_ssao_quality;
+	string32 c_aa_type;
+	string32 c_fxaa_quality;
+	string32 c_bloom_quality;
+	string32 c_bump_quality;
+	string32 c_shadow_filter;
+
+	void update_options();
+
 	struct _stats
 	{
 		u32 l_total, l_visible;
@@ -231,8 +230,6 @@ class CRender : public R_dsgraph_structure
 	virtual void level_Unload();
 
 	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
-	virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
-								   LPCSTR pTarget, DWORD Flags, void*& result);
 
 	// Information
 	virtual void Statistics(CGameFont* F);
@@ -309,12 +306,8 @@ class CRender : public R_dsgraph_structure
 	CRender();
 	virtual ~CRender();
 
-	void addShaderOption(const char* name, const char* value);
-	void clearAllShaderOptions(); //{ m_ShaderOptions.clear(); } - turn to r2.cpp for remove warning
-
-	// private:
-	xr_vector<D3DXMACRO> m_ShaderOptions;
-
+	CShaderMacros FetchShaderMacros();
+	CShaderMacros m_blender_macros;
   private:
 	FS_FileSet m_file_set;
 };

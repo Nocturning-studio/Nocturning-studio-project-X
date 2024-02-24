@@ -1181,10 +1181,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		VERIFY(!bSpecialFull);
 		HOM.Disable();
 		phase = PHASE_SMAP;
-		if (RImplementation.o.Tshadows)
-			r_pmask(true, true);
-		else
-			r_pmask(true, false);
+		r_pmask(true, false);
 		//		sun->svis.begin					();
 	}
 

@@ -9,6 +9,8 @@
 #include "shader.h"
 #include "tss_def.h"
 #include "TextureDescrManager.h"
+#include "ShaderMacros.h"
+
 // refs
 struct lua_State;
 
@@ -125,11 +127,11 @@ class ENGINE_API CResourceManager
 	CRTC* _CreateRTC(LPCSTR Name, u32 size, D3DFORMAT f);
 	void _DeleteRTC(const CRTC* RT);
 
-	SPS* _CreatePS(LPCSTR Name);
+	/*SPS* _CreatePS(LPCSTR Name);
 	void _DeletePS(const SPS* PS);
 
 	SVS* _CreateVS(LPCSTR Name);
-	void _DeleteVS(const SVS* VS);
+	void _DeleteVS(const SVS* VS);*/
 
 	SPass* _CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T,
 					   ref_matrix_list& _M, ref_constant_list& _C);
@@ -195,6 +197,14 @@ class ENGINE_API CResourceManager
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();
 	void Dump(bool bBrief);
+	
+	template<typename T> T&				GetShaderMap	();
+	template<typename T> T*				FindShader		(const char* _name);
+	template<typename T> T*				RegisterShader	(const char* _name);
+	template<typename T> HRESULT		CompileShader	(LPCSTR name, LPCSTR ext, LPCSTR src, UINT size, LPCSTR target, LPCSTR entry, CShaderMacros& macros, T*& result);
+	template<typename T> T*				CreateShader	(const char* _name);
+	template<typename T> void			DestroyShader	(const T* sh);
+	template<typename T> HRESULT		ReflectShader	(DWORD const* src, UINT	size, T*& result);
 };
 
 template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
@@ -209,5 +219,11 @@ template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
 		}
 	return FALSE;
 }
+
+template SPS* CResourceManager::CreateShader<SPS>(LPCSTR _name);
+template SVS* CResourceManager::CreateShader<SVS>(LPCSTR _name);
+
+template void CResourceManager::DestroyShader<SPS>(const SPS* sh);
+template void CResourceManager::DestroyShader<SVS>(const SVS* sh);
 
 #endif // ResourceManagerH

@@ -208,8 +208,6 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	jitter(C);
 
-	RImplementation.clearAllShaderOptions();
-
 	C.r_End();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

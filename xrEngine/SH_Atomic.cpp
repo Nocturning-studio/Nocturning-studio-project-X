@@ -7,13 +7,13 @@
 // Atomic
 SVS::~SVS()
 {
-	_RELEASE(vs);
-	Device.Resources->_DeleteVS(this);
+	_RELEASE(sh);
+	Device.Resources->DestroyShader<SVS>(this);
 }
 SPS::~SPS()
 {
-	_RELEASE(ps);
-	Device.Resources->_DeletePS(this);
+	_RELEASE(sh);
+	Device.Resources->DestroyShader<SPS>(this);
 }
 SState::~SState()
 {

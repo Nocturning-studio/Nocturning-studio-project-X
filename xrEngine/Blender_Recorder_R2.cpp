@@ -23,8 +23,8 @@ void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BO
 	PassSET_LightFog(FALSE, bFog);
 
 	// Create shaders
-	SPS* ps = Device.Resources->_CreatePS(_ps);
-	SVS* vs = Device.Resources->_CreateVS(_vs);
+	SPS* ps = Device.Resources->CreateShader<SPS>(_ps);
+	SVS* vs = Device.Resources->CreateShader<SVS>(_vs);
 	dest.ps = ps;
 	dest.vs = vs;
 	ctable.merge(&ps->constants);
