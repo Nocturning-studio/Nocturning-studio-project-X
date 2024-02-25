@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::photo_grid()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -50,7 +50,7 @@ void CRenderTarget::photo_grid()
 
 void CRenderTarget::cinema_borders()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -93,7 +93,7 @@ void CRenderTarget::cinema_borders()
 
 void CRenderTarget::watermark()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

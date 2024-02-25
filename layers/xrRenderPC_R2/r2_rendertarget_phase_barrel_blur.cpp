@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::calculate_barrel_blur_vertical_pass()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -50,7 +50,7 @@ void CRenderTarget::calculate_barrel_blur_vertical_pass()
 
 void CRenderTarget::calculate_barrel_blur_horizontal_pass()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

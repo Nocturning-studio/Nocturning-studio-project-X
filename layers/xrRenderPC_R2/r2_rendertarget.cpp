@@ -262,6 +262,7 @@ CRenderTarget::CRenderTarget()
 
 	//	NORMAL
 	{
+		rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
@@ -274,13 +275,11 @@ CRenderTarget::CRenderTarget()
 
 		if (ps_r2_rt_format == 1)
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_R8G8B8);
 		}
 		else
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
 		}

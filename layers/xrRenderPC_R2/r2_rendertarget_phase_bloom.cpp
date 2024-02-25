@@ -327,7 +327,7 @@ void CRenderTarget::phase_bloom()
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
 
 	{
-		u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+		u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_Stencil(FALSE);
