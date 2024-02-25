@@ -71,7 +71,7 @@ std::string CShaderMacros::get_name()
 	return name;
 }
 
-xr_vector<D3D_SHADER_MACRO> CShaderMacros::get_macros()
+xr_vector<D3DXMACRO> CShaderMacros::get_macros()
 {
 	macros.clear();
 
@@ -79,7 +79,7 @@ xr_vector<D3D_SHADER_MACRO> CShaderMacros::get_macros()
 	{
 		if (macros_impl[i].Status == Enable || macros_impl[i].Status == Last)
 		{
-			D3D_SHADER_MACRO macro = {macros_impl[i].Name, macros_impl[i].Definition};
+			D3DXMACRO macro = {macros_impl[i].Name, macros_impl[i].Definition};
 			macros.push_back(macro);
 		}
 	}

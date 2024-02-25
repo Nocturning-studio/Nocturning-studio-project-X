@@ -1,15 +1,12 @@
 #pragma once
 
 #include "ShaderMacros.h"
-#include <D3Dcompiler.h>
-
-#pragma comment(lib, "d3dcompiler.lib")
 
 //----------------------------------------------------------------
-class CShaderIncluder : public ID3DInclude
+class CShaderIncluder : public ID3DXInclude
 {
 public:
-	HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+	HRESULT __stdcall Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 	{
 		string_path pname;
 		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
@@ -143,16 +140,16 @@ HRESULT CResourceManager::CompileShader(
 	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
-	print_macros(macros, cache_dest, ext);
+	//print_macros(macros, cache_dest, ext);
 
 	CShaderIncluder		Includer;
-	ID3DBlob*			pShaderBuf = NULL;
-	ID3DBlob*			pErrorBuf = NULL;
+	ID3DXBuffer*		pShaderBuf = NULL;
+	ID3DXBuffer*		pErrorBuf = NULL;
 	ID3DXConstantTable* pConstants	= NULL;
 	
-	u32 flags = D3DXSHADER_PACKMATRIX_ROWMAJOR;
-
-	HRESULT _result = D3DCompile((void*)src, size, name, &macros.get_macros()[0], &Includer, entry, target, flags, NULL, &pShaderBuf, &pErrorBuf); 
+	u32 flags = D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_OPTIMIZATION_LEVEL3;
+	
+	HRESULT _result = D3DXCompileShader(src, size, &macros.get_macros()[0], &Includer, entry, target, flags, &pShaderBuf, &pErrorBuf, &pConstants);
 	
 	if (SUCCEEDED(_result))
 	{

@@ -1,5 +1,5 @@
 #pragma once
-#include "d3dcompiler.h"
+#include "d3dx9.h"
 
 class ENGINE_API CShaderMacros
 {
@@ -22,7 +22,7 @@ public:
 private:
 	xr_vector<MacroImpl> macros_impl; // advanced macros
 	std::string name; // cache
-	xr_vector<D3D_SHADER_MACRO> macros; // cache
+	xr_vector<D3DXMACRO> macros; // cache
 
 public:
 	void add(BOOL Enabled, string32 Name, string32 Definition);
@@ -33,5 +33,5 @@ public:
 
 	xr_vector<MacroImpl> get_impl();
 	std::string get_name();
-	xr_vector<D3D_SHADER_MACRO> get_macros();
+	xr_vector<D3DXMACRO> get_macros();
 };
