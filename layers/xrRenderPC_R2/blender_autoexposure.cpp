@@ -19,7 +19,7 @@ void CBlender_autoexposure::Compile(CBlender_Compile& C)
 	{
 	case 0:
 		C.r_Pass("null", "postprocess_stage_autoexposure_pass_downsampling_step_1", false, FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_clf("s_image", r2_RT_generic0);
 		C.r_End();
 		break;
 	case 1:
@@ -35,7 +35,7 @@ void CBlender_autoexposure::Compile(CBlender_Compile& C)
 		break;
 	case 3:
 		C.r_Pass("null", "postprocess_stage_autoexposure_pass_combine", false, FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 		C.r_Sampler_clf("s_autoexposure", r2_RT_autoexposure_cur);
 		C.r_End();
 		break;

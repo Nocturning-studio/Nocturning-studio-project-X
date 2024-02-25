@@ -26,7 +26,7 @@ void CBlender_tonemapping::Compile(CBlender_Compile& C)
 	{
 	case 0:
 		C.r_Pass("null", "postprocess_stage_tonemapping", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 		jitter(C);
 		C.r_End();
 		break;

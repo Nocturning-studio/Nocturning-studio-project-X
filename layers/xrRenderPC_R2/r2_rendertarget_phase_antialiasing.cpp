@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::antialiasing_phase_rgaa()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -51,7 +51,7 @@ void CRenderTarget::antialiasing_phase_rgaa()
 
 void CRenderTarget::antialiasing_phase_dlaa()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -94,7 +94,7 @@ void CRenderTarget::antialiasing_phase_dlaa()
 
 void CRenderTarget::antialiasing_phase_fxaa()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

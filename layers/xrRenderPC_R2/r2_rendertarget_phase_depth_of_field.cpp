@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::depth_of_field_pass_poisson_filter()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -59,7 +59,7 @@ void CRenderTarget::depth_of_field_pass_poisson_filter()
 
 void CRenderTarget::depth_of_field_pass_vertical()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
@@ -111,7 +111,7 @@ void CRenderTarget::depth_of_field_pass_vertical()
 
 void CRenderTarget::depth_of_field_pass_horizontal()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

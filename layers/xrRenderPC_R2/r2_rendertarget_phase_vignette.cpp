@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::phase_vignette()
 {
-	u_setrt(rt_GBuffer_Albedo, NULL, NULL, NULL);
+	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);

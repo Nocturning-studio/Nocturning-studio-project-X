@@ -26,19 +26,19 @@ void CBlender_antialiasing::Compile(CBlender_Compile& C)
 	{
 	case 0:
 		C.r_Pass("null", "postprocess_stage_antialiasing_pass_rgaa", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 		jitter(C);
 		C.r_End();
 		break;
 	case 1:
 		C.r_Pass("null", "postprocess_stage_antialiasing_pass_dlaa", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 		jitter(C);
 		C.r_End();
 		break;
 	case 2:
 		C.r_Pass("null", "postprocess_stage_antialiasing_pass_fxaa", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_image", r2_RT_GBuffer_Albedo);
+		C.r_Sampler_rtf("s_image", r2_RT_generic0);
 		jitter(C);
 		C.r_End();
 		break;
