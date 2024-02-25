@@ -162,14 +162,8 @@ class cl_fog_params : public R_constant_setup
 	{
 		if (marker != Device.dwFrame)
 		{
-			// Near/Far
-			float FarPlane = g_pGamePersistent->Environment().CurrentEnv->far_plane;
-			float FogFar = FarPlane;
-			float FogIntensity = g_pGamePersistent->Environment().CurrentEnv->fog_density;
-			float FogNear = FogFar * (1.0f - FogIntensity);
-
-			float Fog = 1 / (FogFar - FogNear);
-			result.set(-FogNear * Fog, FogNear, FogFar, Fog);
+			CEnvDescriptor* desc = g_pGamePersistent->Environment().CurrentEnv;
+			result.set(desc->fog_color.x, desc->fog_color.y, desc->fog_color.z, desc->fog_density);
 		}
 		RCache.set_c(C, result);
 	}
