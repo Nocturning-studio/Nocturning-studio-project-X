@@ -2,7 +2,7 @@
 
 class CRenderTarget : public IRender_Target
 {
-  private:
+  public:
 	BOOL bAvailable;
 	u32 rtWidth;
 	u32 rtHeight;
@@ -12,7 +12,7 @@ class CRenderTarget : public IRender_Target
 
 	ref_rt RT;
 	ref_rt RT_distort;
-	IDirect3DSurface9* ZB;
+	ref_rt ZB;
 
 	ref_shader s_postprocess;
 	ref_shader s_postprocess_D;
@@ -45,7 +45,18 @@ class CRenderTarget : public IRender_Target
 	IDirect3DSurface9* surf_screenshot_normal;	 // HW.fTarget, SM_NORMAL
 	IDirect3DTexture9* tex_screenshot_gamesave;	 // Container of "surf_screenshot_gamesave"
 	IDirect3DSurface9* surf_screenshot_gamesave; // DXT1, SM_FOR_GAMESAVE
-	
+
+	struct
+	{
+		IDirect3DSurface9* rt;
+		IDirect3DSurface9* zb;
+	} RT_msaa;
+
+	void EnableMSAA();
+	void DisableMSAA();
+	void EnableAlphaMSAA();
+	void DisableAlphaMSAA();
+
   private:
 	BOOL Create();
 	BOOL NeedPostProcess();
@@ -53,7 +64,6 @@ class CRenderTarget : public IRender_Target
 	{
 		return bAvailable;
 	}
-	BOOL Perform();
 
 	void calc_tc_noise(Fvector2& p0, Fvector2& p1);
 	void calc_tc_duality_ss(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);

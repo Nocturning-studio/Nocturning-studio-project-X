@@ -7,6 +7,21 @@
 /*-------------------------------------------------------------------------------*/
 extern ECORE_API u32 ps_r_cubemap_size;
 
+enum enum_r1_msaa
+{
+	MSAA_2X = 12,
+	MSAA_4X = 14,
+	MSAA_8X = 18,
+	CSAA_4X = 22,
+	CSAA_8X = 24,
+	SSAA_2X = 32,
+	SSAA_4X = 34,
+	MSAA = 1,
+	SSAA = 3,
+};
+extern ECORE_API u32 ps_r1_msaa;
+extern ECORE_API u32 ps_r1_msaa_alpha;
+
 extern ECORE_API u32 ps_r_aa;
 extern ECORE_API u32 ps_r_aa_iterations;
 

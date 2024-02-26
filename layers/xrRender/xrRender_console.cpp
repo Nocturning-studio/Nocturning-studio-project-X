@@ -17,7 +17,7 @@ xr_token qeffpreset_token[] = {
 
 u32 ps_r_aa = 1;
 #if RENDER == R_R1
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssaa", 1}, {0, 0}};
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {0, 0}};
 #else
 xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
 #endif
@@ -25,6 +25,27 @@ xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa
 u32 ps_r_cubemap_size = 2048;
 xr_token cubemap_size_token[] = {{"1024", 1024}, {"2048", 2048}, {"3072", 3072}, 
 					   {"4096", 4096}, {"6144", 6144}, {"8192", 8192}, {0, 0}};
+
+u32 ps_r1_msaa = 0;
+xr_token r1_msaa_token[] = {
+	{"st_opt_disabled", 0}, 
+	{"st_opt_ssaa_2x", SSAA_2X}, 
+	{"st_opt_ssaa_4x", SSAA_4X}, 
+	{"st_opt_msaa_2x", MSAA_2X}, 
+	{"st_opt_msaa_4x", MSAA_4X}, 
+	{"st_opt_msaa_8x", MSAA_8X},
+	{"st_opt_csaa_4x", CSAA_4X},
+	{"st_opt_csaa_8x", CSAA_8X},
+	{0, 0},
+};
+
+u32 ps_r1_msaa_alpha = 0;
+xr_token r1_msaa_alpha_token[] = {
+	{"st_opt_disabled", 0}, 
+	{"st_opt_a_test", MAKEFOURCC('S', 'S', 'A', 'A')}, 
+	{"st_opt_atoc", MAKEFOURCC('A', 'T', 'O', 'C')},
+	{0, 0},
+};
 
 u32 ps_r_aa_iterations = 2;
 xr_token aa_iterations_token[] = {{"st_opt_x1", 1},
@@ -612,6 +633,9 @@ void xrRender_initconsole()
 	CMD1(CCC_ModelPoolStat, "stat_models");
 
 	CMD3(CCC_Token, "r_cubemap_size", &ps_r_cubemap_size, cubemap_size_token);
+
+	CMD3(CCC_Token, "r1_msaa", &ps_r1_msaa, r1_msaa_token);
+	CMD3(CCC_Token, "r1_msaa_alpha", &ps_r1_msaa_alpha, r1_msaa_alpha_token);
 
 	CMD3(CCC_Token, "r_aa_type", &ps_r_aa, aa_token);
 	CMD3(CCC_Token, "r_aa_iterations", &ps_r_aa_iterations, aa_iterations_token);

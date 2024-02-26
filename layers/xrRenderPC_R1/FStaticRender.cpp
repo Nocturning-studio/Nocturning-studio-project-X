@@ -64,6 +64,40 @@ ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdi
 void CRender::update_options()
 {
 	sprintf(c_vignette, "%d", ps_vignette_mode);
+	
+	o.aa_type = 0;
+	o.msaa_samples = D3DMULTISAMPLE_NONE;
+	o.csaa_samples = 0;
+	o.ssaa_samples = 1;
+
+	switch (ps_r1_msaa)
+	{
+	case MSAA_2X:
+	case MSAA_4X:
+	case MSAA_8X:
+		o.aa_type = MSAA;
+		o.msaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		break;
+	case CSAA_4X:
+	case CSAA_8X:
+		o.aa_type = MSAA;
+		o.msaa_samples = D3DMULTISAMPLE_NONMASKABLE;
+		o.csaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		break;
+	case SSAA_2X:
+	case SSAA_4X:
+		o.aa_type = SSAA;
+		o.ssaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		break;
+	}
+
+	DWORD max_csaa_samples = 0;
+	HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_csaa_samples);
+	max_csaa_samples = max_csaa_samples - 1; // DX9 Create*** gets samples-1
+	o.csaa_samples = max_csaa_samples > o.csaa_samples ? o.csaa_samples : max_csaa_samples;
+
+	Msg("* SSAA: %dx, MSAA %dx, CSAA: %dx (max coverage: %dx, curr coverage: %dx)", o.ssaa_samples, o.msaa_samples, 
+		o.csaa_samples*2, max_csaa_samples, o.csaa_samples);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -649,10 +683,12 @@ void CRender::Render()
 	o.vis_intersect = FALSE;
 	phase = PHASE_NORMAL;
 	r_dsgraph_render_hud();	   // hud
+	Target->EnableAlphaMSAA();
 	r_dsgraph_render_graph(0); // normal level
 	if (Details)
 		Details->Render();				// grass / details
 	r_dsgraph_render_lods(true, false); // lods - FB
+	Target->DisableAlphaMSAA();
 
 	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
 	g_pGamePersistent->Environment().RenderClouds(); // clouds

@@ -38,36 +38,15 @@ BOOL CRenderTarget::Create()
 	curWidth = Device.dwWidth;
 	curHeight = Device.dwHeight;
 
-	if (ps_r_aa == 1 && ps_r_aa_iterations >= 2)
+	rtWidth = curWidth;
+	rtHeight = curHeight;
+
+	if (RImplementation.o.aa_type == SSAA)
 	{
-		float amount = 1.0f;
-		switch (ps_r_aa_iterations)
-		{
-		case 2:
-			amount = 2.0f;
-			break;
-		case 3:
-			amount = 4.0f;
-			break;
-		case 4:
-			amount = 8.0f;
-			break;
-		}
-		float scale = _sqrt(amount);
-		rtWidth = clampr(iFloor(scale * Device.dwWidth + .5f), 128, 16384);
-		rtHeight = clampr(iFloor(scale * Device.dwHeight + .5f), 128, 16384);
-		while (rtWidth % 2)
-			rtWidth--;
-		while (rtHeight % 2)
-			rtHeight--;
-		Msg("* SSample: %dx%d", rtWidth, rtHeight);
+		rtWidth *= sqrt(RImplementation.o.ssaa_samples);
+		rtHeight *= sqrt(RImplementation.o.ssaa_samples);
 	}
-	else
-	{
-		rtWidth = Device.dwWidth;
-		rtHeight = Device.dwHeight;
-	}
-	
+
 	// SCREENSHOT
 	{
 		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
@@ -79,20 +58,18 @@ BOOL CRenderTarget::Create()
 	// Bufferts
 	RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
 	RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
-	if ((rtHeight != Device.dwHeight) || (rtWidth != Device.dwWidth))
+	ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
+
+	if (RImplementation.o.aa_type == MSAA)
 	{
-		R_CHK(HW.pDevice->CreateDepthStencilSurface(rtWidth, rtHeight, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE,
-													&ZB, NULL));
-	}
-	else
-	{
-		ZB = HW.pBaseZB;
-		ZB->AddRef();
+		R_CHK(HW.pDevice->CreateRenderTarget(rtWidth, rtHeight, HW.Caps.fTarget, 
+			RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, FALSE, &RT_msaa.rt, NULL));
+		R_CHK(HW.pDevice->CreateDepthStencilSurface(rtWidth, rtHeight, HW.Caps.fDepth, 
+			RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, TRUE, &RT_msaa.zb, NULL));
 	}
 
 	// Temp ZB, used by some of the shadowing code
-	R_CHK(
-		HW.pDevice->CreateDepthStencilSurface(512, 512, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE, &pTempZB, NULL));
+	R_CHK(HW.pDevice->CreateDepthStencilSurface(512, 512, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE, &pTempZB, NULL));
 
 	// Shaders and stream
 	s_postprocess.create("postprocess");
@@ -110,7 +87,6 @@ BOOL CRenderTarget::Create()
 CRenderTarget::~CRenderTarget()
 {
 	_RELEASE(pTempZB);
-	_RELEASE(ZB);
 	s_postprocess_D.destroy();
 	s_postprocess.destroy();
 	g_postprocess.destroy();
@@ -118,6 +94,33 @@ CRenderTarget::~CRenderTarget()
 	g_menu.destroy();
 	RT_distort.destroy();
 	RT.destroy();
+	ZB.destroy();
+	if (RImplementation.o.aa_type == MSAA)
+	{
+		_RELEASE(RT_msaa.rt);
+		_RELEASE(RT_msaa.zb);
+	}
+}
+
+void CRenderTarget::EnableMSAA()
+{
+	HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+}
+
+void CRenderTarget::DisableMSAA()
+{
+	HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
+}
+
+void CRenderTarget::EnableAlphaMSAA()
+{
+	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, 
+		RImplementation.o.aa_type == MSAA ? (D3DFORMAT)ps_r1_msaa_alpha : NULL);
+}
+
+void CRenderTarget::DisableAlphaMSAA()
+{
+	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, NULL);
 }
 
 void CRenderTarget::calc_tc_noise(Fvector2& p0, Fvector2& p1)
@@ -211,18 +214,23 @@ BOOL CRenderTarget::NeedPostProcess()
 	return _blur || _gray || _noise || _dual || _cbase || _cadd || _menu_pp;
 }
 
-BOOL CRenderTarget::Perform()
-{
-	return Available() && (NeedPostProcess() || (ps_r_aa == 1 && ps_r_aa_iterations >= 2) || (frame_distort == (Device.dwFrame - 1)));
-}
-
 #include <dinput.h>
 #define SHOW(a) Log(#a, a);
 #define SHOWX(a) Msg("%s %x", #a, a);
 void CRenderTarget::Begin()
 {
-	RCache.set_RT(RT->pRT);
-	RCache.set_ZB(ZB);
+	if (RImplementation.o.aa_type == MSAA)
+	{
+		RCache.set_RT(RT_msaa.rt);
+		RCache.set_ZB(RT_msaa.zb);
+		EnableMSAA();
+	}
+	else
+	{
+		RCache.set_RT(RT->pRT);
+		RCache.set_ZB(ZB->pRT);
+	}
+
 	curWidth = rtWidth;
 	curHeight = rtHeight;
 
@@ -266,6 +274,12 @@ void CRenderTarget::End()
 	RCache.set_ZB(HW.pBaseZB);
 	curWidth = Device.dwWidth;
 	curHeight = Device.dwHeight;
+
+	if (RImplementation.o.aa_type == MSAA)
+	{
+		HW.pDevice->StretchRect(RT_msaa.rt, NULL, RT->pRT, NULL, D3DTEXF_POINT);
+		DisableMSAA();
+	}
 
 	int gblend = clampr(iFloor((1 - param_gray) * 255.f), 0, 255);
 	int nblend = clampr(iFloor((1 - param_noise) * 255.f), 0, 255);
@@ -331,7 +345,7 @@ void CRenderTarget::phase_distortion()
 {
 	frame_distort = Device.dwFrame;
 	RCache.set_RT(RT_distort->pRT);
-	RCache.set_ZB(ZB);
+	RCache.set_ZB(ZB->pRT);
 	RCache.set_CullMode(CULL_CCW);
 	RCache.set_ColorWriteEnable();
 	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 127, 127), 1.0f, 0L));

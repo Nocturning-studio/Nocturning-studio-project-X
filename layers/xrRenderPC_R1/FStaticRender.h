@@ -38,6 +38,10 @@ class CRender : public R_dsgraph_structure
 		u32 distortion : 1; // run-time modified
 		u32 forceskinw : 1; // config
 
+		u32 aa_type;
+		D3DMULTISAMPLE_TYPE msaa_samples;
+		DWORD csaa_samples;
+		u32 ssaa_samples;
 	} o;
 	// string
 	string32 c_build_id;
