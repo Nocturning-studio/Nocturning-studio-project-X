@@ -114,6 +114,14 @@ static class cl_sun_color : public R_constant_setup
 	}
 } binder_sun_color;
 //////////////////////////////////////////////////////////////////////////
+static class cl_hdr_params : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, ps_r_hdr_brightness, 0);
+	}
+} binder_hdr_params;
+//////////////////////////////////////////////////////////////////////////
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 //////////////////////////////////////////////////////////////////////////
@@ -210,6 +218,7 @@ void CRender::create()
 	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
 	::Device.Resources->RegisterConstantSetup("sun_dir", &binder_sun_dir);
 	::Device.Resources->RegisterConstantSetup("sun_color", &binder_sun_color);
+	::Device.Resources->RegisterConstantSetup("hdr_params", &binder_hdr_params);
 
 	c_lmaterial = "L_material";
 	c_sbase = "s_base";

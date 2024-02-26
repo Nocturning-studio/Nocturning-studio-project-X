@@ -165,9 +165,6 @@ void CRenderTarget::phase_combine()
 			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
 				phase_autoexposure();
 
-			if (ps_render_flags.test(RFLAG_HDR))
-				phase_tonemapping();
-
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
 				g_pGamePersistent->Environment().RenderFlares();
 
