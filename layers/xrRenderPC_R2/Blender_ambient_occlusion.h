@@ -7,6 +7,7 @@
 enum
 {
 	SE_AO_SSAO,
+	SE_AO_SSAO_PLUS,
 	SE_AO_HBAO_PLUS,
 };
 class CBlender_ambient_occlusion : public IBlender

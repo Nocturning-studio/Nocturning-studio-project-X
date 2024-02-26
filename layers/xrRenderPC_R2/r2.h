@@ -62,7 +62,7 @@ class CRender : public R_dsgraph_structure
 	string32 c_smapsize;
 	string32 c_debugview;
 	string32 c_vignette;
-	string32 c_ssao_quality;
+	string32 c_ao_quality;
 	string32 c_aa_type;
 	string32 c_fxaa_quality;
 	string32 c_bloom_quality;

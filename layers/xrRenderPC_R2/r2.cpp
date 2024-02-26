@@ -192,6 +192,7 @@ void CRender::update_options()
 	sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
 	sprintf(c_shadow_filter, "%d", ps_r2_shadow_filtering);
 	sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
+	sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
 }
 //////////////////////////////////////////////////////////////////////////
 extern XRCORE_API u32 build_id;
@@ -626,6 +627,7 @@ CShaderMacros CRender::FetchShaderMacros()
 		macros.add(o.use_atest_aa, "ALPHA_TEST_AA", "1");
 		macros.add("AA_TYPE", c_aa_type);
 		macros.add("AA_QUALITY", c_fxaa_quality);
+		macros.add("AO_QUALITY", c_ao_quality);
 	}
 
 	// finish

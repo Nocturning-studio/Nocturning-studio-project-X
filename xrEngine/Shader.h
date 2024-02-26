@@ -18,7 +18,7 @@
 typedef xr_vector<shared_str> sh_list;
 class ENGINE_API CBlender_Compile;
 class ENGINE_API IBlender;
-#define SHADER_PASSES_MAX 2
+#define SHADER_PASSES_MAX 3
 
 #pragma pack(push, 4)
 
