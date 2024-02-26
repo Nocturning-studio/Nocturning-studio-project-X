@@ -127,7 +127,7 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 			C.r_End();
 			break;
 		case SE_R1_NORMAL_LQ:
-			C.r_Pass("impl_dt", "impl_dt", TRUE);
+			C.r_Pass("impl", "impl", TRUE);
 			C.r_Sampler("s_base", C.L_textures[0]);
 			C.r_Sampler("s_lmap", C.L_textures[1]);
 			C.r_Sampler("s_detail", oT2_Name);

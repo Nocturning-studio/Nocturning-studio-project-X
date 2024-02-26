@@ -104,7 +104,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(IRender_Visual* pVisual, Fvec
 
 	// Shadows registering
 #if RENDER == R_R1
-	RI.L_Shadows->add_element(item);
+	//RI.L_Shadows->add_element(item);
 #endif
 	if (RI.val_bInvisible)
 		return;
