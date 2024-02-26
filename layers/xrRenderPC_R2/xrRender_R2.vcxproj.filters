@@ -626,9 +626,6 @@
     <ClCompile Include="r2_rendertarget_phase_bloom.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_ao.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_antialiasing.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
@@ -745,6 +742,9 @@
     </ClCompile>
     <ClCompile Include="Blender_ambient_occlusion.cpp">
       <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_ao.cpp">
+      <Filter>Rendertargets\Render stages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
