@@ -21,7 +21,6 @@
 #include "blender_light_point.h"
 #include "blender_light_spot.h"
 #include "blender_autoexposure.h"
-#include "blender_tonemapping.h"
 #include "blender_barrel_blur.h"
 
 float CRenderTarget::hclip(float v, float dim)
@@ -238,7 +237,6 @@ CRenderTarget::CRenderTarget()
 	b_ambient_occlusion = xr_new<CBlender_ambient_occlusion>();
 	b_bloom = xr_new<CBlender_bloom_build>();
 	b_autoexposure = xr_new<CBlender_autoexposure>();
-	b_tonemapping = xr_new<CBlender_tonemapping>();
 	b_combine = xr_new<CBlender_combine>();
 	b_contrast_adaptive_sharpening = xr_new<CBlender_contrast_adaptive_sharpening>();
 	b_antialiasing = xr_new<CBlender_antialiasing>();
@@ -544,8 +542,6 @@ CRenderTarget::CRenderTarget()
 
 	s_vignette.create(b_vignette, "r2\\vignette");
 
-	s_tonemapping.create(b_tonemapping, "r2\\tonemapping");
-
 	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
 
 	// PP
@@ -611,7 +607,6 @@ CRenderTarget::~CRenderTarget()
 	xr_delete(b_combine);
 	xr_delete(b_contrast_adaptive_sharpening);
 	xr_delete(b_autoexposure);
-	xr_delete(b_tonemapping);
 	xr_delete(b_bloom);
 	xr_delete(b_ambient_occlusion);
 	xr_delete(b_accum_spot);

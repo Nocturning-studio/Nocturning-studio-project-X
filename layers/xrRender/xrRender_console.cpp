@@ -251,7 +251,7 @@ float ps_cas_sharpening = 0.1f;
 // R2-specific flags
 Flags32 ps_r2_lighting_flags = {R2FLAG_SUN | R2FLAG_EXP_DONT_TEST_UNSHADOWED};
 
-Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR | RFLAG_HDR};
+Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBLUR};
 
 Flags32 ps_r2_overlay_flags = {
 	0,
@@ -662,7 +662,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r_sepia", &ps_render_flags, RFLAG_SEPIA);
 	CMD3(CCC_Token, "r_vignette_mode", &ps_vignette_mode, vignette_mode_token);
 	CMD3(CCC_Mask, "r_chromatic_abberation", &ps_render_flags, RFLAG_CHROMATIC_ABBERATION);
-	CMD3(CCC_Mask, "r_hdr", &ps_render_flags, RFLAG_HDR);
 	CMD4(CCC_Float, "r_hdr_white_intensity", &ps_r_hdr_white_intensity, 0, 2);
 	CMD4(CCC_Float, "r_hdr_gamma", &ps_r_hdr_gamma, 1, 1.75);
 	CMD4(CCC_Float, "r_hdr_brightness", &ps_r_hdr_brightness, 1, 1.75);

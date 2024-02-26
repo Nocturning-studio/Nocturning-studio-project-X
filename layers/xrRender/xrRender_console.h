@@ -69,8 +69,7 @@ enum
 	RFLAG_EXP_MT_CALC = (1 << 1),
 	RFLAG_EXP_HW_OCC = (1 << 2),
 	RFLAG_SEPIA = (1 << 3),
-	RFLAG_HDR = (1 << 4),
-	RFLAG_CHROMATIC_ABBERATION = (1 << 5)
+	RFLAG_CHROMATIC_ABBERATION = (1 << 4)
 };
 
 /*-------------------------------------------------------------------------------*/

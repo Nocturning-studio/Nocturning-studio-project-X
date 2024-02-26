@@ -804,7 +804,6 @@ CShaderMacros CRender::FetchShaderMacros(void)
 
 	// options
 	macros.add(ps_render_flags.test(RFLAG_SEPIA), "USE_SEPIA", "1");
-	macros.add(ps_render_flags.test(RFLAG_HDR), "USE_HDR", "1");
 	macros.add(ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION), "USE_CHROMATIC_ABBERATION", "1");
 	macros.add(ps_vignette_mode > 0, "VIGNETTE_MODE", c_vignette);
 
