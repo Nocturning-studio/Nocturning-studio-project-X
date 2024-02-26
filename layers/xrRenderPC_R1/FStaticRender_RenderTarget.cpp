@@ -115,7 +115,7 @@ void CRenderTarget::DisableMSAA()
 void CRenderTarget::EnableAlphaMSAA()
 {
 	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, 
-		RImplementation.o.aa_type == MSAA ? (D3DFORMAT)ps_r1_msaa_alpha : NULL);
+		RImplementation.o.aa_type == MSAA ? (D3DFORMAT)ps_r1_aa_transluency : NULL);
 }
 
 void CRenderTarget::DisableAlphaMSAA()

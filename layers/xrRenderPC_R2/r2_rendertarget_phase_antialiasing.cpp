@@ -140,7 +140,7 @@ void CRenderTarget::antialiasing_phase_fxaa()
 
 void CRenderTarget::select_antialiasing_type()
 {
-	switch (ps_r_aa)
+	switch (ps_r2_aa)
 	{
 	case 1:
 		return antialiasing_phase_rgaa();

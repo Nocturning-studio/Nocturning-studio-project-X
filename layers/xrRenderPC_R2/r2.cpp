@@ -182,12 +182,12 @@ void CRender::update_options()
 	o.use_ssao = ps_r2_ao > 0;
 	o.use_soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
 	o.use_soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
-	o.use_atest_aa = ps_r2_alpha_test_aa > 0;
+	o.use_atest_aa = ps_r2_aa_transluency > 0;
 
 	sprintf(c_smapsize, "%d", o.smapsize);
 	sprintf(c_debugview, "%d", ps_r2_debug_render);
 	sprintf(c_vignette, "%d", ps_vignette_mode);
-	sprintf(c_aa_type, "%d", ps_r_aa);
+	sprintf(c_aa_type, "%d", ps_r2_aa);
 	sprintf(c_fxaa_quality, "%d", ps_r2_aa_quality);
 	sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
 	sprintf(c_shadow_filter, "%d", ps_r2_shadow_filtering);

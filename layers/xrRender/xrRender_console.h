@@ -19,11 +19,8 @@ enum enum_r1_msaa
 	MSAA = 1,
 	SSAA = 3,
 };
-extern ECORE_API u32 ps_r1_msaa;
-extern ECORE_API u32 ps_r1_msaa_alpha;
-
-extern ECORE_API u32 ps_r_aa;
-extern ECORE_API u32 ps_r_aa_iterations;
+extern ECORE_API u32 ps_r1_aa;
+extern ECORE_API u32 ps_r1_aa_transluency;
 
 extern ECORE_API int ps_r_LightSleepFrames;
 
@@ -121,6 +118,7 @@ extern ECORE_API float ps_r2_bloom_factor;
 extern ECORE_API float ps_cas_contrast;
 extern ECORE_API float ps_cas_sharpening;
 
+extern ECORE_API u32 ps_r2_aa;
 extern ECORE_API u32 ps_r2_aa_quality;
 
 extern ECORE_API float ps_r2_fxaa_subpix;
@@ -170,7 +168,7 @@ extern ECORE_API float ps_r2_df_parallax_h;
 extern ECORE_API u32 ps_r2_bump_mode;
 extern ECORE_API u32 ps_r2_bump_quality;
 
-extern ECORE_API u32 ps_r2_alpha_test_aa;
+extern ECORE_API u32 ps_r2_aa_transluency;
 
 extern ECORE_API u32 ps_r2_fog_quality;
 

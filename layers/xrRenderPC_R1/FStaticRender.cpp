@@ -70,24 +70,24 @@ void CRender::update_options()
 	o.csaa_samples = 0;
 	o.ssaa_samples = 1;
 
-	switch (ps_r1_msaa)
+	switch (ps_r1_aa)
 	{
 	case MSAA_2X:
 	case MSAA_4X:
 	case MSAA_8X:
 		o.aa_type = MSAA;
-		o.msaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		o.msaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_aa % 10);
 		break;
 	case CSAA_4X:
 	case CSAA_8X:
 		o.aa_type = MSAA;
 		o.msaa_samples = D3DMULTISAMPLE_NONMASKABLE;
-		o.csaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		o.csaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_aa % 10);
 		break;
 	case SSAA_2X:
 	case SSAA_4X:
 		o.aa_type = SSAA;
-		o.ssaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_msaa % 10);
+		o.ssaa_samples = (D3DMULTISAMPLE_TYPE)(ps_r1_aa % 10);
 		break;
 	}
 

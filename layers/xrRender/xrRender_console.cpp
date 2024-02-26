@@ -15,44 +15,30 @@ u32 ps_EffPreset = 2;
 xr_token qeffpreset_token[] = {
 	{"st_opt_eff_disabled", 0}, {"st_opt_eff_default", 1}, {"st_opt_eff_cinematic", 2}, {0, 0}};
 
-u32 ps_r_aa = 1;
-#if RENDER == R_R1
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {0, 0}};
-#else
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
-#endif
-
 u32 ps_r_cubemap_size = 2048;
 xr_token cubemap_size_token[] = {{"1024", 1024}, {"2048", 2048}, {"3072", 3072}, 
 					   {"4096", 4096}, {"6144", 6144}, {"8192", 8192}, {0, 0}};
 
-u32 ps_r1_msaa = 0;
-xr_token r1_msaa_token[] = {
-	{"st_opt_disabled", 0}, 
-	{"st_opt_ssaa_2x", SSAA_2X}, 
-	{"st_opt_ssaa_4x", SSAA_4X}, 
+u32 ps_r1_aa = 0;
+xr_token r1_aa_token[] = {
+	{"st_opt_disabled", 0},  
 	{"st_opt_msaa_2x", MSAA_2X}, 
 	{"st_opt_msaa_4x", MSAA_4X}, 
 	{"st_opt_msaa_8x", MSAA_8X},
 	{"st_opt_csaa_4x", CSAA_4X},
 	{"st_opt_csaa_8x", CSAA_8X},
+	{"st_opt_ssaa_2x", SSAA_2X}, 
+	{"st_opt_ssaa_4x", SSAA_4X},
 	{0, 0},
 };
 
-u32 ps_r1_msaa_alpha = 0;
-xr_token r1_msaa_alpha_token[] = {
+u32 ps_r1_aa_transluency = 0;
+xr_token r1_aa_transluency_token[] = {
 	{"st_opt_disabled", 0}, 
-	{"st_opt_a_test", MAKEFOURCC('S', 'S', 'A', 'A')}, 
+	//{"st_opt_a_test", MAKEFOURCC('S', 'S', 'A', 'A')}, 
 	{"st_opt_atoc", MAKEFOURCC('A', 'T', 'O', 'C')},
 	{0, 0},
 };
-
-u32 ps_r_aa_iterations = 2;
-xr_token aa_iterations_token[] = {{"st_opt_x1", 1},
-								  {"st_opt_x2", 2},
-								  {"st_opt_x4", 3},
-								  //{"st_opt_x8", 4},
-								  {0, 0}};
 
 u32 ps_vignette_mode = 2;
 xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, {"st_opt_dynamic", 2}, {0, 0}};
@@ -60,9 +46,15 @@ xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, 
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
+u32 ps_r2_aa = 1;
+xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
+
 u32 ps_r2_aa_quality = 2;
 xr_token aa_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
+
+u32 ps_r2_aa_transluency = 1;
+xr_token aa_transluency_token[] = {{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
 
 u32 ps_r2_ao = 2;
 xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssao", 1}, {"st_opt_ssao_plus", 2}, {"st_opt_hbao_plus", 3}, {0, 0}};
@@ -94,9 +86,6 @@ xr_token bump_mode_token[] = {
 u32 ps_r2_bump_quality = 1;
 xr_token bump_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
-
-u32 ps_r2_alpha_test_aa = 1;
-xr_token alpha_test_aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
 
 u32 ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
@@ -634,11 +623,8 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Token, "r_cubemap_size", &ps_r_cubemap_size, cubemap_size_token);
 
-	CMD3(CCC_Token, "r1_msaa", &ps_r1_msaa, r1_msaa_token);
-	CMD3(CCC_Token, "r1_msaa_alpha", &ps_r1_msaa_alpha, r1_msaa_alpha_token);
-
-	CMD3(CCC_Token, "r_aa_type", &ps_r_aa, aa_token);
-	CMD3(CCC_Token, "r_aa_iterations", &ps_r_aa_iterations, aa_iterations_token);
+	CMD3(CCC_Token, "r1_aa_type", &ps_r1_aa, r1_aa_token);
+	CMD3(CCC_Token, "r1_aa_transluency", &ps_r1_aa_transluency, r1_aa_transluency_token);
 
 	CMD4(CCC_Float, "r_geometry_lod", &ps_r_LOD, 0.1f, 1.2f);
 
@@ -690,7 +676,9 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
 
+	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
 	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
+	CMD3(CCC_Token, "r2_aa_transluency", &ps_r2_aa_transluency, aa_transluency_token);
 	CMD4(CCC_Float, "r2_fxaa_subpix", &ps_r2_fxaa_subpix, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_fxaa_treshold", &ps_r2_fxaa_edge_treshold, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_fxaa_treshold_min", &ps_r2_fxaa_edge_treshold_min, 0.0f, 1.0f);
@@ -770,8 +758,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
 	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
-
-	CMD3(CCC_Token, "r2_alpha_test_aa", &ps_r2_alpha_test_aa, alpha_test_aa_token);
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);
 	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
