@@ -256,10 +256,6 @@ class CRenderTarget : public IRender_Target
 	void watermark();
 	void draw_overlays();
 
-	void antialiasing_phase_rgaa();
-	void antialiasing_phase_fxaa();
-	void antialiasing_phase_dlaa();
-	void select_antialiasing_type();
 	void phase_antialiasing();
 
 	void phase_create_distortion_mask();
@@ -271,8 +267,6 @@ class CRenderTarget : public IRender_Target
 	void calculate_depth_of_field();
 	void phase_depth_of_field();
 
-	void calculate_barrel_blur_vertical_pass();
-	void calculate_barrel_blur_horizontal_pass();
 	void phase_barrel_blur();
 
 	void motion_blur_phase_save_frame();
