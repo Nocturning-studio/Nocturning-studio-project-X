@@ -1196,20 +1196,31 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	{
 		bool bNormal = mapNormal[0].size() || mapMatrix[0].size();
 		bool bSpecial = mapNormal[1].size() || mapMatrix[1].size() || mapSorted.size();
+
 		if (bNormal || bSpecial)
 		{
-			Target->phase_smap_direct(sun, SE_SUN_NEAR);
+			if (cascade_ind == 0)
+				Target->phase_smap_direct(sun, SE_SUN_NEAR);
+			else if (cascade_ind < m_sun_cascades.size() - 1)
+				Target->phase_smap_direct(sun, SE_SUN_MIDDLE);
+			else
+				Target->phase_smap_direct(sun, SE_SUN_FAR);
+
 			RCache.set_xform_world(Fidentity);
 			RCache.set_xform_view(Fidentity);
 			RCache.set_xform_project(sun->X.D.combine);
-			r_dsgraph_render_graph(0);
+
 			if (ps_r2_lighting_flags.test(R2FLAG_SUN_DETAILS))
 			{
 				Details->UpdateVisibleM();
 				Details->Render();
 			}
+
+			r_dsgraph_render_graph(0);
+
 			sun->X.D.transluent = FALSE;
-			if (bSpecial)
+
+			if (bSpecial || (cascade_ind < m_sun_cascades.size() - 1))
 			{
 				sun->X.D.transluent = TRUE;
 				Target->phase_smap_direct_tsh(sun, SE_SUN_FAR);

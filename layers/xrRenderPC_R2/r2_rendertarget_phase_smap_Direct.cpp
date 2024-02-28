@@ -17,7 +17,7 @@ void CRenderTarget::phase_smap_direct(light* L, u32 sub_phase)
 	RCache.set_Stencil(FALSE);
 
 	// Misc	- draw only front/back-faces
-	if (SE_SUN_NEAR == sub_phase)
+	if (SE_SUN_NEAR == sub_phase || SE_SUN_MIDDLE == sub_phase)
 		RCache.set_CullMode(CULL_CCW);
 	else
 		RCache.set_CullMode(CULL_CW);
