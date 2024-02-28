@@ -110,6 +110,10 @@ CDemoRecord::~CDemoRecord()
 		Console->Execute("r2_cinema_borders off");
 		Console->Execute("r2_watermark off");
 
+#ifndef MASTER_GOLD
+		Console->Execute("r2_debug_render disabled");
+#endif
+
 		psHUD_Flags.set(HUD_DRAW, m_bGlobalHudDraw);
 		psHUD_Flags.set(HUD_CROSSHAIR, m_bGlobalCrosshairDraw);
 	}
@@ -187,8 +191,6 @@ void CDemoRecord::MakeLevelMapProcess()
 		psDeviceFlags.zero();
 		psDeviceFlags.set(rsClearBB | rsDrawStatic, TRUE);
 		psDeviceFlags.set(rsFullscreen, s_dev_flags.test(rsFullscreen));
-		//if (!psDeviceFlags.equal(s_dev_flags, rsFullscreen))
-		//	Device.Reset();
 		break;
 	case DEVICE_RESET_PRECACHE_FRAME_COUNT + 1: {
 		m_bOverlapped = TRUE;
@@ -240,10 +242,7 @@ void CDemoRecord::MakeLevelMapProcess()
 				  bb.max.x, bb.max.z);
 		Render->Screenshot(IRender_interface::SM_FOR_LEVELMAP, tmp);
 		psHUD_Flags.assign(s_hud_flag);
-		//BOOL bDevReset = !psDeviceFlags.equal(s_dev_flags, rsFullscreen);
 		psDeviceFlags = s_dev_flags;
-		//if (bDevReset)
-		//	Device.Reset();
 		m_bMakeLevelMap = FALSE;
 	}
 	break;
@@ -325,6 +324,11 @@ void CDemoRecord::ShowInputInfo()
 	pApp->pFontSystem->OutNext("V");
 	pApp->pFontSystem->OutNext("B");
 
+#ifndef MASTER_GOLD
+	pApp->pFontSystem->OutNext("1, 2, ..., 0");
+	pApp->pFontSystem->OutNext("ENTER");
+#endif
+
 	pApp->pFontSystem->SetAligment(CGameFont::alLeft);
 	pApp->pFontSystem->OutSetI(0, +.05f);
 	pApp->pFontSystem->OutNext("= Draw this help");
@@ -338,6 +342,11 @@ void CDemoRecord::ShowInputInfo()
 	pApp->pFontSystem->OutNext("= Autofocus");
 	pApp->pFontSystem->OutNext("= Grid");
 	pApp->pFontSystem->OutNext("= Cinema borders");
+
+#ifndef MASTER_GOLD
+	pApp->pFontSystem->OutNext("= Render debugging");
+	pApp->pFontSystem->OutNext("= Actor teleportation");
+#endif
 }
 
 BOOL CDemoRecord::Process(Fvector& P, Fvector& D, Fvector& N, float& fFov, float& fFar, float& fAspect)
@@ -537,36 +546,71 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 
 	if (dik == DIK_SPACE)
 		RecordKey();
+
 	if (dik == DIK_BACK)
 		MakeCubemap();
+
 	if (dik == DIK_F11)
 		MakeLevelMapScreenshot();
+
 	if (dik == DIK_F12)
 		MakeScreenshot();
+
 	if (dik == DIK_ESCAPE)
 		fLifeTime = -1;
+
 	if (dik == DIK_H)
 		SwitchAutofocusState();
+
 	if (dik == DIK_V)
 		SwitchGridState();
+
 	if (dik == DIK_B)
 		SwitchCinemaBordersState();
+
 	if (dik == DIK_J)
 		SwitchShowInputInfo();
+
 	if (dik == DIK_N)
 		SwitchWatermarkVisibility();
+
 	if (dik == DIK_RETURN)
 	{
 		if (g_pGameLevel->CurrentEntity())
 		{
-#ifndef NDEBUG
+#ifndef MASTER_GOLD
 			g_pGameLevel->CurrentEntity()->ForceTransform(m_Camera);
 #endif
 			fLifeTime = -1;
 		}
 	}
+
 	if (dik == DIK_PAUSE)
 		Device.Pause(!Device.Paused(), TRUE, TRUE, "demo_record");
+
+#ifndef MASTER_GOLD
+#pragma todo("Deathman to all: Переделать быструю отладку рендера под удобный вид")
+	if (dik == DIK_1)
+		Console->Execute("r2_debug_render gbuffer_albedo");
+	if (dik == DIK_2)
+		Console->Execute("r2_debug_render gbuffer_position");
+	if (dik == DIK_3)
+		Console->Execute("r2_debug_render gbuffer_normal");
+	if (dik == DIK_4)
+		Console->Execute("r2_debug_render gbuffer_glossiness");
+	if (dik == DIK_5)
+		Console->Execute("r2_debug_render gbuffer_lightmap_ao");
+	if (dik == DIK_6)
+		Console->Execute("r2_debug_render gbuffer_baked_ao");
+	if (dik == DIK_7)
+		Console->Execute("r2_debug_render accumulator_diffuse");
+	if (dik == DIK_8)
+		Console->Execute("r2_debug_render accumulator_specular");
+	if (dik == DIK_9)
+		Console->Execute("r2_debug_render real_time_ao");
+	if (dik == DIK_0)
+		Console->Execute("r2_debug_render disabled");
+#endif
 }
 
 void CDemoRecord::IR_OnKeyboardHold(int dik)

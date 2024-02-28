@@ -113,6 +113,9 @@ void CRenderTarget::phase_combine()
 	}
 
 	// Forward rendering
+#ifndef MASTER_GOLD
+	if(ps_r2_debug_render == 0)
+#endif
 	{
 		u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, HW.pBaseZB); // LDR RT
 		RCache.set_CullMode(CULL_CCW);
