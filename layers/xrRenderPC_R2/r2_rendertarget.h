@@ -262,9 +262,7 @@ class CRenderTarget : public IRender_Target
 	void phase_distortion();
 
 	void depth_of_field_pass_poisson_filter();
-	void depth_of_field_pass_vertical();
-	void depth_of_field_pass_horizontal();
-	void calculate_depth_of_field();
+	void depth_of_field_pass_separated_filter();
 	void phase_depth_of_field();
 
 	void phase_barrel_blur();
