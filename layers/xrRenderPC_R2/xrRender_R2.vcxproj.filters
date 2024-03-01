@@ -145,11 +145,11 @@
     <Filter Include="Blenders\Postprocess stage\Barrel blur">
       <UniqueIdentifier>{06547e69-f2b8-47ff-95c2-b38d4d2ad8dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blenders\Postprocess stage\Tonemapping">
-      <UniqueIdentifier>{df15c777-de25-47d1-9d98-aa02566ea18c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Blenders\Postprocess stage\Contrast adaptive sharpening">
       <UniqueIdentifier>{07b95237-ced3-4caf-aa54-fda5aa06453c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendertargets\Render stages\Ambient occlusion">
+      <UniqueIdentifier>{6f5146c0-4c67-421d-a6d2-292967c3c6ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +365,6 @@
     </ClInclude>
     <ClInclude Include="blender_autoexposure.h">
       <Filter>Blenders\Postprocess stage\Autoexposure</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_tonemapping.h">
-      <Filter>Blenders\Postprocess stage\Tonemapping</Filter>
     </ClInclude>
     <ClInclude Include="Blender_contrast_adaptive_sharpening.h">
       <Filter>Blenders\Postprocess stage\Contrast adaptive sharpening</Filter>
@@ -728,12 +725,6 @@
     <ClCompile Include="blender_autoexposure.cpp">
       <Filter>Blenders\Postprocess stage\Autoexposure</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_tonemapping.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_tonemapping.cpp">
-      <Filter>Blenders\Postprocess stage\Tonemapping</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_contrast_adaptive_sharpening.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
@@ -744,7 +735,7 @@
       <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ao.cpp">
-      <Filter>Rendertargets\Render stages</Filter>
+      <Filter>Rendertargets\Render stages\Ambient occlusion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

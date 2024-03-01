@@ -164,7 +164,6 @@ void CConsole::Initialize()
 
 CConsole::~CConsole()
 {
-	Execute("cfg_save");
 	xr_delete(m_editor);
 	Destroy();
 }
@@ -173,6 +172,7 @@ void CConsole::Destroy()
 {
 	m_hShader_back.destroy();
 	m_hGeom_con.destroy();
+	Execute("cfg_save");
 	xr_delete(pFont);
 	xr_delete(pFont2);
 	Commands.clear();
