@@ -21,6 +21,8 @@ void fix_texture_name(LPSTR fn);
 void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPCSTR VertexShaderName,
 						  LPCSTR PixelShaderName, BOOL bUseAlpha)
 {
+	CShaderMacros macros;
+
 	// Output shader names
 	string_path NewPixelShaderName;
 	string_path NewVertexShaderName;
@@ -172,7 +174,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	if (bUseDetail)
 		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
 
-	// RImplementation.addShaderOption("TEST_DEFINE", "1");
+	RImplementation.m_ext_macros.add(условие, название, значение)
 
 	// Create shader pass
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);
@@ -208,6 +210,11 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	jitter(C);
 
+	// finish
+	macros.add(TRUE, NULL, NULL);
+
 	C.r_End();
+
+	macros.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
