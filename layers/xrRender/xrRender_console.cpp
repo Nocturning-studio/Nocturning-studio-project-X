@@ -111,8 +111,6 @@ xr_token debug_render_token[] = {{"disabled", 0},
 								 {"accumulator_specular", 8},
 								 {"real_time_ao", 9},
 								 {0, 0}};
-u32 ps_r2_debug_textures = 0;
-xr_token ps_debug_textures_token[] = {{"disabled", 0}, {"uv_checker", 1}, {"white", 2}, {0, 0}};
 
 u32 ps_r2_rt_format = 0;
 xr_token ps_rt_format[] = {{"st_opt_rgba_32", 1}, {"st_opt_rgba_64", 2}, {0, 0}};
@@ -760,7 +758,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);
-	CMD3(CCC_Token, "r2_debug_textures", &ps_r2_debug_textures, ps_debug_textures_token);
 
 	CMD3(CCC_Token, "r2_rt_format", &ps_r2_rt_format, ps_rt_format);
 

@@ -12,6 +12,11 @@ void CBlender_Compile::sh_macro(BOOL Enabled, string32 Name, string32 Definition
 	macros.add(Enabled, Name, Definition);
 }
 
+void CBlender_Compile::sh_macro(string32 Name, string32 Definition)
+{
+	macros.add(Name, Definition);
+}
+
 void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BOOL bZwrite, BOOL bABlend,
 							  D3DBLEND abSRC, D3DBLEND abDST, BOOL aTest, u32 aRef)
 {

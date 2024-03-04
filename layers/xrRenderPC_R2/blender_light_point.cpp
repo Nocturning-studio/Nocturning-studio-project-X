@@ -23,8 +23,7 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_UNSHADOWED: // unshadowed
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_unshadowed", false, FALSE, FALSE,
-				 TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -34,8 +33,8 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_NORMAL: // normal
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_normal", false, FALSE, FALSE, TRUE,
-				 D3DBLEND_ONE, D3DBLEND_ONE);
+		C.sh_macro("USE_SHADOW_MAPPING", "1");
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -47,8 +46,8 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_FULLSIZE: // normal-fullsize
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_normal", false, FALSE, FALSE, TRUE,
-				 D3DBLEND_ONE, D3DBLEND_ONE);
+		C.sh_macro("USE_SHADOW_MAPPING", "1");
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
@@ -60,8 +59,9 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_TRANSLUENT: // shadowed + transluency
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_omni_transluent", false, FALSE, FALSE,
-				 TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.sh_macro("USE_SHADOW_MAPPING", "1");
+		C.sh_macro("USE_LIGHT_MAPPING", "1");
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);

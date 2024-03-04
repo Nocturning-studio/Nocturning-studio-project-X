@@ -14,15 +14,12 @@ extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern u32 ps_r2_bump_mode;
-extern u32 ps_r2_debug_textures;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void fix_texture_name(LPSTR fn);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPCSTR VertexShaderName,
 						  LPCSTR PixelShaderName, BOOL bUseAlpha)
 {
-	CShaderMacros macros;
-
 	// Output shader names
 	string_path NewPixelShaderName;
 	string_path NewVertexShaderName;
@@ -44,19 +41,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	string_path Dummy = {0};
 
-	// Get  for base texture for material with debug
-	switch (ps_r2_debug_textures)
-	{
-	case 0:
-		strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), *C.L_textures[0]);
-		break;
-	case 1:
-		strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), "ed\\debug_uv_checker");
-		break;
-	case 2:
-		strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), "ed\\debug_white");
-		break;
-	}
+	strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), *C.L_textures[0]);
 
 	// Add extension to texture  and chek for null
 	fix_texture_name(AlbedoTexture);
@@ -152,13 +137,9 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
 
 	// Create lightmapped shader if need
-	//if (bUseLightMap)
-	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_lightmapped");
 	C.sh_macro(bUseLightMap, "USE_LIGHTMAP", "1");
 
 	// Create shader with alpha testing if need
-	//if (bUseAlpha)
-	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_alphatest");
 	C.sh_macro(bUseAlpha, "USE_ALPHA_TEST", "1");
 
 	// Create shader with normal mapping or displacement if need
@@ -166,14 +147,13 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	if (bIsHightQualityGeometry)
 	{
 		if (ps_r2_bump_mode == 1 || r2_sun_static || !bUseBump)
-			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_normal");
 			BumpType = 1; // normal
 		else if ((ps_r2_bump_mode == 2 || (!r2_sun_static && !r2_advanced_pp)) || (r2_advanced_pp && !C.bSteepParallax))
-			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_parallax");
 			BumpType = 2; // parallax
 		else if (((ps_r2_bump_mode == 3) && (r2_advanced_pp)) && C.bSteepParallax)
-			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_steep_parallax");
 			BumpType = 3; // steep parallax
+		else 
+			BumpType = 2; // parallax
 	}
 
 	C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
@@ -181,8 +161,6 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
 
 	// Create shader with deatil texture if need
-	//if (bUseDetail)
-	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
 	C.sh_macro(bUseDetail, "USE_TDETAIL", "1");
 
 	// Create shader pass
@@ -219,11 +197,6 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	jitter(C);
 
-	// finish
-	macros.add(TRUE, NULL, NULL);
-
 	C.r_End();
-
-	macros.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

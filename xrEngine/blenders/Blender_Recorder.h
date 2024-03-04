@@ -132,6 +132,7 @@ class ENGINE_API CBlender_Compile
 
 	// R1/R2-compiler	[programmable]		- templates
 	void sh_macro(BOOL Enabled, string32 Name, string32 Definition);
+	void sh_macro(string32 Name, string32 Definition);
 	void r_Pass(LPCSTR vs, LPCSTR ps, bool bFog, BOOL bZtest = TRUE, BOOL bZwrite = TRUE, BOOL bABlend = FALSE,
 				D3DBLEND abSRC = D3DBLEND_ONE, D3DBLEND abDST = D3DBLEND_ZERO, BOOL aTest = FALSE, u32 aRef = 0);
 	void r_Constant(LPCSTR name, R_constant_setup* s);

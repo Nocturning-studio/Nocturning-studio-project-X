@@ -166,57 +166,37 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 	IBlender::Compile(C);
 	// codepath is the same, only the shaders differ
 	// ***only pixel shaders differ***
-	extern u32 ps_r2_debug_textures;
+	extern u32 ps_r2_bump_mode;
 	string256 mask;
+	int BumpType = 0;
+
 	strconcat(sizeof(mask), mask, C.L_textures[0].c_str(), "_mask");
+
 	switch (C.iElement)
 	{
 	case SE_R2_NORMAL_HQ: // deffer
-		extern u32 ps_r2_bump_mode;
-		if ((ps_r2_bump_mode == 1) || (r2_sun_static))
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain", TRUE);
-		else if ((ps_r2_bump_mode == 2) || (!r2_sun_static && !r2_advanced_pp))
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_parallax", TRUE);
-		if ((ps_r2_bump_mode == 3) && (r2_advanced_pp))
-			C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain_steep_parallax", TRUE);
+		if (ps_r2_bump_mode == 1)
+			BumpType = 1; // normal
+		else if (ps_r2_bump_mode == 2)
+			BumpType = 2; // parallax
+		else if (ps_r2_bump_mode == 3)
+			BumpType = 3; // steep parallax
+
+		C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
+		C.sh_macro(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
+		C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
+
+		C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain", TRUE);
 
 		C.r_Sampler("s_mask", mask);
-		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE,
-					D3DTEXF_LINEAR);
+		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
 
-		if (ps_r2_debug_textures == 1)
-			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-		else if (ps_r2_debug_textures == 2)
-			C.r_Sampler_tex("s_base", "ed\\debug_white");
-		else
-			C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
+		C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
-		if (ps_r2_debug_textures == 1)
-		{
-			C.r_Sampler_tex("s_dt_r", "ed\\debug_uv_checker");
-			C.r_Sampler_tex("s_dt_g", "ed\\debug_uv_checker");
-			C.r_Sampler_tex("s_dt_b", "ed\\debug_uv_checker");
-			C.r_Sampler_tex("s_dt_a", "ed\\debug_uv_checker");
-		}
-		else if (ps_r2_debug_textures == 2)
-		{
-			C.r_Sampler_tex("s_dt_r", "ed\\debug_white");
-			C.r_Sampler_tex("s_dt_g", "ed\\debug_white");
-			C.r_Sampler_tex("s_dt_b", "ed\\debug_white");
-			C.r_Sampler_tex("s_dt_a", "ed\\debug_white");
-		}
-		else
-		{
-			C.r_Sampler("s_dt_r", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
-			C.r_Sampler("s_dt_g", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
-			C.r_Sampler("s_dt_b", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
-			C.r_Sampler("s_dt_a", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
-		}
+		C.r_Sampler("s_dt_r", oR_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		C.r_Sampler("s_dt_g", oG_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		C.r_Sampler("s_dt_b", oB_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+		C.r_Sampler("s_dt_a", oA_Name, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 
 		C.r_Sampler("s_dn_r", strconcat(sizeof(mask), mask, oR_Name, "_bump"));
 		C.r_Sampler("s_dn_g", strconcat(sizeof(mask), mask, oG_Name, "_bump"));
@@ -227,30 +207,22 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 		C.r_Sampler("s_dn_gX", strconcat(sizeof(mask), mask, oG_Name, "_bump#"));
 		C.r_Sampler("s_dn_bX", strconcat(sizeof(mask), mask, oB_Name, "_bump#"));
 		C.r_Sampler("s_dn_aX", strconcat(sizeof(mask), mask, oA_Name, "_bump#"));
-
 		C.r_End();
 		break;
 	case SE_R2_NORMAL_LQ: // deffer
 		C.r_Pass("gbuffer_stage_terrain_lq", "gbuffer_stage_terrain_lq", TRUE);
 
-		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE,
-					D3DTEXF_LINEAR);
-
-		if (ps_r2_debug_textures == 1)
-			C.r_Sampler_tex("s_base", "ed\\debug_uv_checker");
-		else if (ps_r2_debug_textures == 2)
-			C.r_Sampler_tex("s_base", "ed\\debug_white");
-		else
-			C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR,
-						D3DTEXF_ANISOTROPIC);
-
+		C.r_Sampler("s_lmap", C.L_textures[1], false, D3DTADDRESS_CLAMP, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		C.r_Sampler("s_base", C.L_textures[0], false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 		C.r_Sampler("s_detail", oT2_Name);
 
 		C.r_End();
 		break;
 	case SE_R2_SHADOW: // smap
 		C.r_Pass("shadow_direct_static_mesh", "shadow_direct_static_mesh", FALSE, TRUE, TRUE, FALSE);
+
 		C.r_Sampler("s_base", C.L_textures[0]);
+
 		C.r_End();
 		break;
 	}
