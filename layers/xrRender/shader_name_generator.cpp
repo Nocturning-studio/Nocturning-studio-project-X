@@ -152,29 +152,38 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
 
 	// Create lightmapped shader if need
-	if (bUseLightMap)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_lightmapped");
+	//if (bUseLightMap)
+	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_lightmapped");
+	C.sh_macro(bUseLightMap, "USE_LIGHTMAP", "1");
 
 	// Create shader with alpha testing if need
-	if (bUseAlpha)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_alphatest");
+	//if (bUseAlpha)
+	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_alphatest");
+	C.sh_macro(bUseAlpha, "USE_ALPHA_TEST", "1");
 
 	// Create shader with normal mapping or displacement if need
+	int BumpType = 0;
 	if (bIsHightQualityGeometry)
 	{
 		if (ps_r2_bump_mode == 1 || r2_sun_static || !bUseBump)
-			strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_normal");
+			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_normal");
+			BumpType = 1; // normal
 		else if ((ps_r2_bump_mode == 2 || (!r2_sun_static && !r2_advanced_pp)) || (r2_advanced_pp && !C.bSteepParallax))
-			strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_parallax");
+			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_parallax");
+			BumpType = 2; // parallax
 		else if (((ps_r2_bump_mode == 3) && (r2_advanced_pp)) && C.bSteepParallax)
-			strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_steep_parallax");
+			// strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_steep_parallax");
+			BumpType = 3; // steep parallax
 	}
 
-	// Create shader with deatil texture if need
-	if (bUseDetail)
-		strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
+	C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
+	C.sh_macro(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
+	C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
 
-	RImplementation.m_ext_macros.add(условие, название, значение)
+	// Create shader with deatil texture if need
+	//if (bUseDetail)
+	//	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, NewPixelShaderName, "_detailed");
+	C.sh_macro(bUseDetail, "USE_TDETAIL", "1");
 
 	// Create shader pass
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);
