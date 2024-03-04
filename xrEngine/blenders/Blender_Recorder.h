@@ -8,6 +8,12 @@
 
 #include "..\tss.h"
 
+#ifdef ENGINE_BUILD
+#include "ShaderMacros.h"
+#else
+#include "../../xrEngine/ShaderMacros.h"
+#endif
+
 #pragma pack(push, 4)
 
 class ENGINE_API CBlender_Compile
@@ -43,6 +49,8 @@ class ENGINE_API CBlender_Compile
 
 	string128 pass_vs;
 	string128 pass_ps;
+
+	CShaderMacros macros;
 
 	u32 BC(BOOL v)
 	{
@@ -123,6 +131,7 @@ class ENGINE_API CBlender_Compile
 	void i_Filter(u32 s, u32 _min, u32 _mip, u32 _mag);
 
 	// R1/R2-compiler	[programmable]		- templates
+	void sh_macro(BOOL Enabled, string32 Name, string32 Definition);
 	void r_Pass(LPCSTR vs, LPCSTR ps, bool bFog, BOOL bZtest = TRUE, BOOL bZwrite = TRUE, BOOL bABlend = FALSE,
 				D3DBLEND abSRC = D3DBLEND_ONE, D3DBLEND abDST = D3DBLEND_ZERO, BOOL aTest = FALSE, u32 aRef = 0);
 	void r_Constant(LPCSTR name, R_constant_setup* s);

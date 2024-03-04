@@ -2,15 +2,37 @@
 
 #include "ShaderMacros.h"
 
+CShaderMacros::MacroImpl* CShaderMacros::find(LPCSTR Name)
+{
+	if (Name == NULL)
+		return NULL;
+
+	for (auto& it : macros_impl)
+	{
+		if (xr_strcmp(Name, it.Name) == 0)
+			return &it;
+	}
+
+	return NULL;
+}
+
 void CShaderMacros::add(BOOL Enabled, string32 Name, string32 Definition)
 {
-	MacroImpl macro;
-	macro.Name = Name;
-	macro.Definition = Definition;
-	if (Enabled)	macro.Status = Enable;
-	else			macro.Status = Disable;
-	if (!Name)		macro.Status = Last;
-	macros_impl.push_back(macro);
+	MacroImpl* pMacro = find(Name);
+
+	if (pMacro)
+	{
+		pMacro->Definition = Definition;
+	}
+	else
+	{
+		MacroImpl macro;
+		macro.Name = Name;
+		macro.Definition = Definition;
+		macro.State = Enabled ? Enable : Disable;
+
+		macros_impl.push_back(macro);
+	}
 }
 
 void CShaderMacros::add(string32 Name, string32 Definition)
@@ -18,24 +40,33 @@ void CShaderMacros::add(string32 Name, string32 Definition)
 	add(TRUE, Name, Definition);
 }
 
-void CShaderMacros::add(CShaderMacros Macros)
+void CShaderMacros::add(CShaderMacros& Macros)
 {
-	for (u32 i = 0; i < Macros.macros_impl.size(); i++)
+	MacroImpl* pMacro = NULL;
+
+	for (auto& it : Macros.macros_impl)
 	{
-		MacroImpl macro = Macros.macros_impl[i];
-		macros_impl.push_back(macro);
+		pMacro = find(it.Name);
+
+		if (pMacro)
+		{
+			pMacro->Definition = it.Definition;
+			pMacro->State = it.State;
+		}
+		else
+		{
+			macros_impl.push_back(it);
+		}
 	}
 }
 
 void CShaderMacros::undef(string32 Name)
 {
-	for (u32 i = 0; i < macros_impl.size(); i++)
+	MacroImpl* pMacro = find(Name);
+	
+	if (pMacro)
 	{
-		if (xr_strcmp(Name, macros_impl[i].Name) == 0)
-		{
-			macros_impl[i].Status = Undef;
-			break;
-		}
+		pMacro->State = Undef;
 	}
 }
 
@@ -44,26 +75,27 @@ void CShaderMacros::clear()
 	macros_impl.clear();
 }
 
-xr_vector<CShaderMacros::MacroImpl> CShaderMacros::get_impl()
+xr_vector<CShaderMacros::MacroImpl>& CShaderMacros::get_impl()
 {
 	return macros_impl;
 }
 
-std::string CShaderMacros::get_name()
+std::string& CShaderMacros::get_name()
 {
 	name.clear();
 
-	for (u32 i = 0; i < macros_impl.size(); i++)
+	for (auto& it : macros_impl)
 	{
-		if (macros_impl[i].Status == Enable)
+		if (it.Definition)
 		{
-			name += macros_impl[i].Definition;
-		}
-		else
-		{
-			for (u32 j = 0; j < strnlen_s(macros_impl[i].Definition, 128); j++)
+			if (it.State == Enable)
 			{
-				name += macros_impl[i].Status;
+				name += it.Definition;
+			}
+			else
+			{
+				for (u32 j = 0; j < strnlen_s(it.Definition, 128); ++j)
+					name += it.State;
 			}
 		}
 	}
@@ -71,18 +103,13 @@ std::string CShaderMacros::get_name()
 	return name;
 }
 
-xr_vector<D3DXMACRO> CShaderMacros::get_macros()
+xr_vector<D3DXMACRO>& CShaderMacros::get_macros()
 {
 	macros.clear();
 
-	for (u32 i = 0; i < macros_impl.size(); i++)
-	{
-		if (macros_impl[i].Status == Enable || macros_impl[i].Status == Last)
-		{
-			D3DXMACRO macro = {macros_impl[i].Name, macros_impl[i].Definition};
-			macros.push_back(macro);
-		}
-	}
+	for (auto& it : macros_impl)
+		if (it.State == Enable)
+			macros.push_back({it.Name, it.Definition});
 
 	return macros;
 }

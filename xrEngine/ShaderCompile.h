@@ -67,26 +67,28 @@ T* CResourceManager::FindShader(const char* _name)
 	return NULL;
 }
 
-void print_macros(CShaderMacros& macros, LPCSTR name, LPCSTR ext)
+void print_macros(CShaderMacros& macros)
 {
 	if (macros.get_name().length() < 1)
 		return;
 
-	Msg("*   cache: %s.%s", name, ext);
 	Msg("*   macro count: %d", macros.get_name().length());
 
 	for (u32 i = 0; i < macros.get_impl().size(); ++i)
 	{
 		CShaderMacros::MacroImpl m = macros.get_impl()[i];
-		Msg("*   macro: (%s : %s : %c)", m.Name, m.Definition, m.Status);
+		Msg("*   macro: (%s : %s : %c)", m.Name, m.Definition, m.State);
 	}
 }
 
 template<typename T>
-T* CResourceManager::CreateShader(const char* _name)
+T* CResourceManager::CreateShader(const char* _name, CShaderMacros& _macros)
 {
 	// get shader macros
-	CShaderMacros macros = ::Render->FetchShaderMacros();
+	CShaderMacros macros;
+	macros.add(::Render->FetchShaderMacros());
+	macros.add(_macros);
+	macros.add(TRUE, NULL, NULL);
 
 	// make the unique shader name
 	string_path name;
@@ -100,8 +102,8 @@ T* CResourceManager::CreateShader(const char* _name)
 	sh = RegisterShader<T>(name);
 
 	// open file
+	string_path file_source;
 	const char* ext = ShaderTypeTraits<T>::GetShaderExt();
-	string_path	file_source;
 	sprintf_s(file_source, sizeof file_source, "%s%s.%s", ::Render->getShaderPath(), _name, ext);
 	FS.update_path(file_source, "$game_shaders$", file_source);
 	IReader* file = FS.r_open(file_source);
@@ -113,6 +115,8 @@ T* CResourceManager::CreateShader(const char* _name)
 	sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
 
 	Msg("* Compiling shader: target=%s, source=%s.%s", c_target, _name, ext);
+
+	print_macros(_macros);
 
 	// compile and create
 	HRESULT _hr = CompileShader(_name, ext, (LPCSTR)file->pointer(), file->length(), c_target, c_entry, macros, (T*&)sh);
@@ -140,7 +144,7 @@ HRESULT CResourceManager::CompileShader(
 	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
-	//print_macros(macros, cache_dest, ext);
+	Msg("*   cache: %s.%s", cache_dest, ext);
 
 	CShaderIncluder		Includer;
 	ID3DXBuffer*		pShaderBuf = NULL;

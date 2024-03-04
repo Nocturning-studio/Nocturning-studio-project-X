@@ -146,8 +146,9 @@ void CBlender_Compile::PassEnd()
 
 	// Create pass
 	ref_state state = Device.Resources->_CreateState(RS.GetContainer());
-	ref_ps ps = Device.Resources->CreateShader<SPS>(pass_ps);
-	ref_vs vs = Device.Resources->CreateShader<SVS>(pass_vs);
+	ref_ps ps = Device.Resources->CreateShader<SPS>(pass_ps, macros);
+	ref_vs vs = Device.Resources->CreateShader<SVS>(pass_vs, macros);
+	macros.clear();
 	ctable.merge(&ps->constants);
 	ctable.merge(&vs->constants);
 	SetMapping();

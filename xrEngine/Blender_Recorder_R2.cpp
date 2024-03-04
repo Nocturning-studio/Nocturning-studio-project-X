@@ -7,6 +7,11 @@
 
 void fix_texture_name(LPSTR fn);
 
+void CBlender_Compile::sh_macro(BOOL Enabled, string32 Name, string32 Definition)
+{
+	macros.add(Enabled, Name, Definition);
+}
+
 void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BOOL bZwrite, BOOL bABlend,
 							  D3DBLEND abSRC, D3DBLEND abDST, BOOL aTest, u32 aRef)
 {
@@ -23,8 +28,9 @@ void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BO
 	PassSET_LightFog(FALSE, bFog);
 
 	// Create shaders
-	SPS* ps = Device.Resources->CreateShader<SPS>(_ps);
-	SVS* vs = Device.Resources->CreateShader<SVS>(_vs);
+	SPS* ps = Device.Resources->CreateShader<SPS>(_ps, macros);
+	SVS* vs = Device.Resources->CreateShader<SVS>(_vs, macros);
+	macros.clear();
 	dest.ps = ps;
 	dest.vs = vs;
 	ctable.merge(&ps->constants);

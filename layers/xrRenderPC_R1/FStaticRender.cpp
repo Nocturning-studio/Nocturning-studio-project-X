@@ -787,7 +787,6 @@ void CRender::Statistics(CGameFont* _F)
 CShaderMacros CRender::FetchShaderMacros(void)
 {
 	CShaderMacros macros;
-	macros.add(m_blender_macros);
 
 	// build id
 	macros.add("BUILD_ID", c_build_id);
@@ -806,9 +805,6 @@ CShaderMacros CRender::FetchShaderMacros(void)
 	macros.add(ps_render_flags.test(RFLAG_SEPIA), "USE_SEPIA", "1");
 	macros.add(ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION), "USE_CHROMATIC_ABBERATION", "1");
 	macros.add(ps_vignette_mode > 0, "VIGNETTE_MODE", c_vignette);
-
-	// finish
-	macros.add(TRUE, NULL, NULL);
 
 	return macros;
 }

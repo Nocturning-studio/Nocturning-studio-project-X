@@ -202,7 +202,7 @@ class ENGINE_API CResourceManager
 	template<typename T> T*				FindShader		(const char* _name);
 	template<typename T> T*				RegisterShader	(const char* _name);
 	template<typename T> HRESULT		CompileShader	(LPCSTR name, LPCSTR ext, LPCSTR src, UINT size, LPCSTR target, LPCSTR entry, CShaderMacros& macros, T*& result);
-	template<typename T> T*				CreateShader	(const char* _name);
+	template<typename T> T*				CreateShader	(const char* _name, CShaderMacros& macros);
 	template<typename T> void			DestroyShader	(const T* sh);
 	template<typename T> HRESULT		ReflectShader	(DWORD const* src, UINT	size, T*& result);
 };
@@ -220,8 +220,8 @@ template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
 	return FALSE;
 }
 
-template SPS* CResourceManager::CreateShader<SPS>(LPCSTR _name);
-template SVS* CResourceManager::CreateShader<SVS>(LPCSTR _name);
+template SPS* CResourceManager::CreateShader<SPS>(LPCSTR _name, CShaderMacros& macros);
+template SVS* CResourceManager::CreateShader<SVS>(LPCSTR _name, CShaderMacros& macros);
 
 template void CResourceManager::DestroyShader<SPS>(const SPS* sh);
 template void CResourceManager::DestroyShader<SVS>(const SVS* sh);

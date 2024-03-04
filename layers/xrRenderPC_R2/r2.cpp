@@ -592,7 +592,6 @@ void CRender::Statistics(CGameFont* _F)
 CShaderMacros CRender::FetchShaderMacros()
 {
 	CShaderMacros macros;
-	macros.add(m_blender_macros);
 
 	// build id
 	macros.add("BUILD_ID", c_build_id);
@@ -629,9 +628,6 @@ CShaderMacros CRender::FetchShaderMacros()
 		macros.add("AA_QUALITY", c_fxaa_quality);
 		macros.add("AO_QUALITY", c_ao_quality);
 	}
-
-	// finish
-	macros.add(TRUE, NULL, NULL);
 
 	return macros;
 }
