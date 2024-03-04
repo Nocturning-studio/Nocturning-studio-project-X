@@ -9,7 +9,7 @@
 #include "..\tss.h"
 
 #ifdef ENGINE_BUILD
-#include "ShaderMacros.h"
+#include "../ShaderMacros.h"
 #else
 #include "../../xrEngine/ShaderMacros.h"
 #endif
