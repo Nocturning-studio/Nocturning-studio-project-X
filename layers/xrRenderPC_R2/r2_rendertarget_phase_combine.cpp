@@ -93,9 +93,11 @@ void CRenderTarget::phase_combine()
 		_RELEASE(e1);
 
 		// Draw
+#ifndef MASTER_GOLD
 		if(ps_r2_debug_render)
-			RCache.set_Element(s_combine->E[3]);
+			RCache.set_Element(s_combine->E[1]);
 		else
+#endif
 			RCache.set_Element(s_combine->E[0]);
 
 		RCache.set_Geometry(g_combine_VP);
