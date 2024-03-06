@@ -19,7 +19,7 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 	{
 	case SE_SUN_NEAR: // near pass - enable Z-test to perform depth-clipping
 	case SE_SUN_MIDDLE:
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_direct_near_cascade", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_direct", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.PassSET_ZB(TRUE, FALSE, TRUE); // force inverted Z-Buffer
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
@@ -29,15 +29,11 @@ void CBlender_accum_direct_cascade::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
 		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
 		jitter(C);
-		// 		{
-		// 			u32 s = C.i_Sampler("s_smap");
-		// 			C.i_Address		(s, D3DTADDRESS_BORDER);
-		// 			C.i_BorderColor	(s, D3DCOLOR_ARGB(255, 255, 255, 255));
-		// 		}
 		C.r_End();
 		break;
 	case SE_SUN_FAR: // far pass, only stencil clipping performed
-		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_direct_far_cascade", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
+		C.sh_macro("USE_SMOOTH_FADING", "1");
+		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_direct", false, TRUE, FALSE, FALSE, D3DBLEND_ONE, D3DBLEND_ZERO);
 		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
 		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
 		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
