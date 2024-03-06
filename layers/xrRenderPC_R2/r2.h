@@ -235,7 +235,7 @@ class CRender : public R_dsgraph_structure
 	virtual void Statistics(CGameFont* F);
 	virtual LPCSTR getShaderPath()
 	{
-		return "sm_3_0\\";
+		return "r2\\";
 	}
 	virtual ref_shader getShader(int id);
 	virtual IRender_Sector* getSector(int id);
