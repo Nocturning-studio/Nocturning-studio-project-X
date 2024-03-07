@@ -44,7 +44,7 @@ u32 GetNVGpuNum()
 		return iGpuNum;
 		// error
 	}
-
+	
 	// enumerate physical gpus
 	status = NvAPI_EnumPhysicalGPUs(physicalGPUs, &physicalGPUCount);
 	if (status != NVAPI_OK)
