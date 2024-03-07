@@ -7,6 +7,8 @@
 /*-------------------------------------------------------------------------------*/
 extern ECORE_API u32 ps_r_cubemap_size;
 
+extern ECORE_API u32 ps_r2_gbuffer_opt;
+
 enum enum_r1_msaa
 {
 	MSAA_2X = 12,

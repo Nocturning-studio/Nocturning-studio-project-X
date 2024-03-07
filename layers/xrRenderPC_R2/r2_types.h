@@ -1,5 +1,8 @@
 #pragma once
 
+// depth-stencil buffer
+#define r2_RT_ZB "$user$zb"
+
 // Geometry Buffer
 #define r2_RT_GBuffer_Position "$user$gbuffer_position"
 #define r2_RT_GBuffer_Normal "$user$gbuffer_normal"

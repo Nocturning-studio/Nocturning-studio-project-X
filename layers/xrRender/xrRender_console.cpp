@@ -43,6 +43,11 @@ xr_token r1_aa_transluency_token[] = {
 u32 ps_vignette_mode = 2;
 xr_token vignette_mode_token[] = {{"st_opt_disabled", 0}, {"st_opt_static", 1}, {"st_opt_dynamic", 2}, {0, 0}};
 
+u32 ps_r2_gbuffer_opt = 0;
+xr_token r2_gbuffer_opt_token[] = {{"st_opt_disabled", 0}, {"st_opt_partial", 1}, {"st_opt_full", 2}, {0, 0}};
+
+Flags32 ps_r2_ls_flags = {};
+
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
@@ -243,8 +248,6 @@ Flags32 ps_r2_postprocess_flags = {R2FLAG_AUTOEXPOSURE | R2FLAG_DOF | R2FLAG_MBL
 Flags32 ps_r2_overlay_flags = {
 	0,
 };
-
-Flags32 ps_r2_ls_flags = {};
 
 /*-------------------------------------------------------------------------------*/
 // Methods
@@ -651,6 +654,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r_hdr_brightness", &ps_r_hdr_brightness, 1, 1.75);
 
 	CMD3(CCC_Mask, "r_mt", &ps_render_flags, RFLAG_EXP_MT_CALC);
+
+	CMD3(CCC_Token, "r2_gbuffer_opt", &ps_r2_gbuffer_opt, r2_gbuffer_opt_token);
 
 	CMD4(CCC_Integer, "r_wait_sleep", &ps_r_thread_wait_sleep, 0, 1);
 

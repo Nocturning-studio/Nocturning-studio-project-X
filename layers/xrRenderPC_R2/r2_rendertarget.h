@@ -49,6 +49,9 @@ class CRenderTarget : public IRender_Target
 	xr_vector<Fplane> dbg_planes;
 #endif
 
+	// depth-stencil buffer
+	ref_rt rt_ZB;
+
 	// Geometry Buffer
 	ref_rt rt_GBuffer_Position;
 	ref_rt rt_GBuffer_Normal;

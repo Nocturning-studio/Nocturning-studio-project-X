@@ -19,9 +19,7 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 	{
 	case 0: // combine
 		C.r_Pass("scene_combine_stage", "scene_combine_stage", FALSE, FALSE, FALSE, TRUE, D3DBLEND_INVSRCALPHA, D3DBLEND_SRCALPHA); //. MRT-blend?
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
 		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler_rtf("s_material", r2_material);
@@ -44,9 +42,7 @@ void CBlender_combine::Compile(CBlender_Compile& C)
 		break;
 	case 1:
 		C.r_Pass("scene_combine_stage", "scene_combine_stage_debug", FALSE, FALSE, FALSE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_rtf("s_diffuse_accumulator", r2_RT_Diffuse_Accumulator);
 		C.r_Sampler_rtf("s_specular_accumulator", r2_RT_Specular_Accumulator);
 		C.r_Sampler_rtf("s_material", r2_material);

@@ -308,20 +308,9 @@ static class cl_pos_decompress_params : public R_constant_setup
 	{
 		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
 		float HorzTan = -VertTan / Device.fASPECT;
-
-		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth,
-					 (2.0f * VertTan) / (float)Device.dwHeight);
+		RCache.set_c(C, HorzTan, VertTan, VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 	}
 } binder_pos_decompress_params;
-
-static class cl_pos_decompress_params2 : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth,
-					 1.0f / (float)Device.dwHeight);
-	}
-} binder_pos_decompress_params2;
 
 static class cl_sepia_params : public R_constant_setup
 {
@@ -554,7 +543,6 @@ void CBlender_Compile::SetMapping()
 	r_Constant("far_plane", &binder_far_plane);
 
 	r_Constant("pos_decompression_params", &binder_pos_decompress_params);
-	r_Constant("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	// env-params
 	r_Constant("env_color", &binder_env_color);

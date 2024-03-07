@@ -184,6 +184,42 @@ void CRender::update_options()
 	o.use_soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
 	o.use_atest_aa = ps_r2_aa_transluency > 0;
 
+	bool intz = HW.support((D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
+	bool rawz = HW.support((D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
+
+	Msg("* depth format 'INTZ' check: %u", intz);
+	Msg("* depth format 'RAWZ' check: %u", rawz);
+
+	// check if we can optimize G-Buffer
+	o.gbuffer_opt_mode = ps_r2_gbuffer_opt;
+
+	if (ps_r2_gbuffer_opt == 2)
+	{
+		if (intz)
+			o.gbuffer_opt_mode = 2;
+		else if (rawz)
+			o.gbuffer_opt_mode = 3;
+		else
+			o.gbuffer_opt_mode = 1;
+	}	
+	
+	sprintf(c_gbuffer_opt_mode, "%d", o.gbuffer_opt_mode);
+
+	switch (o.gbuffer_opt_mode)
+	{
+	case 3:
+		Msg("* G-Buffer optimization mode: full 'RAWZ'");
+		break;
+	case 2:
+		Msg("* G-Buffer optimization mode: full 'INTZ'");
+		break;
+	case 1:
+		Msg("* G-Buffer optimization mode: partial");
+		break;
+	default:
+		Msg("* G-Buffer optimization mode: none");
+	}
+
 	sprintf(c_smapsize, "%d", o.smapsize);
 	sprintf(c_debugview, "%d", ps_r2_debug_render);
 	sprintf(c_vignette, "%d", ps_vignette_mode);
@@ -617,6 +653,8 @@ CShaderMacros CRender::FetchShaderMacros()
 	macros.add("BLOOM_QUALITY", c_bloom_quality);
 
 	macros.add("BUMP_QUALITY", c_bump_quality);
+
+	macros.add("GBUFFER_OPT_MODE", c_gbuffer_opt_mode);
 
 	if (o.advancedpp)
 	{

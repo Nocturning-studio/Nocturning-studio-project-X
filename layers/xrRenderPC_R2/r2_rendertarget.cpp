@@ -258,12 +258,36 @@ CRenderTarget::CRenderTarget()
 		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
+	// check if we can optimize G-Buffer
+	{
+		switch (RImplementation.o.gbuffer_opt_mode)
+		{
+		case 2:
+			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'));
+			break;
+		case 3:
+			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'));
+			break;
+		default:
+			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, HW.Caps.fDepth);
+		}
+
+		if (RImplementation.o.gbuffer_opt_mode > 0)
+		{
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		}
+		else
+		{
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		}
+	}
+
 	//	NORMAL
 	{
-		rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-		rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-		rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-
 		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
 		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
 
@@ -382,7 +406,6 @@ CRenderTarget::CRenderTarget()
 			u_setrt(rt_LUM_pool[it], 0, 0, 0);
 			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L));
 		}
-		u_setrt(dwWidth, dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 	}
 
 	// COMBINE

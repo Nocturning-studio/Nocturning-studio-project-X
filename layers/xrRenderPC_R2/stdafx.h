@@ -38,3 +38,11 @@ IC	void	jitter(CBlender_Compile& C)
 	C.r_Sampler("s_blue_noise", "noise\\blue_noise_texture", true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
 	C.r_Sampler("s_perlin_noise", "noise\\perlin_noise_texture", true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
 }
+
+IC	void	gbuffer(CBlender_Compile& C)
+{
+	C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
+	C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
+	C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+	C.r_Sampler_rtf("s_zb", r2_RT_ZB);
+}

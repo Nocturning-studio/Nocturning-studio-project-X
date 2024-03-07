@@ -55,6 +55,12 @@ class CRender : public R_dsgraph_structure
 		bool use_soft_water;
 		bool use_soft_particles;
 		bool use_atest_aa;
+
+		/// 0 - off
+		/// 1 - partial
+		/// 2 - full (INTZ)
+		/// 3 - full (RAWZ)
+		u32 gbuffer_opt_mode;
 	} o;
 
 	// string
@@ -68,6 +74,7 @@ class CRender : public R_dsgraph_structure
 	string32 c_bloom_quality;
 	string32 c_bump_quality;
 	string32 c_shadow_filter;
+	string32 c_gbuffer_opt_mode;
 
 	void update_options();
 

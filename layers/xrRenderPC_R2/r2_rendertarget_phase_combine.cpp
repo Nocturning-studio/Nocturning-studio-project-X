@@ -19,7 +19,7 @@ void CRenderTarget::phase_combine()
 	}
 
 	// low/hi RTs
-	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
+	u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT);
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
@@ -119,7 +119,10 @@ void CRenderTarget::phase_combine()
 	if(ps_r2_debug_render == 0)
 #endif
 	{
-		u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, HW.pBaseZB); // LDR RT
+		if (RImplementation.o.gbuffer_opt_mode <= 1)
+			u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, rt_ZB->pRT); // LDR RT
+		else
+			u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT); // LDR RT
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_Stencil(FALSE);
 		RCache.set_ColorWriteEnable();
@@ -192,7 +195,7 @@ void CRenderTarget::phase_combine()
 	}
 	else
 	{
-		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
+		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, rt_ZB->pRT);
 
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_Stencil(FALSE);

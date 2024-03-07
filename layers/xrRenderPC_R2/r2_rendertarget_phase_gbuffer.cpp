@@ -19,13 +19,23 @@ void CRenderTarget::disable_anisotropy_filtering()
 
 void CRenderTarget::clear_gbuffer()
 {
-	u_setrt(rt_GBuffer_Position, rt_GBuffer_Normal, rt_GBuffer_Albedo, HW.pBaseZB);
+	// TODO: FIX ME
+	// может вызвать очень неприятную ошибку!!!
+	//u_setrt(rt_GBuffer_Albedo, rt_GBuffer_Normal, rt_GBuffer_Position, rt_ZB->pRT);
+	if (RImplementation.o.gbuffer_opt_mode <= 1)
+		u_setrt(rt_GBuffer_Albedo, rt_GBuffer_Normal, rt_GBuffer_Position, rt_ZB->pRT);
+	else
+		u_setrt(rt_GBuffer_Albedo, rt_GBuffer_Normal, 0, rt_ZB->pRT);
+
 	CHK_DX(HW.pDevice->Clear(0L, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, 0x0, 1.0f, 0L));
 }
 
 void CRenderTarget::create_gbuffer()
 {
-	u_setrt(rt_GBuffer_Position, rt_GBuffer_Normal, rt_GBuffer_Albedo, HW.pBaseZB);
+	if (RImplementation.o.gbuffer_opt_mode <= 1)
+		u_setrt(rt_GBuffer_Albedo, rt_GBuffer_Normal, rt_GBuffer_Position, rt_ZB->pRT);
+	else
+		u_setrt(rt_GBuffer_Albedo, rt_GBuffer_Normal, 0, rt_ZB->pRT);
 
 	// Stencil - write 0x1 at pixel pos
 	RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE,

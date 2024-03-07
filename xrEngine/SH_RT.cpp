@@ -49,23 +49,30 @@ void CRT::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f)
 		return;
 	if (h > caps.MaxTextureHeight)
 		return;
-
+	
 	// Select usage
 	u32 usage = 0;
-	if (D3DFMT_D24X8 == fmt)
+	switch (fmt)
+	{
+	case D3DFMT_D16_LOCKABLE:
+	case D3DFMT_D32:
+	case D3DFMT_D15S1:
+	case D3DFMT_D24S8:
+	case D3DFMT_D24X8:
+	case D3DFMT_D24X4S4:
+	case D3DFMT_D16:
+	case D3DFMT_D32F_LOCKABLE:
+	case D3DFMT_D24FS8:
+	case MAKEFOURCC('D', 'F', '2', '4'): // fetch smap (ATI 9500)
+	case MAKEFOURCC('D', 'F', '1', '6'): // fetch smap (ATI X1300)
+	case MAKEFOURCC('R', 'A', 'W', 'Z'): // depth as texture (GeForce 6000-7000)
+	case MAKEFOURCC('I', 'N', 'T', 'Z'): // depth as texture (GeForce 8000+, HD 4000+) 
+	case MAKEFOURCC('R', 'E', 'S', 'Z'): // msaa depth as texture (HD 4000+)
 		usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D24S8 == fmt)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D15S1 == fmt)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D16 == fmt)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D16_LOCKABLE == fmt)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-	else if ((D3DFORMAT)MAKEFOURCC('D', 'F', '2', '4') == fmt)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-	else
+		break;
+	default:
 		usage = D3DUSAGE_RENDERTARGET;
+	}
 
 	// Validate render-target usage
 	_hr = HW.pD3D->CheckDeviceFormat(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, usage, D3DRTYPE_TEXTURE, f);

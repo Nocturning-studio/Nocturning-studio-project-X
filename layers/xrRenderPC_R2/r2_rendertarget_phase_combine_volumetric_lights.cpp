@@ -11,8 +11,8 @@ void CRenderTarget::phase_combine_volumetric()
 	u32 Offset = 0;
 	Fvector2 p0, p1;
 
-	// u_setrt(rt_Generic_0,0,0,HW.pBaseZB );			// LDR RT
-	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
+	// u_setrt(rt_Generic_0,0,0,rt_ZB->pRT );			// LDR RT
+	u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT);
 	//	Sets limits to both render targets
 	RCache.set_ColorWriteEnable(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 	{

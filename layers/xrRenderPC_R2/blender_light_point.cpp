@@ -24,9 +24,7 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		break;
 	case SE_L_UNSHADOWED: // unshadowed
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_clf("s_lmap", *C.L_textures[0]);
 		C.r_Sampler_clf("s_brdf_lut", "vfx\\vfx_brdf_lut");
@@ -35,9 +33,7 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 	case SE_L_NORMAL: // normal
 		C.sh_macro("USE_SHADOW_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0]);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
@@ -48,9 +44,7 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 	case SE_L_FULLSIZE: // normal-fullsize
 		C.sh_macro("USE_SHADOW_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler("s_lmap", C.L_textures[0]);
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);
@@ -62,9 +56,7 @@ void CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.sh_macro("USE_SHADOW_MAPPING", "1");
 		C.sh_macro("USE_LIGHT_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_point", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
-		C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
+		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
 		C.r_Sampler_clf("s_lmap", r2_RT_smap_surf); // diff here
 		C.r_Sampler_clf("s_smap", r2_RT_smap_depth);

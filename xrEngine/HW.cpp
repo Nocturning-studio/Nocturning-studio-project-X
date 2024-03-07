@@ -103,12 +103,6 @@ void CHW::DestroyD3D()
 //////////////////////////////////////////////////////////////////////
 D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
 {
-	// R2 hack
-#pragma todo("R2 need to specify depth format")
-	if (psDeviceFlags.test(rsR2))
-		return D3DFMT_D24S8;
-
-	// R1 usual
 	static D3DFORMAT fDS_Try1[6] = {D3DFMT_D24S8, D3DFMT_D24X4S4, D3DFMT_D32, D3DFMT_D24X8, D3DFMT_D16, D3DFMT_D15S1};
 
 	D3DFORMAT* fDS_Try = fDS_Try1;
