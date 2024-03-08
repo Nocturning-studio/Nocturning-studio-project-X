@@ -43,11 +43,13 @@ void CBlender_ambient_occlusion::Compile(CBlender_Compile& C)
 
 		// horizontal filer
 		C.r_Pass("null", "ambient_occlusion_blurring_stage_pass_horizontal_filter", FALSE, FALSE, FALSE);
+		C.r_Sampler_clf("s_ao", r2_RT_ao);
 		gbuffer(C);
 		C.r_End();
 
 		// vertical filer
 		C.r_Pass("null", "ambient_occlusion_blurring_stage_pass_vertical_filter", FALSE, FALSE, FALSE);
+		C.r_Sampler_clf("s_ao", r2_RT_ao);
 		gbuffer(C);
 		C.r_End();
 		break;
