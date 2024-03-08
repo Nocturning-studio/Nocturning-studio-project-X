@@ -70,13 +70,6 @@ class cl_hemi_cube_neg_faces : public R_constant_setup
 
 static cl_hemi_cube_neg_faces binder_hemi_cube_neg_faces;
 
-// class cl_material : public R_constant_setup
-//{
-//	virtual void setup(R_constant* C) { RCache.hemi.set_c_material(C); }
-// };
-
-// static cl_material binder_material;
-
 class cl_texgen : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
@@ -527,7 +520,6 @@ void CBlender_Compile::SetMapping()
 	r_Constant("fog_params", &binder_fog_params);
 	r_Constant("fog_color", &binder_fog_color);
 	r_Constant("fog_density", &binder_fog_density);
-	r_Constant("fog_sky_influence", &binder_fog_sky_influence);
 	r_Constant("vertical_fog_intensity", &binder_vertical_fog_intensity);
 	r_Constant("vertical_fog_density", &binder_vertical_fog_density);
 	r_Constant("vertical_fog_height", &binder_vertical_fog_height);
