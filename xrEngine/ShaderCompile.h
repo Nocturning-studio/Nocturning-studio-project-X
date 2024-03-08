@@ -5,31 +5,73 @@
 //----------------------------------------------------------------
 class CShaderIncluder : public ID3DXInclude
 {
-public:
-	HRESULT __stdcall Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+  private:
+	u32 counter = 0;
+	static const u32 max_size = 64; // KB
+	static const u32 max_guard_size = 1; // KB
+	char data[max_size * 1024];
+
+  public:
+	HRESULT __stdcall Open(D3DXINCLUDE_TYPE type, LPCSTR pName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 	{
-		string_path pname;
-		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
-		IReader* R = FS.r_open("$game_shaders$", pname);
-		if (0 == R) {
-			// possibly in shared directory or somewhere else - open directly
-			R = FS.r_open("$game_shaders$", pFileName);
-			if (0 == R) return E_FAIL;
+		bool shared = type == D3DXINC_SYSTEM;
+		LPCSTR shaders_path = shared ? "shared\\" : ::Render->getShaderPath();
+
+		static string_path full_path;
+		sprintf_s(full_path, "%s%s", shaders_path, pName);
+
+		IReader* R = FS.r_open("$game_shaders$", full_path);
+
+		if (R == NULL)
+			return E_FAIL;
+
+		if (R->length() + 1 + max_guard_size >= max_size * 1024)
+		{
+			Msg("! max shader file size: %uKB", max_size);
+			return E_FAIL;
 		}
-		u32 size = R->length();
-		u8* data = xr_alloc<u8>(size + 1);
-		CopyMemory(data, R->pointer(), size);
-		data[size] = 0;
+			
+		static string_path hash;
+		int i = 0;
+		for (i = 0; i < strlen(full_path); i++)
+		{
+			hash[i] = (full_path[i] >= '0' && full_path[i] <= '9')
+				  ||  (full_path[i] >= 'a' && full_path[i] <= 'z')
+				  ||  (full_path[i] >= 'A' && full_path[i] <= 'Z')
+				? full_path[i] : '_';
+		}
+		hash[i] = 0;
+
+		char* offset = data;
+
+		sprintf(offset, "#ifndef _%s_included\n", hash);
+		offset = strchr(offset, 0);
+
+		memcpy(offset, R->pointer(), R->length());
+		offset += R->length();
+
+		sprintf(offset, "\n#define _%s_included\n", hash);
+		offset = strchr(offset, 0);
+
+		sprintf(offset, "\n#endif");
+		offset = strchr(offset, 0);
+
 		FS.r_close(R);
+
 		*ppData = data;
-		*pBytes = size;
-		return	D3D_OK;
+		*pBytes = strlen(data);
+
+		Msg("*   includer open: (id:%u): %s", counter, pName);
+		Msg("*   guard                  _%s_included", hash);
+
+		counter++;
+
+		return D3D_OK;
 	}
 
-	HRESULT __stdcall	Close(LPCVOID	pData)
+	HRESULT __stdcall Close(LPCVOID pData)
 	{
-		xr_free(pData);
-		return	D3D_OK;
+		return D3D_OK;
 	}
 };
 
