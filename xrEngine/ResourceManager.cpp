@@ -92,7 +92,6 @@ void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 			strlwr(N.begin());
 
 			fix_texture_name(N.begin());
-			//. andy			if (strext(N.begin())) *strext(N.begin())=0;
 			dest.push_back(N.begin());
 			N.clear();
 		}
@@ -109,7 +108,6 @@ void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 		strlwr(N.begin());
 
 		fix_texture_name(N.begin());
-		//. andy		if (strext(N.begin())) *strext(N.begin())=0;
 		dest.push_back(N.begin());
 	}
 }
@@ -146,9 +144,6 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	CBlender_Compile C;
 	Shader S;
 
-	//.
-	// if (strstr(s_shader,"transparent"))	__asm int 3;
-
 	// Access to template
 	C.BT = B;
 	C.bEditor = FALSE;
@@ -171,7 +166,6 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	{
 		C.iElement = 0;
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
-		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
 		S.E[0] = _CreateElement(E);
@@ -180,7 +174,6 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	// Compile element	(LOD1)
 	{
 		C.iElement = 1;
-		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
@@ -276,7 +269,8 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-//#define MT_TEXTURES - Deathman: Ќе эффективно при работе с жесткими дисками - мы ограничены возможностью чтени€. ћы не можем грузить текстуры четырьм€ потоками, потому что они все тупо ждут
+//#define MT_TEXTURES - Deathman: Ќе эффективно при работе с жесткими дисками - мы ограничены возможностью чтени€. ћы не
+//можем грузить текстуры четырьм€ потоками, потому что они все тупо ждут
 
 #ifdef MT_TEXTURES
 // «агрузка текстур несколькими потоками.
@@ -309,7 +303,8 @@ void CResourceManager::DeferredUpload()
 	CTimer timer;
 	timer.Start();
 
-	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load") || (std::thread::hardware_concurrency() <= 2))
+	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load") ||
+		(std::thread::hardware_concurrency() <= 2))
 	{
 		Msg("* Texture Loading -> Use one thread");
 
@@ -517,17 +512,3 @@ void CResourceManager::Evict()
 {
 	CHK_DX(HW.pDevice->EvictManagedResources());
 }
-/*
-BOOL	CResourceManager::_GetDetailTexture(LPCSTR Name,LPCSTR& T, R_constant_setup* &CS)
-{
-	LPSTR N = LPSTR(Name);
-	map_TD::iterator I = m_td.find	(N);
-	if (I!=m_td.end())
-	{
-		T	= I->second.T;
-		CS	= I->second.cs;
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-}*/

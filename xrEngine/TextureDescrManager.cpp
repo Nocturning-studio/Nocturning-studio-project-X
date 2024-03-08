@@ -197,16 +197,7 @@ void CTextureDescrMngr::UnLoad()
 	}
 	m_texture_details.clear();
 }
-/*
-		LPCSTR		descr			=	Device.Resources->m_description->r_string("specification",*cName);
-		string256	bmode;
-		sscanf		(descr,"bump_mode[%[^]]], material[%f]",bmode,&m_material);
-		if ((bmode[0]=='u')&&(bmode[1]=='s')&&(bmode[2]=='e')&&(bmode[3]==':'))
-		{
-			// bump-map specified
-			m_bumpmap		=	bmode+4;
-		}
-*/
+
 shared_str CTextureDescrMngr::GetBumpName(const shared_str& tex_name) const
 {
 	map_TD::const_iterator I = m_texture_details.find(tex_name);
@@ -232,24 +223,7 @@ float CTextureDescrMngr::GetMaterial(const shared_str& tex_name) const
 	}
 	return 1.0f;
 }
-/*
-		LPCSTR		descr			=	Device.Resources->m_description->r_string("association",base);
-		if (strstr(descr,"usage[diffuse_or_bump]"))
-		{
-			bDetail_Diffuse	= TRUE;
-			bDetail_Bump = TRUE;
-		}
 
-		if (strstr(descr,"usage[diffuse]"))
-		{
-			bDetail_Diffuse	= TRUE;
-		}
-
-		if (strstr(descr,"usage[bump]"))
-		{
-			bDetail_Bump		= TRUE;
-		}
-*/
 void CTextureDescrMngr::GetTextureUsage(const shared_str& tex_name, BOOL& bDiffuse, BOOL& bBump) const
 {
 	map_TD::const_iterator I = m_texture_details.find(tex_name);
@@ -293,37 +267,6 @@ void CTextureDescrMngr::GetParallax(const shared_str& tex_name, BOOL& bSteepPara
 	}
 }
 
-/*
-	// Load detail textures association
-	string256		fname;
-	FS.update_path	(fname,"$game_textures$","textures.ltx");
-	LPCSTR	Iname	= fname;
-	if (FS.exist(Iname))
-	{
-		xr_delete		(m_description);
-		m_description	= xr_new<CInifile>	(Iname);
-		CInifile&	ini	= *m_description;
-		if (ini.section_exist("association"))
-		{
-			CInifile::Sect& 	data = ini.r_section("association");
-			for (CInifile::SectIt I=data.begin(); I!=data.end(); I++)
-			{
-				texture_detail			D;
-				string256				T;
-				float					s;
-
-				CInifile::Item& item	= *I;
-				sscanf					(*item.second,"%[^,],%f",T,&s);
-
-				//
-				D.T				= xr_strdup				(T);
-				D.cs			= xr_new<cl_dt_scaler>	(s);
-				LPSTR N			= xr_strdup				(*item.first);
-				m_td.insert		(mk_pair(N,D));
-			}
-		}
-	}
-*/
 #ifdef _EDITOR
 u32 CTextureDescrMngr::GetTextureType(const shared_str& tex_name) const
 {

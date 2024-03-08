@@ -51,7 +51,6 @@ void CResourceManager::reset_end()
 	{
 		for (u32 _it = 0; _it < v_geoms.size(); _it++)
 		{
-			// IXRAY FIX (THANKS BY DEATHMAN)
 			SGeometry* _G = v_geoms[_it];
 			if (_G->vb == RCache.Vertex.old_pVB)
 			{
@@ -122,11 +121,11 @@ CResourceManager::~CResourceManager()
 
 void CResourceManager::Dump(bool bBrief)
 {
-	Msg("* RM_Dump: textures  : %d", m_textures.size());   /*if (!bBrief) mdump(m_textures);*/
-	Msg("* RM_Dump: rtargets  : %d", m_rtargets.size());   /*if (!bBrief) mdump(m_rtargets);*/
-	Msg("* RM_Dump: rtargetsc : %d", m_rtargets_c.size()); /*if (!bBrief) mdump(m_rtargets_c);*/
-	Msg("* RM_Dump: vs        : %d", m_vs.size());		   /*if (!bBrief) mdump(m_vs);*/
-	Msg("* RM_Dump: ps        : %d", m_ps.size());		   /*if (!bBrief) mdump(m_ps);*/
+	Msg("* RM_Dump: textures  : %d", m_textures.size());
+	Msg("* RM_Dump: rtargets  : %d", m_rtargets.size());
+	Msg("* RM_Dump: rtargetsc : %d", m_rtargets_c.size());
+	Msg("* RM_Dump: vs        : %d", m_vs.size());
+	Msg("* RM_Dump: ps        : %d", m_ps.size());
 	Msg("* RM_Dump: dcl       : %d", v_declarations.size());
 	Msg("* RM_Dump: states    : %d", v_states.size());
 	Msg("* RM_Dump: tex_list  : %d", lst_textures.size());
