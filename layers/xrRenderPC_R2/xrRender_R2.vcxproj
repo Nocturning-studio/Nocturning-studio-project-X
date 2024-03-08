@@ -1216,7 +1216,6 @@
     <ClInclude Include="blender_autoexposure.h" />
     <ClInclude Include="Blender_motion_blur.h" />
     <ClInclude Include="Blender_sepia.h" />
-    <ClInclude Include="Blender_sharpen.h" />
     <ClInclude Include="Blender_vignette.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="DetailFormat.h" />
@@ -1358,7 +1357,6 @@
     <ClCompile Include="blender_autoexposure.cpp" />
     <ClCompile Include="Blender_motion_blur.cpp" />
     <ClCompile Include="Blender_sepia.cpp" />
-    <ClCompile Include="Blender_sharpen.cpp" />
     <ClCompile Include="Blender_vignette.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
     <ClCompile Include="Light_Render_Direct.cpp" />
@@ -1410,7 +1408,6 @@
     <ClCompile Include="r2_rendertarget_phase_PP.cpp" />
     <ClCompile Include="r2_rendertarget_phase_gbuffer.cpp" />
     <ClCompile Include="r2_rendertarget_phase_sepia.cpp" />
-    <ClCompile Include="r2_rendertarget_phase_sharpen.cpp" />
     <ClCompile Include="r2_rendertarget_phase_smap_Direct.cpp" />
     <ClCompile Include="r2_rendertarget_phase_smap_Spot.cpp" />
     <ClCompile Include="r2_rendertarget_phase_vignette.cpp" />

@@ -11,7 +11,6 @@
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
 #include "blender_sepia.h"
-#include "blender_sharpen.h"
 #include "blender_vignette.h"
 #include "blender_chromatic_abberation.h"
 #include "blender_frame_overlay.h"
@@ -246,7 +245,6 @@ CRenderTarget::CRenderTarget()
 	b_motion_blur = xr_new<CBlender_motion_blur>();
 	b_sepia = xr_new<CBlender_sepia>();
 	b_chromatic_abberation = xr_new<CBlender_chromatic_abberation>();
-	b_sharpen = xr_new<CBlender_sharpen>();
 	b_vignette = xr_new<CBlender_vignette>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
 
@@ -560,8 +558,6 @@ CRenderTarget::CRenderTarget()
 	s_chromatic_abberation.create(b_chromatic_abberation, "r2\\chromatic_abberation");
 
 	s_sepia.create(b_sepia, "r2\\sepia");
-
-	s_sharpen.create(b_sharpen, "r2\\sharpen");
 
 	s_vignette.create(b_vignette, "r2\\vignette");
 

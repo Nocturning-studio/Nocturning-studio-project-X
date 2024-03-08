@@ -70,13 +70,6 @@ class cl_hemi_cube_neg_faces : public R_constant_setup
 
 static cl_hemi_cube_neg_faces binder_hemi_cube_neg_faces;
 
-// class cl_material : public R_constant_setup
-//{
-//	virtual void setup(R_constant* C) { RCache.hemi.set_c_material(C); }
-// };
-
-// static cl_material binder_material;
-
 class cl_texgen : public R_constant_setup
 {
 	virtual void setup(R_constant* C)

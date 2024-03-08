@@ -31,6 +31,7 @@ class adopt_sampler
 		if (u32(-1) == stage)
 			C = 0;
 	}
+
 	adopt_sampler(const adopt_sampler& _C) : C(_C.C), stage(_C.stage)
 	{
 		if (u32(-1) == stage)
@@ -43,114 +44,133 @@ class adopt_sampler
 			C->i_Texture(stage, texture);
 		return *this;
 	}
+
 	adopt_sampler& _projective(bool _b)
 	{
 		if (C)
 			C->i_Projective(stage, _b);
 		return *this;
 	}
+
 	adopt_sampler& _clamp()
 	{
 		if (C)
 			C->i_Address(stage, D3DTADDRESS_CLAMP);
 		return *this;
 	}
+
 	adopt_sampler& _wrap()
 	{
 		if (C)
 			C->i_Address(stage, D3DTADDRESS_WRAP);
 		return *this;
 	}
+
 	adopt_sampler& _mirror()
 	{
 		if (C)
 			C->i_Address(stage, D3DTADDRESS_MIRROR);
 		return *this;
 	}
+
 	adopt_sampler& _f_anisotropic()
 	{
 		if (C)
 			C->i_Filter(stage, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 		return *this;
 	}
+
 	adopt_sampler& _f_trilinear()
 	{
 		if (C)
 			C->i_Filter(stage, D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_LINEAR);
 		return *this;
 	}
+
 	adopt_sampler& _f_bilinear()
 	{
 		if (C)
 			C->i_Filter(stage, D3DTEXF_LINEAR, D3DTEXF_POINT, D3DTEXF_LINEAR);
 		return *this;
 	}
+
 	adopt_sampler& _f_linear()
 	{
 		if (C)
 			C->i_Filter(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
 		return *this;
 	}
+
 	adopt_sampler& _f_none()
 	{
 		if (C)
 			C->i_Filter(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
 		return *this;
 	}
+
 	adopt_sampler& _fmin_none()
 	{
 		if (C)
 			C->i_Filter_Min(stage, D3DTEXF_NONE);
 		return *this;
 	}
+
 	adopt_sampler& _fmin_point()
 	{
 		if (C)
 			C->i_Filter_Min(stage, D3DTEXF_POINT);
 		return *this;
 	}
+
 	adopt_sampler& _fmin_linear()
 	{
 		if (C)
 			C->i_Filter_Min(stage, D3DTEXF_LINEAR);
 		return *this;
 	}
+
 	adopt_sampler& _fmin_aniso()
 	{
 		if (C)
 			C->i_Filter_Min(stage, D3DTEXF_ANISOTROPIC);
 		return *this;
 	}
+
 	adopt_sampler& _fmip_none()
 	{
 		if (C)
 			C->i_Filter_Mip(stage, D3DTEXF_NONE);
 		return *this;
 	}
+
 	adopt_sampler& _fmip_point()
 	{
 		if (C)
 			C->i_Filter_Mip(stage, D3DTEXF_POINT);
 		return *this;
 	}
+
 	adopt_sampler& _fmip_linear()
 	{
 		if (C)
 			C->i_Filter_Mip(stage, D3DTEXF_LINEAR);
 		return *this;
 	}
+
 	adopt_sampler& _fmag_none()
 	{
 		if (C)
 			C->i_Filter_Mag(stage, D3DTEXF_NONE);
 		return *this;
 	}
+
 	adopt_sampler& _fmag_point()
 	{
 		if (C)
 			C->i_Filter_Mag(stage, D3DTEXF_POINT);
 		return *this;
 	}
+
 	adopt_sampler& _fmag_linear()
 	{
 		if (C)
@@ -168,6 +188,7 @@ class adopt_compiler
 	adopt_compiler(CBlender_Compile* _C) : C(_C)
 	{
 	}
+
 	adopt_compiler(const adopt_compiler& _C) : C(_C.C)
 	{
 	}
@@ -177,46 +198,55 @@ class adopt_compiler
 		C->SetParams(P, S);
 		return *this;
 	}
+
 	adopt_compiler& _o_emissive(bool E)
 	{
 		C->SH->flags.bEmissive = E;
 		return *this;
 	}
+
 	adopt_compiler& _o_distort(bool E)
 	{
 		C->SH->flags.bDistort = E;
 		return *this;
 	}
+
 	adopt_compiler& _o_wmark(bool E)
 	{
 		C->SH->flags.bWmark = E;
 		return *this;
 	}
+
 	adopt_compiler& _pass(LPCSTR vs, LPCSTR ps)
 	{
 		C->r_Pass(vs, ps, true);
 		return *this;
 	}
+
 	adopt_compiler& _fog(bool _fog)
 	{
 		C->PassSET_LightFog(FALSE, _fog);
 		return *this;
 	}
+
 	adopt_compiler& _ZB(bool _test, bool _write)
 	{
 		C->PassSET_ZB(_test, _write);
 		return *this;
 	}
+
 	adopt_compiler& _blend(bool _blend, u32 abSRC, u32 abDST)
 	{
 		C->PassSET_ablend_mode(_blend, abSRC, abDST);
 		return *this;
 	}
+
 	adopt_compiler& _aref(bool _aref, u32 aref)
 	{
 		C->PassSET_ablend_aref(_aref, aref);
 		return *this;
 	}
+
 	adopt_sampler _sampler(LPCSTR _name)
 	{
 		u32 s = C->r_Sampler(_name, 0);
@@ -234,6 +264,7 @@ void LuaLog(LPCSTR caMessage)
 	MDB;
 	Lua::LuaOut(Lua::eLuaMessageTypeMessage, "%s", caMessage);
 }
+
 void LuaError(lua_State* L)
 {
 	Debug.fatal(DEBUG_INFO, "LUA error: %s", lua_tostring(L, -1));
@@ -361,20 +392,26 @@ void CResourceManager::LS_Load()
 					  value("srcalphasat", int(D3DBLEND_SRCALPHASAT))]];
 
 	// load shaders
-	xr_vector<char*>* folder =
-		FS.file_list_open("$game_shaders$", ::Render->getShaderPath(), FS_ListFiles | FS_RootOnly);
+	xr_vector<char*>* folder = FS.file_list_open("$game_shaders$", ::Render->getShaderPath(), FS_ListFiles | FS_RootOnly);
 	VERIFY(folder);
+
 	for (u32 it = 0; it < folder->size(); it++)
 	{
 		string_path namesp, fn;
 		strcpy_s(namesp, (*folder)[it]);
+
 		if (0 == strext(namesp) || 0 != xr_strcmp(strext(namesp), ".s"))
 			continue;
+
 		*strext(namesp) = 0;
+
 		if (0 == namesp[0])
 			strcpy_s(namesp, "_G");
+
 		strconcat(sizeof(fn), fn, ::Render->getShaderPath(), (*folder)[it]);
+
 		FS.update_path(fn, "$game_shaders$", fn);
+
 		try
 		{
 			Script::bfLoadFileIntoNamespace(LSVM, fn, namesp, true);
@@ -384,6 +421,7 @@ void CResourceManager::LS_Load()
 			Log(lua_tostring(LSVM, -1));
 		}
 	}
+
 	FS.file_list_close(folder);
 
 #ifdef USE_JIT
@@ -437,10 +475,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	{
 		// Analyze possibility to detail this shader
 		C.iElement = 0;
-		//.		C.bDetail			=
-		//Device.Resources->_GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
-		C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture,
-																			  C.detail_scaler);
+		C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 
 		if (C.bDetail)
 			S.E[0] = C._lua_Compile(s_shader, "normal_hq");
@@ -452,10 +487,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 		if (Script::bfIsObjectPresent(LSVM, s_shader, "normal", LUA_TFUNCTION))
 		{
 			C.iElement = 0;
-			//.			C.bDetail			=
-			//Device.Resources->_GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
-			C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture,
-																				  C.detail_scaler);
+			C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 			S.E[0] = C._lua_Compile(s_shader, "normal");
 		}
 	}
@@ -464,10 +496,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	if (Script::bfIsObjectPresent(LSVM, s_shader, "normal", LUA_TFUNCTION))
 	{
 		C.iElement = 1;
-		//.		C.bDetail			=
-		//Device.Resources->_GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
-		C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture,
-																			  C.detail_scaler);
+		C.bDetail = Device.Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 		S.E[1] = C._lua_Compile(s_shader, "normal");
 	}
 
@@ -477,7 +506,6 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 		C.iElement = 2;
 		C.bDetail = FALSE;
 		S.E[2] = C._lua_Compile(s_shader, "l_point");
-		;
 	}
 
 	// Compile element
@@ -486,7 +514,6 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 		C.iElement = 3;
 		C.bDetail = FALSE;
 		S.E[3] = C._lua_Compile(s_shader, "l_spot");
-		;
 	}
 
 	// Compile element

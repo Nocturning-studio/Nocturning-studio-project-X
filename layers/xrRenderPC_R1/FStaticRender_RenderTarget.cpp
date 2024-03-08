@@ -323,17 +323,7 @@ void CRenderTarget::End()
 
 	// Actual rendering
 	static shared_str s_brightness = "c_brightness";
-	RCache.set_c(s_brightness, color_get_R(p_brightness) / 255.f, color_get_G(p_brightness) / 255.f,
-				 color_get_B(p_brightness) / 255.f, 0);
-
-	CEnvDescriptor* EnvironmentDescriptor = g_pGamePersistent->Environment().CurrentEnv;
-
-	Fvector3 SepiaColor = EnvironmentDescriptor->m_SepiaColor;
-	float SepiaPower = EnvironmentDescriptor->m_SepiaPower;
-	RCache.set_c("sepia_params", SepiaColor.x, SepiaColor.y, SepiaColor.z, SepiaPower);
-
-	float VignettePower = EnvironmentDescriptor->m_VignettePower;
-	RCache.set_c("vignette_power", VignettePower, VignettePower, VignettePower, VignettePower);
+	RCache.set_c(s_brightness, color_get_R(p_brightness) / 255.f, color_get_G(p_brightness) / 255.f, color_get_B(p_brightness) / 255.f, 0);
 
 	RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, ps_r_hdr_brightness, 0);
 

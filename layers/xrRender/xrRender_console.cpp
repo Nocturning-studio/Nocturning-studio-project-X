@@ -721,8 +721,6 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r2_barrel_blur", &ps_r2_postprocess_flags, R2FLAG_BARREL_BLUR);
 
-	CMD3(CCC_Mask, "r2_sharpen", &ps_r2_postprocess_flags, R2FLAG_SHARPEN);
-
 	CMD3(CCC_Mask, "r2_cas_enabled", &ps_r2_postprocess_flags, R2FLAG_CONTRAST_ADAPTIVE_SHARPENING);
 	CMD4(CCC_Float, "r2_cas_contrast", &ps_cas_contrast, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_cas_sharpening", &ps_cas_sharpening, 0.0f, 1.0f);

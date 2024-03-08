@@ -10,7 +10,7 @@ class CBlender_vignette : public IBlender
   public:
 	virtual LPCSTR getComment()
 	{
-		return "INTERNAL: Sharpen";
+		return "INTERNAL: Vignette";
 	}
 
 	virtual BOOL canBeDetailed()

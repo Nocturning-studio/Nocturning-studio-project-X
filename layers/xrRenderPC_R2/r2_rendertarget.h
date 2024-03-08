@@ -34,7 +34,6 @@ class CRenderTarget : public IRender_Target
 	IBlender* b_motion_blur;
 	IBlender* b_sepia;
 	IBlender* b_chromatic_abberation;
-	IBlender* b_sharpen;
 	IBlender* b_vignette;
 	IBlender* b_frame_overlay;
 
@@ -165,7 +164,6 @@ class CRenderTarget : public IRender_Target
 	ref_shader s_motion_blur;
 	ref_shader s_chromatic_abberation;
 	ref_shader s_sepia;
-	ref_shader s_sharpen;
 	ref_shader s_vignette;
 	ref_shader s_frame_overlay;
 	ref_shader s_tonemapping;
@@ -277,8 +275,6 @@ class CRenderTarget : public IRender_Target
 	void phase_chromatic_abberation();
 
 	void phase_sepia();
-
-	void phase_sharpen();
 
 	void phase_vignette();
 

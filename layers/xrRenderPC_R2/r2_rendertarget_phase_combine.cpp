@@ -179,9 +179,6 @@ void CRenderTarget::phase_combine()
 			if (ps_render_flags.test(RFLAG_SEPIA))
 				phase_sepia();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_SHARPEN))
-				phase_sharpen();
-
 			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
 				phase_motion_blur();
 

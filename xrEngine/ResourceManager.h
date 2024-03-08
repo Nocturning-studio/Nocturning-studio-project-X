@@ -25,6 +25,7 @@ class ENGINE_API CResourceManager
 			return xr_strcmp(x, y) < 0;
 		}
 	};
+
 	struct texture_detail
 	{
 		const char* T;
@@ -73,7 +74,6 @@ class ENGINE_API CResourceManager
 	// misc
   public:
 	CTextureDescrMngr m_textures_description;
-	//.	CInifile*											m_textures_description;
 	xr_vector<std::pair<shared_str, R_constant_setup*>> v_constant_setup;
 	lua_State* LSVM;
 	BOOL bDeferredLoad;
@@ -89,7 +89,6 @@ class ENGINE_API CResourceManager
 	IBlender* _FindBlender(LPCSTR Name);
 	void _GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps);
 	void _DumpMemoryUsage();
-	//.	BOOL							_GetDetailTexture	(LPCSTR Name, LPCSTR& T, R_constant_setup* &M);
 
 	map_Blender& _GetBlenders()
 	{
@@ -127,12 +126,6 @@ class ENGINE_API CResourceManager
 	CRTC* _CreateRTC(LPCSTR Name, u32 size, D3DFORMAT f);
 	void _DeleteRTC(const CRTC* RT);
 
-	/*SPS* _CreatePS(LPCSTR Name);
-	void _DeletePS(const SPS* PS);
-
-	SVS* _CreateVS(LPCSTR Name);
-	void _DeleteVS(const SVS* VS);*/
-
 	SPass* _CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T,
 					   ref_matrix_list& _M, ref_constant_list& _C);
 	void _DeletePass(const SPass* P);
@@ -162,7 +155,7 @@ class ENGINE_API CResourceManager
 	Shader* _lua_Create(LPCSTR s_shader, LPCSTR s_textures);
 	BOOL _lua_HasShader(LPCSTR s_shader);
 
-	CResourceManager() : bDeferredLoad(TRUE) /*, m_description(0)*/
+	CResourceManager() : bDeferredLoad(TRUE)
 	{
 	}
 	~CResourceManager();
@@ -197,14 +190,16 @@ class ENGINE_API CResourceManager
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();
 	void Dump(bool bBrief);
-	
-	template<typename T> T&				GetShaderMap	();
-	template<typename T> T*				FindShader		(const char* _name);
-	template<typename T> T*				RegisterShader	(const char* _name);
-	template<typename T> HRESULT		CompileShader	(LPCSTR name, LPCSTR ext, LPCSTR src, UINT size, LPCSTR target, LPCSTR entry, CShaderMacros& macros, T*& result);
-	template<typename T> T*				CreateShader	(const char* _name, CShaderMacros& macros);
-	template<typename T> void			DestroyShader	(const T* sh);
-	template<typename T> HRESULT		ReflectShader	(DWORD const* src, UINT	size, T*& result);
+
+	template <typename T> T& GetShaderMap();
+	template <typename T> T* FindShader(const char* _name);
+	template <typename T> T* RegisterShader(const char* _name);
+	template <typename T>
+	HRESULT CompileShader(LPCSTR name, LPCSTR ext, LPCSTR src, UINT size, LPCSTR target, LPCSTR entry,
+						  CShaderMacros& macros, T*& result);
+	template <typename T> T* CreateShader(const char* _name, CShaderMacros& macros);
+	template <typename T> void DestroyShader(const T* sh);
+	template <typename T> HRESULT ReflectShader(DWORD const* src, UINT size, T*& result);
 };
 
 template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
