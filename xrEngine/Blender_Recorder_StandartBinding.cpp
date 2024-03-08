@@ -520,6 +520,7 @@ void CBlender_Compile::SetMapping()
 	r_Constant("fog_params", &binder_fog_params);
 	r_Constant("fog_color", &binder_fog_color);
 	r_Constant("fog_density", &binder_fog_density);
+	r_Constant("fog_sky_influence", &binder_fog_sky_influence);
 	r_Constant("vertical_fog_intensity", &binder_vertical_fog_intensity);
 	r_Constant("vertical_fog_density", &binder_vertical_fog_density);
 	r_Constant("vertical_fog_height", &binder_vertical_fog_height);
