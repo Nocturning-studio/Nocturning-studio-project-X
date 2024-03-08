@@ -112,9 +112,6 @@
     <Filter Include="Blenders\Postprocess stage\Vignette">
       <UniqueIdentifier>{5775da43-5eda-4402-bec0-0ecba0939a4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blenders\Postprocess stage\Sharpen">
-      <UniqueIdentifier>{a8627c0f-b8ca-41d0-9b76-6028ff5e0a99}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Blenders\Postprocess stage\Chromatic abberation">
       <UniqueIdentifier>{43f72539-6570-40df-88d7-b4416823aecc}</UniqueIdentifier>
     </Filter>
@@ -344,9 +341,6 @@
     </ClInclude>
     <ClInclude Include="Blender_sepia.h">
       <Filter>Blenders\Postprocess stage\Sepia</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_sharpen.h">
-      <Filter>Blenders\Postprocess stage\Sharpen</Filter>
     </ClInclude>
     <ClInclude Include="Blender_vignette.h">
       <Filter>Blenders\Postprocess stage\Vignette</Filter>
@@ -632,9 +626,6 @@
     <ClCompile Include="r2_rendertarget_phase_vignette.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_sharpen.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_sepia.cpp">
       <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
     </ClCompile>
@@ -646,9 +637,6 @@
     </ClCompile>
     <ClCompile Include="Blender_sepia.cpp">
       <Filter>Blenders\Postprocess stage\Sepia</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_sharpen.cpp">
-      <Filter>Blenders\Postprocess stage\Sharpen</Filter>
     </ClCompile>
     <ClCompile Include="Blender_vignette.cpp">
       <Filter>Blenders\Postprocess stage\Vignette</Filter>
