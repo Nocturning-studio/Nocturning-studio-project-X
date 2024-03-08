@@ -62,6 +62,9 @@ class CShaderIncluder : public ID3DXInclude
 		*pBytes = strlen(data);
 
 		Msg("*   includer open: (id:%u): %s", counter, pName);
+		Msg("FILE BEGIN");
+		Log(data);
+		Msg("FILE END");
 		Msg("*   guard                  _%s_included", hash);
 
 		counter++;
