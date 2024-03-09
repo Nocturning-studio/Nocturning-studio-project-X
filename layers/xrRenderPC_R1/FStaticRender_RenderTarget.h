@@ -37,8 +37,6 @@ class CRenderTarget : public IRender_Target
 	u32 param_color_gray;
 	u32 param_color_add;
 
-	u32 frame_distort;
-
   public:
 	IDirect3DSurface9* pTempZB;
 

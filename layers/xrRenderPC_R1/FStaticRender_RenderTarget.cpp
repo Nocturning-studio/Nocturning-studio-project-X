@@ -342,7 +342,6 @@ void CRenderTarget::End()
 
 void CRenderTarget::phase_distortion()
 {
-	frame_distort = Device.dwFrame;
 	RCache.set_RT(RT_distort->pRT);
 	RCache.set_ZB(ZB->pRT);
 	RCache.set_CullMode(CULL_CCW);
