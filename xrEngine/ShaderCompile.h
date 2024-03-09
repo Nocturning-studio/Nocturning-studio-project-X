@@ -61,11 +61,13 @@ class CShaderIncluder : public ID3DXInclude
 		*ppData = data;
 		*pBytes = strlen(data);
 
+#ifdef DEBUG_SHADER_COMPILATION
 		Msg("*   includer open: (id:%u): %s", counter, pName);
 		Msg("FILE BEGIN");
 		Log(data);
 		Msg("FILE END");
 		Msg("*   guard                  _%s_included", hash);
+#endif
 
 		counter++;
 
@@ -159,9 +161,13 @@ T* CResourceManager::CreateShader(const char* _name, CShaderMacros& _macros)
 	sprintf_s(c_entry, sizeof c_entry, "main");
 	sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
 
+#ifndef MASTER_GOLD
 	Msg("* Compiling shader: target=%s, source=%s.%s", c_target, _name, ext);
+#endif
 
+#ifdef DEBUG_SHADER_COMPILATION
 	print_macros(_macros);
+#endif
 
 	// compile and create
 	HRESULT _hr = CompileShader(_name, ext, (LPCSTR)file->pointer(), file->length(), c_target, c_entry, macros, (T*&)sh);
@@ -189,7 +195,9 @@ HRESULT CResourceManager::CompileShader(
 	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
+#ifndef MASTER_GOLD
 	Msg("*   cache: %s.%s", cache_dest, ext);
+#endif
 
 	CShaderIncluder		Includer;
 	ID3DXBuffer*		pShaderBuf = NULL;
@@ -220,7 +228,11 @@ HRESULT CResourceManager::CompileShader(
 			R_ASSERT(NULL);
 		}
 
+#ifdef MASTER_GOLD
 		bool disasm = strstr(Core.Params, "-disasm") ? true : false;
+#else
+		bool disasm = true;
+#endif
 
 		if (disasm)
 		{
@@ -238,7 +250,6 @@ HRESULT CResourceManager::CompileShader(
 	else
 	{
 		string16 code;
-		//xr_sprintf(code, sizeof code, "hr=0x%08x", _result);
 		sprintf_s(code, sizeof code, "hr=0x%08x", _result);
 
 		std::string message = std::string(pErrorBuf ? (char*)pErrorBuf->GetBufferPointer() : "");
