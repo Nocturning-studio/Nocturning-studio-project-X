@@ -327,6 +327,15 @@ void CRenderTarget::End()
 
 	RCache.set_c("hdr_params", ps_r_hdr_white_intensity, ps_r_hdr_gamma, ps_r_hdr_brightness, 0);
 
+	Fvector3 dof;
+	Fvector2 vDofKernel;
+	g_pGamePersistent->GetCurrentDof(dof);
+	vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
+	vDofKernel.mul(ps_r2_dof_kernel_size);
+
+	RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
+	RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+
 	RCache.set_Geometry(g_postprocess);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
