@@ -241,6 +241,10 @@ CShaderMacros CRender::FetchShaderMacros()
 
 	macros.add("VIGNETTE_MODE", c_vignette);
 
+	macros.add(ps_render_flags.test(RFLAG_SEPIA), "USE_SEPIA", "1");
+
+	macros.add(ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION), "USE_CHROMATIC_ABBERATION", "1");
+
 	macros.add("BLOOM_QUALITY", c_bloom_quality);
 
 	macros.add("BUMP_QUALITY", c_bump_quality);

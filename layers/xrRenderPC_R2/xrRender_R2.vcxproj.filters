@@ -109,15 +109,6 @@
     <Filter Include="Blenders\Postprocess stage\Antialiasing">
       <UniqueIdentifier>{d96e805c-1825-4b20-a2a4-2d94e6d1e59e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blenders\Postprocess stage\Vignette">
-      <UniqueIdentifier>{5775da43-5eda-4402-bec0-0ecba0939a4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Blenders\Postprocess stage\Chromatic abberation">
-      <UniqueIdentifier>{43f72539-6570-40df-88d7-b4416823aecc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Blenders\Postprocess stage\Sepia">
-      <UniqueIdentifier>{49b263cf-d1eb-456a-97d7-5673e0c5c00d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Blenders\Combine stage">
       <UniqueIdentifier>{246dcf35-8bd7-4b95-ae7d-d98d9bd8eb12}</UniqueIdentifier>
     </Filter>
@@ -335,15 +326,6 @@
     </ClInclude>
     <ClInclude Include="Blender_antialiasing.h">
       <Filter>Blenders\Postprocess stage\Antialiasing</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_chromatic_abberation.h">
-      <Filter>Blenders\Postprocess stage\Chromatic abberation</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_sepia.h">
-      <Filter>Blenders\Postprocess stage\Sepia</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_vignette.h">
-      <Filter>Blenders\Postprocess stage\Vignette</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\r_occlusion.h">
       <Filter>Core\Occlusion culling</Filter>
@@ -622,24 +604,6 @@
     </ClCompile>
     <ClCompile Include="Blender_antialiasing.cpp">
       <Filter>Blenders\Postprocess stage\Antialiasing</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_vignette.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_sepia.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_chromatic_abberation.cpp">
-      <Filter>Rendertargets\Render stages\Postprocess stages</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_chromatic_abberation.cpp">
-      <Filter>Blenders\Postprocess stage\Chromatic abberation</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_sepia.cpp">
-      <Filter>Blenders\Postprocess stage\Sepia</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_vignette.cpp">
-      <Filter>Blenders\Postprocess stage\Vignette</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_accum_direct.cpp">
       <Filter>Rendertargets\Render stages\Light accumulation stage\Direct</Filter>

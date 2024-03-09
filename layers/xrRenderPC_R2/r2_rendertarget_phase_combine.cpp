@@ -165,9 +165,6 @@ void CRenderTarget::phase_combine()
 			if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
 				phase_bloom();
 
-			if (ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION))
-				phase_chromatic_abberation();
-
 			if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
 				phase_depth_of_field();
 
@@ -180,14 +177,8 @@ void CRenderTarget::phase_combine()
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
 				g_pGamePersistent->Environment().RenderFlares();
 
-			if (ps_render_flags.test(RFLAG_SEPIA))
-				phase_sepia();
-
 			if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
 				phase_motion_blur();
-
-			if (ps_vignette_mode)
-				phase_vignette();
 		}
 
 		draw_overlays();

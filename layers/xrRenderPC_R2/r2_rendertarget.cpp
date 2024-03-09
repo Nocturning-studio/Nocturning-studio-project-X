@@ -10,9 +10,6 @@
 #include "blender_distortion.h"
 #include "blender_depth_of_field.h"
 #include "blender_motion_blur.h"
-#include "blender_sepia.h"
-#include "blender_vignette.h"
-#include "blender_chromatic_abberation.h"
 #include "blender_frame_overlay.h"
 #include "blender_light_direct_cascade.h"
 #include "blender_light_mask.h"
@@ -243,9 +240,6 @@ CRenderTarget::CRenderTarget()
 	b_dof = xr_new<CBlender_depth_of_field>();
 	b_distortion = xr_new<CBlender_distortion>();
 	b_motion_blur = xr_new<CBlender_motion_blur>();
-	b_sepia = xr_new<CBlender_sepia>();
-	b_chromatic_abberation = xr_new<CBlender_chromatic_abberation>();
-	b_vignette = xr_new<CBlender_vignette>();
 	b_frame_overlay = xr_new<CBlender_frame_overlay>();
 
 	// SCREENSHOT
@@ -549,12 +543,6 @@ CRenderTarget::CRenderTarget()
 	s_distortion.create(b_distortion, "r2\\distortion");
 
 	s_motion_blur.create(b_motion_blur, "r2\\motion_blur");
-
-	s_chromatic_abberation.create(b_chromatic_abberation, "r2\\chromatic_abberation");
-
-	s_sepia.create(b_sepia, "r2\\sepia");
-
-	s_vignette.create(b_vignette, "r2\\vignette");
 
 	s_frame_overlay.create(b_frame_overlay, "r2\\frame_overlay");
 
