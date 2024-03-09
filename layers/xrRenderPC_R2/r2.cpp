@@ -122,45 +122,29 @@ static class cl_hdr_params : public R_constant_setup
 	}
 } binder_hdr_params;
 //////////////////////////////////////////////////////////////////////////
-extern ENGINE_API BOOL r2_sun_static;
-extern ENGINE_API BOOL r2_advanced_pp;
-//////////////////////////////////////////////////////////////////////////
 void CheckHWSupporting()
 {
 	R_ASSERT2(CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor) >= CAP_VERSION(3, 0),
 			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (DX9.0c supporting)"));
 
-	if (r2_advanced_pp)
-	{
-		R_ASSERT2(HW.Caps.raster.dwInstructions >= 512,
-				  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions "
-							  "count less than 512)"));
-	}
-	else
-	{
-		R_ASSERT2(HW.Caps.raster.dwInstructions >= 256,
-				  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions "
-							  "count less than 256)"));
-	}
+	R_ASSERT2(HW.Caps.raster.dwInstructions >= 512, 
+		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions count less than 512)"));
 
-	R_ASSERT2(
-		HW.Caps.raster.dwMRT_count >= 3,
+
+	R_ASSERT2(HW.Caps.raster.dwMRT_count >= 3,
 		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets)"));
 
-	R_ASSERT2(HW.Caps.raster.b_MRT_mixdepth, make_string("Your graphics accelerator don`t meet minimal mod system "
-														 "requirements (Multiple render targets independent depths)"));
+	R_ASSERT2(HW.Caps.raster.b_MRT_mixdepth, 
+		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets independent depths)"));
 
-	R_ASSERT2(HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL),
-			  make_string(
-				  "Your graphics accelerator don`t meet minimal mod system requirements (D24X8 rendertarget format)"));
+	R_ASSERT2(HW.support(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL), 
+		make_string("Your graphics accelerator don`t meet minimal mod system requirements (D24X8 rendertarget format)"));
 
 	R_ASSERT2(HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER),
-			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Floating point "
-						  "16-bits rendertarget format)"));
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Floating point 16-bits rendertarget format)"));
 
 	R_ASSERT2(HW.support(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING),
-			  make_string(
-				  "Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
+			  make_string("Your graphics accelerator don`t meet minimal mod system requirements (Post-Pixel Shader blending)"));
 }
 //////////////////////////////////////////////////////////////////////////
 // update with vid_restart
@@ -230,6 +214,55 @@ void CRender::update_options()
 	sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
 	sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
 }
+
+//////////////////////////////////////////////////////////////////////
+CShaderMacros CRender::FetchShaderMacros()
+{
+	CShaderMacros macros;
+
+	// build id
+	macros.add("BUILD_ID", c_build_id);
+
+	// debug view
+	macros.add("DEBUG_VIEW_MODE", c_debugview);
+
+	// skinning
+	macros.add(m_skinning < 0, "SKIN_NONE", "1");
+	macros.add(0 == m_skinning, "SKIN_0", "1");
+	macros.add(1 == m_skinning, "SKIN_1", "1");
+	macros.add(2 == m_skinning, "SKIN_2", "1");
+	macros.add(3 == m_skinning, "SKIN_3", "1");
+	macros.add(4 == m_skinning, "SKIN_4", "1");
+
+	macros.add(o.forceskinw, "SKIN_COLOR", "1");
+
+	macros.add("SMAP_SIZE", c_smapsize);
+	macros.add("SHADOW_FILTER", c_shadow_filter);
+
+	macros.add("VIGNETTE_MODE", c_vignette);
+
+	macros.add("BLOOM_QUALITY", c_bloom_quality);
+
+	macros.add("BUMP_QUALITY", c_bump_quality);
+
+	macros.add("GBUFFER_OPT_MODE", c_gbuffer_opt_mode);
+
+	macros.add(o.use_ssao, "AO_ENABLED", "1");
+
+	macros.add(o.use_soft_water, "USE_SOFT_WATER", "1");
+
+	macros.add(o.use_soft_particles, "USE_SOFT_PARTICLES", "1");
+
+	macros.add(o.use_atest_aa, "ALPHA_TEST_AA", "1");
+
+	macros.add("AA_TYPE", c_aa_type);
+
+	macros.add("AA_QUALITY", c_fxaa_quality);
+
+	macros.add("AO_QUALITY", c_ao_quality);
+
+	return macros;
+}
 //////////////////////////////////////////////////////////////////////////
 extern XRCORE_API u32 build_id;
 void CRender::create()
@@ -243,11 +276,7 @@ void CRender::create()
 	sprintf(c_build_id, "%d", build_id);
 
 	// options
-	o.sunstatic = r2_sun_static;
-	o.advancedpp = r2_advanced_pp;
 	o.noshadows = (strstr(Core.Params, "-noshadows")) ? TRUE : FALSE;
-	o.distortion_enabled = (strstr(Core.Params, "-nodistort")) ? FALSE : TRUE;
-	o.distortion = o.distortion_enabled;
 	o.forceskinw = (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 
 	// constants
@@ -350,8 +379,6 @@ void CRender::OnFrame()
 
 BOOL CRender::is_sun()
 {
-	if (o.sunstatic)
-		return FALSE;
 	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
 	return (ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
 }
@@ -624,48 +651,3 @@ void CRender::Statistics(CGameFont* _F)
 #endif
 }
 
-//////////////////////////////////////////////////////////////////////
-CShaderMacros CRender::FetchShaderMacros()
-{
-	CShaderMacros macros;
-
-	// build id
-	macros.add("BUILD_ID", c_build_id);
-
-	// debug view
-	macros.add("DEBUG_VIEW_MODE", c_debugview);
-
-	// skinning
-	macros.add(m_skinning < 0, "SKIN_NONE", "1");
-	macros.add(0 == m_skinning, "SKIN_0", "1");
-	macros.add(1 == m_skinning, "SKIN_1", "1");
-	macros.add(2 == m_skinning, "SKIN_2", "1");
-	macros.add(3 == m_skinning, "SKIN_3", "1");
-	macros.add(4 == m_skinning, "SKIN_4", "1");
-
-	macros.add(o.forceskinw, "SKIN_COLOR", "1");
-
-	macros.add("SMAP_SIZE", c_smapsize);
-	macros.add("SHADOW_FILTER", c_shadow_filter);
-
-	macros.add("VIGNETTE_MODE", c_vignette);
-
-	macros.add("BLOOM_QUALITY", c_bloom_quality);
-
-	macros.add("BUMP_QUALITY", c_bump_quality);
-
-	macros.add("GBUFFER_OPT_MODE", c_gbuffer_opt_mode);
-
-	if (o.advancedpp)
-	{
-		macros.add(o.use_ssao, "AO_ENABLED", "1");
-		macros.add(o.use_soft_water, "USE_SOFT_WATER", "1");
-		macros.add(o.use_soft_particles, "USE_SOFT_PARTICLES", "1");
-		macros.add(o.use_atest_aa, "ALPHA_TEST_AA", "1");
-		macros.add("AA_TYPE", c_aa_type);
-		macros.add("AA_QUALITY", c_fxaa_quality);
-		macros.add("AO_QUALITY", c_ao_quality);
-	}
-
-	return macros;
-}

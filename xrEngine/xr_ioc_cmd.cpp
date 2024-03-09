@@ -656,9 +656,6 @@ class CCC_DR_UsePoints : public CCC_Integer
 	virtual void Save(IWriter* F){};
 };
 
-ENGINE_API BOOL r2_sun_static = FALSE;
-ENGINE_API BOOL r2_advanced_pp = FALSE;
-
 u32 renderer_value = 0;
 class CCC_r2 : public CCC_Token
 {
@@ -679,8 +676,6 @@ class CCC_r2 : public CCC_Token
 #endif // DEDICATED_SERVER
 
 		psDeviceFlags.set(rsR2, renderer_value == 1);
-		r2_sun_static = renderer_value == 0;
-		r2_advanced_pp = renderer_value == 1;
 	}
 
 	virtual void Save(IWriter* F)

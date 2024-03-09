@@ -93,9 +93,6 @@ enum
 // R2/R2a/R2.5-specific values
 /*-------------------------------------------------------------------------------*/
 
-// Render subtypes
-extern ENGINE_API BOOL r2_advanced_pp; // R2.5
-
 extern ECORE_API float ps_r2_ssaLOD_A;
 extern ECORE_API float ps_r2_ssaLOD_B;
 extern ECORE_API float ps_r2_detalization_distance;

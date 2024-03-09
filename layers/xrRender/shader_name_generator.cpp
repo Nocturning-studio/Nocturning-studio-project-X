@@ -6,13 +6,6 @@
 #include "stdafx.h"
 #include "shader_name_generator.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifdef DEBUG
-#define USE_DEBUG_SHADER_NAME_GETERATION
-#endif
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-extern ENGINE_API BOOL r2_sun_static;
-extern ENGINE_API BOOL r2_advanced_pp;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern u32 ps_r2_bump_mode;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void fix_texture_name(LPSTR fn);
@@ -146,11 +139,11 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	int BumpType = 0;
 	if (bIsHightQualityGeometry)
 	{
-		if (ps_r2_bump_mode == 1 || r2_sun_static || !bUseBump)
+		if (ps_r2_bump_mode == 1 || !bUseBump)
 			BumpType = 1; // normal
-		else if ((ps_r2_bump_mode == 2 || (!r2_sun_static && !r2_advanced_pp)) || (r2_advanced_pp && !C.bSteepParallax))
+		else if (ps_r2_bump_mode == 2 || !C.bSteepParallax)
 			BumpType = 2; // parallax
-		else if (((ps_r2_bump_mode == 3) && (r2_advanced_pp)) && C.bSteepParallax)
+		else if (ps_r2_bump_mode == 3 && C.bSteepParallax)
 			BumpType = 3; // steep parallax
 		else 
 			BumpType = 2; // parallax

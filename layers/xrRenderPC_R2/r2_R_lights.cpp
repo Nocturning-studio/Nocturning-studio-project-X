@@ -169,7 +169,7 @@ void CRender::render_lights(light_Package& LP)
 				Target->accum_spot(L_spot_s[it]);
 			}
 
-			// if (RImplementation.o.advancedpp /* && ps_r2_lighting_flags.is(R2FLAG_VOLUMETRIC_LIGHTS)*/)
+			// if (ps_r2_lighting_flags.is(R2FLAG_VOLUMETRIC_LIGHTS)
 			//	for (u32 it = 0; it < L_spot_s.size(); it++)
 			//		Target->accum_volumetric(L_spot_s[it]);
 

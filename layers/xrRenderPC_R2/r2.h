@@ -40,9 +40,6 @@ class CRender : public R_dsgraph_structure
 		u32 nvstencil : 1;
 		u32 nvdbt : 1;
 		u32 distortion : 1;
-		u32 distortion_enabled : 1;
-		u32 advancedpp : 1; //	advanced post process (DOF, AO, etc.)
-		u32 sunstatic : 1;
 		u32 forceskinw : 1;
 		u32 noshadows : 1;
 
@@ -221,10 +218,7 @@ class CRender : public R_dsgraph_structure
 
 	virtual RenderLightingType get_render_lighting_type()
 	{
-		if (o.sunstatic)
-			return IRender_interface::RENDER_LIGHTMAP_LIGHTED;
-		else
-			return IRender_interface::RENDER_DYNAMIC_LIGHTED;
+		return IRender_interface::RENDER_DYNAMIC_LIGHTED;
 	}
 
 	// Loading / Unloading

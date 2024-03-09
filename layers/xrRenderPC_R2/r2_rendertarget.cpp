@@ -251,8 +251,10 @@ CRenderTarget::CRenderTarget()
 	// SCREENSHOT
 	{
 		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
-		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
-		R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
+		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM,
+													  &surf_screenshot_normal, NULL));
+		R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave,
+										NULL));
 		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
@@ -316,8 +318,7 @@ CRenderTarget::CRenderTarget()
 	rt_smap_ZB = NULL;
 	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
 	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
-	if (RImplementation.o.advancedpp)
-		s_accum_direct_volumetric_cascade.create("accumulating_light_stage_volumetric_sun_cascade");
+	s_accum_direct_volumetric_cascade.create("accumulating_light_stage_volumetric_sun_cascade");
 
 	// POINT
 	{
@@ -336,54 +337,48 @@ CRenderTarget::CRenderTarget()
 	}
 
 	// BLOOM
-	if (RImplementation.o.advancedpp)
+	D3DFORMAT fmt;
+	if (ps_r2_rt_format == 1 || ps_r2_bloom_quality <= 2)
+		fmt = D3DFMT_A8R8G8B8;
+	else
+		fmt = D3DFMT_A2R10G10B10;
+
+	float BloomResolutionMultiplier = 0.0f;
+
+	switch (ps_r2_bloom_quality)
 	{
-		D3DFORMAT fmt;
-		if (ps_r2_rt_format == 1 || ps_r2_bloom_quality <= 2)
-			fmt = D3DFMT_A8R8G8B8;
-		else
-			fmt = D3DFMT_A2R10G10B10;
-
-		float BloomResolutionMultiplier = 0.0f;
-
-		switch (ps_r2_bloom_quality)
-		{
-		case 1:
-			BloomResolutionMultiplier = 0.2f;
-			break;
-		case 2:
-			BloomResolutionMultiplier = 0.25f;
-			break;
-		case 3:
-			BloomResolutionMultiplier = 0.3f;
-			break;
-		case 4:
-			BloomResolutionMultiplier = 0.35f;
-			break;
-		}
-
-		u32 w = dwWidth * BloomResolutionMultiplier, h = dwHeight * BloomResolutionMultiplier;
-		u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) |
-						D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
-		u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) |
-						 D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4) |
-						 D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6) | D3DFVF_TEXCOORDSIZE4(7);
-		rt_Bloom_1.create(r2_RT_bloom1, w, h, fmt);
-		rt_Bloom_2.create(r2_RT_bloom2, w, h, fmt);
-		g_bloom_build.create(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
-		g_bloom_filter.create(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
-		s_bloom.create(b_bloom, "r2\\bloom");
+	case 1:
+		BloomResolutionMultiplier = 0.2f;
+		break;
+	case 2:
+		BloomResolutionMultiplier = 0.25f;
+		break;
+	case 3:
+		BloomResolutionMultiplier = 0.3f;
+		break;
+	case 4:
+		BloomResolutionMultiplier = 0.35f;
+		break;
 	}
+
+	u32 w = dwWidth * BloomResolutionMultiplier, h = dwHeight * BloomResolutionMultiplier;
+	u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) |
+					D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
+	u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) |
+					 D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4) |
+					 D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6) | D3DFVF_TEXCOORDSIZE4(7);
+	rt_Bloom_1.create(r2_RT_bloom1, w, h, fmt);
+	rt_Bloom_2.create(r2_RT_bloom2, w, h, fmt);
+	g_bloom_build.create(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
+	g_bloom_filter.create(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
+	s_bloom.create(b_bloom, "r2\\bloom");
 
 	// AO
-	if (RImplementation.o.advancedpp)
-	{
-		// Create rendertarget
-		rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_L8);
+	// Create rendertarget
+	rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_L8);
 
-		// Create shader resource
-		s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
-	}
+	// Create shader resource
+	s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
 
 	// autoexposure
 	{
@@ -679,7 +674,7 @@ void CRenderTarget::increment_light_marker()
 
 bool CRenderTarget::need_to_render_sunshafts()
 {
-	if (!(RImplementation.o.advancedpp && ps_r2_sun_shafts))
+	if (!ps_r2_sun_shafts)
 		return false;
 
 	{

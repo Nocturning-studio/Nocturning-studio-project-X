@@ -222,11 +222,8 @@ void CRender::Render()
 	}
 
 	// Configure
-	RImplementation.o.distortion = FALSE; // disable distorion
 	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
 	BOOL bSUN = ps_r2_lighting_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
-	if (o.sunstatic)
-		bSUN = FALSE;
 
 	// HOM
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
@@ -434,7 +431,7 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	if (ps_r2_ao && RImplementation.o.advancedpp)
+	if (ps_r2_ao)
 	{
 		Device.Statistic->RenderCALC_AO.Begin();
 		Target->phase_ao();
@@ -454,7 +451,6 @@ void CRender::Render()
 void CRender::render_forward()
 {
 	VERIFY(0 == mapDistort.size());
-	RImplementation.o.distortion = RImplementation.o.distortion_enabled; // enable distorion
 
 	//******* Main render - second order geometry (the one, that doesn't support deffering)
 	//.todo: should be done inside "combine" with estimation of of autoexposure, tone-mapping, etc.
@@ -469,6 +465,4 @@ void CRender::render_forward()
 		Target->disable_anisotropy_filtering();
 		g_pGamePersistent->Environment().RenderLast(); // rain/thunder-bolts
 	}
-
-	RImplementation.o.distortion = FALSE; // disable distorion
 }

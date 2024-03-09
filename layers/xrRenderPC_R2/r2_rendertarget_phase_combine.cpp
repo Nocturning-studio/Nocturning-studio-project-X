@@ -159,22 +159,22 @@ void CRenderTarget::phase_combine()
 			if (ps_r2_aa)
 				phase_antialiasing();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
+			if (ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
 				phase_contrast_adaptive_sharpening();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
+			if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
 				phase_bloom();
 
 			if (ps_render_flags.test(RFLAG_CHROMATIC_ABBERATION))
 				phase_chromatic_abberation();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_DOF))
+			if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
 				phase_depth_of_field();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
+			if (ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
 				phase_barrel_blur();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
+			if (ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
 				phase_autoexposure();
 
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
@@ -183,7 +183,7 @@ void CRenderTarget::phase_combine()
 			if (ps_render_flags.test(RFLAG_SEPIA))
 				phase_sepia();
 
-			if (RImplementation.o.advancedpp && ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+			if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
 				phase_motion_blur();
 
 			if (ps_vignette_mode)
