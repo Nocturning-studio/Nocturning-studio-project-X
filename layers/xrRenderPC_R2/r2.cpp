@@ -272,6 +272,7 @@ extern XRCORE_API u32 build_id;
 void CRender::create()
 {
 	CheckHWSupporting();
+	xrRender_console_apply_conditions();
 
 	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 0x12345678);
 

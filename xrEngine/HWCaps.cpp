@@ -213,8 +213,10 @@ void CHWCaps::Update()
 		dwMaxStencilValue = (1 << 8) - 1;
 	}
 
-	// DEV INFO
+	HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_coverage);
+	max_coverage = max_coverage - 1; // get real max coverage
 
+	// DEV INFO
 	iGPUNum = GetGpuNum();
 }
 

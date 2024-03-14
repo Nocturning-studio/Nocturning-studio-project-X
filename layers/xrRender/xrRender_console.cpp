@@ -33,10 +33,12 @@ xr_token r1_aa_token[] = {
 };
 
 u32 ps_r1_aa_transluency = 0;
+D3DFORMAT trans_ssaa_fmt = (D3DFORMAT)MAKEFOURCC('S', 'S', 'A', 'A');
+D3DFORMAT trans_atoc_fmt = (D3DFORMAT)MAKEFOURCC('A', 'T', 'O', 'C');
 xr_token r1_aa_transluency_token[] = {
 	{"st_opt_disabled", 0}, 
-	//{"st_opt_a_test", MAKEFOURCC('S', 'S', 'A', 'A')}, 
-	{"st_opt_atoc", MAKEFOURCC('A', 'T', 'O', 'C')},
+	{"st_opt_ssaa", trans_ssaa_fmt}, // хватит комментировать этот режим, он мне нужен
+	{"st_opt_atoc", trans_atoc_fmt},
 	{0, 0},
 };
 
@@ -256,6 +258,49 @@ Flags32 ps_r2_overlay_flags = {
 ///////////////////////////////////////////////////////////////////////////////////
 #include "..\xrEngine\xr_ioconsole.h"
 #include "..\xrEngine\xr_ioc_cmd.h"
+///////////////////////////////////////////////////////////////////////////////////
+#define MAX_CONDITIONS_TOKEN_SIZE 32
+class CCC_ConditionsToken : public CCC_Token
+{
+  protected:
+	xr_token tokens_mem[MAX_CONDITIONS_TOKEN_SIZE];
+	bool conditions[MAX_CONDITIONS_TOKEN_SIZE];
+
+  public:
+	CCC_ConditionsToken(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T)
+	{
+		memset(tokens_mem, 0, sizeof(tokens_mem));
+		memset(conditions, 1, sizeof(conditions));
+	};
+
+	void SetCondition(int key, bool condition)
+	{
+		for (int i = 0; tokens[i].name && i < MAX_CONDITIONS_TOKEN_SIZE; i++)
+		{
+			if (key == tokens[i].id)
+			{
+				conditions[i] = condition;
+				break;
+			}
+		}
+	}
+
+	void ApplyConditions()
+	{
+		memset(tokens_mem, 0, sizeof(tokens_mem));
+
+		for (int i = 0, j = 0; tokens[i].name && j < MAX_CONDITIONS_TOKEN_SIZE; i++)
+		{
+			if (conditions[i] == true)
+			{
+				tokens_mem[j] = tokens[i];
+				j++;
+			}
+		}
+
+		tokens = tokens_mem;
+	};
+};
 ///////////////////////////////////////////////////////////////////////////////////
 class CCC_tf_Aniso : public CCC_Integer
 {
@@ -624,9 +669,6 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Token, "r_cubemap_size", &ps_r_cubemap_size, cubemap_size_token);
 
-	CMD3(CCC_Token, "r1_aa_type", &ps_r1_aa, r1_aa_token);
-	CMD3(CCC_Token, "r1_aa_transluency", &ps_r1_aa_transluency, r1_aa_transluency_token);
-
 	CMD4(CCC_Float, "r_geometry_lod", &ps_r_LOD, 0.1f, 1.2f);
 
 	CMD4(CCC_Float, "r_detail_density", &ps_r_Detail_density, .2f, 0.6f);
@@ -789,6 +831,23 @@ void xrRender_initconsole()
 
 	CMD4(CCC_Float, "r2_ls_depth_scale", &ps_r2_ls_depth_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
+
+	// !!! СТРОГО ВНИЗУ ПОСЛЕ ВСЕХ ОПЦИЙ !!!
+	CMD3(CCC_ConditionsToken, "r1_aa_type", &ps_r1_aa, r1_aa_token);
+	CMD3(CCC_ConditionsToken, "r1_aa_transluency", &ps_r1_aa_transluency, r1_aa_transluency_token);
+}
+
+void xrRender_console_apply_conditions()
+{
+	CCC_ConditionsToken* r1_aa_type = dynamic_cast<CCC_ConditionsToken*>(Console->GetCommand("r1_aa_type"));
+	r1_aa_type->SetCondition(CSAA_4X, HW.Caps.max_coverage >= 2);
+	r1_aa_type->SetCondition(CSAA_8X, HW.Caps.max_coverage >= 4);
+	r1_aa_type->ApplyConditions();
+
+	CCC_ConditionsToken* r1_aa_transluency = dynamic_cast<CCC_ConditionsToken*>(Console->GetCommand("r1_aa_transluency"));
+	r1_aa_transluency->SetCondition(trans_ssaa_fmt, HW.support(trans_ssaa_fmt, D3DRTYPE_SURFACE, NULL));
+	r1_aa_transluency->SetCondition(trans_atoc_fmt, HW.support(trans_atoc_fmt, D3DRTYPE_SURFACE, NULL));
+	r1_aa_transluency->ApplyConditions();
 }
 ///////////////////////////////////////////////////////////////////////////////////
 void xrRender_apply_tf()

@@ -217,6 +217,7 @@ enum
 // Functions
 /*-------------------------------------------------------------------------------*/
 extern void xrRender_initconsole();
+extern void xrRender_console_apply_conditions();
 extern BOOL xrRender_test_hw();
 extern void xrRender_apply_tf();
 ///////////////////////////////////////////////////////////////////////////////////

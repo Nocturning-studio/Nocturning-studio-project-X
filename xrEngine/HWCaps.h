@@ -57,6 +57,8 @@ class CHWCaps
 	u16 raster_minor;
 	caps_Raster raster;
 
+	DWORD max_coverage;
+
 	u32 id_vendor;
 	u32 id_device;
 

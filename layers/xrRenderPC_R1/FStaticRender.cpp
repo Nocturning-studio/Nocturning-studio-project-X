@@ -91,19 +91,17 @@ void CRender::update_options()
 		break;
 	}
 
-	DWORD max_csaa_samples = 0;
-	HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_csaa_samples);
-	max_csaa_samples = max_csaa_samples - 1; // DX9 Create*** gets samples-1
-	o.csaa_samples = max_csaa_samples > o.csaa_samples ? o.csaa_samples : max_csaa_samples;
+	o.csaa_samples = HW.Caps.max_coverage > o.csaa_samples ? o.csaa_samples : HW.Caps.max_coverage;
 
-	Msg("* SSAA: %dx, MSAA %dx, CSAA: %dx (max coverage: %dx, curr coverage: %dx)", o.ssaa_samples, o.msaa_samples, 
-		o.csaa_samples*2, max_csaa_samples, o.csaa_samples);
+	Msg("* SSAA: %dx, MSAA %dx, CSAA: %dx (max coverage: %d)", o.ssaa_samples, o.msaa_samples, o.csaa_samples*2, HW.Caps.max_coverage);
 }
 
 //////////////////////////////////////////////////////////////////////////
 extern XRCORE_API u32 build_id;
 void CRender::create()
 {
+	xrRender_console_apply_conditions();
+
 	L_DB = 0;
 	L_Shadows = 0;
 	L_Projector = 0;
