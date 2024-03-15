@@ -1,20 +1,41 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-ENGINE_API CBackend RCache;
+#include "dx11/BufferUtils.h"
+
+CBackend RCache;
 
 // Create Quad-IB
+
+// Igor: is used to test bug with rain, particles corruption
+void CBackend::RestoreQuadIBData()
+{
+	// Igor: never seen this corruption for DX10
+	;
+}
+
 void CBackend::CreateQuadIB()
 {
-#pragma message(Reminder("Not implemented!"))
-	/* const u32 dwTriCount = 4 * 1024;
-	const u32 dwIdxCount = dwTriCount * 2 * 3;
-	u16* Indices = 0;
-	u32 dwUsage = D3DUSAGE_WRITEONLY;
-	if (HW.Caps.geometry.bSoftware)
-		dwUsage |= D3DUSAGE_SOFTWAREPROCESSING;
-	R_CHK(HW.pDevice->CreateIndexBuffer(dwIdxCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &QuadIB, NULL));
-	R_CHK(QuadIB->Lock(0, 0, (void**)&Indices, 0));
+	static const u32 dwTriCount = 4 * 1024;
+	static const u32 dwIdxCount = dwTriCount * 2 * 3;
+	u16 IndexBuffer[dwIdxCount];
+	u16* Indices = IndexBuffer;
+	// u32		dwUsage			= D3DUSAGE_WRITEONLY;
+	// if (HW.Caps.geometry.bSoftware)	dwUsage|=D3DUSAGE_SOFTWAREPROCESSING;
+	// R_CHK(HW.pDevice->CreateIndexBuffer(dwIdxCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&QuadIB,NULL));
+
+	D3D11_BUFFER_DESC desc;
+	desc.ByteWidth = dwIdxCount * 2;
+	// desc.Usage = D3D_USAGE_IMMUTABLE;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subData;
+	subData.pSysMem = IndexBuffer;
+
+	// R_CHK(QuadIB->Lock(0,0,(void**)&Indices,0));
 	{
 		int Cnt = 0;
 		int ICnt = 0;
@@ -31,7 +52,11 @@ void CBackend::CreateQuadIB()
 			Cnt += 4;
 		}
 	}
-	R_CHK(QuadIB->Unlock());*/
+	// R_CHK(QuadIB->Unlock());
+
+	// R_CHK(HW.pDevice->CreateIndexBuffer(dwIdxCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&QuadIB,NULL));
+	R_CHK(HW.pDevice11->CreateBuffer(&desc, &subData, &QuadIB));
+	//HW.stats_manager.increment_stats_ib(QuadIB);
 }
 
 // Device dependance
@@ -54,5 +79,7 @@ void CBackend::OnDeviceDestroy()
 	Vertex.Destroy();
 
 	// Quad
+	//HW.stats_manager.decrement_stats_ib(QuadIB);
 	_RELEASE(QuadIB);
+
 }

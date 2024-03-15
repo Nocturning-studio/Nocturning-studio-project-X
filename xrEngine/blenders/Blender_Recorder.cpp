@@ -47,6 +47,10 @@ void CBlender_Compile::_cpp_Compile(ShaderElement* _SH)
 	SH = _SH;
 	RS.Invalidate();
 
+	//	TODO: Check if we need such wired system for
+	//	base texture name detection. Perhapse it's done for
+	//	optimization?
+
 	// Analyze possibility to detail this shader
 	detail_texture = NULL;
 	detail_scaler = NULL;
@@ -63,12 +67,31 @@ void CBlender_Compile::_cpp_Compile(ShaderElement* _SH)
 				Debug.fatal(DEBUG_INFO, "Not enought textures for shader. Base texture: '%s'.", *lst[0]);
 			base = *lst[id];
 		}
-		//.		if (!Device.Resources->_GetDetailTexture(base,detail_texture,detail_scaler))	bDetail	= FALSE;
+		//.		if (!dxRenderDeviceRender::Instance().Resources->_GetDetailTexture(base,detail_texture,detail_scaler))
+		//bDetail	= FALSE;
 		if (!Device.Resources->m_textures_description.GetDetailTexture(base, detail_texture, detail_scaler))
 			bDetail = FALSE;
 	}
 	else
 	{
+		////////////////////
+		//	Igor
+		//	Need this to correct base to detect steep parallax.
+		if (BT->canUseSteepParallax())
+		{
+			sh_list& lst = L_textures;
+			int id = ParseName(BT->oT_Name);
+			base = BT->oT_Name;
+			if (id >= 0)
+			{
+				if (id >= int(lst.size()))
+					Debug.fatal(DEBUG_INFO, "Not enought textures for shader. Base texture: '%s'.", *lst[0]);
+				base = *lst[id];
+			}
+		}
+		//	Igor
+		////////////////////
+
 		bDetail = FALSE;
 	}
 
@@ -78,31 +101,9 @@ void CBlender_Compile::_cpp_Compile(ShaderElement* _SH)
 	if (bDetail)
 		Device.Resources->m_textures_description.GetTextureUsage(base, bDetail_Diffuse, bDetail_Bump);
 
-	// KD
-	bSteepParallax = FALSE;
-	Device.Resources->m_textures_description.GetParallax(base, bSteepParallax);
-	// KD
-	/*
-		if (bDetail && Device.Resources->m_description->line_exist("association",base))
-		{
-			LPCSTR		descr			=	Device.Resources->m_description->r_string("association",base);
-			if (strstr(descr,"usage[diffuse_or_bump]"))
-			{
-				bDetail_Diffuse	= TRUE;
-				bDetail_Bump = TRUE;
-			}
+	bUseSteepParallax = FALSE;
+	Device.Resources->m_textures_description.GetParallax(base, bUseSteepParallax);
 
-			if (strstr(descr,"usage[diffuse]"))
-			{
-				bDetail_Diffuse	= TRUE;
-			}
-
-			if (strstr(descr,"usage[bump]"))
-			{
-				bDetail_Bump		= TRUE;
-			}
-		}
-	*/
 	// Compile
 	BT->Compile(*this);
 }
@@ -144,20 +145,23 @@ void CBlender_Compile::PassEnd()
 	RS.SetTSS(Stage(), D3DTSS_COLOROP, D3DTOP_DISABLE);
 	RS.SetTSS(Stage(), D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 
+	SPass proto;
 	// Create pass
-	ref_state state = Device.Resources->_CreateState(RS.GetContainer());
-	ref_ps ps = Device.Resources->CreateShader<SPS>(pass_ps, macros);
-	ref_vs vs = Device.Resources->CreateShader<SVS>(pass_vs, macros);
+	proto.state = Device.Resources->_CreateState(RS.GetContainer());
+	proto.ps = Device.Resources->CreateShader<SPS>(pass_ps, macros);
+	proto.vs = Device.Resources->CreateShader<SVS>(pass_vs, macros);
 	macros.clear();
-	ctable.merge(&ps->constants);
-	ctable.merge(&vs->constants);
+	ctable.merge(&proto.ps->constants);
+	ctable.merge(&proto.vs->constants);
 	SetMapping();
-	ref_ctable ct = Device.Resources->_CreateConstantTable(ctable);
-	ref_texture_list T = Device.Resources->_CreateTextureList(passTextures);
-	ref_matrix_list M = Device.Resources->_CreateMatrixList(passMatrices);
-	ref_constant_list C = Device.Resources->_CreateConstantList(passConstants);
+	proto.constants = Device.Resources->_CreateConstantTable(ctable);
+	proto.T = Device.Resources->_CreateTextureList(passTextures);
+#ifdef _EDITOR
+	proto.M = DEV->_CreateMatrixList(passMatrices);
+#endif
+	proto.C = Device.Resources->_CreateConstantList(passConstants);
 
-	ref_pass _pass_ = Device.Resources->_CreatePass(state, ps, vs, ct, T, M, C);
+	ref_pass _pass_ = Device.Resources->_CreatePass(proto);
 	SH->passes.push_back(_pass_);
 }
 
@@ -192,6 +196,14 @@ void CBlender_Compile::PassSET_ablend_mode(BOOL bABlend, u32 abSRC, u32 abDST)
 	RS.SetRS(D3DRS_ALPHABLENDENABLE, BC(bABlend));
 	RS.SetRS(D3DRS_SRCBLEND, bABlend ? abSRC : D3DBLEND_ONE);
 	RS.SetRS(D3DRS_DESTBLEND, bABlend ? abDST : D3DBLEND_ZERO);
+
+	//	Since in our engine D3DRS_SEPARATEALPHABLENDENABLE state is
+	//	always set to false and in DirectX 10 blend functions for
+	//	color and alpha are always independent, assign blend options for
+	//	alpha in DX10 identical to color.
+	RS.SetRS(D3DRS_SRCBLENDALPHA, bABlend ? abSRC : D3DBLEND_ONE);
+	RS.SetRS(D3DRS_DESTBLENDALPHA, bABlend ? abDST : D3DBLEND_ZERO);
+
 }
 void CBlender_Compile::PassSET_ablend_aref(BOOL bATest, u32 aRef)
 {
@@ -253,36 +265,6 @@ void CBlender_Compile::StageSET_Color3(u32 a1, u32 op, u32 a2, u32 a3)
 void CBlender_Compile::StageSET_Alpha(u32 a1, u32 op, u32 a2)
 {
 	RS.SetAlpha(Stage(), a1, op, a2);
-}
-void CBlender_Compile::StageSET_TMC(LPCSTR T, LPCSTR M, LPCSTR C, int UVW_channel)
-{
-	Stage_Texture(T);
-	Stage_Matrix(M, UVW_channel);
-	Stage_Constant(C);
-}
-
-void CBlender_Compile::StageTemplate_LMAP0()
-{
-	StageSET_Address(D3DTADDRESS_CLAMP);
-	StageSET_Color(D3DTA_TEXTURE, D3DTOP_SELECTARG1, D3DTA_DIFFUSE);
-	StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_SELECTARG1, D3DTA_DIFFUSE);
-	StageSET_TMC("$base1", "$null", "$null", 1);
-}
-
-void CBlender_Compile::Stage_Texture(LPCSTR name, u32, u32 fmin, u32 fmip, u32 fmag)
-{
-	sh_list& lst = L_textures;
-	int id = ParseName(name);
-	LPCSTR N = name;
-	if (id >= 0)
-	{
-		if (id >= int(lst.size()))
-			Debug.fatal(DEBUG_INFO, "Not enought textures for shader. Base texture: '%s'.", *lst[0]);
-		N = *lst[id];
-	}
-	passTextures.push_back(mk_pair(Stage(), ref_texture(Device.Resources->_CreateTexture(N))));
-	//	i_Address				(Stage(),address);
-	i_Filter(Stage(), fmin, fmip, fmag);
 }
 void CBlender_Compile::Stage_Matrix(LPCSTR name, int iChannel)
 {

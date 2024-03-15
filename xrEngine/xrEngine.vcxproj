@@ -1999,7 +1999,10 @@
     <ClInclude Include="du_sphere.h" />
     <ClInclude Include="du_sphere_part.h" />
     <ClInclude Include="dx11\BufferUtils.h" />
+    <ClInclude Include="dx11\ConstantBuffer.h" />
+    <ClInclude Include="dx11\ConstantBuffer_impl.h" />
     <ClInclude Include="dx11\HashHelper.h" />
+    <ClInclude Include="dx11\R_Backend_LOD.h" />
     <ClInclude Include="dx11\SamplerStateCache.h" />
     <ClInclude Include="dx11\ShaderResourceStateCache.h" />
     <ClInclude Include="dx11\State.h" />
@@ -2218,7 +2221,9 @@
     <ClCompile Include="du_sphere.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
     <ClCompile Include="dx11\BufferUtils.cpp" />
+    <ClCompile Include="dx11\ConstantBuffer.cpp" />
     <ClCompile Include="dx11\HashHelper.cpp" />
+    <ClCompile Include="dx11\R_Backend_LOD.cpp" />
     <ClCompile Include="dx11\SamplerStateCache.cpp" />
     <ClCompile Include="dx11\ShaderResourceStateCache.cpp" />
     <ClCompile Include="dx11\State.cpp" />

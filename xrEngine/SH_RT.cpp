@@ -7,93 +7,137 @@ CRT::CRT()
 {
 	pSurface = NULL;
 	pRT = NULL;
+	pZRT = NULL;
+	pUAView = NULL;
 	dwWidth = 0;
 	dwHeight = 0;
-	fmt = D3DFMT_UNKNOWN;
+	format = DXGI_FORMAT_UNKNOWN;
+	view = SRV_RTV;
+	samples = 1;
 }
 CRT::~CRT()
 {
 	destroy();
-
 	// release external reference
 	Device.Resources->_DeleteRT(this);
 }
 
-void CRT::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f)
+void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s)
 {
 	if (pSurface)
 		return;
 
-	R_ASSERT(HW.pDevice11 && Name && Name[0] && w && h);
-	_order = CPU::GetCLK(); // Device.GetTimerGlobal()->GetElapsed_clk();
-
-	HRESULT _hr = E_FAIL;
+	R_ASSERT(HW.pDevice11 && name && name[0] && w && h);
 
 	dwWidth = w;
 	dwHeight = h;
-	fmt = f;
-
-	// Get caps
-	D3DCAPS9 caps;
-#pragma message(Reminder("Not implemented!"))
-	//R_CHK(HW.pDevice->GetDeviceCaps(&caps));
-
-	// Pow2
-	if (!btwIsPow2(w) || !btwIsPow2(h))
-	{
-		if (!HW.Caps.raster.bNonPow2)
-			return;
-	}
+	format = f;
+	samples = s;
 
 	// Check width-and-height of render target surface
-	if (w > caps.MaxTextureWidth)
+	if (w > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION)
 		return;
-	if (h > caps.MaxTextureHeight)
+	if (h > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION)
 		return;
-	
-	// Select usage
-	u32 usage = 0;
-	switch (fmt)
-	{
-	case D3DFMT_D16_LOCKABLE:
-	case D3DFMT_D32:
-	case D3DFMT_D15S1:
-	case D3DFMT_D24S8:
-	case D3DFMT_D24X8:
-	case D3DFMT_D24X4S4:
-	case D3DFMT_D16:
-	case D3DFMT_D32F_LOCKABLE:
-	case D3DFMT_D24FS8:
-	case MAKEFOURCC('D', 'F', '2', '4'): // fetch smap (ATI 9500)
-	case MAKEFOURCC('D', 'F', '1', '6'): // fetch smap (ATI X1300)
-	case MAKEFOURCC('R', 'A', 'W', 'Z'): // depth as texture (GeForce 6000-7000)
-	case MAKEFOURCC('I', 'N', 'T', 'Z'): // depth as texture (GeForce 8000+, HD 4000+) 
-	case MAKEFOURCC('R', 'E', 'S', 'Z'): // msaa depth as texture (HD 4000+)
-		usage = D3DUSAGE_DEPTHSTENCIL;
-		break;
-	default:
-		usage = D3DUSAGE_RENDERTARGET;
-	}
 
-	// Validate render-target usage
-#pragma message(Reminder("Not implemented!"))
-	//_hr = HW.pD3D->CheckDeviceFormat(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, usage, D3DRTYPE_TEXTURE, f);
-	if (FAILED(_hr))
-		return;
+	DXGI_FORMAT ftex = f;
+
+	switch (ftex)
+	{
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+		ftex = DXGI_FORMAT_R32G32_TYPELESS;
+		break;
+	case DXGI_FORMAT_D32_FLOAT:
+		ftex = DXGI_FORMAT_R32_TYPELESS;
+		break;
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+		ftex = DXGI_FORMAT_R24G8_TYPELESS;
+		break;
+	case DXGI_FORMAT_D16_UNORM:
+		ftex = DXGI_FORMAT_R16_TYPELESS;
+		break;
+	}
 
 	// Try to create texture/surface
 	Device.Resources->Evict();
-#pragma message(Reminder("Not implemented!"))
-	//_hr = HW.pDevice->CreateTexture(w, h, 1, usage, f, D3DPOOL_DEFAULT, &pSurface, NULL);
-	if (FAILED(_hr) || (0 == pSurface))
-		return;
 
-		// OK
-#ifdef DEBUG
-	Msg("* created RT(%s), %dx%d", Name, w, h);
-#endif // DEBUG
-	R_CHK(pSurface->GetSurfaceLevel(0, &pRT));
-	pTexture = Device.Resources->_CreateTexture(Name);
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = dwWidth;
+	desc.Height = dwHeight;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = ftex;
+	desc.SampleDesc.Count = samples;
+	desc.SampleDesc.Quality = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = 0;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	bool use_uav = HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_0 && view == SRV_RTV_UAV && samples <= 1;
+	bool use_dsv = view == SRV_DSV || view == SRV_RTV_DSV;
+	bool use_rtv = view == SRV_RTV || view == SRV_RTV_UAV || view == SRV_RTV_DSV;
+	bool use_srv = HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 || !use_dsv || samples <= 1;
+
+	if (use_srv)
+		desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	if (use_rtv)
+		desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+	if (use_uav)
+		desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+	if (use_dsv)
+		desc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
+
+	//#ifdef DEBUG
+	Msg("* Create texture: %dx%d, %d(sr=%d, rt=%d, ua=%d, ds=%d), s=%d, '%s'", dwWidth, dwHeight, format, use_srv,
+		use_rtv, use_uav, use_dsv, samples, name);
+	//#endif
+
+	// DX10.1 and later hardware with MSAA
+	if (samples > 1 && HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
+		desc.SampleDesc.Quality = UINT(D3D11_STANDARD_MULTISAMPLE_PATTERN);
+
+	// Create Texture2D
+	CHK_DX(HW.pDevice11->CreateTexture2D(&desc, NULL, &pSurface));
+	//HW.stats_manager.increment_stats_rtarget(pSurface);
+
+	// Create rendertarget view
+	if (use_rtv)
+	{
+		CHK_DX(HW.pDevice11->CreateRenderTargetView(pSurface, NULL, &pRT));
+	}
+
+	// Create depth stencil view
+	if (use_dsv)
+	{
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthstencil = {};
+		depthstencil.Format = format;
+		depthstencil.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthstencil.Texture2D.MipSlice = 0;
+		depthstencil.Flags = 0;
+
+		if (samples > 1)
+		{
+			depthstencil.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+			depthstencil.Texture2DMS.UnusedField_NothingToDefine = 0;
+		}
+
+		CHK_DX(HW.pDevice11->CreateDepthStencilView(pSurface, &depthstencil, &pZRT));
+	}
+
+	// Create unordered acces view
+	if (use_uav)
+	{
+		D3D11_UNORDERED_ACCESS_VIEW_DESC unorderedacces = {};
+		unorderedacces.Format = format;
+		unorderedacces.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+		unorderedacces.Buffer.FirstElement = 0;
+		unorderedacces.Buffer.NumElements = dwWidth * dwHeight;
+
+		CHK_DX(HW.pDevice11->CreateUnorderedAccessView(pSurface, &unorderedacces, &pUAView));
+	}
+
+	pTexture = Device.Resources->_CreateTexture(name);
 	pTexture->surface_set(pSurface);
 }
 
@@ -104,8 +148,14 @@ void CRT::destroy()
 		pTexture->surface_set(0);
 		pTexture = NULL;
 	}
+
 	_RELEASE(pRT);
+	_RELEASE(pZRT);
+
+	//HW.stats_manager.decrement_stats_rtarget(pSurface);
+
 	_RELEASE(pSurface);
+	_RELEASE(pUAView);
 }
 void CRT::reset_begin()
 {
@@ -113,93 +163,10 @@ void CRT::reset_begin()
 }
 void CRT::reset_end()
 {
-	create(*cName, dwWidth, dwHeight, fmt);
-}
-void resptrcode_crt::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f)
-{
-	_set(Device.Resources->_CreateRT(Name, w, h, f));
+	create(*cName, dwWidth, dwHeight, format, view, samples);
 }
 
-//////////////////////////////////////////////////////////////////////////
-CRTC::CRTC()
+void resptrcode_crt::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples)
 {
-	if (pSurface)
-		return;
-
-	pSurface = NULL;
-	pRT[0] = pRT[1] = pRT[2] = pRT[3] = pRT[4] = pRT[5] = NULL;
-	dwSize = 0;
-	fmt = D3DFMT_UNKNOWN;
-}
-CRTC::~CRTC()
-{
-	destroy();
-
-	// release external reference
-	Device.Resources->_DeleteRTC(this);
-}
-
-void CRTC::create(LPCSTR Name, u32 size, D3DFORMAT f)
-{
-	R_ASSERT(HW.pDevice11 && Name && Name[0] && size && btwIsPow2(size));
-	_order = CPU::GetCLK(); // Device.GetTimerGlobal()->GetElapsed_clk();
-
-	HRESULT _hr = E_FAIL;
-
-	dwSize = size;
-	fmt = f;
-
-	// Get caps
-	D3DCAPS9 caps;
-#pragma message(Reminder("Not implemented!"))
-	//R_CHK(HW.pDevice->GetDeviceCaps(&caps));
-
-	// Check width-and-height of render target surface
-	if (size > caps.MaxTextureWidth)
-		return;
-	if (size > caps.MaxTextureHeight)
-		return;
-
-	// Validate render-target usage
-#pragma message(Reminder("Not implemented!"))
-	//_hr = HW.pD3D->CheckDeviceFormat(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, D3DUSAGE_RENDERTARGET,
-	//								 D3DRTYPE_CUBETEXTURE, f);
-	if (FAILED(_hr))
-		return;
-
-	// Try to create texture/surface
-	Device.Resources->Evict();
-#pragma message(Reminder("Not implemented!"))
-	//_hr = HW.pDevice->CreateCubeTexture(size, 1, D3DUSAGE_RENDERTARGET, f, D3DPOOL_DEFAULT, &pSurface, NULL);
-	if (FAILED(_hr) || (0 == pSurface))
-		return;
-
-	// OK
-	Msg("* created RTc(%s), 6(%d)", Name, size);
-	for (u32 face = 0; face < 6; face++)
-		R_CHK(pSurface->GetCubeMapSurface((D3DCUBEMAP_FACES)face, 0, pRT + face));
-	pTexture = Device.Resources->_CreateTexture(Name);
-	pTexture->surface_set(pSurface);
-}
-
-void CRTC::destroy()
-{
-	pTexture->surface_set(0);
-	pTexture = NULL;
-	for (u32 face = 0; face < 6; face++)
-		_RELEASE(pRT[face]);
-	_RELEASE(pSurface);
-}
-void CRTC::reset_begin()
-{
-	destroy();
-}
-void CRTC::reset_end()
-{
-	create(*cName, dwSize, fmt);
-}
-
-void resptrcode_crtc::create(LPCSTR Name, u32 size, D3DFORMAT f)
-{
-	_set(Device.Resources->_CreateRTC(Name, size, f));
+	_set(Device.Resources->_CreateRT(name, w, h, f, view, samples));
 }

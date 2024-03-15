@@ -8,31 +8,22 @@
 
 #include "frustum.h"
 
+#include "dx11/StateManager.h"
+#include "dx11/ShaderResourceStateCache.h"
+
 void CBackend::OnFrameEnd()
 {
 	HW.pContext->ClearState();
 	Invalidate();
-	/*
-#ifndef DEDICATED_SERVER
-	for (u32 stage = 0; stage < HW.Caps.raster.dwStages; stage++)
-		CHK_DX(HW.pDevice->SetTexture(0, 0));
-	CHK_DX(HW.pDevice->SetStreamSource(0, 0, 0, 0));
-	CHK_DX(HW.pDevice->SetIndices(0));
-	CHK_DX(HW.pDevice->SetVertexShader(0));
-	CHK_DX(HW.pDevice->SetPixelShader(0));
-	Invalidate();
-#endif*/
 }
 
 void CBackend::OnFrameBegin()
 {
-#ifndef DEDICATED_SERVER
-	PGO(Msg("PGO:*****frame[%d]*****", Device.dwFrame));
+	PGO(Msg("PGO:*****frame[%d]*****", RDEVICE.dwFrame));
 	Memory.mem_fill(&stat, 0, sizeof(stat));
 	Vertex.Flush();
 	Index.Flush();
 	set_Stencil(FALSE);
-#endif
 }
 
 void CBackend::Invalidate()
@@ -51,18 +42,52 @@ void CBackend::Invalidate()
 	state = NULL;
 	ps = NULL;
 	vs = NULL;
+
 	ctable = NULL;
 
 	T = NULL;
 	M = NULL;
 	C = NULL;
 
+	stencil_enable = u32(-1);
+	stencil_func = u32(-1);
+	stencil_ref = u32(-1);
+	stencil_mask = u32(-1);
+	stencil_writemask = u32(-1);
+	stencil_fail = u32(-1);
+	stencil_pass = u32(-1);
+	stencil_zfail = u32(-1);
+	cull_mode = u32(-1);
+	z_enable = u32(-1);
+	z_func = u32(-1);
+	alpha_ref = u32(-1);
 	colorwrite_mask = u32(-1);
 
-	for (u32 ps_it = 0; ps_it < 16;)
+	//	Since constant buffers are unmapped (for DirecX 10)
+	//	transform setting handlers should be unmapped too.
+	xforms.unmap();
+
+	m_pInputLayout = NULL;
+	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	m_bChangedRTorZB = false;
+	m_pInputSignature = NULL;
+	for (int i = 0; i < MaxCBuffers; ++i)
+	{
+		m_aPixelConstants[i] = 0;
+		m_aVertexConstants[i] = 0;
+	}
+	StateManager.Reset();
+	//	Redundant call. Just no note that we need to unmap const
+	//	if we create dedicated class.
+	StateManager.UnmapConstants();
+	SSManager.ResetDeviceState();
+	SRVSManager.ResetDeviceState();
+
+	for (u32 ps_it = 0; ps_it < mtMaxPixelShaderTextures;)
 		textures_ps[ps_it++] = 0;
-	for (u32 vs_it = 0; vs_it < 5;)
+	for (u32 vs_it = 0; vs_it < mtMaxVertexShaderTextures;)
 		textures_vs[vs_it++] = 0;
+
 #ifdef _EDITOR
 	for (u32 m_it = 0; m_it < 8;)
 		matrices[m_it++] = 0;
@@ -71,37 +96,10 @@ void CBackend::Invalidate()
 
 void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=NULL */, u32 count /* =0*/)
 {
-	if (0 == HW.Caps.geometry.dwClipPlanes)
-		return;
-	if (!_enable)
-	{
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
-		return;
-	}
-
-	// Enable and setup planes
-	VERIFY(_planes && count);
-	if (count > HW.Caps.geometry.dwClipPlanes)
-		count = HW.Caps.geometry.dwClipPlanes;
-
-	D3DXMATRIX worldToClipMatrixIT;
-	D3DXMatrixInverse(&worldToClipMatrixIT, NULL, (D3DXMATRIX*)&Device.mFullTransform);
-	D3DXMatrixTranspose(&worldToClipMatrixIT, &worldToClipMatrixIT);
-	for (u32 it = 0; it < count; it++)
-	{
-		Fplane& P = _planes[it];
-		D3DXPLANE planeWorld(-P.n.x, -P.n.y, -P.n.z, -P.d), planeClip;
-		D3DXPlaneNormalize(&planeWorld, &planeWorld);
-		D3DXPlaneTransform(&planeClip, &planeWorld, &worldToClipMatrixIT);
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->SetClipPlane(it, planeClip));
-	}
-
-	// Enable them
-	u32 e_mask = (1 << count) - 1;
-#pragma message(Reminder("Not implemented!"))
-	// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, e_mask));
+	//	TODO: DX10: Implement in the corresponding vertex shaders
+	//	Use this to set up location, were shader setup code will get data
+	// VERIFY(!"CBackend::set_ClipPlanes not implemented!");
+	return;
 }
 
 #ifndef DEDICATED_SREVER
@@ -111,8 +109,9 @@ void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=NULL */, u32 fmask
 		return;
 	if (!_enable)
 	{
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
+		//	TODO: DX10: Implement in the corresponding vertex shaders
+		//	Use this to set up location, were shader setup code will get data
+		// VERIFY(!"CBackend::set_ClipPlanes not implemented!");
 		return;
 	}
 	VERIFY(_xform && fmask);
@@ -126,19 +125,24 @@ void CBackend::set_Textures(STextureList* _T)
 	if (T == _T)
 		return;
 	T = _T;
-	u32 _last_ps = 0;
-	u32 _last_vs = 0;
+	//	If resources weren't set at all we should clear from resource #0.
+	int _last_ps = -1;
+	int _last_vs = -1;
 	STextureList::iterator _it = _T->begin();
 	STextureList::iterator _end = _T->end();
+
 	for (; _it != _end; _it++)
 	{
 		std::pair<u32, ref_texture>& loader = *_it;
 		u32 load_id = loader.first;
 		CTexture* load_surf = &*loader.second;
-		if (load_id < 256)
+		//		if (load_id < 256)		{
+		if (load_id < CTexture::rstVertex)
 		{
+			//	Set up pixel shader resources
+			VERIFY(load_id < mtMaxPixelShaderTextures);
 			// ordinary pixel surface
-			if (load_id > _last_ps)
+			if ((int)load_id > _last_ps)
 				_last_ps = load_id;
 			if (textures_ps[load_id] != load_surf)
 			{
@@ -156,9 +160,12 @@ void CBackend::set_Textures(STextureList* _T)
 		}
 		else
 		{
-			// d-map or vertex
-			u32 load_id_remapped = load_id - 256;
-			if (load_id_remapped > _last_vs)
+			//	Set up pixel shader resources
+			VERIFY(load_id < CTexture::rstVertex + mtMaxVertexShaderTextures);
+
+			// vertex only //d-map or vertex
+			u32 load_id_remapped = load_id - CTexture::rstVertex;
+			if ((int)load_id_remapped > _last_vs)
 				_last_vs = load_id_remapped;
 			if (textures_vs[load_id_remapped] != load_surf)
 			{
@@ -177,18 +184,28 @@ void CBackend::set_Textures(STextureList* _T)
 	}
 
 	// clear remaining stages (PS)
-	for (++_last_ps; _last_ps < 16 && textures_ps[_last_ps]; _last_ps++)
+	for (++_last_ps; _last_ps < mtMaxPixelShaderTextures; _last_ps++)
 	{
+		if (!textures_ps[_last_ps])
+			continue;
+
 		textures_ps[_last_ps] = 0;
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->SetTexture(_last_ps, NULL));
+		//	TODO: DX10: Optimise: set all resources at once
+		ID3D11ShaderResourceView* pRes = 0;
+		// HW.pDevice->PSSetShaderResources(_last_ps, 1, &pRes);
+		SRVSManager.SetPSResource(_last_ps, pRes);
 	}
 	// clear remaining stages (VS)
-	for (++_last_vs; _last_vs < 5 && textures_vs[_last_vs]; _last_vs++)
+	for (++_last_vs; _last_vs < mtMaxVertexShaderTextures; _last_vs++)
 	{
+		if (!textures_vs[_last_vs])
+			continue;
+
 		textures_vs[_last_vs] = 0;
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->SetTexture(_last_vs + 256, NULL));
+		//	TODO: DX10: Optimise: set all resources at once
+		ID3D11ShaderResourceView* pRes = 0;
+		// HW.pDevice->VSSetShaderResources(_last_vs, 1, &pRes);
+		SRVSManager.SetVSResource(_last_vs, pRes);
 	}
 }
 #else

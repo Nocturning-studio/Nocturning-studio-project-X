@@ -8,33 +8,45 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-int rsDVB_Size = 1024 * 4;
-int rsDIB_Size = 1024 * 4;
+int rsDVB_Size = 512 + 1024;
+int rsDIB_Size = 512;
 
 void _VertexStream::Create()
 {
+	// dxRenderDeviceRender::Instance().Resources->Evict		();
 	Device.Resources->Evict();
 
 	mSize = rsDVB_Size * 1024;
-#pragma message(Reminder("Not implemented!"))
-	// R_CHK(HW.pDevice->CreateVertexBuffer(mSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &pVB,
-	// NULL));
+
+	D3D11_BUFFER_DESC bufferDesc;
+	bufferDesc.ByteWidth = mSize;
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDesc.MiscFlags = 0;
+
+	R_CHK(HW.pDevice11->CreateBuffer(&bufferDesc, 0, &pVB));
+	//HW.stats_manager.increment_stats_vb(pVB);
+
 	R_ASSERT(pVB);
 
 	mPosition = 0;
 	mDiscardID = 0;
 
-	Msg("* Dynamic vertex buffer created: %dK", mSize / 1024);
+	Msg("* DVB created: %dK", mSize / 1024);
 }
 
 void _VertexStream::Destroy()
 {
+	//HW.stats_manager.decrement_stats_vb(pVB);
 	_RELEASE(pVB);
 	_clear();
 }
 
 void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 {
+	D3D11_MAPPED_SUBRESOURCE MappedSubRes;
+
 #ifdef DEBUG
 	PGO(Msg("PGO:VB_LOCK:%d", vl_Count));
 	VERIFY(0 == dbg_lock);
@@ -43,7 +55,8 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 
 	// Ensure there is enough space in the VB for this data
 	u32 bytes_need = vl_Count * Stride;
-	VERIFY((bytes_need <= mSize) && vl_Count);
+	R_ASSERT2((bytes_need <= mSize) && vl_Count,
+			  make_string("bytes_need = %d, mSize = %d, vl_Count = %d", bytes_need, mSize, vl_Count));
 
 	// Vertex-local info
 	u32 vl_mSize = mSize / Stride;
@@ -57,16 +70,18 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 		mPosition = 0;
 		vOffset = 0;
 		mDiscardID++;
-
-		pVB->Lock(mPosition, bytes_need, (void**)&pData, LOCKFLAGS_FLUSH);
+		HW.pContext->Map(pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubRes);
+		pData = (BYTE*)MappedSubRes.pData;
+		pData += vOffset;
 	}
 	else
 	{
 		// APPEND-LOCK
 		mPosition = vl_mPosition * Stride;
 		vOffset = vl_mPosition;
-
-		pVB->Lock(mPosition, bytes_need, (void**)&pData, LOCKFLAGS_APPEND);
+		HW.pContext->Map(pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubRes);
+		pData = (BYTE*)MappedSubRes.pData;
+		pData += vOffset * Stride;
 	}
 	VERIFY(pData);
 
@@ -83,7 +98,8 @@ void _VertexStream::Unlock(u32 Count, u32 Stride)
 	mPosition += Count * Stride;
 
 	VERIFY(pVB);
-	pVB->Unlock();
+
+	HW.pContext->Unmap(pVB, 0);
 }
 
 void _VertexStream::reset_begin()
@@ -97,32 +113,59 @@ void _VertexStream::reset_end()
 	// old_pVB				= NULL;
 }
 
+_VertexStream::_VertexStream()
+{
+	_clear();
+};
+
+void _VertexStream::_clear()
+{
+	pVB = NULL;
+	mSize = 0;
+	mPosition = 0;
+	mDiscardID = 0;
+#ifdef DEBUG
+	dbg_lock = 0;
+#endif
+}
+
 //////////////////////////////////////////////////////////////////////////
 void _IndexStream::Create()
 {
+	// dxRenderDeviceRender::Instance().Resources->Evict		();
 	Device.Resources->Evict();
 
 	mSize = rsDIB_Size * 1024;
-#pragma message(Reminder("Not implemented!"))
-	// R_CHK(HW.pDevice->CreateIndexBuffer(mSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16,
-	// D3DPOOL_DEFAULT,
-	//									&pIB, NULL));
+	
+	D3D11_BUFFER_DESC bufferDesc;
+	bufferDesc.ByteWidth = mSize;
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDesc.MiscFlags = 0;
+
+	R_CHK(HW.pDevice11->CreateBuffer(&bufferDesc, 0, &pIB));
+	//HW.stats_manager.increment_stats_ib(pIB);
+
 	R_ASSERT(pIB);
 
 	mPosition = 0;
 	mDiscardID = 0;
 
-	Msg("* Dynamic index buffer created: %dK\n", mSize / 1024);
+	Msg("* DIB created: %dK", mSize / 1024);
 }
 
 void _IndexStream::Destroy()
 {
+	//HW.stats_manager.decrement_stats_ib(pIB);
 	_RELEASE(pIB);
 	_clear();
 }
 
 u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 {
+	D3D11_MAPPED_SUBRESOURCE MappedSubRes;
+
 	PGO(Msg("PGO:IB_LOCK:%d", Count));
 	vOffset = 0;
 	BYTE* pLockedData = 0;
@@ -140,7 +183,12 @@ u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 		dwFlags = LOCKFLAGS_FLUSH; // discard it's contens
 		mDiscardID++;
 	}
-	pIB->Lock(mPosition * 2, Count * 2, (void**)&pLockedData, dwFlags);
+
+	D3D11_MAP MapMode = (dwFlags == LOCKFLAGS_APPEND) ? D3D11_MAP_WRITE_NO_OVERWRITE : D3D11_MAP_WRITE_DISCARD;
+	HW.pContext->Map(pIB, 0, MapMode, 0, &MappedSubRes);
+	pLockedData = (BYTE*)MappedSubRes.pData;
+	pLockedData += mPosition * 2;
+
 	VERIFY(pLockedData);
 
 	vOffset = mPosition;
@@ -153,7 +201,7 @@ void _IndexStream::Unlock(u32 RealCount)
 	PGO(Msg("PGO:IB_UNLOCK:%d", RealCount));
 	mPosition += RealCount;
 	VERIFY(pIB);
-	pIB->Unlock();
+	HW.pContext->Unmap(pIB, 0);
 }
 
 void _IndexStream::reset_begin()

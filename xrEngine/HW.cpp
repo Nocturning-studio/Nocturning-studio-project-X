@@ -431,15 +431,15 @@ void CHW::CreateDevice(HWND m_hWnd)
 	
 	HRESULT R;
 	D3D_FEATURE_LEVEL levels[] = {
-		//D3D_FEATURE_LEVEL_11_0,
-		//D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
 		D3D_FEATURE_LEVEL_10_0,
 	};
-	D3D_FEATURE_LEVEL curr_level = D3D_FEATURE_LEVEL_10_0;
+	//D3D_FEATURE_LEVEL curr_level = D3D_FEATURE_LEVEL_10_0;
 	u32 cnt = sizeof(levels) / sizeof(D3D_FEATURE_LEVEL);
 
 	R = D3D11CreateDevice(pAdapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, createDeviceFlags, levels, cnt, D3D11_SDK_VERSION,
-						  &pDevice11, &curr_level, &pContext);
+						  &pDevice11, &FeatureLevel, &pContext);
    
 	/* if (FAILED(R))
 	{
@@ -490,7 +490,7 @@ void CHW::CreateDevice(HWND m_hWnd)
 	u32 memory = Desc11.DedicatedVideoMemory;
 	Msg("* Texture memory: %d M", memory / (1024 * 1024));
 	//Msg("* DirectX Graphics Infrastructure level: %2.1f", float(D3DXGetDriverLevel(pDevice)) / 100.f);
-	Msg("* DirectX Graphics Infrastructure level: DirectX11");
+	Msg("* DirectX Graphics Infrastructure level: 11.0");
 #ifndef _EDITOR
 	updateWindowProps(m_hWnd);
 	fill_vid_mode_list(this);

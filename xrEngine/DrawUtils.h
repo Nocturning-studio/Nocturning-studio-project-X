@@ -37,14 +37,13 @@ class ECORE_API CDUInterface
 	virtual void __stdcall DrawFace(const Fvector& p0, const Fvector& p1, const Fvector& p2, u32 clr_s, u32 clr_w,
 									BOOL bSolid, BOOL bWire) = 0;
 	virtual void __stdcall DrawLine(const Fvector& p0, const Fvector& p1, u32 clr) = 0;
-	virtual void __stdcall DrawLine(const Fvector* p, u32 clr) = 0;
 	virtual void __stdcall DrawLink(const Fvector& p0, const Fvector& p1, float sz, u32 clr) = 0;
 	virtual void __stdcall DrawFaceNormal(const Fvector& p0, const Fvector& p1, const Fvector& p2, float size,
 										  u32 clr) = 0;
 	virtual void __stdcall DrawFaceNormal(const Fvector* p, float size, u32 clr) = 0;
 	virtual void __stdcall DrawFaceNormal(const Fvector& C, const Fvector& N, float size, u32 clr) = 0;
 	virtual void __stdcall DrawSelectionBox(const Fvector& center, const Fvector& size, u32* c = 0) = 0;
-	virtual void __stdcall DrawSelectionBox(const Fbox& box, u32* c = 0) = 0;
+	virtual void __stdcall DrawSelectionBoxB(const Fbox& box, u32* c = 0) = 0;
 	virtual void __stdcall DrawIdentSphere(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr_w) = 0;
 	virtual void __stdcall DrawIdentSpherePart(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr_w) = 0;
 	virtual void __stdcall DrawIdentCone(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr_w) = 0;
@@ -79,8 +78,14 @@ class ECORE_API CDUInterface
 	virtual void __stdcall DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel) = 0;
 	virtual void __stdcall DrawSelectionRect(const Ivector2& m_SelStart, const Ivector2& m_SelEnd) = 0;
 
+	virtual void __stdcall DrawIndexedPrimitive(int prim_type, u32 pc, const Fvector& pos, const Fvector* vb,
+												const u32& vb_size, const u32* ib, const u32& ib_size,
+												const u32& clr_argb, float scale = 1.0f) = 0;
+
 	virtual void __stdcall OutText(const Fvector& pos, LPCSTR text, u32 color = 0xFF000000,
 								   u32 shadow_color = 0xFF909090) = 0;
+
+	virtual void __stdcall OnDeviceDestroy() = 0;
 };
 //----------------------------------------------------
 #endif

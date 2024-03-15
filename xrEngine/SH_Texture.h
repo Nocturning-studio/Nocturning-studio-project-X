@@ -2,12 +2,12 @@
 #define SH_TEXTURE_H
 #pragma once
 
-#include "xr_resource.h"
+#include "../../xrCore/xr_resource.h"
 
 class ENGINE_API CAviPlayerCustom;
-class ENGINE_API CTheoraSurface;
+class CTheoraSurface;
 
-class ENGINE_API CTexture : public xr_resource_named
+class ECORE_API CTexture : public xr_resource_named
 {
   public:
 	//	Since DX10 allows up to 128 unique textures,
@@ -22,43 +22,6 @@ class ENGINE_API CTexture : public xr_resource_named
 		rstCompute = rstDomain + 256,
 		rstInvalid = rstCompute + 256
 	};
-	struct
-	{
-		u32 bLoaded : 1;
-		u32 bUser : 1;
-		u32 seqCycles : 1;
-		u32 MemoryUsage : 28;
-	} flags;
-	fastdelegate::FastDelegate1<u32> bind;
-
-	IDirect3DBaseTexture9* pSurface{};
-	IDirect3DBaseTexture9* pTempSurface{};
-	CAviPlayerCustom* pAVI;
-	CTheoraSurface* pTheora;
-	float m_material;
-	shared_str m_bumpmap;
-
-	union {
-		u32 m_play_time; // sync theora time
-		u32 seqMSPF;	 // Sequence data milliseconds per frame
-	};
-
-	// Sequence data
-	xr_vector<IDirect3DBaseTexture9*> seqDATA;
-
-	// Description
-	IDirect3DBaseTexture9* desc_cache;
-	D3DSURFACE_DESC desc;
-	IC BOOL desc_valid()
-	{
-		return pSurface == desc_cache;
-	}
-	IC void desc_enshure()
-	{
-		if (!desc_valid())
-			desc_update();
-	}
-	void desc_update();
 
   public:
 	void __stdcall apply_load(u32 stage);
@@ -73,8 +36,8 @@ class ENGINE_API CTexture : public xr_resource_named
 	void Unload(void);
 	//	void								Apply			(u32 dwStage);
 
-	void surface_set(IDirect3DBaseTexture9* surf);
-	IDirect3DBaseTexture9* surface_get();
+	void surface_set(ID3D11Resource* surf);
+	ID3D11Resource* surface_get();
 
 	IC BOOL isUser()
 	{
@@ -102,8 +65,67 @@ class ENGINE_API CTexture : public xr_resource_named
 
 	CTexture();
 	virtual ~CTexture();
+
+	ID3D11ShaderResourceView* get_SRView()
+	{
+		return m_pSRView;
+	}
+
+  private:
+	IC BOOL desc_valid()
+	{
+		return pSurface == desc_cache;
+	}
+	IC void desc_enshure()
+	{
+		if (!desc_valid())
+			desc_update();
+	}
+	void desc_update();
+
+	void Apply(u32 dwStage);
+	void ProcessStaging();
+	D3D11_USAGE GetUsage();
+
+
+	//	Class data
+  public: //	Public class members (must be encapsulated furthur)
+	struct
+	{
+		u32 bLoaded : 1;
+		u32 bUser : 1;
+		u32 seqCycles : 1;
+		u32 MemoryUsage : 28;
+		u32 bLoadedAsStaging : 1;
+
+	} flags;
+	fastdelegate::FastDelegate1<u32> bind;
+
+	CAviPlayerCustom* pAVI;
+	CTheoraSurface* pTheora;
+	float m_material;
+	shared_str m_bumpmap;
+
+	union {
+		u32 m_play_time; // sync theora time
+		u32 seqMSPF;	 // Sequence data milliseconds per frame
+	};
+
+  private:
+	ID3D11Resource* pSurface;
+	// Sequence data
+	xr_vector<ID3D11Resource*> seqDATA;
+
+	// Description
+	ID3D11Resource* desc_cache;
+	D3D11_TEXTURE2D_DESC desc;
+
+	ID3D11ShaderResourceView* m_pSRView;
+	// Sequence view data
+	xr_vector<ID3D11ShaderResourceView*> m_seqSRView;
+
 };
-struct ENGINE_API resptrcode_texture : public resptr_base<CTexture>
+struct resptrcode_texture : public resptr_base<CTexture>
 {
 	void create(LPCSTR _name);
 	void destroy()

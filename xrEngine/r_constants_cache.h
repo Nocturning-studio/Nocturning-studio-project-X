@@ -1,194 +1,97 @@
-#ifndef r_constants_cacheH
-#define r_constants_cacheH
+#ifndef dx10r_constants_cacheH
+#define dx10r_constants_cacheH
 #pragma once
-
-#include "r_constants.h"
-
-template <class T, u32 limit> class R_constant_cache
-{
-  private:
-	ALIGN(16) svector<T, limit> array;
-	u32 lo, hi;
-
-  public:
-	R_constant_cache()
-	{
-		array.resize(limit);
-		flush();
-	}
-	ICF T* access(u32 id)
-	{
-		return &array[id];
-	}
-	ICF void flush()
-	{
-		lo = hi = 0;
-	}
-	ICF void dirty(u32 _lo, u32 _hi)
-	{
-		if (_lo < lo)
-			lo = _lo;
-		if (_hi > hi)
-			hi = _hi;
-	}
-	ICF u32 r_lo()
-	{
-		return lo;
-	}
-	ICF u32 r_hi()
-	{
-		return hi;
-	}
-};
-
-class R_constant_array
-{
-  public:
-	typedef R_constant_cache<Fvector4, 256> t_f;
-	typedef R_constant_cache<Ivector4, 16> t_i;
-	typedef R_constant_cache<BOOL, 16> t_b;
-
-  public:
-	ALIGN(16) t_f c_f;
-	//	ALIGN(16)	t_i					c_i;
-	//	ALIGN(16)	t_b					c_b;
-	BOOL b_dirty;
-
-  public:
-	t_f& get_array_f()
-	{
-		return c_f;
-	}
-	//	t_i&					get_array_i		()	{ return c_i;	}
-	//	t_b&					get_array_b		()	{ return c_b;	}
-
-	void set(R_constant* C, R_constant_load& L, const Fmatrix& A)
-	{
-		VERIFY(RC_float == C->type);
-		Fvector4* it = c_f.access(L.index);
-		switch (L.cls)
-		{
-		case RC_2x4:
-			c_f.dirty(L.index, L.index + 2);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			break;
-		case RC_3x4:
-			c_f.dirty(L.index, L.index + 3);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			it[2].set(A._13, A._23, A._33, A._43);
-			break;
-		case RC_4x4:
-			c_f.dirty(L.index, L.index + 4);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			it[2].set(A._13, A._23, A._33, A._43);
-			it[3].set(A._14, A._24, A._34, A._44);
-			break;
-		default:
-#ifdef DEBUG
-			Debug.fatal(DEBUG_INFO, "Invalid constant run-time-type for '%s'", *C->name);
-#else
-			NODEFAULT;
-#endif
-		}
-	}
-
-	void set(R_constant* C, R_constant_load& L, const Fvector4& A)
-	{
-		VERIFY(RC_float == C->type);
-		VERIFY(RC_1x4 == L.cls);
-		c_f.access(L.index)->set(A);
-		c_f.dirty(L.index, L.index + 1);
-	}
-
-	void seta(R_constant* C, R_constant_load& L, u32 e, const Fmatrix& A)
-	{
-		VERIFY(RC_float == C->type);
-		u32 base;
-		Fvector4* it;
-		switch (L.cls)
-		{
-		case RC_2x4:
-			base = L.index + 2 * e;
-			it = c_f.access(base);
-			c_f.dirty(base, base + 2);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			break;
-		case RC_3x4:
-			base = L.index + 3 * e;
-			it = c_f.access(base);
-			c_f.dirty(base, base + 3);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			it[2].set(A._13, A._23, A._33, A._43);
-			break;
-		case RC_4x4:
-			base = L.index + 4 * e;
-			it = c_f.access(base);
-			c_f.dirty(base, base + 4);
-			it[0].set(A._11, A._21, A._31, A._41);
-			it[1].set(A._12, A._22, A._32, A._42);
-			it[2].set(A._13, A._23, A._33, A._43);
-			it[3].set(A._14, A._24, A._34, A._44);
-			break;
-		default:
-#ifdef DEBUG
-			Debug.fatal(DEBUG_INFO, "Invalid constant run-time-type for '%s'", *C->name);
-#else
-			NODEFAULT;
-#endif
-		}
-	}
-
-	void seta(R_constant* C, R_constant_load& L, u32 e, const Fvector4& A)
-	{
-		VERIFY(RC_float == C->type);
-		VERIFY(RC_1x4 == L.cls);
-		u32 base = L.index + e;
-		c_f.access(base)->set(A);
-		c_f.dirty(base, base + 1);
-	}
-};
 
 class ENGINE_API R_constants
 {
+	enum BufferType
+	{
+		BT_PixelBuffer,
+		BT_VertexBuffer,
+		BT_GeometryBuffer,
+		BT_HullBuffer,
+		BT_DomainBuffer,
+		BT_Compute
+	};
+
   public:
-	ALIGN(16) R_constant_array a_pixel;
-	ALIGN(16) R_constant_array a_vertex;
+	//	ALIGN(16)	R_constant_array	a_pixel;
+	//	ALIGN(16)	R_constant_array	a_vertex;
 
 	void flush_cache();
 
   public:
 	// fp, non-array versions
-	ICF void set(R_constant* C, const Fmatrix& A)
+
+	template <typename T> ICF void set(R_constant* C, const T& A)
 	{
-		if (C->destination & 1)
+		if (C->destination & RC_dest_pixel)
 		{
-			a_pixel.set(C, C->ps, A);
-			a_pixel.b_dirty = TRUE;
-		}
-		if (C->destination & 2)
+			set(C, C->ps, A, BT_PixelBuffer);
+		} // a_pixel.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_vertex)
 		{
-			a_vertex.set(C, C->vs, A);
-			a_vertex.b_dirty = TRUE;
-		}
+			set(C, C->vs, A, BT_VertexBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_geometry)
+		{
+			set(C, C->gs, A, BT_GeometryBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_hull)
+		{
+			set(C, C->hs, A, BT_HullBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_domain)
+		{
+			set(C, C->ds, A, BT_DomainBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_compute)
+		{
+			set(C, C->cs, A, BT_Compute);
+		} //  a_vertex.b_dirty=TRUE;		}
 	}
-	ICF void set(R_constant* C, const Fvector4& A)
+
+	template <typename T> ICF void seta(R_constant* C, u32 e, const T& A)
 	{
-		if (C->destination & 1)
+		if (C->destination & RC_dest_pixel)
 		{
-			a_pixel.set(C, C->ps, A);
-			a_pixel.b_dirty = TRUE;
-		}
-		if (C->destination & 2)
+			seta(C, C->ps, e, A, BT_PixelBuffer);
+		} //  a_pixel.b_dirty=TRUE;	}
+		if (C->destination & RC_dest_vertex)
 		{
-			a_vertex.set(C, C->vs, A);
-			a_vertex.b_dirty = TRUE;
-		}
+			seta(C, C->vs, e, A, BT_VertexBuffer);
+		} //  a_vertex.b_dirty=TRUE;	}
+		if (C->destination & RC_dest_geometry)
+		{
+			seta(C, C->gs, e, A, BT_GeometryBuffer);
+		} //  a_vertex.b_dirty=TRUE;	}
+		if (C->destination & RC_dest_hull)
+		{
+			seta(C, C->hs, e, A, BT_HullBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_domain)
+		{
+			seta(C, C->ds, e, A, BT_DomainBuffer);
+		} //  a_vertex.b_dirty=TRUE;		}
+		if (C->destination & RC_dest_compute)
+		{
+			seta(C, C->cs, e, A, BT_Compute);
+		} //  a_vertex.b_dirty=TRUE;		}
 	}
+	// ICF void				set		(R_constant* C, const Fmatrix& A)		{
+	//	if (C->destination&RC_dest_pixel)	{ set	(C,C->ps,A, BT_PixelBuffer); }	// a_pixel.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_vertex)	{ set	(C,C->vs,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_geometry){ set	(C,C->gs,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE; } 	if
+	//(C->destination&RC_dest_hull)	{ set	(C,C->hs,A, BT_HullBuffer); }	//  a_vertex.b_dirty=TRUE;		} 	if
+	//(C->destination&RC_dest_domain)	{ set	(C,C->ds,A, BT_DomainBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	// }
+	// ICF void				set		(R_constant* C, const Fvector4& A)		{
+	//	if (C->destination&RC_dest_pixel)	{ set	(C,C->ps,A, BT_PixelBuffer); }	//  a_pixel.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_vertex)	{ set	(C,C->vs,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_geometry){ set	(C,C->gs,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE; } 	if
+	//(C->destination&RC_dest_hull)	{ set	(C,C->hs,A, BT_HullBuffer); }	//  a_vertex.b_dirty=TRUE;		} 	if
+	//(C->destination&RC_dest_domain)	{ set	(C,C->ds,A, BT_DomainBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	// }
 	ICF void set(R_constant* C, float x, float y, float z, float w)
 	{
 		Fvector4 data;
@@ -196,33 +99,34 @@ class ENGINE_API R_constants
 		set(C, data);
 	}
 
+	// scalars, non-array versions
+	// ICF	void				set		(R_constant* C, float A)
+	//{
+	//	if (C->destination&RC_dest_pixel)	{ set	(C,C->ps,A, BT_PixelBuffer); }	//  a_pixel.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_vertex)	{ set	(C,C->vs,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_geometry){ set	(C,C->gs,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE; } 	if
+	//(C->destination&RC_dest_hull)	{ set	(C,C->hs,A, BT_HullBuffer); }	//  a_vertex.b_dirty=TRUE;		} 	if
+	//(C->destination&RC_dest_domain)	{ set	(C,C->ds,A, BT_DomainBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	//}
+
+	// ICF	void				set		(R_constant* C, int A)
+	//{
+	//	if (C->destination&RC_dest_pixel)	{ set	(C,C->ps,A, BT_PixelBuffer); }	//  a_pixel.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_vertex)	{ set	(C,C->vs,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;		}
+	//	if (C->destination&RC_dest_geometry){ set	(C,C->gs,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE; }
+	// }
+
 	// fp, array versions
-	ICF void seta(R_constant* C, u32 e, const Fmatrix& A)
-	{
-		if (C->destination & 1)
-		{
-			a_pixel.seta(C, C->ps, e, A);
-			a_pixel.b_dirty = TRUE;
-		}
-		if (C->destination & 2)
-		{
-			a_vertex.seta(C, C->vs, e, A);
-			a_vertex.b_dirty = TRUE;
-		}
-	}
-	ICF void seta(R_constant* C, u32 e, const Fvector4& A)
-	{
-		if (C->destination & 1)
-		{
-			a_pixel.seta(C, C->ps, e, A);
-			a_pixel.b_dirty = TRUE;
-		}
-		if (C->destination & 2)
-		{
-			a_vertex.seta(C, C->vs, e, A);
-			a_vertex.b_dirty = TRUE;
-		}
-	}
+	// ICF void				seta	(R_constant* C, u32 e, const Fmatrix& A)		{
+	//	if (C->destination&RC_dest_pixel)	{ seta	(C,C->ps,e,A, BT_PixelBuffer); }	//  a_pixel.b_dirty=TRUE;	}
+	//	if (C->destination&RC_dest_vertex)	{ seta	(C,C->vs,e,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;	}
+	//	if (C->destination&RC_dest_geometry){ seta	(C,C->gs,e,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE;	}
+	//}
+	// ICF void				seta	(R_constant* C, u32 e, const Fvector4& A)		{
+	//	if (C->destination&RC_dest_pixel)	{ seta	(C,C->ps,e,A, BT_PixelBuffer); }	//  a_pixel.b_dirty=TRUE;	}
+	//	if (C->destination&RC_dest_vertex)	{ seta	(C,C->vs,e,A, BT_VertexBuffer); }	//  a_vertex.b_dirty=TRUE;	}
+	//	if (C->destination&RC_dest_geometry){ seta	(C,C->gs,e,A, BT_GeometryBuffer); }	//  a_vertex.b_dirty=TRUE;	}
+	//}
 	ICF void seta(R_constant* C, u32 e, float x, float y, float z, float w)
 	{
 		Fvector4 data;
@@ -233,8 +137,86 @@ class ENGINE_API R_constants
 	//
 	ICF void flush()
 	{
-		if (a_pixel.b_dirty || a_vertex.b_dirty)
-			flush_cache();
+		// if (a_pixel.b_dirty || a_vertex.b_dirty)	flush_cache();
+		flush_cache();
 	}
+
+	ICF void access_direct(R_constant* C, u32 DataSize, void** ppVData, void** ppGData, void** ppPData)
+	{
+		if (ppPData)
+		{
+			if (C->destination & RC_dest_pixel)
+			{
+				access_direct(C, C->ps, ppPData, DataSize, BT_PixelBuffer);
+			}
+			else
+				*ppPData = 0;
+		}
+
+		if (ppVData)
+		{
+			if (C->destination & RC_dest_vertex)
+			{
+				access_direct(C, C->vs, ppVData, DataSize, BT_VertexBuffer);
+			}
+			else
+				*ppVData = 0;
+		}
+
+		if (ppGData)
+		{
+			if (C->destination & RC_dest_geometry)
+			{
+				access_direct(C, C->gs, ppGData, DataSize, BT_GeometryBuffer);
+			}
+			else
+				*ppGData = 0;
+		}
+	}
+
+  private:
+	void set(R_constant* C, R_constant_load& L, const Fmatrix& A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.set(C, L, A);
+	}
+
+	void set(R_constant* C, R_constant_load& L, const Fvector4& A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.set(C, L, A);
+	}
+
+	void set(R_constant* C, R_constant_load& L, float A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.set(C, L, A);
+	}
+
+	void set(R_constant* C, R_constant_load& L, int A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.set(C, L, A);
+	}
+
+	void seta(R_constant* C, R_constant_load& L, u32 e, const Fmatrix& A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.seta(C, L, e, A);
+	}
+
+	void seta(R_constant* C, R_constant_load& L, u32 e, const Fvector4& A, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		Buffer.seta(C, L, e, A);
+	}
+
+	void access_direct(R_constant* C, R_constant_load& L, void** ppData, u32 DataSize, BufferType BType)
+	{
+		dx10ConstantBuffer& Buffer = GetCBuffer(C, BType);
+		*ppData = Buffer.AccessDirect(L, DataSize);
+	}
+
+	dx10ConstantBuffer& GetCBuffer(R_constant* C, BufferType BType);
 };
-#endif
+#endif //	dx10r_constants_cacheH

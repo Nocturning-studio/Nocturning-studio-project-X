@@ -9,23 +9,23 @@
 #include "shader.h"
 #include "tss_def.h"
 #include "TextureDescrManager.h"
-#include "ShaderMacros.h"
-
+#include "shadermacros.h"
 // refs
 struct lua_State;
+
+class dx10ConstantBuffer;
 
 // defs
 class ENGINE_API CResourceManager
 {
   private:
-	struct str_pred
+	struct str_pred : public std::binary_function<char*, char*, bool>
 	{
 		IC bool operator()(LPCSTR x, LPCSTR y) const
 		{
 			return xr_strcmp(x, y) < 0;
 		}
 	};
-
 	struct texture_detail
 	{
 		const char* T;
@@ -38,7 +38,6 @@ class ENGINE_API CResourceManager
 	DEFINE_MAP_PRED(const char*, CMatrix*, map_Matrix, map_MatrixIt, str_pred);
 	DEFINE_MAP_PRED(const char*, CConstant*, map_Constant, map_ConstantIt, str_pred);
 	DEFINE_MAP_PRED(const char*, CRT*, map_RT, map_RTIt, str_pred);
-	DEFINE_MAP_PRED(const char*, CRTC*, map_RTC, map_RTCIt, str_pred);
 	DEFINE_MAP_PRED(const char*, SVS*, map_VS, map_VSIt, str_pred);
 	DEFINE_MAP_PRED(const char*, SPS*, map_PS, map_PSIt, str_pred);
 	DEFINE_MAP_PRED(const char*, texture_detail, map_TD, map_TDIt, str_pred);
@@ -50,7 +49,7 @@ class ENGINE_API CResourceManager
 	map_Matrix m_matrices;
 	map_Constant m_constants;
 	map_RT m_rtargets;
-	map_RTC m_rtargets_c;
+	//	DX10 cut map_RTC												m_rtargets_c;
 	map_VS m_vs;
 	map_PS m_ps;
 	map_TD m_td;
@@ -59,6 +58,9 @@ class ENGINE_API CResourceManager
 	xr_vector<SDeclaration*> v_declarations;
 	xr_vector<SGeometry*> v_geoms;
 	xr_vector<R_constant_table*> v_constant_tables;
+
+	xr_vector<dx10ConstantBuffer*> v_constant_buffer;
+	xr_vector<SInputSignature*> v_input_signature;
 
 	// lists
 	xr_vector<STextureList*> lst_textures;
@@ -74,6 +76,7 @@ class ENGINE_API CResourceManager
 	// misc
   public:
 	CTextureDescrMngr m_textures_description;
+	//.	CInifile*											m_textures_description;
 	xr_vector<std::pair<shared_str, R_constant_setup*>> v_constant_setup;
 	lua_State* LSVM;
 	BOOL bDeferredLoad;
@@ -89,6 +92,7 @@ class ENGINE_API CResourceManager
 	IBlender* _FindBlender(LPCSTR Name);
 	void _GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps);
 	void _DumpMemoryUsage();
+	//.	BOOL							_GetDetailTexture	(LPCSTR Name, LPCSTR& T, R_constant_setup* &M);
 
 	map_Blender& _GetBlenders()
 	{
@@ -120,14 +124,17 @@ class ENGINE_API CResourceManager
 	R_constant_table* _CreateConstantTable(R_constant_table& C);
 	void _DeleteConstantTable(const R_constant_table* C);
 
-	CRT* _CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f);
+	dx10ConstantBuffer* _CreateConstantBuffer(ID3D11ShaderReflectionConstantBuffer* pTable);
+	void _DeleteConstantBuffer(const dx10ConstantBuffer* pBuffer);
+
+	SInputSignature* _CreateInputSignature(ID3DBlob* pBlob);
+	void _DeleteInputSignature(const SInputSignature* pSignature);
+
+	CRT* _CreateRT(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples);
+
 	void _DeleteRT(const CRT* RT);
 
-	CRTC* _CreateRTC(LPCSTR Name, u32 size, D3DFORMAT f);
-	void _DeleteRTC(const CRTC* RT);
-
-	SPass* _CreatePass(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T,
-					   ref_matrix_list& _M, ref_constant_list& _C);
+	SPass* _CreatePass(const SPass& proto);
 	void _DeletePass(const SPass* P);
 
 	// Shader compiling / optimizing
@@ -177,8 +184,8 @@ class ENGINE_API CResourceManager
 		v_constant_setup.push_back(mk_pair(shared_str(name), s));
 	}
 
-	SGeometry* CreateGeom(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
-	SGeometry* CreateGeom(u32 FVF, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
+	SGeometry* CreateGeom(D3DVERTEXELEMENT9* decl, ID3D11Buffer* vb, ID3D11Buffer* ib);
+	SGeometry* CreateGeom(u32 FVF, ID3D11Buffer* vb, ID3D11Buffer* ib);
 	void DeleteGeom(const SGeometry* VS);
 	void DeferredLoad(BOOL E)
 	{
@@ -194,26 +201,13 @@ class ENGINE_API CResourceManager
 	template <typename T> T& GetShaderMap();
 	template <typename T> T* FindShader(const char* _name);
 	template <typename T> T* RegisterShader(const char* _name);
-	template <typename T>
-	HRESULT CompileShader(LPCSTR name, LPCSTR ext, LPCSTR src, UINT size, LPCSTR target, LPCSTR entry,
-						  CShaderMacros& macros, T*& result);
+	template <typename T> HRESULT CompileShader(LPCSTR name, LPCSTR ext, LPCSTR src, 
+		UINT size, LPCSTR target, LPCSTR entry, CShaderMacros& macros, T*& result);
 	template <typename T> T* CreateShader(const char* _name, CShaderMacros& macros);
 	template <typename T> void DestroyShader(const T* sh);
 	template <typename T> HRESULT ReflectShader(DWORD const* src, UINT size, T*& result);
+	template <typename T> void CreateSignature(DWORD const* src, UINT size, T*& result);
 };
-
-template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
-{
-	xr_vector<T*>::iterator it = vec.begin();
-	xr_vector<T*>::iterator end = vec.end();
-	for (; it != end; it++)
-		if (*it == ptr)
-		{
-			vec.erase(it);
-			return TRUE;
-		}
-	return FALSE;
-}
 
 template SPS* CResourceManager::CreateShader<SPS>(LPCSTR _name, CShaderMacros& macros);
 template SVS* CResourceManager::CreateShader<SVS>(LPCSTR _name, CShaderMacros& macros);

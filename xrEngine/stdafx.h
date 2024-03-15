@@ -24,6 +24,7 @@
 #pragma warning(disable : 4995)
 #include <d3d11.h>
 #include <d3dx11.h>
+#include "d3d11shader.h"
 #include <d3d9.h>
 #include <DPlay\dplay8.h>
 #pragma warning(default : 4995)
@@ -57,6 +58,12 @@
 #include "xrXRC.h"
 
 #include "../xrSound/sound.h"
+
+#include "HW.h"
+#include "Shader.h"
+#include "R_Backend.h"
+#include "R_Backend_Runtime.h"
+#include "resourcemanager.h"
 
 extern ENGINE_API CInifile* pGameIni;
 

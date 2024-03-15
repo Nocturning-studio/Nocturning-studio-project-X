@@ -189,7 +189,7 @@ class ENGINE_API IRender_interface
 	virtual void level_Load(IReader*) = 0;
 	virtual void level_Unload() = 0;
 
-	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize) = 0;
+	virtual ID3D11Resource* texture_load(LPCSTR fname, u32& msize, bool bStaging) = 0;
 	void shader_option_skinning(s32 mode)
 	{
 		m_skinning = mode;

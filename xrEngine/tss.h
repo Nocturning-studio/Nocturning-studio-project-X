@@ -15,7 +15,8 @@ enum XRDX10RENDERSTATETYPE
 {
 	XRDX10RS_ALPHATOCOVERAGE = 1024
 };
-class ENGINE_API CSimulatorTSS
+
+class CSimulatorTSS
 {
   public:
 	IC void Set(SimulatorStates& container, u32 S, u32 N, u32 V)
@@ -72,17 +73,18 @@ class ENGINE_API CSimulatorTSS
 	}
 };
 
-class ENGINE_API CSimulatorRS
+class CSimulatorRS
 {
   public:
 	IC void Set(SimulatorStates& container, u32 N, u32 V)
 	{
-		R_ASSERT(N < 256);
+		//	Igor: XBox has render states 400 and hire
+		// R_ASSERT(N<256);
 		container.set_RS(N, V);
 	}
 };
 
-class ENGINE_API CSimulator
+class CSimulator
 {
   public:
 	CSimulatorTSS TSS;

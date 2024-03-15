@@ -83,7 +83,7 @@ void CRenderDevice::_Create(LPCSTR shName)
 	m_WireShader.create("editor\\wire");
 	m_SelectionShader.create("editor\\selection");
 
-	DU.OnDeviceCreate();
+	DUImpl.OnDeviceCreate();
 #endif
 
 	dwFrame = 0;

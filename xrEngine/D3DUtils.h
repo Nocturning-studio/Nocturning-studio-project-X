@@ -8,8 +8,8 @@
 //----------------------------------------------------
 
 #ifdef _EDITOR
-#define DU_DRAW_DIP Device.DIP
-#define DU_DRAW_DP Device.DP
+#define DU_DRAW_DIP EDevice.DIP
+#define DU_DRAW_DP EDevice.DP
 #else
 #define DU_DRAW_DIP RCache.dbg_DIP
 #define DU_DRAW_DP RCache.dbg_DP
@@ -94,7 +94,7 @@ class ECORE_API CDrawUtilities : public CDUInterface, public pureRender
 	}
 
 	void OnDeviceCreate();
-	void OnDeviceDestroy();
+	virtual void __stdcall OnDeviceDestroy();
 
 	void UpdateGrid(int number_of_cell, float square_size, int subdiv = 10);
 
@@ -128,10 +128,6 @@ class ECORE_API CDrawUtilities : public CDUInterface, public pureRender
 	virtual void __stdcall DrawFace(const Fvector& p0, const Fvector& p1, const Fvector& p2, u32 clr_s, u32 clr_w,
 									BOOL bSolid, BOOL bWire);
 	virtual void __stdcall DrawLine(const Fvector& p0, const Fvector& p1, u32 clr);
-	IC virtual void __stdcall DrawLine(const Fvector* p, u32 clr)
-	{
-		DrawLine(p[0], p[1], clr);
-	}
 	virtual void __stdcall DrawLink(const Fvector& p0, const Fvector& p1, float sz, u32 clr);
 	IC virtual void __stdcall DrawFaceNormal(const Fvector& p0, const Fvector& p1, const Fvector& p2, float size,
 											 u32 clr)
@@ -156,7 +152,7 @@ class ECORE_API CDrawUtilities : public CDUInterface, public pureRender
 		DrawLine(C, P, clr);
 	}
 	virtual void __stdcall DrawSelectionBox(const Fvector& center, const Fvector& size, u32* c = 0);
-	IC virtual void __stdcall DrawSelectionBox(const Fbox& box, u32* c = 0)
+	IC virtual void __stdcall DrawSelectionBoxB(const Fbox& box, u32* c = 0)
 	{
 		Fvector S, C;
 		box.getsize(S);
@@ -200,6 +196,9 @@ class ECORE_API CDrawUtilities : public CDUInterface, public pureRender
 	virtual void __stdcall DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel);
 	virtual void __stdcall DrawSelectionRect(const Ivector2& m_SelStart, const Ivector2& m_SelEnd);
 
+	virtual void __stdcall DrawIndexedPrimitive(int prim_type, u32 pc, const Fvector& pos, const Fvector* vb,
+												const u32& vb_size, const u32* ib, const u32& ib_size,
+												const u32& clr_argb, float scale = 1.0f){};
 	virtual void __stdcall DrawPrimitiveL(D3DPRIMITIVETYPE pt, u32 pc, Fvector* vertices, int vc, u32 color, BOOL bCull,
 										  BOOL bCycle);
 	virtual void __stdcall DrawPrimitiveTL(D3DPRIMITIVETYPE pt, u32 pc, FVF::TL* vertices, int vc, BOOL bCull,
@@ -212,6 +211,6 @@ class ECORE_API CDrawUtilities : public CDUInterface, public pureRender
 
 	virtual void OnRender();
 };
-extern ECORE_API CDrawUtilities DU;
+extern ECORE_API CDrawUtilities DUImpl;
 //----------------------------------------------------
 #endif /*_INCDEF_D3DUtils_H_*/

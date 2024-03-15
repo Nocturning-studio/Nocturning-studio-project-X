@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "gamefont.h"
+#include "../../xrEngine/gamefont.h"
 #include "d3dutils.h"
 #include "du_box.h"
 #include "du_sphere.h"
@@ -16,7 +16,7 @@
 #include "d3dx9.h"
 #pragma warning(pop)
 
-CDrawUtilities DU;
+CDrawUtilities DUImpl;
 
 #define LINE_DIVISION 32 // не меньше 6!!!!!
 // for drawing sphere
@@ -29,16 +29,16 @@ static const int boxvertcount = 48;
 static Fvector boxvert[boxvertcount];
 
 #ifdef _EDITOR
-#define DU_DRAW_RS Device.SetRS
+#define DU_DRAW_RS dxRenderDeviceRender::Instance().SetRS
 #define DU_DRAW_SH_C(a, c)                                                                                             \
 	{                                                                                                                  \
-		Device.SetShader(a);                                                                                           \
-		Device.SetRS(D3DRS_TEXTUREFACTOR, c);                                                                          \
+		dxRenderDeviceRender::Instance().SetShader(a);                                                                 \
+		dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, c);                                                \
 	}
 #define DU_DRAW_SH(a)                                                                                                  \
 	{                                                                                                                  \
-		Device.SetShader(a);                                                                                           \
-		Device.SetRS(D3DRS_TEXTUREFACTOR, 0xFFFFFFFF);                                                                 \
+		dxRenderDeviceRender::Instance().SetShader(a);                                                                 \
+		dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, 0xFFFFFFFF);                                       \
 	}
 #else
 #define DU_DRAW_RS RCache.dbg_SetRS
@@ -56,9 +56,9 @@ static Fvector boxvert[boxvertcount];
 #endif
 
 #ifdef _EDITOR
-#define FILL_MODE Device.dwFillMode
-#define SHADE_MODE Device.dwShadeMode
-#define SCREEN_QUALITY Device.m_ScreenQuality
+#define FILL_MODE dxRenderDeviceRender::Instance().dwFillMode
+#define SHADE_MODE dxRenderDeviceRender::Instance().dwShadeMode
+#define SCREEN_QUALITY dxRenderDeviceRender::Instance().m_ScreenQuality
 #else
 #define FILL_MODE D3DFILL_SOLID
 #define SHADE_MODE D3DSHADE_GOURAUD
@@ -110,42 +110,15 @@ u32 m_ColorSafeRect = 0xffB040B0;
 void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt,
 									  u16* indices, u32 _i_cnt)
 {
-	IDirect3DVertexBuffer9* pVB = 0;
-	IDirect3DIndexBuffer9* pIB = 0;
-	p_cnt = _p_cnt;
-	p_type = _pt;
-	v_cnt = _v_cnt;
-	i_cnt = _i_cnt;
-	u32 stride = D3DXGetFVFVertexSize(FVF);
-#pragma message(Reminder("Not implemented!"))
-	// R_CHK(HW.pDevice->CreateVertexBuffer(v_cnt * stride, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVB, 0));
-	u8* bytes;
-	R_CHK(pVB->Lock(0, 0, (LPVOID*)&bytes, 0));
-	FLvertexVec verts(v_cnt);
-	for (u32 k = 0; k < v_cnt; ++k)
-		verts[k].set(((Fvector*)vertices)[k], 0xFFFFFFFF);
-	Memory.mem_copy(bytes, &*verts.begin(), v_cnt * stride);
-	R_CHK(pVB->Unlock());
-	if (i_cnt)
-	{
-#pragma message(Reminder("Not implemented!"))
-		// R_CHK(HW.pDevice->CreateIndexBuffer(i_cnt * sizeof(u16), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-		//									&pIB, NULL));
-		R_CHK(pIB->Lock(0, 0, (LPVOID*)&bytes, 0));
-		Memory.mem_copy(bytes, indices, i_cnt * sizeof(u16));
-		R_CHK(pIB->Unlock());
-		OnRender.bind(this, &SPrimitiveBuffer::RenderDIP);
-	}
-	else
-	{
-		OnRender.bind(this, &SPrimitiveBuffer::RenderDP);
-	}
-	pGeom.create(FVF, pVB, pIB);
+//	TODO: DX10: Implement SPrimitiveBuffer::CreateFromData for DX10
+//	VERIFY(!"SPrimitiveBuffer::CreateFromData not implemented for dx10");
 }
 void SPrimitiveBuffer::Destroy()
 {
 	if (pGeom)
 	{
+		//HW.stats_manager.decrement_stats_vb(pGeom->vb);
+		//HW.stats_manager.decrement_stats_ib(pGeom->ib);
 		_RELEASE(pGeom->vb);
 		_RELEASE(pGeom->ib);
 		pGeom.destroy();
@@ -185,7 +158,6 @@ void CDrawUtilities::UpdateGrid(int number_of_cell, float square_size, int subdi
 				m_GridPoints.push_back(right);
 			}
 		}
-
 		for (int i = -m_GridCounts[1]; i <= m_GridCounts[1]; i++)
 		{
 			if ((!!thin) != !!(i % m_GridSubDiv[1]))
@@ -573,7 +545,9 @@ void CDrawUtilities::DrawIdentCone(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr_w
 	}
 	if (bSolid)
 	{
-		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader, clr_s);
+		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader
+											   : Device.m_SelectionShader,
+					 clr_s);
 		m_SolidCone.Render();
 	}
 	DU_DRAW_RS(D3DRS_TEXTUREFACTOR, 0xffffffff);
@@ -588,7 +562,8 @@ void CDrawUtilities::DrawIdentSphere(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr
 	}
 	if (bSolid)
 	{
-		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader, clr_s);
+		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader,
+					 clr_s);
 		m_SolidSphere.Render();
 	}
 	DU_DRAW_RS(D3DRS_TEXTUREFACTOR, 0xffffffff);
@@ -603,7 +578,8 @@ void CDrawUtilities::DrawIdentSpherePart(BOOL bSolid, BOOL bWire, u32 clr_s, u32
 	}
 	if (bSolid)
 	{
-		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader, clr_s);
+		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader,
+					 clr_s);
 		m_SolidSpherePart.Render();
 	}
 	DU_DRAW_RS(D3DRS_TEXTUREFACTOR, 0xffffffff);
@@ -618,7 +594,8 @@ void CDrawUtilities::DrawIdentCylinder(BOOL bSolid, BOOL bWire, u32 clr_s, u32 c
 	}
 	if (bSolid)
 	{
-		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader, clr_s);
+		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader,
+					 clr_s);
 		m_SolidCylinder.Render();
 	}
 	DU_DRAW_RS(D3DRS_TEXTUREFACTOR, 0xffffffff);
@@ -633,7 +610,8 @@ void CDrawUtilities::DrawIdentBox(BOOL bSolid, BOOL bWire, u32 clr_s, u32 clr_w)
 	}
 	if (bSolid)
 	{
-		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader, clr_s);
+		DU_DRAW_SH_C(color_get_A(clr_s) >= 254 ? Device.m_WireShader : Device.m_SelectionShader,
+					 clr_s);
 		m_SolidBox.Render();
 	}
 	DU_DRAW_RS(D3DRS_TEXTUREFACTOR, 0xffffffff);

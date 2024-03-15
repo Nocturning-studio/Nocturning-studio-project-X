@@ -105,10 +105,10 @@ u32 GetGpuNum()
 
 void CHWCaps::Update()
 {
-	D3DCAPS9 caps;
+	/* D3DCAPS9 caps;
 #pragma message(Reminder("Not implemented!"))
 	// HW.pDevice->GetDeviceCaps(&caps);
-
+	
 	// ***************** GEOMETRY
 	geometry_major = u16((u32(caps.VertexShaderVersion) & (0xf << 8ul)) >> 8);
 	geometry_minor = u16((u32(caps.VertexShaderVersion) & 0xf));
@@ -142,14 +142,14 @@ void CHWCaps::Update()
 	IDirect3DQuery9* q_vc;
 	D3DDEVINFO_VCACHE vc;
 #pragma message(Reminder("Not implemented!"))
-	// HRESULT _hr = HW.pDevice->CreateQuery(D3DQUERYTYPE_VCACHE, &q_vc);
-	//if (FAILED(_hr))
+	 HRESULT _hr = HW.pDevice->CreateQuery(D3DQUERYTYPE_VCACHE, &q_vc);
+	if (FAILED(_hr))
 	{
 		vc.OptMethod = 0;
 		vc.CacheSize = 16;
 		geometry.dwVertexCache = 16;
 	}
-	/* else
+	 else
 	{
 		q_vc->Issue(D3DISSUE_END);
 		q_vc->GetData(&vc, sizeof(vc), D3DGETDATA_FLUSH);
@@ -158,7 +158,7 @@ void CHWCaps::Update()
 			geometry.dwVertexCache = vc.CacheSize;
 		else
 			geometry.dwVertexCache = 16;
-	}*/
+	}
 	Msg("* GPU vertex cache: %s, %d", (1 == vc.OptMethod) ? "recognized" : "unrecognized", u32(geometry.dwVertexCache));
 
 	// *******1********** Compatibility : vertex shader
@@ -219,6 +219,87 @@ void CHWCaps::Update()
 #pragma message(Reminder("Not implemented!"))
 	//HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_coverage);
 	//max_coverage = max_coverage - 1; // get real max coverage
+
+	// DEV INFO
+	iGPUNum = GetGpuNum();*/
+
+	struct sm
+	{
+		u16 major, minor;
+	} version = {2, 0};
+
+	switch (HW.FeatureLevel)
+	{
+	case D3D_FEATURE_LEVEL_10_0:
+		version.major = 4;
+		version.minor = 0;
+		break;
+	case D3D_FEATURE_LEVEL_10_1:
+		version.major = 4;
+		version.minor = 1;
+		break;
+	case D3D_FEATURE_LEVEL_11_0:
+		version.major = 5;
+		version.minor = 0;
+		break;
+	}
+
+	// ***************** GEOMETRY
+	geometry_major = version.major;
+	geometry_minor = version.minor;
+	geometry.bSoftware = FALSE;
+	geometry.bPointSprites = FALSE;
+	geometry.bNPatches = version.major >= 5;
+	geometry.dwRegisters = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+	geometry.dwInstructions = 256;
+	geometry.dwClipPlanes = 6;
+	geometry.bVTF = TRUE;
+
+	// ***************** PIXEL processing
+	raster_major = version.major;
+	raster_minor = version.minor;
+	raster.dwStages = 16;
+	raster.bNonPow2 = TRUE;
+	raster.bCubemap = TRUE;
+	raster.dwMRT_count = 8;
+	raster.b_MRT_mixdepth = TRUE;
+	raster.dwInstructions = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+
+	// ***************** Info
+	Msg("* GPU shading: vs(%x/%d.%d/%d), ps(%x/%d.%d/%d)", 0, geometry_major, geometry_minor,
+		CAP_VERSION(geometry_major, geometry_minor), 0, raster_major, raster_minor,
+		CAP_VERSION(raster_major, raster_minor));
+
+	// *******1********** Vertex cache
+	//	TODO: DX10: Find a way to detect cache size
+	geometry.dwVertexCache = 128;
+	Msg("* GPU vertex cache: %s, %d", "unrecognized", u32(geometry.dwVertexCache));
+
+	// *******1********** Compatibility : vertex shader
+	if (0 == raster_major)
+		geometry_major = 0; // Disable VS if no PS
+
+	//
+	bTableFog = FALSE; // BOOL	(caps.RasterCaps&D3DPRASTERCAPS_FOGTABLE);
+
+	// Detect if stencil available
+	bStencil = TRUE;
+
+	// Scissoring
+	bScissor = TRUE;
+
+	// Stencil relative caps
+	soInc = D3DSTENCILOP_INCRSAT;
+	soDec = D3DSTENCILOP_DECRSAT;
+	dwMaxStencilValue = (1 << 8) - 1;
+
+	// csaa caps
+	/* ZeroMemory(msaa_coverage, sizeof(msaa_coverage));
+	for (u32 i = 1, j = 0; i <= 8; i = i * 2, ++j)
+	{
+		HW.pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &msaa_coverage[j]);
+		Msg("MSAA %ux coverage: %u", i, msaa_coverage[j]);
+	}*/
 
 	// DEV INFO
 	iGPUNum = GetGpuNum();

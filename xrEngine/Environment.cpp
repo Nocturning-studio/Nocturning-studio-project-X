@@ -488,8 +488,8 @@ void CEnvironment::OnFrame()
 	}
 
 	//. Setup skybox textures, somewhat ugly
-	IDirect3DBaseTexture9* e0 = CurrentEnv->sky_r_textures[0].second->surface_get();
-	IDirect3DBaseTexture9* e1 = CurrentEnv->sky_r_textures[1].second->surface_get();
+	ID3D11Resource* e0 = CurrentEnv->sky_r_textures[0].second->surface_get();
+	ID3D11Resource* e1 = CurrentEnv->sky_r_textures[1].second->surface_get();
 
 	tsky0->surface_set(e0);
 	_RELEASE(e0);

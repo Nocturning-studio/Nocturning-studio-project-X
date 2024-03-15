@@ -2,8 +2,11 @@
 
 #include "ShaderMacros.h"
 
+#include "d3dcompiler.h"
+#pragma comment(lib, "d3dcompiler.lib")
+
 //----------------------------------------------------------------
-class CShaderIncluder : public ID3DXInclude
+class CShaderIncluder : public ID3DInclude
 {
   private:
 	u32 counter = 0;
@@ -12,7 +15,7 @@ class CShaderIncluder : public ID3DXInclude
 	char data[max_size * 1024];
 
   public:
-	HRESULT __stdcall Open(D3DXINCLUDE_TYPE type, LPCSTR pName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+	HRESULT __stdcall Open(D3D_INCLUDE_TYPE type, LPCSTR pName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 	{
 		bool shared = type == D3DXINC_SYSTEM;
 		LPCSTR shaders_path = shared ? "shared\\" : ::Render->getShaderPath();
@@ -199,14 +202,14 @@ HRESULT CResourceManager::CompileShader(
 	Msg("*   cache: %s.%s", cache_dest, ext);
 #endif
 
-	CShaderIncluder		Includer;
-	ID3DXBuffer*		pShaderBuf = NULL;
-	ID3DXBuffer*		pErrorBuf = NULL;
-	ID3DXConstantTable* pConstants	= NULL;
+	CShaderIncluder	Includer;
+	ID3DBlob* pShaderBuf = NULL;
+	ID3DBlob* pErrorBuf = NULL;
 	
-	u32 flags = D3DXSHADER_PACKMATRIX_ROWMAJOR | D3DXSHADER_OPTIMIZATION_LEVEL3;
+	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
 	
-	HRESULT _result = D3DXCompileShader(src, size, &macros.get_macros()[0], &Includer, entry, target, flags, &pShaderBuf, &pErrorBuf, &pConstants);
+	HRESULT _result = D3DCompile(src, size, name, (D3D_SHADER_MACRO*)&macros.get_macros()[0], 
+		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
 	
 	if (SUCCEEDED(_result))
 	{
@@ -273,16 +276,31 @@ HRESULT CResourceManager::ReflectShader(
 {
 	result->sh = ShaderTypeTraits<T>::D3DCreateShader(src, size);
 
-	const void* pReflection = 0;
-	HRESULT _hr = D3DXFindShaderComment(src, MAKEFOURCC('C', 'T', 'A', 'B'), &pReflection, NULL);
-	
+	ID3D11ShaderReflection* pReflection = 0;
+	HRESULT const _hr = D3DReflect(src, size, IID_ID3D11ShaderReflection, (void**)result);
+
 	if (SUCCEEDED(_hr) && pReflection)
 	{
 		result->constants.parse((void*)pReflection, ShaderTypeTraits<T>::GetShaderDest());
+		CreateSignature(src, size, result);
+		_RELEASE(pReflection);
 		return _hr;
 	}
 
 	return E_FAIL;
+}
+
+template <typename T> void CResourceManager::CreateSignature(DWORD const* src, UINT size, T*& result)
+{
+}
+
+template <> void CResourceManager::CreateSignature<SVS>(DWORD const* src, UINT size, SVS*& result)
+{
+	//	Store input signature (need only for VS)
+	ID3DBlob* pSignatureBlob;
+	CHK_DX(D3DGetInputSignatureBlob(src, size, &pSignatureBlob));
+	VERIFY(pSignatureBlob);
+	result->signature = _CreateInputSignature(pSignatureBlob);
 }
 
 template<typename T>

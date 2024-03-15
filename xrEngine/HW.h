@@ -26,6 +26,7 @@ class ENGINE_API CHW
 	ID3D11DepthStencilView* pBaseZB;
 	ID3D11RenderTargetView* pBaseRT;
 	DXGI_SWAP_CHAIN_DESC m_ChainDesc;
+	D3D_FEATURE_LEVEL FeatureLevel;
 
 	CHWCaps Caps;
 

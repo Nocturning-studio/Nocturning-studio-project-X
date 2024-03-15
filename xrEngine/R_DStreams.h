@@ -8,29 +8,20 @@ enum
 	LOCKFLAGS_APPEND = D3DLOCK_NOOVERWRITE
 };
 
-class ENGINE_API _VertexStream
+class ECORE_API _VertexStream
 {
   private:
-	IDirect3DVertexBuffer9* pVB;
+	ID3D11Buffer* pVB;
 	u32 mSize;		// size in bytes
 	u32 mPosition;	// position in bytes
 	u32 mDiscardID; // ID of discard - usually for caching
   public:
-	IDirect3DVertexBuffer9* old_pVB;
+	ID3D11Buffer* old_pVB;
 #ifdef DEBUG
 	u32 dbg_lock;
 #endif
   private:
-	void _clear()
-	{
-		pVB = NULL;
-		mSize = 0;
-		mPosition = 0;
-		mDiscardID = 0;
-#ifdef DEBUG
-		dbg_lock = 0;
-#endif
-	}
+	void _clear();
 
   public:
 	void Create();
@@ -38,7 +29,7 @@ class ENGINE_API _VertexStream
 	void reset_begin();
 	void reset_end();
 
-	IC IDirect3DVertexBuffer9* Buffer()
+	IC ID3D11Buffer* Buffer()
 	{
 		return pVB;
 	}
@@ -53,27 +44,28 @@ class ENGINE_API _VertexStream
 
 	void* Lock(u32 vl_Count, u32 Stride, u32& vOffset);
 	void Unlock(u32 Count, u32 Stride);
-
-	_VertexStream()
+	u32 GetSize()
 	{
-		_clear();
-	};
+		return mSize;
+	}
+
+	_VertexStream();
 	~_VertexStream()
 	{
 		Destroy();
 	};
 };
 
-class ENGINE_API _IndexStream
+class ECORE_API _IndexStream
 {
   private:
-	IDirect3DIndexBuffer9* pIB;
+	ID3D11Buffer* pIB;
 	u32 mSize; // real size (usually mCount, aligned on 512b boundary)
 	u32 mPosition;
 	u32 mDiscardID;
 
   public:
-	IDirect3DIndexBuffer9* old_pIB;
+	ID3D11Buffer* old_pIB;
 
   private:
 	void _clear()
@@ -90,7 +82,7 @@ class ENGINE_API _IndexStream
 	void reset_begin();
 	void reset_end();
 
-	IC IDirect3DIndexBuffer9* Buffer()
+	IC ID3D11Buffer* Buffer()
 	{
 		return pIB;
 	}

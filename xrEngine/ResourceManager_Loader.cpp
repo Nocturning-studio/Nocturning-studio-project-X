@@ -8,7 +8,6 @@ void CResourceManager::OnDeviceDestroy(BOOL)
 {
 	if (Device.b_is_Ready)
 		return;
-
 	m_textures_description.UnLoad();
 
 	// Matrices
@@ -100,20 +99,24 @@ void CResourceManager::OnDeviceCreate(IReader* F)
 			CBlender_DESC desc;
 			chunk->r(&desc, sizeof(desc));
 			IBlender* B = IBlender::Create(desc.CLS);
+			/*#if RENDER != R_R1
+						if (desc.CLS == B_SHADOW_WORLD)
+						{
+							chunk->close();
+							chunk_id += 1;
+							continue;
+						}
+			#endif*/
 			if (0 == B)
 			{
-#ifdef EDITOR
 				Msg("! Renderer doesn't support blender '%s'", desc.cName);
-#endif
 			}
 			else
 			{
-#ifdef EDITOR
 				if (B->getDescription().version != desc.version)
 				{
 					Msg("! Version conflict in shader '%s'", desc.cName);
 				}
-#endif
 
 				chunk->seek(0);
 				B->Load(*chunk, desc.version);

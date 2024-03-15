@@ -588,6 +588,15 @@
     <ClInclude Include="dx11\State.h">
       <Filter>Render\DX11</Filter>
     </ClInclude>
+    <ClInclude Include="dx11\ConstantBuffer.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\ConstantBuffer_impl.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\R_Backend_LOD.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1020,6 +1029,12 @@
       <Filter>Render\DX11</Filter>
     </ClCompile>
     <ClCompile Include="dx11\State.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\ConstantBuffer.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\R_Backend_LOD.cpp">
       <Filter>Render\DX11</Filter>
     </ClCompile>
   </ItemGroup>

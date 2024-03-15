@@ -7,7 +7,7 @@
 #pragma once
 
 #include "r_constants.h"
-#include "xr_resource.h"
+#include "../../xrCore/xr_resource.h"
 
 #include "sh_atomic.h"
 #include "sh_texture.h"
@@ -16,8 +16,8 @@
 #include "sh_rt.h"
 
 typedef xr_vector<shared_str> sh_list;
-class ENGINE_API CBlender_Compile;
-class ENGINE_API IBlender;
+class CBlender_Compile;
+class IBlender;
 #define SHADER_PASSES_MAX 3
 
 #pragma pack(push, 4)
@@ -43,6 +43,10 @@ struct ENGINE_API STextureList : public xr_resource_flagged, public xr_vector<st
 	}
 	virtual void clear();
 	virtual void clear_not_free();
+
+	//	Avoid using this function.
+	//	If possible use precompiled texture list.
+	u32 find_texture_stage(const shared_str& TexName) const;
 };
 typedef resptr_core<STextureList, resptr_base<STextureList>> ref_texture_list;
 //////////////////////////////////////////////////////////////////////////
@@ -62,15 +66,16 @@ typedef resptr_core<SConstantList, resptr_base<SConstantList>> ref_constant_list
 struct ENGINE_API SGeometry : public xr_resource_flagged
 {
 	ref_declaration dcl;
-	IDirect3DVertexBuffer9* vb;
-	IDirect3DIndexBuffer9* ib;
+	ID3D11Buffer* vb;
+	ID3D11Buffer* ib;
 	u32 vb_stride;
 	~SGeometry();
 };
+
 struct ENGINE_API resptrcode_geom : public resptr_base<SGeometry>
 {
-	void create(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
-	void create(u32 FVF, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib);
+	void create(D3DVERTEXELEMENT9* decl, ID3D11Buffer* vb, ID3D11Buffer* ib);
+	void create(u32 FVF, ID3D11Buffer* vb, ID3D11Buffer* ib);
 	void destroy()
 	{
 		_set(NULL);
@@ -80,6 +85,7 @@ struct ENGINE_API resptrcode_geom : public resptr_base<SGeometry>
 		return _get()->vb_stride;
 	}
 };
+
 typedef resptr_core<SGeometry, resptrcode_geom> ref_geom;
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,6 +95,12 @@ struct ENGINE_API SPass : public xr_resource_flagged
 	ref_ps ps;		 // may be NULL = FFP, in that case "state" must contain TSS setup
 	ref_vs vs; // may be NULL = FFP, in that case "state" must contain RS setup, *and* FVF-compatible declaration must
 			   // be used
+
+	ref_gs gs;			  // may be NULL = don't use geometry shader at all
+	ref_hs hs;			  // may be NULL = don't use hull shader at all
+	ref_ds ds;			  // may be NULL = don't use domain shader at all
+	ref_cs cs;			  // may be NULL = don't use compute shader at all
+					  //
 	ref_ctable constants; // may be NULL
 
 	ref_texture_list T;
@@ -98,8 +110,8 @@ struct ENGINE_API SPass : public xr_resource_flagged
 #endif
 
 	~SPass();
-	BOOL equal(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T,
-			   ref_matrix_list& _M, ref_constant_list& _C);
+
+	BOOL equal(const SPass& other);
 };
 typedef resptr_core<SPass, resptr_base<SPass>> ref_pass;
 
@@ -156,6 +168,14 @@ enum SE_R1
 	SE_R1_LSPOT = 3,	 // add:	spot light
 	SE_R1_LMODELS = 4,	 // lighting info for models or shadowing from models
 };
+
+//#define		SE_R2_NORMAL_HQ		0	// high quality/detail
+//#define		SE_R2_NORMAL_LQ		1	// low quality
+//#define		SE_R2_SHADOW		2	// shadow generation
+//	E[3] - can use for night vision but need to extend SE_R1. Will need
+//	Extra shader element.
+//	E[4] - distortion or self illumination(self emission).
+//	E[4] Can use for lightmap capturing.
 
 #pragma pack(pop)
 

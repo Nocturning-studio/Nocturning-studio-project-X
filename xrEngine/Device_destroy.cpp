@@ -6,7 +6,7 @@
 
 void CRenderDevice::_Destroy(BOOL bKeepTextures)
 {
-	DU.OnDeviceDestroy();
+	DUImpl.OnDeviceDestroy();
 	m_WireShader.destroy();
 	m_SelectionShader.destroy();
 

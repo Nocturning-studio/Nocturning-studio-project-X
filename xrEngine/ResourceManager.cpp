@@ -14,13 +14,34 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
+//	Already defined in Texture.cpp
+void fix_texture_name(LPSTR fn);
+/*
 void fix_texture_name(LPSTR fn)
 {
 	LPSTR _ext = strext(fn);
-	if (_ext && (0 == stricmp(_ext, ".tga") || 0 == stricmp(_ext, ".dds") || 0 == stricmp(_ext, ".bmp") ||
-				 0 == stricmp(_ext, ".ogm")))
+	if(  _ext					&&
+	  (0==stricmp(_ext,".tga")	||
+		0==stricmp(_ext,".dds")	||
+		0==stricmp(_ext,".bmp")	||
+		0==stricmp(_ext,".ogm")	) )
 		*_ext = 0;
 }
+*/
+//--------------------------------------------------------------------------------------------------------------
+template <class T> BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
+{
+	xr_vector<T*>::iterator it = vec.begin();
+	xr_vector<T*>::iterator end = vec.end();
+	for (; it != end; it++)
+		if (*it == ptr)
+		{
+			vec.erase(it);
+			return TRUE;
+		}
+	return FALSE;
+}
+
 //--------------------------------------------------------------------------------------------------------------
 IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 {
@@ -32,6 +53,12 @@ IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 	if (I == m_blenders.end())
 		return 0;
 #else
+	//	TODO: DX10: When all shaders are ready switch to common path
+	if (I == m_blenders.end())
+	{
+		Msg("DX10: Shader '%s' not found in library.", Name);
+		return 0;
+	}
 	if (I == m_blenders.end())
 	{
 		Debug.fatal(DEBUG_INFO, "Shader '%s' not found in library.", Name);
@@ -76,7 +103,7 @@ void CResourceManager::ED_UpdateBlender(LPCSTR Name, IBlender* data)
 //////////////////////////////////////////////////////////////////////
 void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 {
-	if (0 == names)
+	if (0 == names || 0 == names[0])
 		names = "$null";
 
 	ZeroMemory(&dest, sizeof(dest));
@@ -92,6 +119,7 @@ void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 			strlwr(N.begin());
 
 			fix_texture_name(N.begin());
+			//. andy			if (strext(N.begin())) *strext(N.begin())=0;
 			dest.push_back(N.begin());
 			N.clear();
 		}
@@ -108,6 +136,7 @@ void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 		strlwr(N.begin());
 
 		fix_texture_name(N.begin());
+		//. andy		if (strext(N.begin())) *strext(N.begin())=0;
 		dest.push_back(N.begin());
 	}
 }
@@ -144,6 +173,9 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	CBlender_Compile C;
 	Shader S;
 
+	//.
+	// if (strstr(s_shader,"transparent"))	__asm int 3;
+
 	// Access to template
 	C.BT = B;
 	C.bEditor = FALSE;
@@ -166,6 +198,7 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	{
 		C.iElement = 0;
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
+		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
 		S.E[0] = _CreateElement(E);
@@ -174,6 +207,7 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	// Compile element	(LOD1)
 	{
 		C.iElement = 1;
+		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
@@ -230,34 +264,30 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 
 Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
-	return _cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
+	{
+		//	TODO: DX10: When all shaders are ready switch to common path
+		IBlender* pBlender = _GetBlender(s_shader ? s_shader : "null");
+		if (!pBlender)
+			return NULL;
+		return _cpp_Create(pBlender, s_shader, s_textures, s_constants, s_matrices);
+	}
 }
 
 Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
-	return _cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
+	{
+		return _cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
+	}
 }
 
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
-#ifndef _EDITOR
-	if (_lua_HasShader(s_shader))
-		return _lua_Create(s_shader, s_textures);
-	else
-#endif
-		return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
+	{
+		if (_lua_HasShader(s_shader))
+			return _lua_Create(s_shader, s_textures);
+		else
+			return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+	}
 }
 
 void CResourceManager::Delete(const Shader* S)
@@ -269,173 +299,23 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-//#define MT_TEXTURES - Deathman: Не эффективно при работе с жесткими дисками - мы ограничены возможностью чтения. Мы не
-//можем грузить текстуры четырьмя потоками, потому что они все тупо ждут
-
-#ifdef MT_TEXTURES
-// Загрузка текстур несколькими потоками.
-// Спасибо Morrey из проекта которого я взял функцию,
-//	Maks0 за переделку под определение количества ядер процессора и
-//	использвания соответствующего числа потоков и VAX, который доделал функцию
-
-#include <thread>
-xr_vector<CTexture*> tex_to_load;
-
-void TextureLoading(u16 thread_num, u32 lowerbound, u32 upperbound)
-{
-	Msg("* THREAD #%d: Started.", thread_num);
-
-	for (size_t i = lowerbound; i < upperbound; i++)
-		tex_to_load[i]->Load();
-
-	Msg("* THREAD #%d: Task Completed.", thread_num);
-}
-
 void CResourceManager::DeferredUpload()
 {
 	if (!Device.b_is_Ready)
 		return;
-
-	const u32 MinTexturesCntToUseMT = 100;
-
-	tex_to_load.clear();
-	Msg("* Texture Loading, size = %d", m_textures.size());
-	CTimer timer;
-	timer.Start();
-
-	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load") ||
-		(std::thread::hardware_concurrency() <= 2))
-	{
-		Msg("* Texture Loading -> Use one thread");
-
-		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-			t->second->Load();
-	}
-	else
-	{
-		u32 th_count = std::thread::hardware_concurrency();
-		u32 texCntOneThread = m_textures.size() / th_count;
-		std::thread* th_arr = new std::thread[th_count];
-
-		for (const auto& tex : m_textures)
-			tex_to_load.push_back(tex.second);
-
-		for (u16 i = 0; i < th_count; i++)
-		{
-			u32 from = i * texCntOneThread;
-			u32 to = (i + 1) * texCntOneThread;
-
-			if (i == th_count - 1)
-				to = m_textures.size();
-
-			th_arr[i] = std::thread(&TextureLoading, i, from, to);
-		}
-
-		for (size_t i = 0; i < th_count; i++)
-			th_arr[i].join();
-
-		delete[] th_arr;
-		tex_to_load.clear();
-	}
-
-	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
-}
-
-void TextureUnloading(u16 thread_num, u32 lowerbound, u32 upperbound)
-{
-	Msg("* THREAD #%d: Started.", thread_num);
-
-	for (size_t i = lowerbound; i < upperbound; i++)
-		tex_to_load[i]->Unload();
-
-	Msg("* THREAD #%d: Task Completed.", thread_num);
-}
-
-void CResourceManager::DeferredUnload()
-{
-	if (!Device.b_is_Ready)
-		return;
-
-	const u32 MinTexturesCntToUseMT = 100;
-
-	tex_to_load.clear();
-	Msg("* Texture Unloading, size = %d", m_textures.size());
-	CTimer timer;
-	timer.Start();
-
-	if (m_textures.size() <= MinTexturesCntToUseMT || strstr(Core.Params, "-one_thread_load"))
-	{
-		Msg("* Texture Unloading -> Use one thread");
-
-		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-			t->second->Unload();
-	}
-	else
-	{
-		u32 th_count = std::thread::hardware_concurrency();
-		u32 texCntOneThread = m_textures.size() / th_count;
-		std::thread* th_arr = new std::thread[th_count];
-
-		for (const auto& tex : m_textures)
-			tex_to_load.push_back(tex.second);
-
-		for (u16 i = 0; i < th_count; i++)
-		{
-			u32 from = i * texCntOneThread;
-			u32 to = (i + 1) * texCntOneThread;
-
-			if (i == th_count - 1)
-				to = m_textures.size();
-
-			th_arr[i] = std::thread(&TextureUnloading, i, from, to);
-		}
-
-		for (size_t i = 0; i < th_count; i++)
-			th_arr[i].join();
-
-		delete[] th_arr;
-		tex_to_load.clear();
-	}
-
-	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
-}
-#else  // MT_TEXTURES
-void CResourceManager::DeferredUpload()
-{
-	if (!Device.b_is_Ready)
-		return;
-
-	Msg("* Texture loading, size = %d", m_textures.size());
-
-	CTimer timer;
-	timer.Start();
-
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 	{
 		t->second->Load();
 	}
-
-	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
 
-void CResourceManager::DeferredUnload()
+void	CResourceManager::DeferredUnload	()
 {
 	if (!Device.b_is_Ready)
 		return;
-
-	Msg("* Texture unloading, size = %d", m_textures.size());
-
-	CTimer timer;
-	timer.Start();
-
-	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-	{
+	for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); t++)
 		t->second->Unload();
-	}
-
-	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
-#endif // MT_TEXTURES
 
 #ifdef _EDITOR
 void CResourceManager::ED_UpdateTextures(AStringVec* names)
@@ -482,7 +362,6 @@ void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 		}
 	}
 }
-
 void CResourceManager::_DumpMemoryUsage()
 {
 	xr_multimap<u32, std::pair<u32, shared_str>> mtex;
@@ -510,6 +389,20 @@ void CResourceManager::_DumpMemoryUsage()
 
 void CResourceManager::Evict()
 {
-#pragma message(Reminder("Not implemented!"))
-	// CHK_DX(HW.pDevice->EvictManagedResources());
+	//	TODO: DX10: check if we really need this method
+
 }
+/*
+BOOL	CResourceManager::_GetDetailTexture(LPCSTR Name,LPCSTR& T, R_constant_setup* &CS)
+{
+	LPSTR N = LPSTR(Name);
+	map_TD::iterator I = m_td.find	(N);
+	if (I!=m_td.end())
+	{
+		T	= I->second.T;
+		CS	= I->second.cs;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}*/

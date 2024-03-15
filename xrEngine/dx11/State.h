@@ -4,13 +4,7 @@
 
 class SimulatorStates;
 
-#pragma comment(Reminder("Fix me :("))
 #include "SamplerStateCache.h"
-#include "StateCache.h"
-#include "StateCacheImpl.h"
-#include "StateUtils.h"
-#include "StateManager.h"
-
 
 class dx10State
 {

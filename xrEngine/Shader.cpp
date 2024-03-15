@@ -8,6 +8,8 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 
+
+
 //
 STextureList::~STextureList()
 {
@@ -49,11 +51,11 @@ void resptrcode_shader::create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, 
 }
 
 //////////////////////////////////////////////////////////////////////////
-void resptrcode_geom::create(u32 FVF, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib)
+void resptrcode_geom::create(u32 FVF, ID3D11Buffer* vb, ID3D11Buffer* ib)
 {
 	_set(Device.Resources->CreateGeom(FVF, vb, ib));
 }
-void resptrcode_geom::create(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib)
+void resptrcode_geom::create(D3DVERTEXELEMENT9* decl, ID3D11Buffer* vb, ID3D11Buffer* ib)
 {
 	_set(Device.Resources->CreateGeom(decl, vb, ib));
 }
@@ -61,24 +63,31 @@ void resptrcode_geom::create(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-BOOL SPass::equal(ref_state& _state, ref_ps& _ps, ref_vs& _vs, ref_ctable& _ctable, ref_texture_list& _T,
-				  ref_matrix_list& _M, ref_constant_list& _C)
+BOOL SPass::equal(const SPass& other)
 {
-	if (state != _state)
+	if (state != other.state)
 		return FALSE;
-	if (ps != _ps)
+	if (ps != other.ps)
 		return FALSE;
-	if (vs != _vs)
+	if (vs != other.vs)
 		return FALSE;
-	if (constants != _ctable)
+	if (gs != other.gs)
+		return FALSE;
+	if (hs != other.hs)
+		return FALSE;
+	if (ds != other.ds)
+		return FALSE;
+	if (cs != other.cs)
+		return FALSE;
+	if (constants != other.constants)
 		return FALSE; // is this nessesary??? (ps+vs already combines)
 
-	if (T != _T)
+	if (T != other.T)
 		return FALSE;
-	if (C != _C)
+	if (C != other.C)
 		return FALSE;
 #ifdef _EDITOR
-	if (M != _M)
+	if (M != other.M)
 		return FALSE;
 #endif
 	return TRUE;
@@ -152,4 +161,28 @@ void STextureList::clear_not_free()
 		(*it).second.destroy();
 
 	erase(begin(), end());
+}
+
+u32 STextureList::find_texture_stage(const shared_str& TexName) const
+{
+	u32 dwTextureStage = 0;
+
+	STextureList::const_iterator _it = this->begin();
+	STextureList::const_iterator _end = this->end();
+	for (; _it != _end; _it++)
+	{
+		const std::pair<u32, ref_texture>& loader = *_it;
+
+		//	Shadowmap texture always uses 0 texture unit
+		if (loader.second->cName == TexName)
+		{
+			//	Assign correct texture
+			dwTextureStage = loader.first;
+			break;
+		}
+	}
+
+	VERIFY(_it != _end);
+
+	return dwTextureStage;
 }

@@ -1,7 +1,7 @@
 #ifndef	dx10ShaderResourceStateCache_included
 #define	dx10ShaderResourceStateCache_included
 #pragma once
-
+#include "../R_Backend.h"
 class dx10ShaderResourceStateCache
 {
 public:
@@ -19,12 +19,12 @@ public:
 	void	SetCSResource( u32 uiSlot, ID3D11ShaderResourceView	*pRes );
 
 private:
-	ID3D11ShaderResourceView* m_PSViews[CBackend::mtMaxPixelShaderTextures];
-	ID3D11ShaderResourceView* m_GSViews[CBackend::mtMaxGeometryShaderTextures];
-	ID3D11ShaderResourceView* m_VSViews[CBackend::mtMaxVertexShaderTextures];
-	ID3D11ShaderResourceView* m_HSViews[CBackend::mtMaxHullShaderTextures];
-	ID3D11ShaderResourceView* m_DSViews[CBackend::mtMaxDomainShaderTextures];
-	ID3D11ShaderResourceView* m_CSViews[CBackend::mtMaxComputeShaderTextures];
+	ID3D11ShaderResourceView* m_PSViews[mtMaxPixelShaderTextures];
+	ID3D11ShaderResourceView* m_GSViews[mtMaxGeometryShaderTextures];
+	ID3D11ShaderResourceView* m_VSViews[mtMaxVertexShaderTextures];
+	ID3D11ShaderResourceView* m_HSViews[mtMaxHullShaderTextures];
+	ID3D11ShaderResourceView* m_DSViews[mtMaxDomainShaderTextures];
+	ID3D11ShaderResourceView* m_CSViews[mtMaxComputeShaderTextures];
 
 	u32		m_uiMinPSView;
 	u32		m_uiMaxPSView;
