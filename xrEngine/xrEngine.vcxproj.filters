@@ -154,6 +154,9 @@
     <Filter Include="Game API\Environment\Hemisphere">
       <UniqueIdentifier>{a0a981e9-3342-4843-8de4-f900f0c05969}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX11">
+      <UniqueIdentifier>{702f32cf-d5be-4988-8910-2c3b79d28ffa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -557,6 +560,27 @@
     </ClInclude>
     <ClInclude Include="ShaderMacros.h">
       <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\SamplerStateCache.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\ShaderResourceStateCache.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\StateCache.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\StateCacheImpl.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\StateUtils.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\BufferUtils.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\HashHelper.h">
+      <Filter>Render\DX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -967,6 +991,24 @@
     </ClCompile>
     <ClCompile Include="ShaderMacros.cpp">
       <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\ShaderResourceStateCache.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\StateCache.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\StateUtils.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\BufferUtils.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\SamplerStateCache.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\HashHelper.cpp">
+      <Filter>Render\DX11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

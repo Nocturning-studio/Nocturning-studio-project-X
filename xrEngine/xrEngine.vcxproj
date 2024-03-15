@@ -1998,6 +1998,13 @@
     <ClInclude Include="du_cylinder.h" />
     <ClInclude Include="du_sphere.h" />
     <ClInclude Include="du_sphere_part.h" />
+    <ClInclude Include="dx11\BufferUtils.h" />
+    <ClInclude Include="dx11\HashHelper.h" />
+    <ClInclude Include="dx11\SamplerStateCache.h" />
+    <ClInclude Include="dx11\ShaderResourceStateCache.h" />
+    <ClInclude Include="dx11\StateCache.h" />
+    <ClInclude Include="dx11\StateCacheImpl.h" />
+    <ClInclude Include="dx11\StateUtils.h" />
     <ClInclude Include="edit_actions.h" />
     <ClInclude Include="Effector.h" />
     <ClInclude Include="EffectorPP.h" />
@@ -2208,6 +2215,12 @@
     <ClCompile Include="du_cylinder.cpp" />
     <ClCompile Include="du_sphere.cpp" />
     <ClCompile Include="du_sphere_part.cpp" />
+    <ClCompile Include="dx11\BufferUtils.cpp" />
+    <ClCompile Include="dx11\HashHelper.cpp" />
+    <ClCompile Include="dx11\SamplerStateCache.cpp" />
+    <ClCompile Include="dx11\ShaderResourceStateCache.cpp" />
+    <ClCompile Include="dx11\StateCache.cpp" />
+    <ClCompile Include="dx11\StateUtils.cpp" />
     <ClCompile Include="edit_actions.cpp" />
     <ClCompile Include="Effector.cpp" />
     <ClCompile Include="EffectorPP.cpp" />

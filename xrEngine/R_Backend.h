@@ -48,6 +48,22 @@ struct R_statistics
 class ENGINE_API CBackend
 {
   public:
+#pragma message(Reminder "Fix me! max textures = 128, max cbuffers = 16")
+	enum MaxTextures
+	{
+		//	Actually these values are 128
+		mtMaxPixelShaderTextures = 16,
+		mtMaxVertexShaderTextures = 4,
+		mtMaxGeometryShaderTextures = 16,
+		mtMaxHullShaderTextures = 16,
+		mtMaxDomainShaderTextures = 16,
+		mtMaxComputeShaderTextures = 16,
+	};
+
+	enum
+	{
+		MaxCBuffers = 14
+	};
 	// Dynamic geometry streams
 	_VertexStream Vertex;
 	_IndexStream Index;
