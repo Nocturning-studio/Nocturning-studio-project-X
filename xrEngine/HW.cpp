@@ -417,17 +417,19 @@ void CHW::CreateDevice(HWND m_hWnd)
 									  GPU | D3DCREATE_MULTITHREADED, //. ? locks at present
 									  &P, &pDevice);*/
 
-	UINT createDeviceFlags = 0;
+	UINT createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
+	
 	HRESULT R;
 	D3D_FEATURE_LEVEL levels[] = {
 		//D3D_FEATURE_LEVEL_11_0,
 		//D3D_FEATURE_LEVEL_10_1,
 		D3D_FEATURE_LEVEL_10_0,
 	};
+	D3D_FEATURE_LEVEL curr_level = D3D_FEATURE_LEVEL_10_0;
 	u32 cnt = sizeof(levels) / sizeof(D3D_FEATURE_LEVEL);
 
-	R = D3D11CreateDevice(pAdapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, createDeviceFlags, levels,
-						  cnt, D3D11_SDK_VERSION, &pDevice11, levels, &pContext);
+	R = D3D11CreateDevice(pAdapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, createDeviceFlags, levels, cnt, D3D11_SDK_VERSION,
+						  &pDevice11, &curr_level, &pContext);
    
 	/* if (FAILED(R))
 	{
