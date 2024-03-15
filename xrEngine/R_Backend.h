@@ -59,8 +59,10 @@ class ENGINE_API CBackend
 
   private:
 	// Render-targets
-	IDirect3DSurface9* pRT[4];
-	IDirect3DSurface9* pZB;
+	//IDirect3DSurface9* pRT[4];
+	//IDirect3DSurface9* pZB;
+	ID3D11RenderTargetView* pRT[4];
+	ID3D11DepthStencilView* pZB;
 
 	// Vertices/Indices/etc
 	IDirect3DVertexDeclaration9* decl;
@@ -358,11 +360,13 @@ class ENGINE_API CBackend
 	void dbg_DIP(D3DPRIMITIVETYPE pt, ref_geom geom, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC);
 	IC void dbg_SetRS(D3DRENDERSTATETYPE p1, u32 p2)
 	{
-		CHK_DX(HW.pDevice->SetRenderState(p1, p2));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetRenderState(p1, p2));
 	}
 	IC void dbg_SetSS(u32 sampler, D3DSAMPLERSTATETYPE type, u32 value)
 	{
-		CHK_DX(HW.pDevice->SetSamplerState(sampler, type, value));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetSamplerState(sampler, type, value));
 	}
 #ifdef DEBUG
 	void dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int vcnt, u16* pIdx, int pcnt);

@@ -7,7 +7,7 @@
 #include "resource.h"
 #include "dbghelp.h"
 
-#include "dxerr9.h"
+#include "dxerr.h"
 
 #ifdef __BORLANDC__
 #include "d3d9.h"
@@ -24,7 +24,7 @@ static BOOL bException = FALSE;
 #else
 #define DEBUG_INVOKE __asm { int 3 }
 #ifndef __BORLANDC__
-#pragma comment(lib, "dxerr9.lib")
+#pragma comment(lib, "dxerr.lib")
 #endif
 #endif
 
@@ -92,7 +92,8 @@ void xrDebug::backend(const char* reason, const char* expression, const char* ar
 
 	// Call the dialog
 	dlgExpr = reason;
-	sprintf() dlgFile = file;
+	//sprintf() 
+	dlgFile = file;
 	sprintf(dlgLine, "%d", line);
 	INT_PTR res = -1;
 #ifdef XRCORE_STATIC
@@ -124,7 +125,7 @@ LPCSTR xrDebug::error2string(long code)
 
 #ifdef _M_AMD64
 #else
-	result = DXGetErrorDescription9(code);
+	result = DXGetErrorDescription(code);
 #endif
 	if (0 == result)
 	{

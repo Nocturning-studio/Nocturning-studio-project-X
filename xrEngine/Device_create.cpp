@@ -16,7 +16,7 @@ void CRenderDevice::_SetupStates()
 	vCameraRight.set(1, 0, 0);
 
 	HW.Caps.Update();
-	for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
+	/* for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 	{
 		float fBias = -.5f;
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, 4));
@@ -61,7 +61,7 @@ void CRenderDevice::_SetupStates()
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP2));
-	}
+	}*/
 }
 
 void CRenderDevice::_Create(LPCSTR shName)
@@ -102,8 +102,8 @@ void CRenderDevice::Create()
 #endif
 
 	HW.CreateDevice(m_hWnd);
-	dwWidth = HW.DevPP.BackBufferWidth;
-	dwHeight = HW.DevPP.BackBufferHeight;
+	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
+	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	fFOV = 90.f;

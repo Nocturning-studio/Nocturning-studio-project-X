@@ -69,8 +69,8 @@ void CRenderDevice::Reset(bool precache)
 	Resources->reset_begin();
 	Memory.mem_compact();
 	HW.Reset(m_hWnd);
-	dwWidth = HW.DevPP.BackBufferWidth;
-	dwHeight = HW.DevPP.BackBufferHeight;
+	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
+	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources->reset_end();

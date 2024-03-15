@@ -17,7 +17,8 @@ void R_constants::flush_cache()
 				{
 					count = (count > 31) ? 31 : count;
 					PGO(Msg("PGO:P_CONST:%d", count));
-					CHK_DX(HW.pDevice->SetPixelShaderConstantF(F.r_lo(), (float*)F.access(F.r_lo()), count));
+#pragma message(Reminder("Not implemented!"))
+					//CHK_DX(HW.pDevice->SetPixelShaderConstantF(F.r_lo(), (float*)F.access(F.r_lo()), count));
 					F.flush();
 				}
 			}
@@ -39,8 +40,9 @@ void R_constants::flush_cache()
 								HW.Caps.geometry.dwRegisters, F.r_hi());
 				}
 				PGO(Msg("PGO:V_CONST:%d", count));
-#endif&
-				CHK_DX(HW.pDevice->SetVertexShaderConstantF(F.r_lo(), (float*)F.access(F.r_lo()), count));
+#endif
+#pragma message(Reminder("Not implemented!"))
+				//CHK_DX(HW.pDevice->SetVertexShaderConstantF(F.r_lo(), (float*)F.access(F.r_lo()), count));
 				F.flush();
 			}
 		}

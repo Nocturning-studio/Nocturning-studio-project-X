@@ -6,7 +6,8 @@ ENGINE_API CBackend RCache;
 // Create Quad-IB
 void CBackend::CreateQuadIB()
 {
-	const u32 dwTriCount = 4 * 1024;
+#pragma message(Reminder("Not implemented!"))
+	/* const u32 dwTriCount = 4 * 1024;
 	const u32 dwIdxCount = dwTriCount * 2 * 3;
 	u16* Indices = 0;
 	u32 dwUsage = D3DUSAGE_WRITEONLY;
@@ -30,7 +31,7 @@ void CBackend::CreateQuadIB()
 			Cnt += 4;
 		}
 	}
-	R_CHK(QuadIB->Unlock());
+	R_CHK(QuadIB->Unlock());*/
 }
 
 // Device dependance

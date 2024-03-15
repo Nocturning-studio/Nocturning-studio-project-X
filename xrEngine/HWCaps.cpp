@@ -106,7 +106,8 @@ u32 GetGpuNum()
 void CHWCaps::Update()
 {
 	D3DCAPS9 caps;
-	HW.pDevice->GetDeviceCaps(&caps);
+#pragma message(Reminder("Not implemented!"))
+	// HW.pDevice->GetDeviceCaps(&caps);
 
 	// ***************** GEOMETRY
 	geometry_major = u16((u32(caps.VertexShaderVersion) & (0xf << 8ul)) >> 8);
@@ -140,14 +141,15 @@ void CHWCaps::Update()
 	// *******1********** Vertex cache
 	IDirect3DQuery9* q_vc;
 	D3DDEVINFO_VCACHE vc;
-	HRESULT _hr = HW.pDevice->CreateQuery(D3DQUERYTYPE_VCACHE, &q_vc);
-	if (FAILED(_hr))
+#pragma message(Reminder("Not implemented!"))
+	// HRESULT _hr = HW.pDevice->CreateQuery(D3DQUERYTYPE_VCACHE, &q_vc);
+	//if (FAILED(_hr))
 	{
 		vc.OptMethod = 0;
 		vc.CacheSize = 16;
 		geometry.dwVertexCache = 16;
 	}
-	else
+	/* else
 	{
 		q_vc->Issue(D3DISSUE_END);
 		q_vc->GetData(&vc, sizeof(vc), D3DGETDATA_FLUSH);
@@ -156,7 +158,7 @@ void CHWCaps::Update()
 			geometry.dwVertexCache = vc.CacheSize;
 		else
 			geometry.dwVertexCache = 16;
-	}
+	}*/
 	Msg("* GPU vertex cache: %s, %d", (1 == vc.OptMethod) ? "recognized" : "unrecognized", u32(geometry.dwVertexCache));
 
 	// *******1********** Compatibility : vertex shader
@@ -173,7 +175,8 @@ void CHWCaps::Update()
 	bStencil = FALSE;
 	IDirect3DSurface9* surfZS = 0;
 	D3DSURFACE_DESC surfDESC;
-	CHK_DX(HW.pDevice->GetDepthStencilSurface(&surfZS));
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->GetDepthStencilSurface(&surfZS));
 	R_ASSERT(surfZS);
 	CHK_DX(surfZS->GetDesc(&surfDESC));
 	_RELEASE(surfZS);
@@ -213,8 +216,9 @@ void CHWCaps::Update()
 		dwMaxStencilValue = (1 << 8) - 1;
 	}
 
-	HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_coverage);
-	max_coverage = max_coverage - 1; // get real max coverage
+#pragma message(Reminder("Not implemented!"))
+	//HW.pD3D->CheckDeviceMultiSampleType(HW.DevAdapter, HW.DevT, HW.Caps.fTarget, FALSE, D3DMULTISAMPLE_NONMASKABLE,	&max_coverage);
+	//max_coverage = max_coverage - 1; // get real max coverage
 
 	// DEV INFO
 	iGPUNum = GetGpuNum();

@@ -40,7 +40,7 @@ BOOL CRenderDevice::Begin()
 {
 #ifndef DEDICATED_SERVER
 	HW.Validate();
-	HRESULT _hr = HW.pDevice->TestCooperativeLevel();
+	/* HRESULT _hr = HW.pDevice->TestCooperativeLevel();
 	if (FAILED(_hr))
 	{
 		// If the device was lost, do not render until we get it back
@@ -55,9 +55,9 @@ BOOL CRenderDevice::Begin()
 		{
 			Reset();
 		}
-	}
-
-	CHK_DX(HW.pDevice->BeginScene());
+	}*/
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->BeginScene());
 	RCache.OnFrameBegin();
 	RCache.set_CullMode(CULL_CW);
 	RCache.set_CullMode(CULL_CCW);
@@ -71,10 +71,11 @@ BOOL CRenderDevice::Begin()
 
 void CRenderDevice::Clear()
 {
-	CHK_DX(HW.pDevice->Clear(0, 0,
-							 D3DCLEAR_ZBUFFER | (psDeviceFlags.test(rsClearBB) ? D3DCLEAR_TARGET : 0) |
-								 (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0),
-							 D3DCOLOR_XRGB(0, 0, 0), 1, 0));
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->Clear(0, 0,
+	//						 D3DCLEAR_ZBUFFER | (psDeviceFlags.test(rsClearBB) ? D3DCLEAR_TARGET : 0) |
+	//							 (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0),
+	//						 D3DCOLOR_XRGB(0, 0, 0), 1, 0));
 }
 
 extern void CheckPrivilegySlowdown();
@@ -116,11 +117,12 @@ void CRenderDevice::End(void)
 	// end scene
 	RCache.OnFrameEnd();
 	Memory.dbg_check();
-	CHK_DX(HW.pDevice->EndScene());
-
-	HRESULT _hr = HW.pDevice->Present(NULL, NULL, NULL, NULL);
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->EndScene());
+	HW.m_pSwapChain->Present(0,0);
+	/* HRESULT _hr = HW.pDevice->Present(NULL, NULL, NULL, NULL);
 	if (D3DERR_DEVICELOST == _hr)
-		return; // we will handle this later
+		return; // we will handle this later*/
 #endif
 }
 
@@ -221,7 +223,8 @@ void CRenderDevice::Run()
 
 	seqAppStart.Process(rp_AppStart);
 
-	CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1, 0));
+	#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1, 0));
 
 	while (WM_QUIT != msg.message)
 	{

@@ -2,8 +2,9 @@
 
 void CRenderDevice::overdrawBegin()
 {
+#pragma message(Reminder("Not implemented!"))
 	// Turn stenciling
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE));
+	/* CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, 0));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILMASK, 0x00000000));
@@ -20,13 +21,14 @@ void CRenderDevice::overdrawBegin()
 	else
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT));
-	} // ZB access
+	} // ZB access*/
 }
 
 void CRenderDevice::overdrawEnd()
 {
+#pragma message(Reminder("Not implemented!"))
 	// Set up the stencil states
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP));
+	/* CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL));
@@ -54,5 +56,5 @@ void CRenderDevice::overdrawEnd()
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, I));
 		CHK_DX(HW.pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pv, sizeof(FVF::TL)));
 	}
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE));
+	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE));*/
 }

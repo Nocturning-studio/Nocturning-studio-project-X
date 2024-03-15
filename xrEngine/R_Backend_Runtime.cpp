@@ -10,6 +10,9 @@
 
 void CBackend::OnFrameEnd()
 {
+	HW.pContext->ClearState();
+	Invalidate();
+	/*
 #ifndef DEDICATED_SERVER
 	for (u32 stage = 0; stage < HW.Caps.raster.dwStages; stage++)
 		CHK_DX(HW.pDevice->SetTexture(0, 0));
@@ -18,7 +21,7 @@ void CBackend::OnFrameEnd()
 	CHK_DX(HW.pDevice->SetVertexShader(0));
 	CHK_DX(HW.pDevice->SetPixelShader(0));
 	Invalidate();
-#endif
+#endif*/
 }
 
 void CBackend::OnFrameBegin()
@@ -72,7 +75,8 @@ void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=NULL */, u32 count
 		return;
 	if (!_enable)
 	{
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
+#pragma message(Reminder("Not implemented!"))
+		// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
 		return;
 	}
 
@@ -90,12 +94,14 @@ void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=NULL */, u32 count
 		D3DXPLANE planeWorld(-P.n.x, -P.n.y, -P.n.z, -P.d), planeClip;
 		D3DXPlaneNormalize(&planeWorld, &planeWorld);
 		D3DXPlaneTransform(&planeClip, &planeWorld, &worldToClipMatrixIT);
-		CHK_DX(HW.pDevice->SetClipPlane(it, planeClip));
+#pragma message(Reminder("Not implemented!"))
+		// CHK_DX(HW.pDevice->SetClipPlane(it, planeClip));
 	}
 
 	// Enable them
 	u32 e_mask = (1 << count) - 1;
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, e_mask));
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, e_mask));
 }
 
 #ifndef DEDICATED_SREVER
@@ -105,7 +111,8 @@ void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=NULL */, u32 fmask
 		return;
 	if (!_enable)
 	{
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
+#pragma message(Reminder("Not implemented!"))
+		// CHK_DX(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE));
 		return;
 	}
 	VERIFY(_xform && fmask);
@@ -173,13 +180,15 @@ void CBackend::set_Textures(STextureList* _T)
 	for (++_last_ps; _last_ps < 16 && textures_ps[_last_ps]; _last_ps++)
 	{
 		textures_ps[_last_ps] = 0;
-		CHK_DX(HW.pDevice->SetTexture(_last_ps, NULL));
+#pragma message(Reminder("Not implemented!"))
+		// CHK_DX(HW.pDevice->SetTexture(_last_ps, NULL));
 	}
 	// clear remaining stages (VS)
 	for (++_last_vs; _last_vs < 5 && textures_vs[_last_vs]; _last_vs++)
 	{
 		textures_vs[_last_vs] = 0;
-		CHK_DX(HW.pDevice->SetTexture(_last_vs + 256, NULL));
+#pragma message(Reminder("Not implemented!"))
+		// CHK_DX(HW.pDevice->SetTexture(_last_vs + 256, NULL));
 	}
 }
 #else

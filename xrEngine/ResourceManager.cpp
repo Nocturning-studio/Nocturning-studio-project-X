@@ -510,5 +510,6 @@ void CResourceManager::_DumpMemoryUsage()
 
 void CResourceManager::Evict()
 {
-	CHK_DX(HW.pDevice->EvictManagedResources());
+#pragma message(Reminder("Not implemented!"))
+	// CHK_DX(HW.pDevice->EvictManagedResources());
 }

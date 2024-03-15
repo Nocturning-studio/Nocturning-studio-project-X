@@ -46,7 +46,8 @@ IC void R_xforms::set_c_wvp(R_constant* C)
 IC void CBackend::set_xform(u32 ID, const Fmatrix& M)
 {
 	stat.xforms++;
-	CHK_DX(HW.pDevice->SetTransform((D3DTRANSFORMSTATETYPE)ID, (D3DMATRIX*)&M));
+#pragma message(Reminder("Not implemented!"))
+	//CHK_DX(HW.pDevice->SetTransform((D3DTRANSFORMSTATETYPE)ID, (D3DMATRIX*)&M));
 }
 IC void CBackend::set_xform_world(const Fmatrix& M)
 {
@@ -75,23 +76,25 @@ IC const Fmatrix& CBackend::get_xform_project()
 
 IC void CBackend::set_RT(IDirect3DSurface9* RT, u32 ID)
 {
-	if (RT != pRT[ID])
+	if ((ID3D11RenderTargetView*)RT != pRT[ID])
 	{
 		PGO(Msg("PGO:setRT"));
 		stat.target_rt++;
-		pRT[ID] = RT;
-		CHK_DX(HW.pDevice->SetRenderTarget(ID, RT));
+		pRT[ID] = (ID3D11RenderTargetView*)RT;
+		//CHK_DX(HW.pDevice->SetRenderTarget(ID, RT));
+		CHK_DX(HW.pContext->OMSetRenderTargets(4, pRT, pZB));
 	}
 }
 
 IC void CBackend::set_ZB(IDirect3DSurface9* ZB)
 {
-	if (ZB != pZB)
+	if ((ID3D11DepthStencilView*)ZB != pZB)
 	{
 		PGO(Msg("PGO:setZB"));
 		stat.target_zb++;
-		pZB = ZB;
-		CHK_DX(HW.pDevice->SetDepthStencilSurface(ZB));
+		pZB = (ID3D11DepthStencilView*)ZB;
+		//CHK_DX(HW.pDevice->SetDepthStencilSurface(ZB));
+		CHK_DX(HW.pContext->OMSetRenderTargets(4, pRT, pZB));
 	}
 }
 
@@ -177,7 +180,8 @@ ICF void CBackend::set_Format(IDirect3DVertexDeclaration9* _decl)
 		stat.decl++;
 #endif
 		decl = _decl;
-		CHK_DX(HW.pDevice->SetVertexDeclaration(decl));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetVertexDeclaration(decl));
 	}
 }
 
@@ -188,7 +192,8 @@ ICF void CBackend::set_PS(IDirect3DPixelShader9* _ps, LPCSTR _n)
 		PGO(Msg("PGO:Pshader:%x", _ps));
 		stat.ps++;
 		ps = _ps;
-		CHK_DX(HW.pDevice->SetPixelShader(ps));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetPixelShader(ps));
 #ifdef DEBUG
 		ps_name = _n;
 #endif
@@ -202,7 +207,8 @@ ICF void CBackend::set_VS(IDirect3DVertexShader9* _vs, LPCSTR _n)
 		PGO(Msg("PGO:Vshader:%x", _vs));
 		stat.vs++;
 		vs = _vs;
-		CHK_DX(HW.pDevice->SetVertexShader(vs));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetVertexShader(vs));
 #ifdef DEBUG
 		vs_name = _n;
 #endif
@@ -219,7 +225,8 @@ ICF void CBackend::set_Vertices(IDirect3DVertexBuffer9* _vb, u32 _vb_stride)
 #endif
 		vb = _vb;
 		vb_stride = _vb_stride;
-		CHK_DX(HW.pDevice->SetStreamSource(0, vb, 0, vb_stride));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetStreamSource(0, vb, 0, vb_stride));
 	}
 }
 
@@ -232,7 +239,8 @@ ICF void CBackend::set_Indices(IDirect3DIndexBuffer9* _ib)
 		stat.ib++;
 #endif
 		ib = _ib;
-		CHK_DX(HW.pDevice->SetIndices(ib));
+#pragma message(Reminder("Not implemented!"))
+		//CHK_DX(HW.pDevice->SetIndices(ib));
 	}
 }
 
@@ -242,7 +250,8 @@ ICF void CBackend::Render(D3DPRIMITIVETYPE T, u32 baseV, u32 startV, u32 countV,
 	stat.verts += countV;
 	stat.polys += PC;
 	constants.flush();
-	CHK_DX(HW.pDevice->DrawIndexedPrimitive(T, baseV, startV, countV, startI, PC));
+#pragma message(Reminder("Not implemented!"))
+	//CHK_DX(HW.pDevice->DrawIndexedPrimitive(T, baseV, startV, countV, startI, PC));
 	PGO(Msg("PGO:DIP:%dv/%df", countV, PC));
 }
 
@@ -252,7 +261,8 @@ ICF void CBackend::Render(D3DPRIMITIVETYPE T, u32 startV, u32 PC)
 	stat.verts += 3 * PC;
 	stat.polys += PC;
 	constants.flush();
-	CHK_DX(HW.pDevice->DrawPrimitive(T, startV, PC));
+#pragma message(Reminder("Not implemented!"))
+	//CHK_DX(HW.pDevice->DrawPrimitive(T, startV, PC));
 	PGO(Msg("PGO:DIP:%dv/%df", 3 * PC, PC));
 }
 
@@ -270,7 +280,8 @@ IC void CBackend::set_Geometry(SGeometry* _geom)
 
 IC void CBackend::set_Scissor(Irect* R)
 {
-	if (R)
+#pragma message(Reminder("Not implemented!"))
+	/* if (R)
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE));
 		RECT* clip = (RECT*)R;
@@ -279,14 +290,15 @@ IC void CBackend::set_Scissor(Irect* R)
 	else
 	{
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE));
-	}
+	}*/
 }
 
 IC void CBackend::set_Stencil(u32 _enable, u32 _func, u32 _ref, u32 _mask, u32 _writemask, u32 _fail, u32 _pass,
 							  u32 _zfail)
 {
+#pragma message(Reminder("Not implemented!"))
 	// Simple filter
-	if (stencil_enable != _enable)
+	/* if (stencil_enable != _enable)
 	{
 		stencil_enable = _enable;
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, _enable));
@@ -327,26 +339,28 @@ IC void CBackend::set_Stencil(u32 _enable, u32 _func, u32 _ref, u32 _mask, u32 _
 	{
 		stencil_zfail = _zfail;
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, _zfail));
-	}
+	}*/
 }
 IC void CBackend::set_ColorWriteEnable(u32 _mask)
 {
-	if (colorwrite_mask != _mask)
+#pragma message(Reminder("Not implemented!"))
+	/* if (colorwrite_mask != _mask)
 	{
 		colorwrite_mask = _mask;
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, _mask));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE1, _mask));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE2, _mask));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE3, _mask));
-	}
+	}*/
 }
 ICF void CBackend::set_CullMode(u32 _mode)
 {
-	if (cull_mode != _mode)
+#pragma message(Reminder("Not implemented!"))
+	/* if (cull_mode != _mode)
 	{
 		cull_mode = _mode;
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_CULLMODE, _mode));
-	}
+	}*/
 }
 
 #endif

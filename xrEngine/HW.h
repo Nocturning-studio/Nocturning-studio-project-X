@@ -10,26 +10,34 @@
 
 class ENGINE_API CHW
 {
-	HINSTANCE hD3D9;
+	//HINSTANCE hD3D9;
 
   public:
-	IDirect3D9* pD3D;		   // D3D
-	IDirect3DDevice9* pDevice; // render device
+	//IDirect3D9* pD3D;		   // D3D
+	//IDirect3DDevice9* pDevice; // render device
 
-	IDirect3DSurface9* pBaseRT;
-	IDirect3DSurface9* pBaseZB;
+	//IDirect3DSurface9* pBaseRT;
+	//IDirect3DSurface9* pBaseZB;
+
+	IDXGIAdapter1* pAdapter;
+	ID3D11Device* pDevice11;
+	ID3D11DeviceContext* pContext;
+	IDXGISwapChain* m_pSwapChain;
+	ID3D11DepthStencilView* pBaseZB;
+	ID3D11RenderTargetView* pBaseRT;
+	DXGI_SWAP_CHAIN_DESC m_ChainDesc;
 
 	CHWCaps Caps;
 
 	UINT DevAdapter;
-	D3DDEVTYPE DevT;
-	D3DPRESENT_PARAMETERS DevPP;
+	//D3DDEVTYPE DevT;
+	//D3DPRESENT_PARAMETERS DevPP;
 
 	CHW()
 	{
-		hD3D9 = NULL;
-		pD3D = NULL;
-		pDevice = NULL;
+		//hD3D9 = NULL;
+		//pD3D = NULL;
+		//pDevice = NULL;
 		pBaseRT = NULL;
 		pBaseZB = NULL;
 	};

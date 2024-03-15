@@ -5,29 +5,34 @@
 
 IDirect3DStateBlock9* SimulatorStates::record()
 {
-	CHK_DX(HW.pDevice->BeginStateBlock());
+#pragma message(Reminder("Not implemented!"))
+	//CHK_DX(HW.pDevice->BeginStateBlock());
 	for (u32 it = 0; it < States.size(); it++)
 	{
 		State& S = States[it];
 		switch (S.type)
 		{
 		case 0:
-			CHK_DX(HW.pDevice->SetRenderState((D3DRENDERSTATETYPE)S.v1, S.v2));
+#pragma message(Reminder("Not implemented!"))
+			//CHK_DX(HW.pDevice->SetRenderState((D3DRENDERSTATETYPE)S.v1, S.v2));
 			break;
 		case 1:
-			CHK_DX(HW.pDevice->SetTextureStageState(S.v1, (D3DTEXTURESTAGESTATETYPE)S.v2, S.v3));
+#pragma message(Reminder("Not implemented!"))
+			//CHK_DX(HW.pDevice->SetTextureStageState(S.v1, (D3DTEXTURESTAGESTATETYPE)S.v2, S.v3));
 			break;
 		case 2: {
-			CHK_DX(HW.pDevice->SetSamplerState(
-				S.v1, (D3DSAMPLERSTATETYPE)S.v2,
-				((D3DSAMPLERSTATETYPE)S.v2 == D3DSAMP_MAGFILTER && S.v3 == D3DTEXF_ANISOTROPIC) ? D3DTEXF_LINEAR
-																								: S.v3));
+#pragma message(Reminder("Not implemented!"))
+			//CHK_DX(HW.pDevice->SetSamplerState(
+			//	S.v1, (D3DSAMPLERSTATETYPE)S.v2,
+			//	((D3DSAMPLERSTATETYPE)S.v2 == D3DSAMP_MAGFILTER && S.v3 == D3DTEXF_ANISOTROPIC) ? D3DTEXF_LINEAR
+			//																					: S.v3));
 		}
 		break;
 		}
 	}
 	IDirect3DStateBlock9* SB = 0;
-	CHK_DX(HW.pDevice->EndStateBlock(&SB));
+#pragma message(Reminder("Not implemented!"))
+	//CHK_DX(HW.pDevice->EndStateBlock(&SB));
 	return SB;
 }
 

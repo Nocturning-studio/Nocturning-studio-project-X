@@ -25,7 +25,8 @@ template <> struct ShaderTypeTraits<SVS>
 	static inline ID3DShader* D3DCreateShader(DWORD const* buffer, size_t size)
 	{
 		ID3DShader* s = 0;
-		R_CHK(HW.pDevice->CreateVertexShader(buffer, &s));
+#pragma message(Reminder("Not implemented!"))
+		// R_CHK(HW.pDevice->CreateVertexShader(buffer, &s));
 		return s;
 	}
 };
@@ -51,7 +52,8 @@ template <> struct ShaderTypeTraits<SPS>
 	static inline ID3DShader* D3DCreateShader(DWORD const* buffer, size_t size)
 	{
 		ID3DShader* s = 0;
-		R_CHK(HW.pDevice->CreatePixelShader(buffer, &s));
+#pragma message(Reminder("Not implemented!"))
+		// R_CHK(HW.pDevice->CreatePixelShader(buffer, &s));
 		return s;
 	}
 };
