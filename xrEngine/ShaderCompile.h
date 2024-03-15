@@ -200,6 +200,10 @@ HRESULT CResourceManager::CompileShader(
 	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
+	// TODO: fix shader log name
+	char name_ext[256];
+	sprintf_s(name_ext, "%s.%s", name, ext);
+
 #ifndef MASTER_GOLD
 	Msg("*   cache: %s.%s", cache_dest, ext);
 #endif
@@ -211,7 +215,7 @@ HRESULT CResourceManager::CompileShader(
 	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3
 		/* | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY*/;
 	
-	HRESULT _result = D3DCompile(src, size, name, (D3D_SHADER_MACRO*)&macros.get_macros()[0], 
+	HRESULT _result = D3DCompile(src, size, name_ext, (D3D_SHADER_MACRO*)&macros.get_macros()[0], 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
 	
 	if (SUCCEEDED(_result))
