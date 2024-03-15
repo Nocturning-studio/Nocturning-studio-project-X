@@ -34,7 +34,7 @@
 #include "d3d11shader.h"
 
 #pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3dx11.lib")
+#pragma comment(lib, "d3dx11d.lib")
 
 #define		TEX_POINT_ATT	"internal\\internal_light_attpoint"
 #define		TEX_SPOT_ATT	"internal\\internal_light_attclip"

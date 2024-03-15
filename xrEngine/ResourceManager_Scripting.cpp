@@ -464,7 +464,10 @@ BOOL CResourceManager::_lua_HasShader(LPCSTR s_shader)
 
 Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 {
-	CBlender_Compile C;
+#pragma message(Reminder("fix LUA blenders"))
+	return NULL;
+
+	/*CBlender_Compile C;
 	Shader S;
 
 	// undecorate
@@ -563,7 +566,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	Shader* N = xr_new<Shader>(S);
 	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	v_shaders.push_back(N);
-	return N;
+	return N;*/
 }
 
 ShaderElement* CBlender_Compile::_lua_Compile(LPCSTR namesp, LPCSTR name)

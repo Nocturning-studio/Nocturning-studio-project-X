@@ -82,6 +82,10 @@ template <> struct ShaderTypeTraits<SVS>
 	{
 		return "vs";
 	}
+	static inline LPCSTR GetShaderTarget()
+	{
+		return "vs_4_0_level_9_3";
+	}
 	static inline BOOL IsSupported()
 	{
 		// hack
@@ -108,6 +112,10 @@ template <> struct ShaderTypeTraits<SPS>
 	static inline LPCSTR GetShaderExt()
 	{
 		return "ps";
+	}
+	static inline LPCSTR GetShaderTarget()
+	{
+		return "ps_4_0_level_9_3";
 	}
 	static inline BOOL IsSupported()
 	{

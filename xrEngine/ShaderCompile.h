@@ -3,7 +3,9 @@
 #include "ShaderMacros.h"
 
 #include "d3dcompiler.h"
+#include <DxErr.h>
 #pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "dxerr.lib")
 
 //----------------------------------------------------------------
 class CShaderIncluder : public ID3DInclude
@@ -163,6 +165,7 @@ T* CResourceManager::CreateShader(const char* _name, CShaderMacros& _macros)
 	string32 c_target, c_entry;
 	sprintf_s(c_entry, sizeof c_entry, "main");
 	sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
+	//LPCSTR c_target = ShaderTypeTraits<T>::GetShaderTarget();
 
 #ifndef MASTER_GOLD
 	Msg("* Compiling shader: target=%s, source=%s.%s", c_target, _name, ext);
@@ -207,6 +210,7 @@ HRESULT CResourceManager::CompileShader(
 	ID3DBlob* pErrorBuf = NULL;
 	
 	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+		//| D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
 	
 	HRESULT _result = D3DCompile(src, size, name, (D3D_SHADER_MACRO*)&macros.get_macros()[0], 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
@@ -228,6 +232,7 @@ HRESULT CResourceManager::CompileShader(
 		if (FAILED(_result))
 		{
 			Msg("! D3DReflectShader %s.%s hr == 0x%08x", name, ext, _result);
+			Msg("%s", DXGetErrorString(_result));
 			R_ASSERT(NULL);
 		}
 
@@ -239,15 +244,16 @@ HRESULT CResourceManager::CompileShader(
 
 		if (disasm)
 		{
-			ID3DXBuffer* pDisasm = 0;
-			D3DXDisassembleShader((DWORD*)pShaderBuf->GetBufferPointer(), TRUE, 0, &pDisasm);
-			string_path disasm_dest;
-			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.html", 
-				::Render->getShaderPath(), name, ext, macros.get_name().c_str());
-			IWriter* W = FS.w_open("$app_data_root$", disasm_dest);
-			W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
-			FS.w_close(W);
-			_RELEASE(pDisasm);
+#pragma message(Reminder("fix shader disasseble"))
+			//ID3DXBuffer* pDisasm = 0;
+			//D3DXDisassembleShader((DWORD*)pShaderBuf->GetBufferPointer(), TRUE, 0, &pDisasm);
+			//string_path disasm_dest;
+			//sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.html", 
+			//	::Render->getShaderPath(), name, ext, macros.get_name().c_str());
+			//IWriter* W = FS.w_open("$app_data_root$", disasm_dest);
+			//W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
+			//FS.w_close(W);
+			//_RELEASE(pDisasm);
 		}
 	}
 	else
@@ -277,7 +283,8 @@ HRESULT CResourceManager::ReflectShader(
 	result->sh = ShaderTypeTraits<T>::D3DCreateShader(src, size);
 
 	ID3D11ShaderReflection* pReflection = 0;
-	HRESULT const _hr = D3DReflect(src, size, IID_ID3D11ShaderReflection, (void**)result);
+	HRESULT const _hr = D3DReflect(src, size, IID_ID3D11ShaderReflection, (void**)&pReflection);
+	Msg("* Reflect shader: %u", SUCCEEDED(_hr));
 
 	if (SUCCEEDED(_hr) && pReflection)
 	{
@@ -298,7 +305,9 @@ template <> void CResourceManager::CreateSignature<SVS>(DWORD const* src, UINT s
 {
 	//	Store input signature (need only for VS)
 	ID3DBlob* pSignatureBlob;
-	CHK_DX(D3DGetInputSignatureBlob(src, size, &pSignatureBlob));
+	HRESULT const _hr = D3DGetInputSignatureBlob(src, size, &pSignatureBlob);
+	Msg("* Get Signature shader: %u", SUCCEEDED(_hr));
+	CHK_DX(_hr);
 	VERIFY(pSignatureBlob);
 	result->signature = _CreateInputSignature(pSignatureBlob);
 }
