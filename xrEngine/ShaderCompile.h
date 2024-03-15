@@ -162,9 +162,8 @@ T* CResourceManager::CreateShader(const char* _name, CShaderMacros& _macros)
 	R_ASSERT2(file, file_source);
 
 	// select target
-	string32 c_target, c_entry;
-	sprintf_s(c_entry, sizeof c_entry, "main");
-	sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
+	string32 c_entry;sprintf_s(c_entry, sizeof c_entry, "main");
+	string32 c_target; sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
 	//LPCSTR c_target = ShaderTypeTraits<T>::GetShaderTarget();
 
 #ifndef MASTER_GOLD
@@ -209,8 +208,8 @@ HRESULT CResourceManager::CompileShader(
 	ID3DBlob* pShaderBuf = NULL;
 	ID3DBlob* pErrorBuf = NULL;
 	
-	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-		//| D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
+	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3
+		/* | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY*/;
 	
 	HRESULT _result = D3DCompile(src, size, name, (D3D_SHADER_MACRO*)&macros.get_macros()[0], 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
