@@ -680,6 +680,13 @@ void CRender::Render()
 	Target->Begin();
 	o.vis_intersect = FALSE;
 	phase = PHASE_NORMAL;
+
+	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
+	g_pGamePersistent->Environment().RenderClouds(); // clouds
+
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+
 	r_dsgraph_render_hud();	   // hud
 	Target->EnableAlphaMSAA();
 	r_dsgraph_render_graph(0); // normal level
@@ -687,9 +694,6 @@ void CRender::Render()
 		Details->Render();				// grass / details
 	r_dsgraph_render_lods(true, false); // lods - FB
 	Target->DisableAlphaMSAA();
-
-	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
-	g_pGamePersistent->Environment().RenderClouds(); // clouds
 
 	r_pmask(true, false); // disable priority "1"
 	o.vis_intersect = TRUE;
@@ -715,6 +719,9 @@ void CRender::Render()
 	if (ps_render_flags.test(RFLAG_LENS_FLARES))
 		g_pGamePersistent->Environment().RenderFlares(); // lens-flares
 	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
+
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
 
 	// Postprocess, if necessary
 	Target->End();

@@ -303,10 +303,16 @@ void CRender::Render()
 
 	Target->create_gbuffer();
 
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+
 	if (Details)
 		Details->Render();
 
 	r_dsgraph_render_graph(0);
+
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
 
 	Target->disable_anisotropy_filtering();
 
@@ -374,9 +380,15 @@ void CRender::Render()
 
 	Target->create_gbuffer();
 
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+
 	r_dsgraph_render_hud();
 
 	r_dsgraph_render_lods(true, true);
+
+	if (psDeviceFlags.test(rsWireframe))
+		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
 
 	Target->disable_anisotropy_filtering();
 
@@ -460,8 +472,16 @@ void CRender::render_forward()
 		phase = PHASE_NORMAL;
 		render_main(Device.mFullTransform, false);	   //
 		Target->enable_anisotropy_filtering();
+
+		if (psDeviceFlags.test(rsWireframe))
+			CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+
 		r_dsgraph_render_graph(1);					   // normal level, secondary priority
 		r_dsgraph_render_sorted();					   // strict-sorted geoms
+
+		if (psDeviceFlags.test(rsWireframe))
+			CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
+
 		Target->disable_anisotropy_filtering();
 		g_pGamePersistent->Environment().RenderLast(); // rain/thunder-bolts
 	}
