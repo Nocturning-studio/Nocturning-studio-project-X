@@ -236,7 +236,8 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 	{
 	case RM_SKINNING_SOFT:
 		// Msg					("skinning: software");
-		V.rm_geom.create(vertRenderFVF, RCache.Vertex.Buffer(), V.p_rm_Indices);
+#pragma message(Reminder("fix skinning"))
+		//V.rm_geom.create(vertRenderFVF, RCache.Vertex.Buffer(), V.p_rm_Indices);
 		break;
 	case RM_SINGLE:
 	case RM_SKINNING_1B:
@@ -246,7 +247,8 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			VERIFY(vStride == sizeof(vertHW_1W));
 			BYTE* bytes = 0;
 			VERIFY(NULL == V.p_rm_Vertices);
-			R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
+#pragma message(Reminder("fix skinning"))
+			//R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
 			R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
 			vertHW_1W* dst = (vertHW_1W*)bytes;
 			vertBoned1W* src = (vertBoned1W*)_verts_;
@@ -259,7 +261,8 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 				src++;
 			}
 			V.p_rm_Vertices->Unlock();
-			V.rm_geom.create(dwDecl_01W, V.p_rm_Vertices, V.p_rm_Indices);
+#pragma message(Reminder("fix skinning"))
+			//V.rm_geom.create(dwDecl_01W, V.p_rm_Vertices, V.p_rm_Indices);
 		}
 		break;
 	case RM_SKINNING_2B:
@@ -269,7 +272,8 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			VERIFY(vStride == sizeof(vertHW_2W));
 			BYTE* bytes = 0;
 			VERIFY(NULL == V.p_rm_Vertices);
-			R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
+#pragma message(Reminder("fix skinning"))
+			//R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
 			R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
 			vertHW_2W* dst = (vertHW_2W*)bytes;
 			vertBoned2W* src = (vertBoned2W*)_verts_;
@@ -282,7 +286,8 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 				src++;
 			}
 			V.p_rm_Vertices->Unlock();
-			V.rm_geom.create(dwDecl_2W, V.p_rm_Vertices, V.p_rm_Indices);
+#pragma message(Reminder("fix skinning"))
+			//V.rm_geom.create(dwDecl_2W, V.p_rm_Vertices, V.p_rm_Indices);
 		}
 		break;
 	}

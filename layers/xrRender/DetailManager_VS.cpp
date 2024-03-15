@@ -58,8 +58,9 @@ void CDetailManager::hw_Load()
 	u32 dwUsage = D3DUSAGE_WRITEONLY;
 
 	// Create VB/IB
-	R_CHK(HW.pDevice->CreateVertexBuffer(dwVerts * vSize, dwUsage, 0, D3DPOOL_MANAGED, &hw_VB, 0));
-	R_CHK(HW.pDevice->CreateIndexBuffer(dwIndices * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &hw_IB, 0));
+#pragma message(Reminder("fix details"))
+	//R_CHK(HW.pDevice->CreateVertexBuffer(dwVerts * vSize, dwUsage, 0, D3DPOOL_MANAGED, &hw_VB, 0));
+	//R_CHK(HW.pDevice->CreateIndexBuffer(dwIndices * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &hw_IB, 0));
 	Msg("* [DETAILS] Batch(%d), VB(%dK), IB(%dK)", hw_BatchSize, (dwVerts * vSize) / 1024, (dwIndices * 2) / 1024);
 
 	// Fill VB
@@ -121,7 +122,8 @@ void CDetailManager::hw_Load()
 	hwc_s_array = T1.get("array");
 
 	// Declare geometry
-	hw_Geom.create(dwDecl_Details, hw_VB, hw_IB);
+#pragma message(Reminder("fix details"))
+	//hw_Geom.create(dwDecl_Details, hw_VB, hw_IB);
 }
 
 void CDetailManager::hw_Unload()
@@ -192,7 +194,8 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 			RCache.set_Element(Object.shader->E[lod_id]);
 			RImplementation.apply_lmaterial();
 			u32 c_base = x_array->vs.index;
-			Fvector4* c_storage = RCache.get_ConstantCache_Vertex().get_array_f().access(c_base);
+#pragma message(Reminder("fix details"))
+			//Fvector4* c_storage = RCache.get_ConstantCache_Vertex().get_array_f().access(c_base);
 
 			u32 dwBatch = 0;
 
@@ -211,9 +214,10 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 					// Build matrix ( 3x4 matrix, last row - color )
 					float scale = Instance.scale_calculated;
 					Fmatrix& M = Instance.mRotY;
-					c_storage[base + 0].set(M._11 * scale, M._21 * scale, M._31 * scale, M._41);
-					c_storage[base + 1].set(M._12 * scale, M._22 * scale, M._32 * scale, M._42);
-					c_storage[base + 2].set(M._13 * scale, M._23 * scale, M._33 * scale, M._43);
+#pragma message(Reminder("fix details"))
+					//c_storage[base + 0].set(M._11 * scale, M._21 * scale, M._31 * scale, M._41);
+					//c_storage[base + 1].set(M._12 * scale, M._22 * scale, M._32 * scale, M._42);
+					//c_storage[base + 2].set(M._13 * scale, M._23 * scale, M._33 * scale, M._43);
 
 					// Build color
 #if RENDER == R_R1
@@ -222,7 +226,7 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 					//					C.mad					(c_lmap,Instance.c_rgb);
 					C.mad(c_hemi, Instance.c_hemi);
 					C.mad(c_sun, Instance.c_sun);
-					c_storage[base + 3].set(C.x, C.y, C.z, 1.f);
+					//c_storage[base + 3].set(C.x, C.y, C.z, 1.f);
 #else
 					// R2 only needs hemisphere
 					float h = Instance.c_hemi;
@@ -236,9 +240,10 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 						Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 						u32 dwCNT_verts = dwBatch * Object.number_vertices;
 						u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-						RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
-						RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-						RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
+#pragma message(Reminder("fix details"))
+						//RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
+						//RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
+						//RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 						RCache.stat.r.s_details.add(dwCNT_verts);
 
 						// restart
@@ -252,9 +257,10 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 				Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 				u32 dwCNT_verts = dwBatch * Object.number_vertices;
 				u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-				RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
-				RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
+#pragma message(Reminder("fix details"))
+				//RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
+				//RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
+				//RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 				RCache.stat.r.s_details.add(dwCNT_verts);
 			}
 			// Clean up

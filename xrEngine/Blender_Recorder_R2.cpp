@@ -7,7 +7,13 @@
 
 #include "tss.h"
 
-void fix_texture_name(LPSTR fn);
+void fix_texture_name(LPSTR fn)
+{
+	LPSTR _ext = strext(fn);
+	if (_ext && (0 == stricmp(_ext, ".tga") || 0 == stricmp(_ext, ".dds") || 0 == stricmp(_ext, ".bmp") ||
+				 0 == stricmp(_ext, ".ogm")))
+		*_ext = 0;
+}
 
 void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BOOL bZwrite, BOOL bABlend,
 							  D3DBLEND abSRC, D3DBLEND abDST, BOOL aTest, u32 aRef)
@@ -248,4 +254,36 @@ void CBlender_Compile::r_End()
 	ref_matrix_list temp(0);
 	SH->passes.push_back(Device.Resources->_CreatePass(dest));
 	// SH->passes.push_back	(DEV->_CreatePass(dest.state,dest.ps,dest.vs,dest.gs,dest.constants,dest.T,temp,dest.C));
+}
+
+// DX11 HACK!!!!
+
+u32 CBlender_Compile::r_Sampler(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide, u32 address, u32 fmin,
+								u32 fmip, u32 fmag)
+{
+#pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
+	r_dx10Texture(name, texture);
+	r_dx10Sampler("smp_nofilter");
+	return 0;
+}
+
+void CBlender_Compile::r_Sampler_rtf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide)
+{
+#pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
+	r_dx10Texture(name, texture);
+	r_dx10Sampler("smp_rtlinear");
+}
+
+void CBlender_Compile::r_Sampler_clf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide)
+{
+#pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
+	r_dx10Texture(name, texture);
+	r_dx10Sampler("smp_linear");
+}
+
+void CBlender_Compile::r_Sampler_clw(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide)
+{
+#pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
+	r_dx10Texture(name, texture);
+	r_dx10Sampler("smp_linear");
 }

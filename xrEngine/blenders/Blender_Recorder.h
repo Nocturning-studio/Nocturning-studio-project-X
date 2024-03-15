@@ -136,6 +136,19 @@ class ENGINE_API CBlender_Compile
 	};
 	u32 r_dx10Sampler(LPCSTR ResourceName);
 
+	u32 r_Sampler(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false, u32 address = D3DTADDRESS_WRAP,
+				  u32 fmin = D3DTEXF_LINEAR, u32 fmip = D3DTEXF_LINEAR, u32 fmag = D3DTEXF_LINEAR);
+	u32 r_Sampler(LPCSTR name, shared_str texture, bool b_ps1x_ProjectiveDivide = false,
+				  u32 address = D3DTADDRESS_WRAP,
+				  u32 fmin = D3DTEXF_LINEAR, u32 fmip = D3DTEXF_LINEAR, u32 fmag = D3DTEXF_LINEAR)
+	{
+		r_Sampler(name, texture.c_str());
+		return 0;
+	}
+	void r_Sampler_rtf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
+	void r_Sampler_clf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
+	void r_Sampler_clw(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide = false);
+
 	void r_ColorWriteEnable(bool cR = true, bool cG = true, bool cB = true, bool cA = true);
 	void r_End();
 

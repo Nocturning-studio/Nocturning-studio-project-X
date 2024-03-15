@@ -22,6 +22,13 @@ CEngineAPI::CEngineAPI()
 	tune_resume = dummy;
 }
 
+ENGINE_API bool is_enough_address_space_available()
+{
+	SYSTEM_INFO system_info;
+	GetSystemInfo(&system_info);
+	return (*(u32*)&system_info.lpMaximumApplicationAddress) > 0x90000000;
+}
+
 CEngineAPI::~CEngineAPI()
 {
 }

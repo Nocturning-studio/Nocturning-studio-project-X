@@ -32,7 +32,7 @@ void CBlender_Editor_Wire::Load(IReader& fs, u16 version)
 void CBlender_Editor_Wire::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	if (C.bEditor)
+	/* if (C.bEditor)
 	{
 		C.PassBegin();
 		{
@@ -52,7 +52,7 @@ void CBlender_Editor_Wire::Compile(CBlender_Compile& C)
 		}
 		C.PassEnd();
 	}
-	else
+	else*/
 	{
 		C.r_Pass("editor", "simple_color", FALSE, TRUE, TRUE);
 		C.r_End();

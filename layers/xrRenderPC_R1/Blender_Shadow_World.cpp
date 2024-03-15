@@ -39,7 +39,8 @@ void CBlender_ShWorld::Compile(CBlender_Compile& C)
 		C.StageBegin();
 		C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_ADD, D3DTA_DIFFUSE);
 		C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_ADD, D3DTA_DIFFUSE);
-		C.Stage_Texture("$base0");
+#pragma message(Reminder("fix shadow_world"))
+		//C.Stage_Texture("$base0");
 		C.Stage_Matrix("$null", 0);
 		C.Stage_Constant("$null");
 		C.StageEnd();

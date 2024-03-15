@@ -33,7 +33,8 @@ CLightProjector::CLightProjector()
 	RT = 0;
 
 	//
-	RT.create("$user$projector", P_rt_size, P_rt_size, P_rtf);
+#pragma message(Reminder("fix light projectors"))
+	//RT.create("$user$projector", P_rt_size, P_rt_size, P_rtf);
 
 	// ref-str for faster const-search
 	c_xform = "m_plmap_xform";
@@ -179,9 +180,10 @@ void CLightProjector::calculate()
 
 	// Begin
 	Device.Statistic->RenderDUMP_Pcalc.Begin();
-	RCache.set_RT(RT->pRT);
-	RCache.set_ZB(RImplementation.Target->pTempZB);
-	CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_ZBUFFER | (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0), 0, 1, 0));
+#pragma message(Reminder("fix light projectors"))
+	//RCache.set_RT(RT->pRT);
+	//RCache.set_ZB(RImplementation.Target->pTempZB);
+	//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_ZBUFFER | (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0), 0, 1, 0));
 	RCache.set_xform_world(Fidentity);
 
 	// reallocate/reassociate structures + perform all the work
@@ -283,12 +285,14 @@ void CLightProjector::calculate()
 		int s_x = c_it % P_o_line;
 		int s_y = c_it / P_o_line;
 		D3DVIEWPORT9 VP = {s_x * P_o_size, s_y * P_o_size, P_o_size, P_o_size, 0, 1};
-		CHK_DX(HW.pDevice->SetViewport(&VP));
+#pragma message(Reminder("fix light projectors"))
+		//CHK_DX(HW.pDevice->SetViewport(&VP));
 
 		// Clear color to ambience
 		Fvector& cap = LT->get_approximate();
-		CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET,
-								 color_rgba_f(cap.x, cap.y, cap.z, (cap.x + cap.y + cap.z) / 4.f), 1, 0));
+#pragma message(Reminder("fix light projectors"))
+		//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET,
+			//					 color_rgba_f(cap.x, cap.y, cap.z, (cap.x + cap.y + cap.z) / 4.f), 1, 0));
 
 		// calculate uv-gen matrix and clamper
 		Fmatrix mCombine;

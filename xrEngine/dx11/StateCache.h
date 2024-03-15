@@ -2,8 +2,8 @@
 #define	dx10StateCache_included
 #pragma once
 
-template <class IDeviceState, class StateDecs>
-class dx10StateCache
+template <class IDeviceState, class StateDecs> 
+class ENGINE_API dx10StateCache
 {
 	//	Public interface
 public:

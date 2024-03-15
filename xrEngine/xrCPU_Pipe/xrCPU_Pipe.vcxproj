@@ -285,7 +285,7 @@
     <OutDir>$(SolutionDir)..\bin\</OutDir>
     <IntDir>$(SolutionDir)..\intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)third-party\include\;$(SolutionDir)xrCore\;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)Include;.;$(SolutionDir)third-party\include\;$(SolutionDir)xrCore\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\libraries\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Demo|Win32'">

@@ -78,7 +78,8 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 	}
 
 	// Geom
-	rm_geom.create(vFormat, p_rm_Vertices, p_rm_Indices);
+#pragma message(Reminder("fix tree visual"))
+	//rm_geom.create(vFormat, p_rm_Vertices, p_rm_Indices);
 
 	// Get constants
 	m_xform = "m_xform";

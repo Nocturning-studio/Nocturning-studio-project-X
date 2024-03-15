@@ -3,7 +3,7 @@
 #pragma once
 
 
-class dx10SamplerStateCache
+class ENGINE_API dx10SamplerStateCache
 {
 public:
 	enum

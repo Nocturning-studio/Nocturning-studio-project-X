@@ -67,8 +67,9 @@ void CUIStaticItem::Render()
 	// установить обязательно перед вызовом CustomItem::Render() !!!
 	VERIFY(hShader);
 	RCache.set_Shader(hShader);
-	if (alpha_ref != -1)
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, alpha_ref));
+#pragma message(Reminder("xrGame fix alpharef"))
+	//if (alpha_ref != -1)
+	//	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, alpha_ref));
 	// convert&set pos
 	Fvector2 bp;
 	UI()->ClientToScreenScaled(bp, float(iPos.x), float(iPos.y));
@@ -107,8 +108,9 @@ void CUIStaticItem::Render()
 	RCache.set_Geometry(hGeom_fan);
 	if (p_cnt != 0)
 		RCache.Render(D3DPT_TRIANGLELIST, vOffset, u32(p_cnt));
-	if (alpha_ref != -1)
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
+#pragma message(Reminder("xrGame fix alpharef"))
+	//	if (alpha_ref != -1)
+	//	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
 	UI()->PopScissor();
 }
 
@@ -118,8 +120,9 @@ void CUIStaticItem::Render(float angle)
 	// установить обязательно перед вызовом CustomItem::Render() !!!
 	VERIFY(hShader);
 	RCache.set_Shader(hShader);
-	if (alpha_ref != -1)
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, alpha_ref));
+#pragma message(Reminder("xrGame fix alpharef"))
+	//	if (alpha_ref != -1)
+	//	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, alpha_ref));
 	// convert&set pos
 	Fvector2 bp_ns;
 	bp_ns.set(iPos);
@@ -135,6 +138,7 @@ void CUIStaticItem::Render(float angle)
 	RCache.set_Geometry(hGeom_fan);
 	if (p_cnt > 2)
 		RCache.Render(D3DPT_TRIANGLEFAN, vOffset, u32(p_cnt - 2));
-	if (alpha_ref != -1)
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
+#pragma message(Reminder("xrGame fix alpharef"))
+	//	if (alpha_ref != -1)
+	//	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
 }

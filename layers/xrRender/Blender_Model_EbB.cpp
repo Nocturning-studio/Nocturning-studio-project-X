@@ -49,7 +49,7 @@ void CBlender_Model_EbB::Load(IReader& fs, u16 version)
 void CBlender_Model_EbB::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	if (C.bEditor)
+	/* if (C.bEditor)
 	{
 		C.PassBegin();
 		{
@@ -90,8 +90,8 @@ void CBlender_Model_EbB::Compile(CBlender_Compile& C)
 			C.StageEnd();
 		}
 		C.PassEnd();
-	}
-	else
+	}*/
+	//else
 	{
 		LPCSTR vsname = 0;
 		LPCSTR psname = 0;

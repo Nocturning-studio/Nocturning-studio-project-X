@@ -144,7 +144,8 @@ class CRender : public R_dsgraph_structure
 	virtual void level_Load(IReader*);
 	virtual void level_Unload();
 
-	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
+	ID3D11Resource* texture_load(LPCSTR fname, u32& msize, bool bStaging);
+	//virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
 	//virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName,
 	//							   LPCSTR pTarget, DWORD Flags, void*& result);
 

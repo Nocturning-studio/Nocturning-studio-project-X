@@ -29,5 +29,12 @@
 #include "..\xrRender\xrRender_console.h"
 #include "FStaticRender.h"
 
+#include <d3d11.h>
+#include <d3dx11.h>
+#include "d3d11shader.h"
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dx11.lib")
+
 #define		TEX_POINT_ATT	"internal\\internal_light_attpoint"
 #define		TEX_SPOT_ATT	"internal\\internal_light_attclip"

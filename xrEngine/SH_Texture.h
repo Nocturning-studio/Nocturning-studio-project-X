@@ -7,7 +7,7 @@
 class ENGINE_API CAviPlayerCustom;
 class CTheoraSurface;
 
-class ECORE_API CTexture : public xr_resource_named
+class ENGINE_API CTexture : public xr_resource_named
 {
   public:
 	//	Since DX10 allows up to 128 unique textures,
@@ -125,7 +125,7 @@ class ECORE_API CTexture : public xr_resource_named
 	xr_vector<ID3D11ShaderResourceView*> m_seqSRView;
 
 };
-struct resptrcode_texture : public resptr_base<CTexture>
+struct ENGINE_API resptrcode_texture : public resptr_base<CTexture>
 {
 	void create(LPCSTR _name);
 	void destroy()

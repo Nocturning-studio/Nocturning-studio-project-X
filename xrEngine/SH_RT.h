@@ -15,7 +15,7 @@ enum VIEW_TYPE
 };
 
 //////////////////////////////////////////////////////////////////////////
-class CRT : public xr_resource_named
+class ENGINE_API CRT : public xr_resource_named
 {
   public:
 	CRT();
@@ -46,7 +46,7 @@ class CRT : public xr_resource_named
 
 	u64 _order;
 };
-struct resptrcode_crt : public resptr_base<CRT>
+struct ENGINE_API resptrcode_crt : public resptr_base<CRT>
 {
 	// Depth Stencil view type required DXGI_FORMAT_D...
 	void create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples = 1);

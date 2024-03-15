@@ -304,7 +304,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 		for (u32 vs_id = 0; vs_id < nrmVS.size(); vs_id++)
 		{
 			mapNormalVS::TNode* Nvs = nrmVS[vs_id];
-			RCache.set_VS(Nvs->key);
+#pragma message(Reminder("fix render dsgraph render"))
+			//RCache.set_VS(Nvs->key);
 
 			mapNormalPS& ps = Nvs->val;
 			ps.ssa = 0;
@@ -313,7 +314,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 			for (u32 ps_id = 0; ps_id < nrmPS.size(); ps_id++)
 			{
 				mapNormalPS::TNode* Nps = nrmPS[ps_id];
-				RCache.set_PS(Nps->key);
+#pragma message(Reminder("fix render dsgraph render"))
+				//RCache.set_PS(Nps->key);
 
 				mapNormalCS& cs = Nps->val;
 				cs.ssa = 0;
@@ -331,7 +333,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					for (u32 state_id = 0; state_id < nrmStates.size(); state_id++)
 					{
 						mapNormalStates::TNode* Nstate = nrmStates[state_id];
-						RCache.set_States(Nstate->key);
+#pragma message(Reminder("fix render dsgraph render"))
+						//RCache.set_States(Nstate->key);
 
 						mapNormalTextures& tex = Nstate->val;
 						tex.ssa = 0;
@@ -380,7 +383,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 		for (u32 vs_id = 0; vs_id < matVS.size(); vs_id++)
 		{
 			mapMatrixVS::TNode* Nvs = matVS[vs_id];
-			RCache.set_VS(Nvs->key);
+#pragma message(Reminder("fix render dsgraph render"))
+			//RCache.set_VS(Nvs->key);
 
 			mapMatrixPS& ps = Nvs->val;
 			ps.ssa = 0;
@@ -389,7 +393,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 			for (u32 ps_id = 0; ps_id < matPS.size(); ps_id++)
 			{
 				mapMatrixPS::TNode* Nps = matPS[ps_id];
-				RCache.set_PS(Nps->key);
+#pragma message(Reminder("fix render dsgraph render"))
+				//RCache.set_PS(Nps->key);
 
 				mapMatrixCS& cs = Nps->val;
 				cs.ssa = 0;
@@ -407,7 +412,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					for (u32 state_id = 0; state_id < matStates.size(); state_id++)
 					{
 						mapMatrixStates::TNode* Nstate = matStates[state_id];
-						RCache.set_States(Nstate->key);
+#pragma message(Reminder("fix render dsgraph render"))
+						//RCache.set_States(Nstate->key);
 
 						mapMatrixTextures& tex = Nstate->val;
 						tex.ssa = 0;

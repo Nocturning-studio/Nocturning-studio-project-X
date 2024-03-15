@@ -1,7 +1,7 @@
 #ifndef R_BACKEND_LOD_H_INCLUDED
 #define R_BACKEND_LOD_H_INCLUDED
 
-class R_LOD
+class ENGINE_API R_LOD
 {
 public:
 	R_constant*		c_LOD;

@@ -35,9 +35,10 @@ IC void MouseRayFromPoint(Fvector& direction, int x, int y, Fmatrix& m_CamMat)
 
 void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 {
-	if (!Device.b_is_Ready)
+#pragma message(Reminder("fix screenshots"))
+	// if (!Device.b_is_Ready)
 		return;
-
+	/*
 	BOOL fullscreen = psDeviceFlags.test(rsFullscreen);
 
 	if (fullscreen)
@@ -203,5 +204,5 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 		return;
 	}
 	break;
-	}
+	}*/
 }

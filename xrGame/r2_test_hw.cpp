@@ -2,7 +2,9 @@
 
 BOOL xrRender_test_hw()
 {
-	D3DCAPS9 caps;
+#pragma message(Reminder("r2 test hw delete"))
+	return TRUE;
+	/* D3DCAPS9 caps;
 	CHW _HW;
 	_HW.CreateD3D();
 	_HW.pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
@@ -16,5 +18,5 @@ BOOL xrRender_test_hw()
 		return FALSE;
 	if (mrt_count < 3)
 		return FALSE;
-	return TRUE;
+	return TRUE;*/
 }

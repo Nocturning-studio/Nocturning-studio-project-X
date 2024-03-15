@@ -227,11 +227,12 @@ void CRender::LoadBuffers(CStreamReader* base_fs)
 
 			// Create and fill
 			BYTE* pData = 0;
-			R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vSize, dwUsage, 0, D3DPOOL_MANAGED, &VB[i], 0));
-			R_CHK(VB[i]->Lock(0, 0, (void**)&pData, 0));
-			fs->r(pData, vCount * vSize);
-			//			CopyMemory			(pData,fs->pointer(),vCount*vSize);	//.???? copy while skip T&B
-			VB[i]->Unlock();
+#pragma message(Reminder("fix render loader"))
+			//R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vSize, dwUsage, 0, D3DPOOL_MANAGED, &VB[i], 0));
+			//R_CHK(VB[i]->Lock(0, 0, (void**)&pData, 0));
+			//fs->r(pData, vCount * vSize);
+			////			CopyMemory			(pData,fs->pointer(),vCount*vSize);	//.???? copy while skip T&B
+			//VB[i]->Unlock();
 
 			//			fs->advance			(vCount*vSize);
 		}
@@ -255,11 +256,12 @@ void CRender::LoadBuffers(CStreamReader* base_fs)
 
 			// Create and fill
 			BYTE* pData = 0;
-			R_CHK(HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &IB[i], 0));
-			R_CHK(IB[i]->Lock(0, 0, (void**)&pData, 0));
+#pragma message(Reminder("fix render loader"))
+			//R_CHK(HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &IB[i], 0));
+			//R_CHK(IB[i]->Lock(0, 0, (void**)&pData, 0));
 			//			CopyMemory			(pData,fs->pointer(),iCount*2);
-			fs->r(pData, iCount * 2);
-			IB[i]->Unlock();
+			//fs->r(pData, iCount * 2);
+			//IB[i]->Unlock();
 
 			//			fs->advance			(iCount*2);
 		}

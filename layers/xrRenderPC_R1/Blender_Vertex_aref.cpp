@@ -53,7 +53,7 @@ void CBlender_Vertex_aref::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-	if (C.bEditor)
+	/* if (C.bEditor)
 	{
 		C.PassBegin();
 		{
@@ -75,7 +75,7 @@ void CBlender_Vertex_aref::Compile(CBlender_Compile& C)
 		}
 		C.PassEnd();
 	}
-	else
+	else*/
 	{
 		switch (C.iElement)
 		{

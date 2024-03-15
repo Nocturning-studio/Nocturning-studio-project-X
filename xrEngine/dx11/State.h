@@ -6,7 +6,7 @@ class SimulatorStates;
 
 #include "SamplerStateCache.h"
 
-class dx10State
+class ENGINE_API dx10State
 {
 //	Public interface
 public:

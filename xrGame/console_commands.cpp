@@ -115,9 +115,10 @@ enum E_COMMON_FLAGS
 
 CUIOptConCom g_OptConCom;
 
+#pragma message(Reminder("xrGame fix SEVERAL_ALLOCATORS"))
 #ifndef PURE_ALLOC
 #ifndef USE_MEMORY_MONITOR
-#define SEVERAL_ALLOCATORS
+//#define SEVERAL_ALLOCATORS
 #endif // USE_MEMORY_MONITOR
 #endif // PURE_ALLOC
 

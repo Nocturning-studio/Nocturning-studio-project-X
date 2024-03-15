@@ -9,9 +9,9 @@ static LPCSTR RTname_distort = "$user$distort";
 CRenderTarget::CRenderTarget()
 {
 	bAvailable = FALSE;
-	RT = 0;
-	pTempZB = 0;
-	ZB = 0;
+	//RT = 0;
+	//pTempZB = 0;
+	//ZB = 0;
 
 	param_blur = 0.f;
 	param_gray = 0.f;
@@ -49,27 +49,32 @@ BOOL CRenderTarget::Create()
 
 	// SCREENSHOT
 	{
-		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
-		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth, Device.dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
-		R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
-		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
+#pragma message(Reminder("FIX SCREENSHOTS"))
+		//D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
+		//R_CHK(HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth, Device.dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
+		//R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
+		//R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
 	// Bufferts
-	RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
-	RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
-	ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
+#pragma message(Reminder("FIX CUSTOM RTS"))
+#pragma message(Reminder("FIX DISTORT"))
+	//RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
+	//RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
+	//ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
 
-	if (RImplementation.o.aa_type == MSAA)
-	{
-		R_CHK(HW.pDevice->CreateRenderTarget(rtWidth, rtHeight, HW.Caps.fTarget, 
-			RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, FALSE, &RT_msaa.rt, NULL));
-		R_CHK(HW.pDevice->CreateDepthStencilSurface(rtWidth, rtHeight, HW.Caps.fDepth, 
-			RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, TRUE, &RT_msaa.zb, NULL));
-	}
+#pragma message(Reminder("FIX MSAA/CSAA"))
+	//if (RImplementation.o.aa_type == MSAA)
+	//{
+	//	R_CHK(HW.pDevice->CreateRenderTarget(rtWidth, rtHeight, HW.Caps.fTarget, 
+	//		RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, FALSE, &RT_msaa.rt, NULL));
+	//	R_CHK(HW.pDevice->CreateDepthStencilSurface(rtWidth, rtHeight, HW.Caps.fDepth, 
+	//		RImplementation.o.msaa_samples, RImplementation.o.csaa_samples, TRUE, &RT_msaa.zb, NULL));
+	//}
 
+#pragma message(Reminder("FIX LIGST SHADOWS"))
 	// Temp ZB, used by some of the shadowing code
-	R_CHK(HW.pDevice->CreateDepthStencilSurface(512, 512, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE, &pTempZB, NULL));
+	//R_CHK(HW.pDevice->CreateDepthStencilSurface(512, 512, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE, &pTempZB, NULL));
 
 	// Shaders and stream
 	s_postprocess.create("postprocess");
@@ -81,46 +86,51 @@ BOOL CRenderTarget::Create()
 	s_menu.create("distort");
 	g_menu.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 
-	return RT->valid() && RT_distort->valid();
+	//return RT->valid() && RT_distort->valid();
+	return true;
 }
 
 CRenderTarget::~CRenderTarget()
 {
-	_RELEASE(pTempZB);
+	//_RELEASE(pTempZB);
 	s_postprocess_D.destroy();
 	s_postprocess.destroy();
 	g_postprocess.destroy();
 	s_menu.destroy();
 	g_menu.destroy();
-	RT_distort.destroy();
-	RT.destroy();
-	ZB.destroy();
-	if (RImplementation.o.aa_type == MSAA)
-	{
-		_RELEASE(RT_msaa.rt);
-		_RELEASE(RT_msaa.zb);
-	}
+	//RT_distort.destroy();
+	//RT.destroy();
+	//ZB.destroy();
+	//if (RImplementation.o.aa_type == MSAA)
+	//{
+	//	_RELEASE(RT_msaa.rt);
+	//	_RELEASE(RT_msaa.zb);
+	//}
 }
 
 void CRenderTarget::EnableMSAA()
 {
-	HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+#pragma message(Reminder("FIX MSAA ENABLE"))
+	//HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
 }
 
 void CRenderTarget::DisableMSAA()
 {
-	HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
+#pragma message(Reminder("FIX MSAA DISABLE"))
+	//HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
 }
 
 void CRenderTarget::EnableAlphaMSAA()
 {
-	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, 
-		RImplementation.o.aa_type == MSAA ? (D3DFORMAT)ps_r1_aa_transluency : NULL);
+#pragma message(Reminder("FIX ATOC ENABLE"))
+	//HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, 
+	//	RImplementation.o.aa_type == MSAA ? (D3DFORMAT)ps_r1_aa_transluency : NULL);
 }
 
 void CRenderTarget::DisableAlphaMSAA()
 {
-	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, NULL);
+#pragma message(Reminder("FIX ATOC DISABLE"))
+	//HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_Y, NULL);
 }
 
 void CRenderTarget::calc_tc_noise(Fvector2& p0, Fvector2& p1)
@@ -219,17 +229,21 @@ BOOL CRenderTarget::NeedPostProcess()
 #define SHOWX(a) Msg("%s %x", #a, a);
 void CRenderTarget::Begin()
 {
-	if (RImplementation.o.aa_type == MSAA)
-	{
-		RCache.set_RT(RT_msaa.rt);
-		RCache.set_ZB(RT_msaa.zb);
-		EnableMSAA();
-	}
-	else
-	{
-		RCache.set_RT(RT->pRT);
-		RCache.set_ZB(ZB->pRT);
-	}
+	//if (RImplementation.o.aa_type == MSAA)
+	//{
+	//	RCache.set_RT(RT_msaa.rt);
+	//	RCache.set_ZB(RT_msaa.zb);
+	//	EnableMSAA();
+	//}
+	//else
+	//{
+	//	RCache.set_RT(RT->pRT);
+	//	RCache.set_ZB(ZB->pRT);
+	//}
+
+#pragma message(Reminder("FIX pBaseRT/ZB setup in backend"))
+	RCache.set_RT(HW.pBaseRT);
+	RCache.set_ZB(HW.pBaseZB);
 
 	curWidth = rtWidth;
 	curHeight = rtHeight;
@@ -256,6 +270,12 @@ struct TL_2c3uv
 
 void CRenderTarget::End()
 {
+#pragma message(Reminder("FIX POSTPROCESS"))
+
+	RImplementation.mapDistort.clear();
+	return;
+	//----------------------------
+
 	if (g_pGamePersistent)
 		g_pGamePersistent->OnRenderPPUI_main();
 
@@ -275,11 +295,12 @@ void CRenderTarget::End()
 	curWidth = Device.dwWidth;
 	curHeight = Device.dwHeight;
 
-	if (RImplementation.o.aa_type == MSAA)
-	{
-		HW.pDevice->StretchRect(RT_msaa.rt, NULL, RT->pRT, NULL, D3DTEXF_POINT);
-		DisableMSAA();
-	}
+#pragma message(Reminder("FIX MSAA RESOLVE"))
+	//if (RImplementation.o.aa_type == MSAA)
+	//{
+	//	HW.pDevice->StretchRect(RT_msaa.rt, NULL, RT->pRT, NULL, D3DTEXF_POINT);
+	//	DisableMSAA();
+	//}
 
 	int gblend = clampr(iFloor((1 - param_gray) * 255.f), 0, 255);
 	int nblend = clampr(iFloor((1 - param_noise) * 255.f), 0, 255);
@@ -342,17 +363,20 @@ void CRenderTarget::End()
 
 void CRenderTarget::phase_distortion()
 {
-	RCache.set_RT(RT_distort->pRT);
-	RCache.set_ZB(ZB->pRT);
-	RCache.set_CullMode(CULL_CCW);
-	RCache.set_ColorWriteEnable();
-	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 127, 127), 1.0f, 0L));
+#pragma message(Reminder("FIX DISTORT"))
+	RImplementation.mapDistort.clear();
 
-	if (g_pGameLevel && g_pGamePersistent && !g_pGamePersistent->OnRenderPPUI_query())
-		RImplementation.r_dsgraph_render_distort();
-	else
-		RImplementation.mapDistort.clear();
-
-	if (g_pGamePersistent)
-		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
+	//RCache.set_RT(RT_distort->pRT);
+	//RCache.set_ZB(ZB->pRT);
+	//RCache.set_CullMode(CULL_CCW);
+	//RCache.set_ColorWriteEnable();
+	//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 127, 127), 1.0f, 0L));
+	//
+	//if (g_pGameLevel && g_pGamePersistent && !g_pGamePersistent->OnRenderPPUI_query())
+	//	RImplementation.r_dsgraph_render_distort();
+	//else
+	//	RImplementation.mapDistort.clear();
+	//
+	//if (g_pGamePersistent)
+	//	g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
 }

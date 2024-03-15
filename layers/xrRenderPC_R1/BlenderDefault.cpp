@@ -41,7 +41,8 @@ void CBlender_default::Compile(CBlender_Compile& C)
 			C.StageBegin();
 			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
 			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_TMC(oT_Name, oT_xform, "$null", 0);
+#pragma message(Reminder("fix blender default"))
+			//C.StageSET_TMC(oT_Name, oT_xform, "$null", 0);
 			C.StageEnd();
 		}
 		C.PassEnd();

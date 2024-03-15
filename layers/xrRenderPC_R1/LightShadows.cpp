@@ -43,8 +43,9 @@ CLightShadows::CLightShadows()
 	strconcat(sizeof(RTtemp2), RTtemp2, RTtemp, ",", RTtemp);
 
 	//
-	RT.create(RTname, S_rt_size, S_rt_size, S_rtf);
-	RT_temp.create(RTtemp, S_rt_size, S_rt_size, S_rtf);
+#pragma message(Reminder("fix light shadows"))
+	//RT.create(RTname, S_rt_size, S_rt_size, S_rtf);
+	//RT_temp.create(RTtemp, S_rt_size, S_rt_size, S_rtf);
 	sh_World.create("effects\\shadow_world", RTname);
 	geom_World.create(FVF::F_LIT, RCache.Vertex.Buffer(), NULL);
 	sh_BlurTR.create("blur4", RTtemp2);
@@ -195,7 +196,8 @@ void CLightShadows::calculate()
 
 	BOOL bRTS = FALSE;
 	Device.Statistic->RenderDUMP_Scalc.Begin();
-	HW.pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+#pragma message(Reminder("fix light shadows"))
+	//HW.pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
 
 	// iterate on objects
 	int slot_id = 0;
@@ -225,9 +227,10 @@ void CLightShadows::calculate()
 			if (!bRTS)
 			{
 				bRTS = TRUE;
-				RCache.set_RT(RT_temp->pRT);
-				RCache.set_ZB(RImplementation.Target->pTempZB);
-				HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 255, 255), 1, 0);
+#pragma message(Reminder("fix light shadows"))
+				//RCache.set_RT(RT_temp->pRT);
+				//RCache.set_ZB(RImplementation.Target->pTempZB);
+				//HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 255, 255), 1, 0);
 			}
 
 			// calculate light center
@@ -315,7 +318,8 @@ void CLightShadows::calculate()
 			int s_x = slot_id % slot_line;
 			int s_y = slot_id / slot_line;
 			D3DVIEWPORT9 VP = {s_x * S_size, s_y * S_size, S_size, S_size, 0, 1};
-			CHK_DX(HW.pDevice->SetViewport(&VP));
+#pragma message(Reminder("fix light shadows"))
+			//CHK_DX(HW.pDevice->SetViewport(&VP));
 
 			// Render object-parts
 			for (u32 n_it = 0; n_it < C.nodes.size(); n_it++)
@@ -358,14 +362,16 @@ void CLightShadows::calculate()
 
 		// Actual rendering (pass0, temp2real)
 		RCache.set_RT(RT->pRT);
-		RCache.set_ZB(RImplementation.Target->pTempZB);
+#pragma message(Reminder("fix light shadows"))
+		//RCache.set_ZB(RImplementation.Target->pTempZB);
 		RCache.set_Shader(sh_BlurTR);
 		RCache.set_Geometry(geom_Blur);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 
 	// Finita la comedia
-	HW.pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+#pragma message(Reminder("fix light shadows"))
+	//HW.pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	Device.Statistic->RenderDUMP_Scalc.End();
 
 	RCache.set_xform_project(Device.mProject);

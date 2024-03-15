@@ -2,7 +2,7 @@
 #define	dxHashHelper_included
 #pragma once
 
-class dxHashHelper
+class ENGINE_API dxHashHelper
 {
 public:
 	dxHashHelper();

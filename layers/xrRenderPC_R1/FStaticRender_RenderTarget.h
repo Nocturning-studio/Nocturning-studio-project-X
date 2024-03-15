@@ -10,9 +10,9 @@ class CRenderTarget : public IRender_Target
 	u32 curWidth;
 	u32 curHeight;
 
-	ref_rt RT;
-	ref_rt RT_distort;
-	ref_rt ZB;
+	//ref_rt RT;
+	//ref_rt RT_distort;
+	//ref_rt ZB;
 
 	ref_shader s_postprocess;
 	ref_shader s_postprocess_D;
@@ -38,17 +38,17 @@ class CRenderTarget : public IRender_Target
 	u32 param_color_add;
 
   public:
-	IDirect3DSurface9* pTempZB;
+	//IDirect3DSurface9* pTempZB;
 
-	IDirect3DSurface9* surf_screenshot_normal;	 // HW.fTarget, SM_NORMAL
-	IDirect3DTexture9* tex_screenshot_gamesave;	 // Container of "surf_screenshot_gamesave"
-	IDirect3DSurface9* surf_screenshot_gamesave; // DXT1, SM_FOR_GAMESAVE
+	//IDirect3DSurface9* surf_screenshot_normal;	 // HW.fTarget, SM_NORMAL
+	//IDirect3DTexture9* tex_screenshot_gamesave;	 // Container of "surf_screenshot_gamesave"
+	//IDirect3DSurface9* surf_screenshot_gamesave; // DXT1, SM_FOR_GAMESAVE
 
-	struct
-	{
-		IDirect3DSurface9* rt;
-		IDirect3DSurface9* zb;
-	} RT_msaa;
+	//struct
+	//{
+	//	IDirect3DSurface9* rt;
+	//	IDirect3DSurface9* zb;
+	//} RT_msaa;
 
 	void EnableMSAA();
 	void DisableMSAA();

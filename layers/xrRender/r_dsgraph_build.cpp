@@ -155,16 +155,17 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(IRender_Visual* pVisual, Fvec
 	mapMatrixVS::TNode* Nvs = map.insert(pass.vs);
 	mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps);
 #else
-	mapMatrixVS::TNode* Nvs = map.insert(pass.vs->sh);
-	mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
+#pragma message(Reminder("fix render dsgraph build dynamic"))
+	//mapMatrixVS::TNode* Nvs = map.insert(pass.vs->sh);
+	//mapMatrixPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
 #endif
-	mapMatrixCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
-	mapMatrixStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
-	mapMatrixTextures::TNode* Ntex = Nstate->val.insert(pass.T._get());
-	mapMatrixItems& items = Ntex->val;
-	items.push_back(item);
+	//mapMatrixCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
+	//mapMatrixStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
+	//mapMatrixTextures::TNode* Ntex = Nstate->val.insert(pass.T._get());
+	//mapMatrixItems& items = Ntex->val;
+	//items.push_back(item);
 
-	// Need to sort for HZB efficient use
+	/*// Need to sort for HZB efficient use
 	if (SSA > Ntex->val.ssa)
 	{
 		Ntex->val.ssa = SSA;
@@ -194,7 +195,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(IRender_Visual* pVisual, Fvec
 		temp.xform(pVisual->vis.box, xf);
 		val_recorder->push_back(temp);
 	}
-#endif
+#endif*/
 }
 
 void R_dsgraph_structure::r_dsgraph_insert_static(IRender_Visual* pVisual)
@@ -286,17 +287,18 @@ void R_dsgraph_structure::r_dsgraph_insert_static(IRender_Visual* pVisual)
 	mapNormalVS::TNode* Nvs = map.insert(pass.vs);
 	mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps);
 #else
-	mapNormalVS::TNode* Nvs = map.insert(pass.vs->sh);
-	mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
+#pragma message(Reminder("fix render dsgraph build static"))
+	//mapNormalVS::TNode* Nvs = map.insert(pass.vs->sh);
+	//mapNormalPS::TNode* Nps = Nvs->val.insert(pass.ps->sh);
 #endif
-	mapNormalCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
-	mapNormalStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
-	mapNormalTextures::TNode* Ntex = Nstate->val.insert(pass.T._get());
-	mapNormalItems& items = Ntex->val;
-	_NormalItem item = {SSA, pVisual};
-	items.push_back(item);
+	//mapNormalCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
+	//mapNormalStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
+	//mapNormalTextures::TNode* Ntex = Nstate->val.insert(pass.T._get());
+	//mapNormalItems& items = Ntex->val;
+	//_NormalItem item = {SSA, pVisual};
+	//items.push_back(item);
 
-	// Need to sort for HZB efficient use
+	/*// Need to sort for HZB efficient use
 	if (SSA > Ntex->val.ssa)
 	{
 		Ntex->val.ssa = SSA;
@@ -323,7 +325,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static(IRender_Visual* pVisual)
 	{
 		val_recorder->push_back(pVisual->vis.box);
 	}
-#endif
+#endif*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
