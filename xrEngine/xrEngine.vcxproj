@@ -2002,8 +2002,10 @@
     <ClInclude Include="dx11\HashHelper.h" />
     <ClInclude Include="dx11\SamplerStateCache.h" />
     <ClInclude Include="dx11\ShaderResourceStateCache.h" />
+    <ClInclude Include="dx11\State.h" />
     <ClInclude Include="dx11\StateCache.h" />
     <ClInclude Include="dx11\StateCacheImpl.h" />
+    <ClInclude Include="dx11\StateManager.h" />
     <ClInclude Include="dx11\StateUtils.h" />
     <ClInclude Include="edit_actions.h" />
     <ClInclude Include="Effector.h" />
@@ -2219,7 +2221,9 @@
     <ClCompile Include="dx11\HashHelper.cpp" />
     <ClCompile Include="dx11\SamplerStateCache.cpp" />
     <ClCompile Include="dx11\ShaderResourceStateCache.cpp" />
+    <ClCompile Include="dx11\State.cpp" />
     <ClCompile Include="dx11\StateCache.cpp" />
+    <ClCompile Include="dx11\StateManager.cpp" />
     <ClCompile Include="dx11\StateUtils.cpp" />
     <ClCompile Include="edit_actions.cpp" />
     <ClCompile Include="Effector.cpp" />

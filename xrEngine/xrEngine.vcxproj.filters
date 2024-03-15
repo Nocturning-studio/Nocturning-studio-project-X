@@ -582,6 +582,12 @@
     <ClInclude Include="dx11\HashHelper.h">
       <Filter>Render\DX11</Filter>
     </ClInclude>
+    <ClInclude Include="dx11\StateManager.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11\State.h">
+      <Filter>Render\DX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1008,6 +1014,12 @@
       <Filter>Render\DX11</Filter>
     </ClCompile>
     <ClCompile Include="dx11\HashHelper.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\StateManager.cpp">
+      <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11\State.cpp">
       <Filter>Render\DX11</Filter>
     </ClCompile>
   </ItemGroup>

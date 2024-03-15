@@ -10,6 +10,18 @@ class ENGINE_API CTheoraSurface;
 class ENGINE_API CTexture : public xr_resource_named
 {
   public:
+	//	Since DX10 allows up to 128 unique textures,
+	//	distance between enum values should be at leas 128
+	enum ResourceShaderType //	Don't change this since it's hardware-dependent
+	{
+		rstPixel = 0, //	Default texture offset
+		rstVertex = D3DVERTEXTEXTURESAMPLER0,
+		rstGeometry = rstVertex + 256,
+		rstHull = rstGeometry + 256,
+		rstDomain = rstHull + 256,
+		rstCompute = rstDomain + 256,
+		rstInvalid = rstCompute + 256
+	};
 	struct
 	{
 		u32 bLoaded : 1;

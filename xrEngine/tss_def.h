@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "dx11\State.h"
 class ENGINE_API SimulatorStates
 {
   private:
@@ -44,5 +45,11 @@ class ENGINE_API SimulatorStates
 	BOOL equal(SimulatorStates& S);
 	void clear();
 	IDirect3DStateBlock9* record();
+	void UpdateState(dx10State& state) const;
+	void UpdateDesc(D3D11_RASTERIZER_DESC& desc) const;
+	void UpdateDesc(D3D11_DEPTH_STENCIL_DESC& desc) const;
+	void UpdateDesc(D3D11_BLEND_DESC& desc) const;
+	void UpdateDesc(D3D11_SAMPLER_DESC descArray[D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT],
+					bool SamplerUsed[D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT], int iBaseSamplerIndex) const;
 };
 #endif

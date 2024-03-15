@@ -13,11 +13,13 @@
 #define D3D_DEBUG_INFO
 #endif
 
+#ifndef Reminder
 #define DBGStringize(L) #L
 #define DBGMakeString(M, L) M(L)
 #define DBG$Line DBGMakeString(DBGStringize, __LINE__)
 #define DBGReminder "-------------------------- TODO --------------------------\n| File:" __FILE__ "\n| Line:" DBG$Line  "\n| Function:" __FUNCTION__ "\n| " "Reminder: "
 #define Reminder(text) DBGReminder text "\n----------------------------------------------------------\n"
+#endif
 
 #pragma warning(disable : 4995)
 #include <d3d11.h>

@@ -10,6 +10,9 @@
 #include "HW.h"
 #include "xr_IOconsole.h"
 
+#include "dx11\StateCache.h"
+#include "dx11\SamplerStateCache.h"
+
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 
@@ -186,6 +189,13 @@ D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
 
 void CHW::DestroyDevice()
 {
+	//	Destroy state managers
+	StateManager.Reset();
+	RSManager.ClearStateArray();
+	DSSManager.ClearStateArray();
+	BSManager.ClearStateArray();
+	SSManager.ClearStateArray();
+
 	_SHOW_REF("refCount:pBaseZB", pBaseZB);
 	_RELEASE(pBaseZB);
 
