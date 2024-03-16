@@ -176,6 +176,8 @@ void CGameFont::OnRender()
 {
 	VERIFY(g_bRendering);
 
+	HW.pContext->OMSetRenderTargets(1, &HW.pBaseRT, HW.pBaseZB);
+
 	//if (pShader)
 	//Msg("%s, %s", pShader->E[0]->passes[0]->vs->cName.c_str(), 
 	//	pShader->E[0]->passes[0]->ps->cName.c_str());

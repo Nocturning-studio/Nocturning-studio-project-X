@@ -153,14 +153,15 @@ IC void CBackend::set_RT(ID3D11RenderTargetView* RT, u32 ID)
 		PGO(Msg("PGO:setRT"));
 		stat.target_rt++;
 		pRT[ID] = RT;
+		HW.pContext->OMSetRenderTargets(4, pRT, pZB);
 		//	Mark RT array dirty
 		// HW.pDevice->OMSetRenderTargets(sizeof(pRT)/sizeof(pRT[0]), pRT, 0);
 		// HW.pDevice->OMSetRenderTargets(sizeof(pRT)/sizeof(pRT[0]), pRT, pZB);
 		//	Reset all RT's here to allow RT to be bounded as input
-		if (!m_bChangedRTorZB)
-			HW.pContext->OMSetRenderTargets(0, 0, 0);
+		//if (!m_bChangedRTorZB)
+		//	HW.pContext->OMSetRenderTargets(0, 0, 0);
 
-		m_bChangedRTorZB = true;
+		//m_bChangedRTorZB = true;
 	}
 }
 
@@ -171,12 +172,13 @@ IC void CBackend::set_ZB(ID3D11DepthStencilView* ZB)
 		PGO(Msg("PGO:setZB"));
 		stat.target_zb++;
 		pZB = ZB;
+		HW.pContext->OMSetRenderTargets(4, pRT, pZB);
 		// HW.pDevice->OMSetRenderTargets(0, 0, pZB);
 		// HW.pDevice->OMSetRenderTargets(sizeof(pRT)/sizeof(pRT[0]), pRT, pZB);
 		//	Reset all RT's here to allow RT to be bounded as input
-		if (!m_bChangedRTorZB)
-			HW.pContext->OMSetRenderTargets(0, 0, 0);
-		m_bChangedRTorZB = true;
+		//if (!m_bChangedRTorZB)
+		//	HW.pContext->OMSetRenderTargets(0, 0, 0);
+		//m_bChangedRTorZB = true;
 	}
 }
 
@@ -651,8 +653,8 @@ ICF void CBackend::ApplyRTandZB()
 {
 	if (m_bChangedRTorZB)
 	{
-		m_bChangedRTorZB = false;
-		HW.pContext->OMSetRenderTargets(sizeof(pRT) / sizeof(pRT[0]), pRT, pZB);
+		//m_bChangedRTorZB = false;
+		//HW.pContext->OMSetRenderTargets(sizeof(pRT) / sizeof(pRT[0]), pRT, pZB);
 	}
 }
 
