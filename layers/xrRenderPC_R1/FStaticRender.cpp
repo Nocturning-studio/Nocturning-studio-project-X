@@ -131,7 +131,7 @@ void CRender::create()
 	Models = xr_new<CModelPool>();
 	L_Dynamic = xr_new<CLightR_Manager>();
 	PSLibrary.OnCreate();
-	HWOCC.occq_create			(occq_size);
+	//HWOCC.occq_create			(occq_size);
 
 	xrRender_apply_tf();
 	::PortalTraverser.initialize();
@@ -140,7 +140,7 @@ void CRender::create()
 void CRender::destroy()
 {
 	::PortalTraverser.destroy();
-	HWOCC.occq_destroy			();
+	//HWOCC.occq_destroy			();
 	PSLibrary.OnDestroy();
 
 	xr_delete(L_Dynamic);
@@ -156,13 +156,13 @@ void CRender::destroy()
 void CRender::reset_begin()
 {
 	xr_delete(Target);
-	HWOCC.occq_destroy			();
+	//HWOCC.occq_destroy			();
 }
 
 void CRender::reset_end()
 {
 	xrRender_apply_tf();
-	HWOCC.occq_create(occq_size);
+	//HWOCC.occq_create(occq_size);
 	update_options();
 	Target = xr_new<CRenderTarget>();
 	if (L_Projector)

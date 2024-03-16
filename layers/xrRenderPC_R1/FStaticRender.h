@@ -64,7 +64,7 @@ class CRender : public R_dsgraph_structure
 	xrXRC Sectors_xrc;
 	CDB::MODEL* rmPortals;
 	CHOM HOM;
-	R_occlusion HWOCC;
+	//R_occlusion HWOCC;
 
 	// Global containers
 	xr_vector<FSlideWindowItem> SWIs;
@@ -229,7 +229,7 @@ class CRender : public R_dsgraph_structure
 	virtual ~CRender();
 
 	// HW-occlusion culling
-	IC u32 occq_begin(u32& ID)
+	/*IC u32 occq_begin(u32& ID)
 	{
 		return HWOCC.occq_begin(ID);
 	}
@@ -240,7 +240,7 @@ class CRender : public R_dsgraph_structure
 	IC u32 occq_get(u32& ID)
 	{
 		return HWOCC.occq_get(ID);
-	}
+	}*/
 
 	CShaderMacros FetchShaderMacros();
   private:

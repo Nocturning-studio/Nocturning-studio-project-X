@@ -643,12 +643,12 @@ struct _uniq_mode
 #ifndef _EDITOR
 void free_vid_mode_list()
 {
-	for (int i = 0; vid_mode_token[i].name; i++)
-	{
-		xr_free(vid_mode_token[i].name);
-	}
-	xr_free(vid_mode_token);
-	vid_mode_token = NULL;
+	//for (int i = 0; vid_mode_token[i].name; i++)
+	//{
+	//	xr_free(vid_mode_token[i].name);
+	//}
+	//xr_free(vid_mode_token);
+	//vid_mode_token = NULL;
 }
 
 void fill_vid_mode_list(CHW* _hw)
