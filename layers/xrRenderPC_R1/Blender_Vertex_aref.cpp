@@ -53,30 +53,6 @@ void CBlender_Vertex_aref::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-	/* if (C.bEditor)
-	{
-		C.PassBegin();
-		{
-			C.PassSET_ZB(TRUE, TRUE);
-			if (oBlend.value)
-				C.PassSET_Blend(TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE, oAREF.value);
-			else
-				C.PassSET_Blend(TRUE, D3DBLEND_ONE, D3DBLEND_ZERO, TRUE, oAREF.value);
-			C.PassSET_LightFog(TRUE, TRUE);
-
-			// Stage1 - Base texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.Stage_Texture(oT_Name);
-			C.Stage_Matrix(oT_xform, 0);
-			C.Stage_Constant("$null");
-			C.StageEnd();
-		}
-		C.PassEnd();
-	}
-	else*/
-	{
 		switch (C.iElement)
 		{
 		case SE_R1_NORMAL_HQ:
@@ -130,5 +106,4 @@ void CBlender_Vertex_aref::Compile(CBlender_Compile& C)
 			C.r_End();
 			break;
 		}
-	}
 }

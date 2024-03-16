@@ -29,26 +29,7 @@ void CBlender_default::Load(IReader& fs, u16 version)
 void CBlender_default::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	if (C.bEditor)
-	{
-		C.PassBegin();
-		{
-			C.PassSET_ZB(TRUE, TRUE);
-			C.PassSET_Blend(FALSE, D3DBLEND_ONE, D3DBLEND_ZERO, FALSE, 0);
-			C.PassSET_LightFog(TRUE, TRUE);
-
-			// Stage1 - Base texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-#pragma message(Reminder("fix blender default"))
-			//C.StageSET_TMC(oT_Name, oT_xform, "$null", 0);
-			C.StageEnd();
-		}
-		C.PassEnd();
-	}
-	else
-	{
+	
 		if (C.L_textures.size() < 3)
 			Debug.fatal(DEBUG_INFO, "Not enought textures for shader, base tex: %s", *C.L_textures[0]);
 		switch (C.iElement)
@@ -103,5 +84,4 @@ void CBlender_default::Compile(CBlender_Compile& C)
 			C.r_End();
 			break;
 		}
-	}
 }

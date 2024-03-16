@@ -159,6 +159,7 @@ void CBackend::set_Textures(STextureList* _T)
 			}
 		}
 		else
+		if (load_id < CTexture::rstGeometry)
 		{
 			//	Set up pixel shader resources
 			VERIFY(load_id < CTexture::rstVertex + mtMaxVertexShaderTextures);
@@ -181,6 +182,8 @@ void CBackend::set_Textures(STextureList* _T)
 				}
 			}
 		}
+		else
+			VERIFY("Invalid enum");
 	}
 
 	// clear remaining stages (PS)

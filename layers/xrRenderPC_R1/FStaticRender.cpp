@@ -457,7 +457,8 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::Calculate()
 {
-	Device.Statistic->RenderCALC.Begin();
+#pragma message(Reminder("fix render calculate"))
+	/*Device.Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
 	IRender_Target* T = getTarget();
@@ -638,18 +639,18 @@ void CRender::Calculate()
 	else
 	{
 		set_Object(0);
-		/*
-		g_pGameLevel->pHUD->Render_First					();
-		g_pGameLevel->pHUD->Render_Last						();
+		
+		//g_pGameLevel->pHUD->Render_First					();
+		//g_pGameLevel->pHUD->Render_Last						();
 
 		// Calculate miscelaneous stuff
-		L_Shadows->calculate								();
-		L_Projector->calculate								();
-		*/
+		//L_Shadows->calculate								();
+		//L_Projector->calculate								();
+		
 	}
 
 	// End calc
-	Device.Statistic->RenderCALC.End();
+	Device.Statistic->RenderCALC.End();*/
 }
 
 void CRender::rmNear()
@@ -677,7 +678,8 @@ void CRender::rmNormal()
 extern u32 g_r;
 void CRender::Render()
 {
-	g_r = 1;
+#pragma message(Reminder("fix render render"))
+	/*g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();
 	// Begin
 	Target->Begin();
@@ -725,7 +727,7 @@ void CRender::Render()
 		L_Projector->finalize();
 
 	// HUD
-	Device.Statistic->RenderDUMP.End();
+	Device.Statistic->RenderDUMP.End();*/
 }
 
 void CRender::ApplyBlur4(FVF::TL4uv* pv, u32 w, u32 h, float k)

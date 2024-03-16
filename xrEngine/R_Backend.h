@@ -168,8 +168,13 @@ class ENGINE_API CBackend
 	{
 		if (stage < CTexture::rstVertex)
 			return textures_ps[stage];
-		else
+		else if (stage < CTexture::rstGeometry)
 			return textures_vs[stage - CTexture::rstVertex];
+		else
+		{
+			VERIFY(!"Invalid texture stage");
+			return 0;
+		}
 	}
 
 	IC void get_ConstantDirect(shared_str& n, u32 DataSize, void** pVData, void** pGData, void** pPData);

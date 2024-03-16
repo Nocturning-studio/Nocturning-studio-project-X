@@ -65,32 +65,7 @@ void CBlender_BmmD::Load(IReader& fs, u16 version)
 void CBlender_BmmD::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	/* if (C.bEditor)
-	{
-		C.PassBegin();
-		{
-			C.PassSET_ZB(TRUE, TRUE);
-			C.PassSET_Blend_SET();
-			C.PassSET_LightFog(TRUE, TRUE);
 
-			// Stage1 - Base texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_TMC(oT_Name, oT_xform, "$null", 0);
-			C.StageEnd();
-
-			// Stage2 - Second texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE2X, D3DTA_CURRENT);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_SELECTARG2, D3DTA_CURRENT);
-			C.StageSET_TMC(oT2_Name, oT2_xform, "$null", 0);
-			C.StageEnd();
-		}
-		C.PassEnd();
-	}
-	else*/
-	{
 		if (C.L_textures.size() < 2)
 			Debug.fatal(DEBUG_INFO, "Not enought textures for shader, base tex: %s", *C.L_textures[0]);
 		string256 mask;
@@ -150,7 +125,7 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 			C.r_End();
 			break;
 		}
-	}
+
 }
 #else
 //////////////////////////////////////////////////////////////////////////

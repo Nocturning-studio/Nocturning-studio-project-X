@@ -37,28 +37,6 @@ void CBlender_Detail_Still::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-	/* if (C.bEditor)
-	{
-		C.PassBegin();
-		{
-			C.PassSET_ZB(TRUE, TRUE);
-			if (oBlend.value)
-				C.PassSET_Blend_BLEND(TRUE, 200);
-			else
-				C.PassSET_Blend_SET(TRUE, 200);
-			C.PassSET_LightFog(TRUE, TRUE);
-
-			// Stage1 - Base texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_MODULATE, D3DTA_DIFFUSE);
-			C.StageSET_TMC(oT_Name, "$null", "$null", 0);
-			C.StageEnd();
-		}
-		C.PassEnd();
-	}
-	else*/
-	{
 		switch (C.iElement)
 		{
 		case SE_R1_NORMAL_HQ:
@@ -80,7 +58,7 @@ void CBlender_Detail_Still::Compile(CBlender_Compile& C)
 		case SE_R1_LMODELS:
 			break;
 		}
-	}
+
 }
 #else
 //////////////////////////////////////////////////////////////////////////

@@ -514,10 +514,7 @@ IC void CBackend::ApplyVertexLayout()
 ICF void CBackend::set_VS(ref_vs& _vs)
 {
 	if (!_vs->signature._get())
-	{
 		Msg("! Shader invalid signature: %s", _vs->cName.c_str());
-		return;
-	}
 	m_pInputSignature = _vs->signature->signature;
 	set_VS(_vs->sh, _vs->cName.c_str());
 }
@@ -525,10 +522,7 @@ ICF void CBackend::set_VS(ref_vs& _vs)
 ICF void CBackend::set_VS(SVS* _vs)
 {
 	if (!_vs->signature._get())
-	{
 		Msg("! Shader invalid signature: %s", _vs->cName.c_str());
-		return;
-	}
 	m_pInputSignature = _vs->signature->signature;
 	set_VS(_vs->sh, _vs->cName.c_str());
 }

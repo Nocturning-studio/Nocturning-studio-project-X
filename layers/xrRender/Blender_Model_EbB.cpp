@@ -49,50 +49,7 @@ void CBlender_Model_EbB::Load(IReader& fs, u16 version)
 void CBlender_Model_EbB::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
-	/* if (C.bEditor)
-	{
-		C.PassBegin();
-		{
-			if (oBlend.value)
-			{
-				C.PassSET_ZB(TRUE, FALSE);
-				C.PassSET_Blend_BLEND();
-			}
-			else
-			{
-				C.PassSET_ZB(TRUE, TRUE);
-				C.PassSET_Blend_SET();
-			}
-			C.PassSET_LightFog(TRUE, TRUE);
-
-			// Stage1 - Env texture
-			C.StageBegin();
-			C.StageSET_Address(D3DTADDRESS_CLAMP);
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_SELECTARG1, D3DTA_DIFFUSE);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_SELECTARG1, D3DTA_DIFFUSE);
-			C.StageSET_TMC(oT2_Name, oT2_xform, "$null", 0);
-			C.StageEnd();
-
-			// Stage2 - Base texture
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_TEXTURE, D3DTOP_BLENDTEXTUREALPHA, D3DTA_CURRENT);
-			C.StageSET_Alpha(D3DTA_TEXTURE, D3DTOP_SELECTARG1, D3DTA_CURRENT);
-			C.StageSET_TMC(oT_Name, oT_xform, "$null", 0);
-			C.StageEnd();
-
-			// Stage3 - Lighting - should work on all 2tex hardware
-			C.StageBegin();
-			C.StageSET_Color(D3DTA_DIFFUSE, D3DTOP_MODULATE, D3DTA_CURRENT);
-			C.StageSET_Alpha(D3DTA_DIFFUSE, D3DTOP_SELECTARG2, D3DTA_CURRENT);
-			C.Stage_Texture("$null");
-			C.Stage_Matrix("$null", 0);
-			C.Stage_Constant("$null");
-			C.StageEnd();
-		}
-		C.PassEnd();
-	}*/
-	//else
-	{
+	
 		LPCSTR vsname = 0;
 		LPCSTR psname = 0;
 		switch (C.iElement)
@@ -143,7 +100,6 @@ void CBlender_Model_EbB::Compile(CBlender_Compile& C)
 			C.r_End();
 			break;
 		}
-	}
 }
 #else
 #include "shader_name_generator.h"
