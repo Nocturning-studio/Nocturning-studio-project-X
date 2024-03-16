@@ -389,6 +389,8 @@ void CHW::CreateDevice(HWND m_hWnd)
 	ZeroMemory(&P, sizeof(P));
 	selectResolution(P.BufferDesc.Width, P.BufferDesc.Height, TRUE);
 
+	Caps.fTarget = (D3DFORMAT)m_ChainDesc.BufferDesc.Format;
+	
 	// Back buffer
 	//.	P.BackBufferWidth		= dwWidth;
 	//. P.BackBufferHeight		= dwHeight;

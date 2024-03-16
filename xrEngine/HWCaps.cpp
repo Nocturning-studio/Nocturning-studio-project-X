@@ -293,6 +293,8 @@ void CHWCaps::Update()
 	soDec = D3DSTENCILOP_DECRSAT;
 	dwMaxStencilValue = (1 << 8) - 1;
 
+	fTarget = (D3DFORMAT)DXGI_FORMAT_R8G8B8A8_UNORM;
+
 	// csaa caps
 	/* ZeroMemory(msaa_coverage, sizeof(msaa_coverage));
 	for (u32 i = 1, j = 0; i <= 8; i = i * 2, ++j)
