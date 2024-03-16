@@ -279,18 +279,18 @@ IRender_Visual* CRender::getVisual(int id)
 }
 D3DVERTEXELEMENT9* CRender::getVB_Format(int id)
 {
-	VERIFY(id < int(DCL.size()));
-	return DCL[id].begin();
+	VERIFY(id < int(nDC.size()));
+	return nDC[id].begin();
 }
 IDirect3DVertexBuffer9* CRender::getVB(int id)
 {
-	VERIFY(id < int(VB.size()));
-	return VB[id];
+	VERIFY(id < int(nVB.size()));
+	return (IDirect3DVertexBuffer9*)nVB[id];
 }
 IDirect3DIndexBuffer9* CRender::getIB(int id)
 {
-	VERIFY(id < int(IB.size()));
-	return IB[id];
+	VERIFY(id < int(nIB.size()));
+	return (IDirect3DIndexBuffer9*)nIB[id];
 }
 IRender_Target* CRender::getTarget()
 {

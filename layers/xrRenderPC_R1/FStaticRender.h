@@ -70,9 +70,12 @@ class CRender : public R_dsgraph_structure
 	xr_vector<FSlideWindowItem> SWIs;
 	xr_vector<ref_shader> Shaders;
 	typedef svector<D3DVERTEXELEMENT9, MAXD3DDECLLENGTH + 1> VertexDeclarator;
-	xr_vector<VertexDeclarator> DCL;
-	xr_vector<IDirect3DVertexBuffer9*> VB;
-	xr_vector<IDirect3DIndexBuffer9*> IB;
+	//xr_vector<VertexDeclarator> DCL;
+	//xr_vector<IDirect3DVertexBuffer9*> VB;
+	//xr_vector<IDirect3DIndexBuffer9*> IB;
+	xr_vector<VertexDeclarator> nDC;
+	xr_vector<ID3D11Buffer*> nVB;
+	xr_vector<ID3D11Buffer*> nIB;
 	xr_vector<IRender_Visual*> Visuals;
 	CPSLibrary PSLibrary;
 
