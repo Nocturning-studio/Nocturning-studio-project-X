@@ -457,6 +457,13 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::Calculate()
 {
+	RCache.set_RT(HW.pBaseRT);
+	RCache.set_ZB(HW.pBaseZB);
+	RCache.ApplyRTandZB();
+
+	static const FLOAT color[] = {80, 120, 220, 255};
+	HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
+	
 #pragma message(Reminder("fix render calculate"))
 	/*Device.Statistic->RenderCALC.Begin();
 

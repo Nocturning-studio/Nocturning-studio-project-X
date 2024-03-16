@@ -469,7 +469,6 @@ class ENGINE_API CBackend
 		Invalidate();
 	};
 
-  private:
 	//	DirectX 10 internal functionality
 	// void CreateConstantBuffers();
 	// void DestroyConstantBuffers();
