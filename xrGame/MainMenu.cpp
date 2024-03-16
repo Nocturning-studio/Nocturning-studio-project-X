@@ -342,11 +342,12 @@ bool CMainMenu::OnRenderPPUI_query()
 }
 
 extern void draw_wnds_rects();
+extern bool ENGINE_API g_menu;
 void CMainMenu::OnRender()
 {
+	g_menu = true;
 	if (m_Flags.test(flGameSaveScreenshot))
 		return;
-
 	if (g_pGameLevel)
 		Render->Calculate();
 
@@ -357,6 +358,7 @@ void CMainMenu::OnRender()
 		UI()->RenderFont();
 		draw_wnds_rects();
 	}
+	g_menu = false;
 }
 
 void CMainMenu::OnRenderPPUI_main()

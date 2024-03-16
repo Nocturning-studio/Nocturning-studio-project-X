@@ -679,16 +679,22 @@ void CRender::rmNormal()
 }
 
 extern u32 g_r;
+extern bool ENGINE_API g_menu;
 void CRender::Render()
 {
-	RCache.set_RT(HW.pBaseRT);
-	RCache.set_ZB(HW.pBaseZB);
-	
-	rmNormal();
+	if (g_menu)
+	{
+		// render menu
+		RCache.set_RT(HW.pBaseRT);
+		RCache.set_ZB(HW.pBaseZB);
 
-	static const FLOAT color[] = {80, 120, 220, 255};
-	HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
+		rmNormal();
 
+		static const FLOAT color[] = {80 / 255.0, 120 / 255.0, 220 / 255.0, 255 / 255.0};
+		HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
+
+		return;
+	}
 #pragma message(Reminder("fix render render"))
 	/*g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();

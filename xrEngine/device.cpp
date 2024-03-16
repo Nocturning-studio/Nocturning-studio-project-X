@@ -18,6 +18,7 @@
 
 ENGINE_API CRenderDevice Device;
 ENGINE_API BOOL g_bRendering = FALSE;
+bool ENGINE_API g_menu = false;
 
 BOOL g_bLoaded = FALSE;
 ref_light precache_light = 0;
