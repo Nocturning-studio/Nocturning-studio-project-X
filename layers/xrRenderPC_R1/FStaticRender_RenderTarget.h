@@ -10,8 +10,8 @@ class CRenderTarget : public IRender_Target
 	u32 curWidth;
 	u32 curHeight;
 
-	//ref_rt RT;
-	//ref_rt RT_distort;
+	ref_rt RT;
+	ref_rt RT_distort;
 	//ref_rt ZB;
 
 	ref_shader s_postprocess;

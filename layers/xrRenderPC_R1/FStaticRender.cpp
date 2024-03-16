@@ -684,14 +684,60 @@ void CRender::Render()
 {
 	if (g_menu)
 	{
+		R_ASSERT(Target->RT->pRT);
+		R_ASSERT(Target->RT_distort->pRT);
+
 		// render menu
-		RCache.set_RT(HW.pBaseRT);
-		RCache.set_ZB(HW.pBaseZB);
+		//RCache.set_RT(HW.pBaseRT);
+		RCache.set_ZB(0);
 
 		rmNormal();
 
-		static const FLOAT color[] = {80 / 255.0, 120 / 255.0, 220 / 255.0, 255 / 255.0};
-		HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
+		RCache.set_CullMode(CULL_CCW);
+		RCache.set_Stencil(FALSE);
+		RCache.set_ColorWriteEnable();
+
+		// menu
+		RCache.set_RT(Target->RT->pRT);
+		g_pGamePersistent->OnRenderPPUI_main(); // PP-UI
+
+		// Distort
+		{
+			static const float ColorRGBA[4] = {127.0f / 255.0f, 127.0f / 255.0f, 0.0f, 127.0f / 255.0f};
+			//Target->u_setrt(Target->rt_Generic_1, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
+			//HW.pContext->ClearRenderTargetView(Target->rt_Generic_1->pRT, ColorRGBA);
+			RCache.set_RT(Target->RT_distort->pRT);
+			HW.pContext->ClearRenderTargetView(Target->RT_distort->pRT, ColorRGBA);
+			g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
+		}
+
+		// Actual Display
+		//Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
+		RCache.set_RT(HW.pBaseRT);
+		RCache.set_Shader(Target->s_menu);
+		RCache.set_Geometry(Target->g_menu);
+
+		Fvector2 p0, p1;
+		u32 Offset;
+		u32 C = color_rgba(255, 255, 255, 255);
+		float _w = float(Device.dwWidth);
+		float _h = float(Device.dwHeight);
+		float d_Z = EPS_S;
+		float d_W = 1.f;
+		p0.set(.5f / _w, .5f / _h);
+		p1.set((_w + .5f) / _w, (_h + .5f) / _h);
+
+		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, Target->g_menu->vb_stride, Offset);
+		pv->set(EPS, float(_h + EPS), d_Z, d_W, C, p0.x, p1.y);
+		pv++;
+		pv->set(EPS, EPS, d_Z, d_W, C, p0.x, p0.y);
+		pv++;
+		pv->set(float(_w + EPS), float(_h + EPS), d_Z, d_W, C, p1.x, p1.y);
+		pv++;
+		pv->set(float(_w + EPS), EPS, d_Z, d_W, C, p1.x, p0.y);
+		pv++;
+		RCache.Vertex.Unlock(4, Target->g_menu->vb_stride);
+		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
 		return;
 	}

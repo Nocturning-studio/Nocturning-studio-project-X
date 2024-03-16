@@ -57,10 +57,11 @@ BOOL CRenderTarget::Create()
 	}
 
 	// Bufferts
-#pragma message(Reminder("FIX CUSTOM RTS"))
-#pragma message(Reminder("FIX DISTORT"))
 	//RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
 	//RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
+	RT.create(RTname, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, SRV_RTV);
+	RT_distort.create(RTname_distort, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, SRV_RTV);
+
 	//ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
 
 #pragma message(Reminder("FIX MSAA/CSAA"))
