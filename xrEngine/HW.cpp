@@ -88,6 +88,18 @@ void CHW::Reset(HWND hwnd)
 	CHK_DX(m_pSwapChain->ResizeBuffers(cd.BufferCount, desc.Width, desc.Height, desc.Format,
 									   DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
+	CreateRenderTarget();
+
+#ifdef DEBUG
+	R_CHK(pDevice->CreateStateBlock(D3DSBT_ALL, &dwDebugSB));
+#endif
+#ifndef _EDITOR
+	updateWindowProps(hwnd);
+#endif
+}
+
+void CHW::CreateRenderTarget()
+{
 	DXGI_SWAP_CHAIN_DESC& sd = m_ChainDesc;
 	HRESULT R;
 
@@ -112,9 +124,9 @@ void CHW::Reset(HWND hwnd)
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0;
-	R = pDevice11->CreateTexture2D(&descDepth,	  // Texture desc
-								 NULL,			  // Initial data
-								 &pDepthStencil); // [out] Texture
+	R = pDevice11->CreateTexture2D(&descDepth,		// Texture desc
+								   NULL,			// Initial data
+								   &pDepthStencil); // [out] Texture
 	R_CHK(R);
 
 	//	Create Depth/stencil view
@@ -122,12 +134,6 @@ void CHW::Reset(HWND hwnd)
 	R_CHK(R);
 
 	pDepthStencil->Release();
-#ifdef DEBUG
-	R_CHK(pDevice->CreateStateBlock(D3DSBT_ALL, &dwDebugSB));
-#endif
-#ifndef _EDITOR
-	updateWindowProps(hwnd);
-#endif
 }
 
 xr_token* vid_mode_token = NULL;
@@ -480,6 +486,8 @@ void CHW::CreateDevice(HWND m_hWnd)
 	R = pFactory11->CreateSwapChain(pDevice11, &P, &m_pSwapChain);
 	pFactory11->Release();
 
+	// ??
+	CreateRenderTarget();
 	// Capture misc data
 #ifdef DEBUG
 	R_CHK(pDevice->CreateStateBlock(D3DSBT_ALL, &dwDebugSB));

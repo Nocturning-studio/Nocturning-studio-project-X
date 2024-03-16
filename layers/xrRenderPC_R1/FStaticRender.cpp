@@ -457,13 +457,6 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::Calculate()
 {
-	RCache.set_RT(HW.pBaseRT);
-	RCache.set_ZB(HW.pBaseZB);
-	RCache.ApplyRTandZB();
-
-	static const FLOAT color[] = {80, 120, 220, 255};
-	HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
-	
 #pragma message(Reminder("fix render calculate"))
 	/*Device.Statistic->RenderCALC.Begin();
 
@@ -663,28 +656,39 @@ void CRender::Calculate()
 void CRender::rmNear()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 0.02f};
-#pragma message(Reminder("fix viewport"))
-	//CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0, 0.02f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void CRender::rmFar()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0.99999f, 1.f};
-#pragma message(Reminder("fix viewport"))
-	//CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0.99999f, 1.f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void CRender::rmNormal()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 1.f};
-#pragma message(Reminder("fix viewport"))
-	//CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0, 1.f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 extern u32 g_r;
 void CRender::Render()
 {
+	RCache.set_RT(HW.pBaseRT);
+	RCache.set_ZB(HW.pBaseZB);
+	
+	rmNormal();
+
+	static const FLOAT color[] = {80, 120, 220, 255};
+	HW.pContext->ClearRenderTargetView(HW.pBaseRT, color);
+
 #pragma message(Reminder("fix render render"))
 	/*g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();

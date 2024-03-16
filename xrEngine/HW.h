@@ -48,6 +48,8 @@ class ENGINE_API CHW
 	void CreateDevice(HWND hw);
 	void DestroyDevice();
 
+	void CreateRenderTarget();
+
 	void Reset(HWND hw);
 
 	void selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed);
