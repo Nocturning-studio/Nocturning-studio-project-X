@@ -54,7 +54,7 @@ void CRender::level_Load(IReader* fs)
 	L_DB = xr_new<CLight_DB>();
 	L_Glows = xr_new<CGlowManager>();
 	Wallmarks = xr_new<CWallmarksEngine>();
-	Details = xr_new<CDetailManager>();
+	//Details = xr_new<CDetailManager>();
 
 	rmFar();
 	rmNormal();
@@ -78,7 +78,7 @@ void CRender::level_Load(IReader* fs)
 
 		// Details
 		g_pGamePersistent->LoadTitle("st_loading_details");
-		Details->Load();
+		//Details->Load();
 	}
 
 	// Sectors
@@ -115,7 +115,7 @@ void CRender::level_Unload()
 
 	//*** Details
 	g_pGamePersistent->LoadTitle("st_unloading_details");
-	Details->Unload();
+	//Details->Unload();
 
 	//*** Sectors
 	// 1.
@@ -187,7 +187,7 @@ void CRender::level_Unload()
 
 	//*** Components
 	g_pGamePersistent->LoadTitle("st_unloading_components");
-	xr_delete(Details);
+	//xr_delete(Details);
 	xr_delete(Wallmarks);
 	xr_delete(L_Glows);
 	xr_delete(L_DB);

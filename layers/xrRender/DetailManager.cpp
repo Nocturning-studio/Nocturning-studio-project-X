@@ -319,7 +319,7 @@ void CDetailManager::Render()
 void __stdcall CDetailManager::MT_CALC()
 {
 #ifndef _EDITOR
-	if (0 == RImplementation.Details)
+	//if (0 == RImplementation.Details)
 		return; // possibly deleted
 	if (0 == dtFS)
 		return;
