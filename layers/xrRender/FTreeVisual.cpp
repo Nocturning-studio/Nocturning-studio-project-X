@@ -47,7 +47,7 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 
 		VERIFY(NULL == p_rm_Vertices);
 
-		p_rm_Vertices = RImplementation.getVB(ID);
+		p_rm_Vertices = (ID3D11Buffer*)RImplementation.getVB(ID);
 		p_rm_Vertices->AddRef();
 
 		// indices
@@ -58,7 +58,7 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 		dwPrimitives = iCount / 3;
 
 		VERIFY(NULL == p_rm_Indices);
-		p_rm_Indices = RImplementation.getIB(ID);
+		p_rm_Indices = (ID3D11Buffer*)RImplementation.getIB(ID);
 		p_rm_Indices->AddRef();
 	}
 
@@ -78,8 +78,7 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 	}
 
 	// Geom
-#pragma message(Reminder("fix tree visual"))
-	//rm_geom.create(vFormat, p_rm_Vertices, p_rm_Indices);
+	rm_geom.create(vFormat, p_rm_Vertices, p_rm_Indices);
 
 	// Get constants
 	m_xform = "m_xform";

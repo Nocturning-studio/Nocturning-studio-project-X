@@ -130,8 +130,14 @@ class ENGINE_API CSkeletonX
 	virtual void AfterLoad(CKinematics* parent, u16 child_idx) = 0;
 	virtual void EnumBoneVertices(SEnumVerticesCallback& C, u16 bone_id) = 0;
 	virtual BOOL PickBone(Fvector& normal, float& dist, const Fvector& start, const Fvector& dir, u16 bone_id) = 0;
-	virtual void FillVertices(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size,
-							  u16 bone_id) = 0;
+	//virtual void FillVertices(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size,
+	//						  u16 bone_id) = 0;
+
+
+	
+	void _DuplicateIndices(const char* N, IReader* data);
+	//	Index buffer replica since we can't read from index buffer in DX10
+	ref_smem<u16> m_Indices;
 };
 
 #endif // SkeletonXH

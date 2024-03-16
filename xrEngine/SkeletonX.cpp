@@ -582,3 +582,18 @@ void CSkeletonX::_FillVerticesSoft2W(const Fmatrix& view, CSkeletonWallmark& wm,
 		}
 	}
 }
+
+
+void CSkeletonX::_DuplicateIndices(const char* N, IReader* data)
+{
+	//	We will have trouble with container since don't know were to take readable indices
+	VERIFY(!data->find_chunk(OGF_ICONTAINER));
+	//	Index buffer replica since we can't read from index buffer in DX10
+	// ref_smem<u16>			Indices;
+	R_ASSERT(data->find_chunk(OGF_INDICES));
+	u32 iCount = data->r_u32();
+
+	u32 size = iCount * 2;
+	u32 crc = crc32(data->pointer(), size);
+	m_Indices.create(crc, iCount, (u16*)data->pointer());
+}

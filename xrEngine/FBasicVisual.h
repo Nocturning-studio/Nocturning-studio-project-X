@@ -19,12 +19,14 @@ struct ENGINE_API IRender_Mesh
 	ref_geom rm_geom;
 
 	// verts
-	IDirect3DVertexBuffer9* p_rm_Vertices;
+	//IDirect3DVertexBuffer9* p_rm_Vertices;
+	ID3D11Buffer* p_rm_Vertices;
 	u32 vBase;
 	u32 vCount;
 
 	// indices
-	IDirect3DIndexBuffer9* p_rm_Indices;
+	//IDirect3DIndexBuffer9* p_rm_Indices;
+	ID3D11Buffer* p_rm_Indices;
 	u32 iBase;
 	u32 iCount;
 	u32 dwPrimitives;

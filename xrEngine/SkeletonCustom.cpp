@@ -742,12 +742,12 @@ void CKinematics::AddWallmark(const Fmatrix* parent_xform, const Fvector3& start
 	mView.mulA_43(mRot);
 
 	// fill vertices
-	for (u32 i = 0; i < children.size(); i++)
-	{
-		CSkeletonX* S = LL_GetChild(i);
-		for (U16It b_it = test_bones.begin(); b_it != test_bones.end(); b_it++)
-			S->FillVertices(mView, *wm, normal, size, *b_it);
-	}
+	//for (u32 i = 0; i < children.size(); i++)
+	//{
+	//	CSkeletonX* S = LL_GetChild(i);
+	//	for (U16It b_it = test_bones.begin(); b_it != test_bones.end(); b_it++)
+	//		S->FillVertices(mView, *wm, normal, size, *b_it);
+	//}
 
 	wallmarks.push_back(wm);
 }
