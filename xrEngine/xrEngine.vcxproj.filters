@@ -597,9 +597,6 @@
     <ClInclude Include="dx11\R_Backend_LOD.h">
       <Filter>Render\DX11</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderCompileDebug.h">
-      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1039,9 +1036,6 @@
     </ClCompile>
     <ClCompile Include="dx11\R_Backend_LOD.cpp">
       <Filter>Render\DX11</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderCompileDebug.cpp">
-      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
