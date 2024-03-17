@@ -12,7 +12,7 @@ CRT::CRT()
 	dwWidth = 0;
 	dwHeight = 0;
 	format = DXGI_FORMAT_UNKNOWN;
-	view = SRV_RTV;
+	bind_flags = 0;
 	samples = 1;
 }
 CRT::~CRT()
@@ -22,7 +22,7 @@ CRT::~CRT()
 	Device.Resources->_DeleteRT(this);
 }
 
-void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s)
+void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 _bind_flags, u32 s)
 {
 	if (pSurface)
 		return;
@@ -33,6 +33,7 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s
 	dwHeight = h;
 	format = f;
 	samples = s;
+	bind_flags = _bind_flags;
 
 	// Check width-and-height of render target surface
 	if (w > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION)
@@ -70,27 +71,13 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s
 	desc.SampleDesc.Count = samples;
 	desc.SampleDesc.Quality = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = 0;
+	desc.BindFlags = bind_flags;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
-	bool use_uav = HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_0 && view == SRV_RTV_UAV && samples <= 1;
-	bool use_dsv = view == SRV_DSV || view == SRV_RTV_DSV;
-	bool use_rtv = view == SRV_RTV || view == SRV_RTV_UAV || view == SRV_RTV_DSV;
-	bool use_srv = HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 || !use_dsv || samples <= 1;
-
-	if (use_srv)
-		desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-	if (use_rtv)
-		desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-	if (use_uav)
-		desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
-	if (use_dsv)
-		desc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
-
 	//#ifdef DEBUG
-	Msg("* Create texture: %dx%d, %d(sr=%d, rt=%d, ua=%d, ds=%d), s=%d, '%s'", dwWidth, dwHeight, format, use_srv,
-		use_rtv, use_uav, use_dsv, samples, name);
+	Msg("* Create texture: %dx%d, %d(sr=%d, rt=%d, ua=%d, ds=%d), s=%d, '%s'", dwWidth, dwHeight, format, (bool)(bind_flags & fSR), 
+		(bool)(bind_flags & fRT), (bool)(bind_flags & fUA), (bool)(bind_flags & fDS), samples, name);
 	//#endif
 
 	// DX10.1 and later hardware with MSAA
@@ -102,13 +89,13 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s
 	//HW.stats_manager.increment_stats_rtarget(pSurface);
 
 	// Create rendertarget view
-	if (use_rtv)
+	if (bind_flags & fRT)
 	{
 		CHK_DX(HW.pDevice11->CreateRenderTargetView(pSurface, NULL, &pRT));
 	}
 
 	// Create depth stencil view
-	if (use_dsv)
+	if (bind_flags & fDS)
 	{
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthstencil = {};
 		depthstencil.Format = format;
@@ -126,7 +113,7 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 s
 	}
 
 	// Create unordered acces view
-	if (use_uav)
+	if (bind_flags & fUA)
 	{
 		D3D11_UNORDERED_ACCESS_VIEW_DESC unorderedacces = {};
 		unorderedacces.Format = format;
@@ -163,10 +150,10 @@ void CRT::reset_begin()
 }
 void CRT::reset_end()
 {
-	create(*cName, dwWidth, dwHeight, format, view, samples);
+	create(*cName, dwWidth, dwHeight, format, bind_flags, samples);
 }
 
-void resptrcode_crt::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples)
+void resptrcode_crt::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 bind_flags, u32 samples)
 {
-	_set(Device.Resources->_CreateRT(name, w, h, f, view, samples));
+	_set(Device.Resources->_CreateRT(name, w, h, f, bind_flags, samples));
 }

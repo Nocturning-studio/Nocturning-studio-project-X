@@ -130,7 +130,7 @@ class ENGINE_API CResourceManager
 	SInputSignature* _CreateInputSignature(ID3DBlob* pBlob);
 	void _DeleteInputSignature(const SInputSignature* pSignature);
 
-	CRT* _CreateRT(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples);
+	CRT* _CreateRT(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 bind_flags, u32 samples);
 
 	void _DeleteRT(const CRT* RT);
 

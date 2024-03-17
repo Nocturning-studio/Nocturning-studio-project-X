@@ -458,7 +458,7 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 void CRender::Calculate()
 {
 #pragma message(Reminder("fix render calculate"))
-	/*Device.Statistic->RenderCALC.Begin();
+	Device.Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
 	IRender_Target* T = getTarget();
@@ -639,7 +639,7 @@ void CRender::Calculate()
 	else
 	{
 		set_Object(0);
-		
+
 		//g_pGameLevel->pHUD->Render_First					();
 		//g_pGameLevel->pHUD->Render_Last						();
 
@@ -650,7 +650,7 @@ void CRender::Calculate()
 	}
 
 	// End calc
-	Device.Statistic->RenderCALC.End();*/
+	Device.Statistic->RenderCALC.End();
 }
 
 void CRender::rmNear()

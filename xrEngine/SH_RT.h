@@ -2,16 +2,12 @@
 #define SH_RT_H
 #pragma once
 
-enum VIEW_TYPE
+enum TextureBindFlags
 {
-	// SRV = 1 << 1, // ShaderResource
-	// RTV = 1 << 2, // RenderTarget
-	// DSV = 1 << 3, // DepthStencil
-	// UAV = 1 << 4, // UnorderedAcces
-	SRV_RTV,	 // ShaderResource & RenderTarget
-	SRV_RTV_UAV, // ShaderResource & RenderTarget & UnorderedAcces
-	SRV_RTV_DSV, // ShaderResource & RenderTarget & DepthStencil
-	SRV_DSV,	 // ShaderResource & DepthStencil
+	fSR = D3D11_BIND_SHADER_RESOURCE,	// ShaderResource
+	fRT = D3D11_BIND_RENDER_TARGET,		// RenderTarget
+	fDS = D3D11_BIND_DEPTH_STENCIL,		// DepthStencil
+	fUA = D3D11_BIND_UNORDERED_ACCESS,	// UnorderedAcces
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -21,7 +17,7 @@ class ENGINE_API CRT : public xr_resource_named
 	CRT();
 	~CRT();
 
-	void create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples);
+	void create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 bind_flags, u32 samples);
 	void destroy();
 	void reset_begin();
 	void reset_end();
@@ -34,7 +30,7 @@ class ENGINE_API CRT : public xr_resource_named
 	ID3D11DepthStencilView* pZRT;
 	ID3D11UnorderedAccessView* pUAView;
 	DXGI_FORMAT format;
-	VIEW_TYPE view;
+	u32 bind_flags;
 	u32 samples;
 
 	u32 dwWidth;
@@ -49,7 +45,7 @@ class ENGINE_API CRT : public xr_resource_named
 struct ENGINE_API resptrcode_crt : public resptr_base<CRT>
 {
 	// Depth Stencil view type required DXGI_FORMAT_D...
-	void create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples = 1);
+	void create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 bind_flags, u32 samples = 1);
 
 	void destroy()
 	{

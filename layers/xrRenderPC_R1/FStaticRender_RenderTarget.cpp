@@ -59,8 +59,8 @@ BOOL CRenderTarget::Create()
 	// Bufferts
 	//RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
 	//RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
-	RT.create(RTname, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, SRV_RTV);
-	RT_distort.create(RTname_distort, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, SRV_RTV);
+	RT.create(RTname, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, fSR | fRT);
+	RT_distort.create(RTname_distort, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, fSR | fRT);
 
 	//ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
 

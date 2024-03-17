@@ -163,7 +163,7 @@ void CResourceManager::_DeleteConstantTable(const R_constant_table* C)
 }
 
 //--------------------------------------------------------------------------------------------------------------
-CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, VIEW_TYPE view, u32 samples)
+CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 bind_flags, u32 samples)
 {
 	R_ASSERT(Name && Name[0] && w && h);
 
@@ -178,7 +178,7 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, VIEW_
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_rtargets.insert(mk_pair(RT->set_name(Name), RT));
 		if (Device.b_is_Ready)
-			RT->create(Name, w, h, f, view, samples);
+			RT->create(Name, w, h, f, bind_flags, samples);
 		return RT;
 	}
 }
