@@ -677,6 +677,7 @@ void CRender::rmNormal()
 	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
+extern bool ENGINE_API g_menu;
 void CRender::RenderMenu()
 {
 	R_ASSERT(Target->RT->pRT);
@@ -733,10 +734,11 @@ void CRender::RenderMenu()
 	pv++;
 	RCache.Vertex.Unlock(4, Target->g_menu->vb_stride);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+
+	g_menu = false;
 }
 
 extern u32 g_r;
-extern bool ENGINE_API g_menu;
 void CRender::Render()
 {
 	if (g_menu)
@@ -751,7 +753,7 @@ void CRender::Render()
 	Target->ClearRT(HW.pBaseRT);
 	Target->ClearZB(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 
-	//RCache.set_CullMode(D3D11_CULL_BACK);
+	RCache.set_CullMode(D3D11_CULL_BACK);
 	RCache.set_Z(TRUE);
 	RCache.set_Stencil(FALSE);
 

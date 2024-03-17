@@ -215,7 +215,7 @@ HRESULT CResourceManager::CompileShader(
 	D3D_SHADER_MACRO* _macros = (D3D_SHADER_MACRO*)&macros.get_macros()[0];
 	
 	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3
-		/* | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY*/;
+		 | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
 	
 	HRESULT _result = D3DCompile(src, size, name_ext, _macros, 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);

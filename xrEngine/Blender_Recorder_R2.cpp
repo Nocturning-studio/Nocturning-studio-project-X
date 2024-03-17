@@ -263,8 +263,8 @@ u32 CBlender_Compile::r_Sampler(LPCSTR name, LPCSTR texture, bool b_ps1x_Project
 {
 #pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
 	r_dx10Texture(name, texture);
-	r_dx10Sampler("smp_nofilter");
-	return 0;
+	u32 i = r_dx10Sampler("smp_nofilter");
+	return i;
 }
 
 void CBlender_Compile::r_Sampler_rtf(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide)
