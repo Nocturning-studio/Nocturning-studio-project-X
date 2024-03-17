@@ -747,8 +747,13 @@ void CRender::Render()
 
 	g_r = 1;
 
-	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT);
+	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT, 0, 0, 0, HW.pBaseZB);
 	Target->ClearRT(HW.pBaseRT);
+	Target->ClearZB(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+
+	//RCache.set_CullMode(D3D11_CULL_BACK);
+	RCache.set_Z(TRUE);
+	RCache.set_Stencil(FALSE);
 
 	rmNormal();
 
@@ -758,8 +763,8 @@ void CRender::Render()
 	r_dsgraph_render_graph(0); // normal level
 	r_dsgraph_render_lods(true, false); // lods - FB
 
-	//g_pGamePersistent->Environment().RenderSky();	 // sky / sun
-	//g_pGamePersistent->Environment().RenderClouds(); // clouds
+	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
+	g_pGamePersistent->Environment().RenderClouds(); // clouds
 
 	r_pmask(true, false); // disable priority "1"
 
@@ -767,7 +772,7 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	L_Dynamic->render(); // addititional light sources
+	//L_Dynamic->render(); // addititional light sources
 
 	//if (Wallmarks)
 	//{
@@ -796,8 +801,8 @@ void CRender::Render()
 	//if (L_Glows)
 	//	L_Glows->Render(); // glows
 
-	//g_pGamePersistent->Environment().RenderFlares(); // lens-flares
-	//g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
+	g_pGamePersistent->Environment().RenderFlares(); // lens-flares
+	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
 
 	// Postprocess, if necessary
 	//Target->End();

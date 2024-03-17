@@ -148,8 +148,8 @@ struct _LodItem
 typedef ref_vs vs_type;
 typedef ref_ps ps_type;
 #else
-typedef IDirect3DVertexShader9* vs_type;
-typedef IDirect3DPixelShader9* ps_type;
+typedef SVS* vs_type;
+typedef ID3D11PixelShader* ps_type;
 #endif
 
 // NORMAL
@@ -162,7 +162,7 @@ struct mapNormalTextures : public FixedMAP<STextureList*, mapNormalItems, render
 {
 	float ssa;
 };
-struct mapNormalStates : public FixedMAP<IDirect3DStateBlock9*, mapNormalTextures, render_allocator>
+struct mapNormalStates : public FixedMAP<dx10State*, mapNormalTextures, render_allocator>
 {
 	float ssa;
 };
@@ -189,7 +189,7 @@ struct mapMatrixTextures : public FixedMAP<STextureList*, mapMatrixItems, render
 {
 	float ssa;
 };
-struct mapMatrixStates : public FixedMAP<IDirect3DStateBlock9*, mapMatrixTextures, render_allocator>
+struct mapMatrixStates : public FixedMAP<dx10State*, mapMatrixTextures, render_allocator>
 {
 	float ssa;
 };

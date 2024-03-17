@@ -20,8 +20,22 @@ IC void dx10ConstantBuffer::set(R_constant* C, R_constant_load& L, const Fmatrix
 	//	TEST
 	//return;
 
+	// debug
+	if (this == NULL)
+	{
+		Msg("! Can't set contant: %s", C->name.c_str());
+		return;
+	}
+
 	//Fvector4*	it	= c_f.access	(L.index);
-	Fvector4*	it	= Access(L.index);
+	m_bChanged = true;
+
+	//	Check buffer size in client code: don't know if actual data will cross
+	//	buffer boundaries.
+	VERIFY(offset < (int)m_uiBufferSize);
+	BYTE* res = ((BYTE*)m_pBufferData) + L.index;
+	Fvector4* it = (Fvector4*) res;
+
 	switch		(L.cls)
 	{
 	case RC_2x4:

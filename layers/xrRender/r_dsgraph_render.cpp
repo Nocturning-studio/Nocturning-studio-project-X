@@ -31,7 +31,9 @@ void __fastcall mapNormal_Render(mapNormalItems& N)
 	for (; I != E; I++)
 	{
 		_NormalItem& Ni = *I;
-		Ni.pVisual->Render(calcLOD(Ni.ssa, Ni.pVisual->vis.sphere.R));
+		float LOD = calcLOD(Ni.ssa, Ni.pVisual->vis.sphere.R);
+		RCache.LOD.set_LOD(LOD);
+		Ni.pVisual->Render(LOD);
 	}
 }
 
@@ -52,7 +54,9 @@ void __fastcall mapMatrix_Render(mapMatrixItems& N)
 		RCache.set_xform_world(Ni.Matrix);
 		RImplementation.apply_object(Ni.pObject);
 		RImplementation.apply_lmaterial();
-		Ni.pVisual->Render(calcLOD(Ni.ssa, Ni.pVisual->vis.sphere.R));
+		float LOD = calcLOD(Ni.ssa, Ni.pVisual->vis.sphere.R);
+		RCache.LOD.set_LOD(LOD);
+		Ni.pVisual->Render(LOD);
 	}
 	N.clear();
 }
@@ -304,8 +308,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 		for (u32 vs_id = 0; vs_id < nrmVS.size(); vs_id++)
 		{
 			mapNormalVS::TNode* Nvs = nrmVS[vs_id];
-#pragma message(Reminder("fix render dsgraph render"))
-			//RCache.set_VS(Nvs->key);
+			RCache.set_VS(Nvs->key);
 
 			mapNormalPS& ps = Nvs->val;
 			ps.ssa = 0;
@@ -314,8 +317,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 			for (u32 ps_id = 0; ps_id < nrmPS.size(); ps_id++)
 			{
 				mapNormalPS::TNode* Nps = nrmPS[ps_id];
-#pragma message(Reminder("fix render dsgraph render"))
-				//RCache.set_PS(Nps->key);
+				RCache.set_PS(Nps->key);
 
 				mapNormalCS& cs = Nps->val;
 				cs.ssa = 0;
@@ -333,8 +335,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					for (u32 state_id = 0; state_id < nrmStates.size(); state_id++)
 					{
 						mapNormalStates::TNode* Nstate = nrmStates[state_id];
-#pragma message(Reminder("fix render dsgraph render"))
-						//RCache.set_States(Nstate->key);
+						RCache.set_States(Nstate->key);
 
 						mapNormalTextures& tex = Nstate->val;
 						tex.ssa = 0;
@@ -383,8 +384,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 		for (u32 vs_id = 0; vs_id < matVS.size(); vs_id++)
 		{
 			mapMatrixVS::TNode* Nvs = matVS[vs_id];
-#pragma message(Reminder("fix render dsgraph render"))
-			//RCache.set_VS(Nvs->key);
+			RCache.set_VS(Nvs->key);
 
 			mapMatrixPS& ps = Nvs->val;
 			ps.ssa = 0;
@@ -393,8 +393,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 			for (u32 ps_id = 0; ps_id < matPS.size(); ps_id++)
 			{
 				mapMatrixPS::TNode* Nps = matPS[ps_id];
-#pragma message(Reminder("fix render dsgraph render"))
-				//RCache.set_PS(Nps->key);
+				RCache.set_PS(Nps->key);
 
 				mapMatrixCS& cs = Nps->val;
 				cs.ssa = 0;
@@ -412,8 +411,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					for (u32 state_id = 0; state_id < matStates.size(); state_id++)
 					{
 						mapMatrixStates::TNode* Nstate = matStates[state_id];
-#pragma message(Reminder("fix render dsgraph render"))
-						//RCache.set_States(Nstate->key);
+						RCache.set_States(Nstate->key);
 
 						mapMatrixTextures& tex = Nstate->val;
 						tex.ssa = 0;
