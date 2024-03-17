@@ -74,6 +74,63 @@ class CRenderTarget : public IRender_Target
 	void Begin();
 	void End();
 
+	IC void SetRT(const ref_rt& rt0 = 0, const ref_rt& rt1 = 0, const ref_rt& rt2 = 0, const ref_rt& rt3 = 0, ID3D11DepthStencilView* zb = 0)
+	{
+		if (rt0)
+		{
+			curWidth = rt0->dwWidth;	
+			curHeight = rt0->dwHeight;
+		}
+
+		static ID3D11RenderTargetView* rts[4];
+		rts[0] = rt0 ? rt0->pRT : 0;
+		rts[1] = rt1 ? rt1->pRT : 0;
+		rts[2] = rt2 ? rt2->pRT : 0;
+		rts[3] = rt3 ? rt3->pRT : 0;
+
+		HW.pContext->OMSetRenderTargets(4, rts, zb);
+	}
+	
+	IC void SetRT(u32 w, u32 h, ID3D11RenderTargetView* rt0, ID3D11RenderTargetView* rt1 = 0, ID3D11RenderTargetView* rt2 = 0, 
+		ID3D11RenderTargetView* rt3 = 0, ID3D11DepthStencilView* zb = 0)
+	{
+		curWidth = w;
+		curHeight = h;
+
+		static ID3D11RenderTargetView* rts[4];
+		rts[0] = rt0;
+		rts[1] = rt1;
+		rts[2] = rt2;
+		rts[3] = rt3;
+
+		HW.pContext->OMSetRenderTargets(4, rts, zb);
+	}
+
+	IC void ClearRT(const ref_rt& rt0, float r = 0, float g = 0, float b = 0, float a = 0)
+	{
+		static float color[4];
+		color[0] = r;
+		color[1] = g;
+		color[2] = b;
+		color[3] = a;
+		HW.pContext->ClearRenderTargetView(rt0->pRT, color);
+	}
+	
+	IC void ClearRT(ID3D11RenderTargetView* rt0, float r = 0, float g = 0, float b = 0, float a = 0)
+	{
+		static float color[4];
+		color[0] = r;
+		color[1] = g;
+		color[2] = b;
+		color[3] = a;
+		HW.pContext->ClearRenderTargetView(rt0, color);
+	}
+
+	IC void ClearZB(ID3D11DepthStencilView* zb, u32 flags, float depth = 1, float stencil = 0)
+	{
+		HW.pContext->ClearDepthStencilView(zb, flags, depth, stencil);
+	}
+
 	virtual void set_blur(float f)
 	{
 		param_blur = f;

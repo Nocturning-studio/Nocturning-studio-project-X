@@ -137,7 +137,7 @@ class CRender : public R_dsgraph_structure
 	{
 		return IRender_interface::RENDER_LIGHTMAP_LIGHTED;
 	}
-
+	
 	// Loading / Unloading
 	virtual void create();
 	virtual void destroy();

@@ -99,8 +99,8 @@ CRenderTarget::~CRenderTarget()
 	g_postprocess.destroy();
 	s_menu.destroy();
 	g_menu.destroy();
-	//RT_distort.destroy();
-	//RT.destroy();
+	RT_distort.destroy();
+	RT.destroy();
 	//ZB.destroy();
 	//if (RImplementation.o.aa_type == MSAA)
 	//{

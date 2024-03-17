@@ -746,6 +746,11 @@ void CRender::Render()
 		return;
 	}
 
+	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT);
+	Target->ClearRT(HW.pBaseRT);
+
+	rmNormal();
+
 #pragma message(Reminder("fix render render"))
 	/*g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();
