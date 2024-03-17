@@ -18,18 +18,34 @@ const float SSM_tex_size = 32.f;
 //////////////////////////////////////////////////////////////////////////
 void cl_light_PR::setup(R_constant* C)
 {
-	Fvector& P = RImplementation.r1_dlight_light->position;
-	float R = RImplementation.r1_dlight_light->range;
-	if (RImplementation.phase == CRender::PHASE_POINT)
-		RCache.set_c(C, P.x, P.y, P.z, .5f / R);
+#pragma message(Reminder("Fix dlights"))
+	if (RImplementation.r1_dlight_light)
+	{
+		Fvector& P = RImplementation.r1_dlight_light->position;
+		float R = RImplementation.r1_dlight_light->range;
+		if (RImplementation.phase == CRender::PHASE_POINT)
+			RCache.set_c(C, P.x, P.y, P.z, .5f / R);
+		else
+			RCache.set_c(C, P.x, P.y, P.z, 1.f / R);
+	}
 	else
-		RCache.set_c(C, P.x, P.y, P.z, 1.f / R);
+	{
+		RCache.set_c(C, 0, 0, 0, 1);
+	}
 }
 void cl_light_C::setup(R_constant* C)
 {
-	Fcolor _C = RImplementation.r1_dlight_light->color;
-	_C.mul_rgb(RImplementation.r1_dlight_scale);
-	RCache.set_c(C, _C.r, _C.g, _C.b, 1.f);
+#pragma message(Reminder("Fix dlights"))
+	if (RImplementation.r1_dlight_light)
+	{
+		Fcolor _C = RImplementation.r1_dlight_light->color;
+		_C.mul_rgb(RImplementation.r1_dlight_scale);
+		RCache.set_c(C, _C.r, _C.g, _C.b, 1.f);
+	}
+	else
+	{
+		RCache.set_c(C, 0, 0, 0, 1);
+	}
 }
 void cl_light_XFORM::setup(R_constant* C)
 {

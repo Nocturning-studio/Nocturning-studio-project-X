@@ -344,7 +344,7 @@ void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::
 	if (T->suppress_wm)
 		return;
 	VERIFY2(_valid(P) && _valid(s) && T && verts && (s > EPS_L), "Invalid static wallmark params");
-	Wallmarks->AddStaticWallmark(T, verts, P, &*S, s);
+	//Wallmarks->AddStaticWallmark(T, verts, P, &*S, s);
 }
 
 void CRender::clear_static_wallmarks()
@@ -354,12 +354,12 @@ void CRender::clear_static_wallmarks()
 
 void CRender::add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
 {
-	Wallmarks->AddSkeletonWallmark(wm);
+	//Wallmarks->AddSkeletonWallmark(wm);
 }
 void CRender::add_SkeletonWallmark(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start,
 								   const Fvector& dir, float size)
 {
-	Wallmarks->AddSkeletonWallmark(xf, obj, sh, start, dir, size);
+	//Wallmarks->AddSkeletonWallmark(xf, obj, sh, start, dir, size);
 }
 void CRender::add_Occluder(Fbox2& bb_screenspace)
 {
@@ -457,7 +457,6 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::Calculate()
 {
-#pragma message(Reminder("fix render calculate"))
 	Device.Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
@@ -586,7 +585,7 @@ void CRender::Calculate()
 							// It may be an glow
 							CGlow* glow = dynamic_cast<CGlow*>(spatial);
 							VERIFY(glow);
-							L_Glows->add(glow);
+							//L_Glows->add(glow);
 						}
 						else
 						{
@@ -633,8 +632,8 @@ void CRender::Calculate()
 		}
 
 		// Calculate miscelaneous stuff
-		L_Shadows->calculate();
-		L_Projector->calculate();
+		//L_Shadows->calculate();
+		//L_Projector->calculate();
 	}
 	else
 	{
@@ -746,10 +745,65 @@ void CRender::Render()
 		return;
 	}
 
+	g_r = 1;
+
 	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT);
 	Target->ClearRT(HW.pBaseRT);
 
 	rmNormal();
+
+	phase = PHASE_NORMAL;
+
+	r_dsgraph_render_hud(); // hud
+	r_dsgraph_render_graph(0); // normal level
+	r_dsgraph_render_lods(true, false); // lods - FB
+
+	//g_pGamePersistent->Environment().RenderSky();	 // sky / sun
+	//g_pGamePersistent->Environment().RenderClouds(); // clouds
+
+	r_pmask(true, false); // disable priority "1"
+
+	o.vis_intersect = TRUE;
+
+	HOM.Disable();
+
+	L_Dynamic->render(); // addititional light sources
+
+	//if (Wallmarks)
+	//{
+	//	g_r = 0;
+	//	Wallmarks->Render(); // wallmarks has priority as normal geometry
+	//}
+
+	HOM.Enable();
+
+	o.vis_intersect = FALSE;
+
+	phase = PHASE_NORMAL;
+
+	r_pmask(true, true); // enable priority "0" and "1"
+
+	//if (L_Shadows)
+	//	L_Shadows->render();			// ... and shadows
+
+	r_dsgraph_render_lods(false, true); // lods - FB
+	r_dsgraph_render_graph(1);			// normal level, secondary priority
+
+	PortalTraverser.fade_render();		// faded-portals
+
+	r_dsgraph_render_sorted();			// strict-sorted geoms
+
+	//if (L_Glows)
+	//	L_Glows->Render(); // glows
+
+	//g_pGamePersistent->Environment().RenderFlares(); // lens-flares
+	//g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
+
+	// Postprocess, if necessary
+	//Target->End();
+
+	if (L_Projector)
+		L_Projector->finalize();
 
 #pragma message(Reminder("fix render render"))
 	/*g_r = 1;

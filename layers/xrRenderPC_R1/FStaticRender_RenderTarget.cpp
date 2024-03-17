@@ -63,7 +63,7 @@ BOOL CRenderTarget::Create()
 	RT_distort.create(RTname_distort, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, fSR | fRT);
 
 	//ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
-
+	
 #pragma message(Reminder("FIX MSAA/CSAA"))
 	//if (RImplementation.o.aa_type == MSAA)
 	//{
