@@ -332,6 +332,9 @@ IC void CBackend::Compute(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT T
 
 IC void CBackend::Render(D3DPRIMITIVETYPE T, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC)
 {
+	//D3D11_VIEWPORT VP = {0, 0, (float)Device.dwWidth, (float)Device.dwHeight, 0, 1.f};
+	//HW.pContext->RSSetViewports(1, &VP);
+
 	// VERIFY(vs);
 	// HW.pDevice->VSSetShader(vs);
 	// HW.pDevice->GSSetShader(0);

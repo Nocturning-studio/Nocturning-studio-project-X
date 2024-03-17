@@ -1224,12 +1224,20 @@ void doBenchmark(LPCSTR name)
 #pragma optimize("g", off)
 void CApplication::load_draw_internal()
 {
+	D3D11_VIEWPORT VP = {0, 0, (float)Device.dwWidth, (float)Device.dwHeight, 0, 1.f};
+	HW.pContext->RSSetViewports(1, &VP);
+
+	RCache.set_RT(HW.pBaseRT);
+	RCache.set_ZB(HW.pBaseZB);
+
+	//FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+	//HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
+
 	if (!sh_progress)
 	{
-#pragma message(Reminder("Not implemented!"))
-		// CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1, 0));
 		return;
 	}
+
 	// Draw logo
 	u32 Offset;
 	u32 C = 0xffffffff;
