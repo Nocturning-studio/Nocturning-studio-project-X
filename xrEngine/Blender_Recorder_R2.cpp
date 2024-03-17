@@ -263,7 +263,12 @@ u32 CBlender_Compile::r_Sampler(LPCSTR name, LPCSTR texture, bool b_ps1x_Project
 {
 #pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
 	r_dx10Texture(name, texture);
-	u32 i = r_dx10Sampler("smp_nofilter");
+	// set all samplers
+	r_dx10Sampler("smp_nofilter");
+	r_dx10Sampler("smp_rtlinear");
+	r_dx10Sampler("smp_linear");
+	// hack... return smp_base id
+	u32 i = i = r_dx10Sampler("smp_base");
 	return i;
 }
 
@@ -271,6 +276,8 @@ void CBlender_Compile::r_Sampler_rtf(LPCSTR name, LPCSTR texture, bool b_ps1x_Pr
 {
 #pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
 	r_dx10Texture(name, texture);
+	// point or bilienar
+	r_dx10Sampler("smp_nofilter");
 	r_dx10Sampler("smp_rtlinear");
 }
 
@@ -278,12 +285,14 @@ void CBlender_Compile::r_Sampler_clf(LPCSTR name, LPCSTR texture, bool b_ps1x_Pr
 {
 #pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
 	r_dx10Texture(name, texture);
-	r_dx10Sampler("smp_linear");
+	// bilinear
+	r_dx10Sampler("smp_rtlinear");
 }
 
 void CBlender_Compile::r_Sampler_clw(LPCSTR name, LPCSTR texture, bool b_ps1x_ProjectiveDivide)
 {
 #pragma message(Reminder("Rewrite me with r_dx10Texture please :("))
 	r_dx10Texture(name, texture);
+	// trilinear
 	r_dx10Sampler("smp_linear");
 }
