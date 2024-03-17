@@ -2247,6 +2247,7 @@
     <ClInclude Include="R_DStreams.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderCompile.h" />
+    <ClInclude Include="ShaderCompileDebug.h" />
     <ClInclude Include="ShaderMacros.h" />
     <ClInclude Include="ShaderResourceTraits.h" />
     <ClInclude Include="Shader_xrLC.h" />
@@ -2501,6 +2502,7 @@
     <ClCompile Include="r_constants_cache.cpp" />
     <ClCompile Include="R_DStreams.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderCompileDebug.cpp" />
     <ClCompile Include="ShaderMacros.cpp" />
     <ClCompile Include="SH_Atomic.cpp" />
     <ClCompile Include="SH_Constant.cpp">

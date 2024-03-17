@@ -747,6 +747,8 @@ void CRender::Render()
 		return;
 	}
 
+#pragma message(Reminder("fix render render"))
+
 	g_r = 1;
 
 	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT, 0, 0, 0, HW.pBaseZB);
@@ -763,7 +765,7 @@ void CRender::Render()
 
 	r_dsgraph_render_hud(); // hud
 	r_dsgraph_render_graph(0); // normal level
-	r_dsgraph_render_lods(true, false); // lods - FB
+	//r_dsgraph_render_lods(true, false); // lods - FB
 
 	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
 	g_pGamePersistent->Environment().RenderClouds(); // clouds
@@ -793,7 +795,12 @@ void CRender::Render()
 	//if (L_Shadows)
 	//	L_Shadows->render();			// ... and shadows
 
-	r_dsgraph_render_lods(false, true); // lods - FB
+	//r_dsgraph_render_lods(false, true); // lods - FB
+
+	lstLODs.clear();
+	lstLODgroups.clear();
+	mapLOD.clear();
+
 	r_dsgraph_render_graph(1);			// normal level, secondary priority
 
 	PortalTraverser.fade_render();		// faded-portals
@@ -812,7 +819,6 @@ void CRender::Render()
 	if (L_Projector)
 		L_Projector->finalize();
 
-#pragma message(Reminder("fix render render"))
 	/*g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();
 	// Begin
