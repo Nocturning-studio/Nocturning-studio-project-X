@@ -77,7 +77,7 @@
 #undef VERIFY
 #endif // VERIFY
 
-#ifdef DEBUG
+#if defined DEBUG || defined DEBUG_VERIFY
 #define NODEFAULT FATAL("nodefault reached")
 #define VERIFY(expr)                                                                                                   \
 	do                                                                                                                 \

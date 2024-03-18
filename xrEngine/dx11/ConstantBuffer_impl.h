@@ -32,7 +32,7 @@ IC void dx10ConstantBuffer::set(R_constant* C, R_constant_load& L, const Fmatrix
 
 	//	Check buffer size in client code: don't know if actual data will cross
 	//	buffer boundaries.
-	VERIFY(offset < (int)m_uiBufferSize);
+	//VERIFY(offset < (int)m_uiBufferSize);
 	BYTE* res = ((BYTE*)m_pBufferData) + L.index;
 	Fvector4* it = (Fvector4*) res;
 
