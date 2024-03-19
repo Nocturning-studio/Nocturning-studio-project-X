@@ -53,69 +53,68 @@ void CBlender_default_aref::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-		if (C.L_textures.size() < 2)
-			Debug.fatal(DEBUG_INFO, "Not enought textures for shader, base tex: %s", *C.L_textures[0]);
-		switch (C.iElement)
+	bool use_aref = (!oBlend.value);
+	C.macros.add(use_aref, "USE_AREF", "1");
+
+	if (C.L_textures.size() < 2)
+		Debug.fatal(DEBUG_INFO, "Not enought textures for shader, base tex: %s", *C.L_textures[0]);
+
+	switch (C.iElement)
+	{
+	case SE_R1_NORMAL_HQ: {
+		LPCSTR sname = "lmap";
+		if (C.bDetail_Diffuse)
+			sname = "lmap_dt";
+		if (oBlend.value)
+			C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA);
+		else
+			C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO);
+		C.r_Sampler("s_base", C.L_textures[0]);
+		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler("s_detail", C.detail_texture);
+		C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+		C.r_End();
+	}
+	break;
+	case SE_R1_NORMAL_LQ: {
+		LPCSTR sname = "lmap";
+		if (oBlend.value)
+			C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA);
+		else
+			C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO);
+		C.r_Sampler("s_base", C.L_textures[0]);
+		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+		C.r_End();
+	}
+	break;
+	case SE_R1_LPOINT:
+		if (!oBlend.value)
 		{
-		case SE_R1_NORMAL_HQ: {
-			LPCSTR sname = "lmap";
-			if (C.bDetail_Diffuse)
-				sname = "lmap_dt";
-			if (oBlend.value)
-				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
-						 oAREF.value);
-			else
-				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO, TRUE, oAREF.value);
+			C.r_Pass("lmap_point", "add_point", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_Sampler("s_lmap", C.L_textures[1]);
-			C.r_Sampler("s_detail", C.detail_texture);
-			C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+			C.r_Sampler_clf("s_lmap", TEX_POINT_ATT);
+			C.r_Sampler_clf("s_att", TEX_POINT_ATT);
 			C.r_End();
 		}
 		break;
-		case SE_R1_NORMAL_LQ: {
-			LPCSTR sname = "lmap";
-			if (oBlend.value)
-				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
-						 oAREF.value);
-			else
-				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO, TRUE, oAREF.value);
+	case SE_R1_LSPOT:
+		if (!oBlend.value)
+		{
+			C.r_Pass("lmap_spot", "add_spot", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_Sampler("s_lmap", C.L_textures[1]);
-			C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+			C.r_Sampler_clf("s_lmap", "internal\\internal_light_att", true);
+			C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
 			C.r_End();
 		}
 		break;
-		case SE_R1_LPOINT:
-			if (!oBlend.value)
-			{
-				C.r_Pass("lmap_point", "add_point", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE, TRUE,
-						 oAREF.value);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_Sampler_clf("s_lmap", TEX_POINT_ATT);
-				C.r_Sampler_clf("s_att", TEX_POINT_ATT);
-				C.r_End();
-			}
-			break;
-		case SE_R1_LSPOT:
-			if (!oBlend.value)
-			{
-				C.r_Pass("lmap_spot", "add_spot", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE, TRUE,
-						 oAREF.value);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_Sampler_clf("s_lmap", "internal\\internal_light_att", true);
-				C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
-				C.r_End();
-			}
-			break;
-		case SE_R1_LMODELS:
-			// Lighting only, not use alpha-channel
-			C.r_Pass("lmap_l", "lmap_l", FALSE);
-			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_Sampler("s_lmap", C.L_textures[1]);
-			C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
-			C.r_End();
-			break;
-		}
+	//case SE_R1_LMODELS:
+	//	C.r_Pass("lmap_l", "lmap_l", FALSE);
+	//	C.r_Sampler("s_base", C.L_textures[0]);
+	//	C.r_Sampler("s_lmap", C.L_textures[1]);
+	//	C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+	//	C.r_End();
+	//	break;
+	}
 
 }

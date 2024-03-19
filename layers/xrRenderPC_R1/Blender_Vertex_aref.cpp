@@ -53,57 +53,58 @@ void CBlender_Vertex_aref::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
-		switch (C.iElement)
+	bool use_aref = (!oBlend.value);
+	C.macros.add(use_aref, "USE_AREF", "1");
+
+	switch (C.iElement)
+	{
+	case SE_R1_NORMAL_HQ:
+		// Level view
 		{
-		case SE_R1_NORMAL_HQ:
-			// Level view
-			{
-				LPCSTR sname = "vert";
-				if (C.bDetail_Diffuse)
-					sname = "vert_dt";
-				if (oBlend.value)
-					C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
-							 oAREF.value);
-				else
-					C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO, TRUE, oAREF.value);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_Sampler("s_detail", C.detail_texture);
-				C.r_End();
-			}
-			break;
-		case SE_R1_NORMAL_LQ:
-			// Level view
-			{
-				LPCSTR sname = "vert";
-				if (oBlend.value)
-					C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA, TRUE,
-							 oAREF.value);
-				else
-					C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO, TRUE, oAREF.value);
-				C.r_Sampler("s_base", C.L_textures[0]);
-				C.r_End();
-			}
-			break;
-		case SE_R1_LPOINT:
-			C.r_Pass("vert_point", "add_point", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE, TRUE,
-					 oAREF.value);
+			LPCSTR sname = "vert";
+			if (C.bDetail_Diffuse)
+				sname = "vert_dt";
+			if (oBlend.value)
+				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA);
+			else
+				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO);
 			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_Sampler_clf("s_lmap", TEX_POINT_ATT);
-			C.r_Sampler_clf("s_att", TEX_POINT_ATT);
+			C.r_Sampler("s_detail", C.detail_texture);
 			C.r_End();
-			break;
-		case SE_R1_LSPOT:
-			C.r_Pass("vert_spot", "add_spot", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE, TRUE, oAREF.value);
-			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_Sampler_clf("s_lmap", "internal\\internal_light_att", true);
-			C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
-			C.r_End();
-			break;
-		case SE_R1_LMODELS:
-			// Lighting only
-			C.r_Pass("vert_l", "vert_l", FALSE);
-			C.r_Sampler("s_base", C.L_textures[0]);
-			C.r_End();
-			break;
 		}
+		break;
+	case SE_R1_NORMAL_LQ:
+		// Level view
+		{
+			LPCSTR sname = "vert";
+			if (oBlend.value)
+				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_SRCALPHA, D3DBLEND_INVSRCALPHA);
+			else
+				C.r_Pass(sname, sname, TRUE, TRUE, TRUE, TRUE, D3DBLEND_ONE, D3DBLEND_ZERO);
+			C.r_Sampler("s_base", C.L_textures[0]);
+			C.r_End();
+		}
+		break;
+	case SE_R1_LPOINT:
+		C.r_Pass("vert_point", "add_point", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Sampler("s_base", C.L_textures[0]);
+		C.r_Sampler_clf("s_lmap", TEX_POINT_ATT);
+		C.r_Sampler_clf("s_att", TEX_POINT_ATT);
+		C.r_End();
+		break;
+	case SE_R1_LSPOT:
+		C.r_Pass("vert_spot", "add_spot", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
+		C.r_Sampler("s_base", C.L_textures[0]);
+		C.r_Sampler_clf("s_lmap", "internal\\internal_light_att", true);
+		C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
+		C.r_End();
+		break;
+	//case SE_R1_LMODELS:
+	//	// Lighting only
+	//	C.r_Pass("vert_l", "vert_l", FALSE);
+	//	C.r_Sampler("s_base", C.L_textures[0]);
+	//	C.r_End();
+	//	break;
+	}
+
 }

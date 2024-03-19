@@ -10,6 +10,8 @@
 
 #pragma pack(push, 4)
 
+extern ENGINE_API bool g_shader_compiled;
+
 class ENGINE_API CBlender_Compile
 {
   public:

@@ -31,10 +31,10 @@ enum MaxTextures
 	//	Actually these values are 128
 	mtMaxPixelShaderTextures = 16,
 	mtMaxVertexShaderTextures = 4,
-	mtMaxGeometryShaderTextures = 16,
-	mtMaxHullShaderTextures = 16,
-	mtMaxDomainShaderTextures = 16,
-	mtMaxComputeShaderTextures = 16,
+	//mtMaxGeometryShaderTextures = 16,
+	//mtMaxHullShaderTextures = 16,
+	//mtMaxDomainShaderTextures = 16,
+	//mtMaxComputeShaderTextures = 16,
 };
 enum
 {
@@ -168,7 +168,8 @@ class ENGINE_API CBackend
 	{
 		if (stage < CTexture::rstVertex)
 			return textures_ps[stage];
-		else if (stage < CTexture::rstGeometry)
+		//else if (stage < CTexture::rstGeometry)
+		else if (stage < CTexture::rstInvalid)
 			return textures_vs[stage - CTexture::rstVertex];
 		else
 		{

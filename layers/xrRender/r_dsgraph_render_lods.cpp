@@ -26,6 +26,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 		return;
 
 	// *** Fill VB and generate groups
+	//u32 shid = _setup_zb ? SE_R1_LMODELS : SE_R1_NORMAL_LQ;
 	u32 shid = _setup_zb ? SE_R1_LMODELS : SE_R1_NORMAL_LQ;
 	FLOD* firstV = (FLOD*)lstLODs[0].pVisual;
 	// Msg						("dbg_lods: shid[%d],firstV[%X]",shid,u32((void*)firstV));

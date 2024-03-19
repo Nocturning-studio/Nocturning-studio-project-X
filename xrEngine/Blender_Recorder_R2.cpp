@@ -24,6 +24,7 @@ void CBlender_Compile::r_Pass(LPCSTR _vs, LPCSTR _ps, bool bFog, BOOL bZtest, BO
 	passMatrices.clear();
 	passConstants.clear();
 	dwStage = 0;
+	g_shader_compiled = false;
 
 	// Setup FF-units (Z-buffer, blender)
 	PassSET_ZB(bZtest, bZwrite);
@@ -117,6 +118,12 @@ void CBlender_Compile::r_dx10Texture(LPCSTR ResourceName, LPCSTR texture)
 
 	R_ASSERT(C->type == RC_dx10texture);
 	u32 stage = C->samp.index;
+
+	// debug
+	if (g_shader_compiled)
+	{
+		Msg("*   - set tex: %d, %s (%s)", stage, ResourceName, texture);
+	}
 
 	passTextures.push_back(mk_pair(stage, ref_texture(Device.Resources->_CreateTexture(TexName))));
 }
@@ -239,6 +246,12 @@ u32 CBlender_Compile::r_dx10Sampler(LPCSTR ResourceName)
 	{
 		i_dx10Address(stage, D3DTADDRESS_WRAP);
 		i_dx10Filter(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
+	}
+
+	// debug
+	if (g_shader_compiled)
+	{
+		Msg("*   - set smp: %d, %s", stage, ResourceName);
 	}
 
 	return stage;

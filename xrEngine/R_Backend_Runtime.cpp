@@ -159,7 +159,8 @@ void CBackend::set_Textures(STextureList* _T)
 			}
 		}
 		else
-		if (load_id < CTexture::rstGeometry)
+		//if (load_id < CTexture::rstGeometry)
+		if (load_id < CTexture::rstInvalid)
 		{
 			//	Set up pixel shader resources
 			VERIFY(load_id < CTexture::rstVertex + mtMaxVertexShaderTextures);

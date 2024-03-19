@@ -7,6 +7,8 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxerr.lib")
 
+ENGINE_API bool g_shader_compiled = false;
+
 //----------------------------------------------------------------
 class CShaderIncluder : public ID3DInclude
 {
@@ -166,13 +168,13 @@ T* CResourceManager::CreateShader(const char* _name, CShaderMacros& _macros)
 	string32 c_target; sprintf_s(c_target, sizeof c_target, "%s_%u_%u", ext, HW.Caps.raster_major, HW.Caps.raster_minor);
 	//LPCSTR c_target = ShaderTypeTraits<T>::GetShaderTarget();
 
-#ifndef MASTER_GOLD
+//#ifndef MASTER_GOLD
 	Msg("* Compiling shader: target=%s, source=%s.%s", c_target, _name, ext);
-#endif
+//#endif
 
-#ifdef DEBUG_SHADER_COMPILATION
+//#ifdef DEBUG_SHADER_COMPILATION
 	print_macros(_macros);
-#endif
+//#endif
 
 	// compile and create
 	HRESULT _hr = CompileShader(_name, ext, (LPCSTR)file->pointer(), file->length(), c_target, c_entry, macros, (T*&)sh);
@@ -214,7 +216,8 @@ HRESULT CResourceManager::CompileShader(
 
 	D3D_SHADER_MACRO* _macros = (D3D_SHADER_MACRO*)&macros.get_macros()[0];
 	
-	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+	//u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL0 | D3DCOMPILE_SKIP_OPTIMIZATION;
 	
 	HRESULT _result = D3DCompile(src, size, name_ext, _macros, 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
@@ -259,6 +262,8 @@ HRESULT CResourceManager::CompileShader(
 			//FS.w_close(W);
 			//_RELEASE(pDisasm);
 		}
+
+		g_shader_compiled = true;
 	}
 	else
 	{
@@ -288,7 +293,7 @@ HRESULT CResourceManager::ReflectShader(
 
 	ID3D11ShaderReflection* pReflection = 0;
 	HRESULT const _hr = D3DReflect(src, size, IID_ID3D11ShaderReflection, (void**)&pReflection);
-	Msg("* Reflect shader: %u", SUCCEEDED(_hr));
+	Msg("*   reflect shader: %u", SUCCEEDED(_hr));
 
 	if (SUCCEEDED(_hr) && pReflection)
 	{
@@ -310,7 +315,7 @@ template <> void CResourceManager::CreateSignature<SVS>(DWORD const* src, UINT s
 	//	Store input signature (need only for VS)
 	ID3DBlob* pSignatureBlob;
 	HRESULT const _hr = D3DGetInputSignatureBlob(src, size, &pSignatureBlob);
-	Msg("* Get Signature shader: %u", SUCCEEDED(_hr));
+	Msg("*   get signature shader: %u", SUCCEEDED(_hr));
 	CHK_DX(_hr);
 	VERIFY(pSignatureBlob);
 	result->signature = _CreateInputSignature(pSignatureBlob);
