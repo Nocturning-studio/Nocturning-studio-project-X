@@ -205,6 +205,36 @@ void CRender::level_Unload()
 	Device.Resources->DBG_VerifyTextures();
 #endif
 	b_loaded = FALSE;
+
+	// dirty hack
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			mapNormal[i].destroy();
+			mapNormal[i] = R_dsgraph::mapNormal_T();
+			mapNormal[i].clear();
+
+			mapMatrix[i].destroy();
+			mapMatrix[i] = R_dsgraph::mapMatrix_T();
+			mapMatrix[i].clear();
+		}
+
+		mapLOD.destroy();
+		mapLOD = R_dsgraph::mapLOD_T();
+		mapLOD.clear();
+
+		mapHUD.destroy();
+		mapHUD = R_dsgraph::mapHUD_T();
+		mapHUD.clear();
+
+		mapDistort.destroy();
+		mapDistort = R_dsgraph::mapSorted_T();
+		mapDistort.clear();
+
+		mapSorted.destroy();
+		mapSorted = R_dsgraph::mapSorted_T();
+		mapSorted.clear();
+	}
 }
 
 void CRender::LoadBuffers(CStreamReader* base_fs)
