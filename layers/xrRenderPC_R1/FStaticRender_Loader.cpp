@@ -207,7 +207,7 @@ void CRender::level_Unload()
 	b_loaded = FALSE;
 
 	// dirty hack
-	{
+	/*{
 		for (int i = 0; i < 2; i++)
 		{
 			mapNormal[i].destroy();
@@ -234,7 +234,7 @@ void CRender::level_Unload()
 		mapSorted.destroy();
 		mapSorted = R_dsgraph::mapSorted_T();
 		mapSorted.clear();
-	}
+	}*/
 }
 
 void CRender::LoadBuffers(CStreamReader* base_fs)
