@@ -808,7 +808,7 @@ void CRender::Render()
 	//if (L_Shadows)
 	//	L_Shadows->render();			// ... and shadows
 
-	//r_dsgraph_render_lods(false, true); // lods - FB
+	r_dsgraph_render_lods(false, true); // lods - FB
 
 	lstLODs.clear();
 	lstLODgroups.clear();
