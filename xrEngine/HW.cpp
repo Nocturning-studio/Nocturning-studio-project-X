@@ -79,8 +79,7 @@ void CHW::Reset(HWND hwnd)
 	_SHOW_REF("refCount:pBaseZB", pBaseZB);
 	_SHOW_REF("refCount:pBaseRT", pBaseRT);
 
-	_RELEASE(pBaseZB);
-	_RELEASE(pBaseRT);
+	DestroyRenderTarget();
 
 	DXGI_SWAP_CHAIN_DESC& cd = m_ChainDesc;
 	cd.Windowed = TRUE;
@@ -134,6 +133,15 @@ void CHW::CreateRenderTarget()
 	R_CHK(R);
 
 	pDepthStencil->Release();
+
+	// hack..
+	pContext->OMSetRenderTargets(1, &pBaseRT, 0);
+}
+
+void CHW::DestroyRenderTarget()
+{
+	_RELEASE(pBaseZB);
+	_RELEASE(pBaseRT);
 }
 
 xr_token* vid_mode_token = NULL;
@@ -203,10 +211,10 @@ void CHW::DestroyDevice()
 	SSManager.ClearStateArray();
 
 	_SHOW_REF("refCount:pBaseZB", pBaseZB);
-	_RELEASE(pBaseZB);
-
 	_SHOW_REF("refCount:pBaseRT", pBaseRT);
-	_RELEASE(pBaseRT);
+
+	DestroyRenderTarget();
+
 #ifdef DEBUG
 	_SHOW_REF("refCount:dwDebugSB", dwDebugSB);
 	_RELEASE(dwDebugSB);

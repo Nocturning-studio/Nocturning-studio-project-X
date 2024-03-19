@@ -76,7 +76,7 @@ SPass* CResourceManager::_CreatePass(const SPass& proto)
 	P->state = proto.state;
 	P->ps = proto.ps;
 	P->vs = proto.vs;
-	P->gs = proto.gs;
+	//P->gs = proto.gs;
 	P->constants = proto.constants;
 	P->T = proto.T;
 #ifdef _EDITOR

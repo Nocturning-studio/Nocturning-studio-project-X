@@ -127,9 +127,9 @@ void IGame_Persistent::OnGameStart()
 	Log("Loading models...");
 	Render->models_Prefetch();
 
-	#pragma todo("Deathman to all: Так не должно быть - вернуть при фиксе бага с использованием старых lmap на новом уровне, и уборке кастыля с перезагрузкой текстур")
-	//Log("Loading textures...");
-	//Device.Resources->DeferredUpload();
+	//#pragma todo("Deathman to all: Так не должно быть - вернуть при фиксе бага с использованием старых lmap на новом уровне, и уборке костыля с перезагрузкой текстур")
+	Log("Loading textures...");
+	Device.Resources->DeferredUpload();
 
 	p_time = 1000.f * Device.GetTimerGlobal()->GetElapsed_sec() - p_time;
 	u32 p_mem = Memory.mem_usage() - mem_0;

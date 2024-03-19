@@ -96,10 +96,10 @@ struct ENGINE_API SPass : public xr_resource_flagged
 	ref_vs vs; // may be NULL = FFP, in that case "state" must contain RS setup, *and* FVF-compatible declaration must
 			   // be used
 
-	ref_gs gs;			  // may be NULL = don't use geometry shader at all
-	ref_hs hs;			  // may be NULL = don't use hull shader at all
-	ref_ds ds;			  // may be NULL = don't use domain shader at all
-	ref_cs cs;			  // may be NULL = don't use compute shader at all
+	//ref_gs gs;			  // may be NULL = don't use geometry shader at all
+	//ref_hs hs;			  // may be NULL = don't use hull shader at all
+	//ref_ds ds;			  // may be NULL = don't use domain shader at all
+	//ref_cs cs;			  // may be NULL = don't use compute shader at all
 					  //
 	ref_ctable constants; // may be NULL
 

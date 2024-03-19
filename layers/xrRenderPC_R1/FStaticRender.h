@@ -99,6 +99,8 @@ class CRender : public R_dsgraph_structure
 	cl_light_XFORM r1_dlight_binder_xform;
 	shared_str c_ldynamic_props;
 
+	// Determines weather the frame is the first after resetting device.
+	bool m_bFirstFrameAfterReset; 
   private:
 	// Loading / Unloading
 	void LoadBuffers(CStreamReader* fs);

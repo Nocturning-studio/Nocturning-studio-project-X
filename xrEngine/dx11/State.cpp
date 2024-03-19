@@ -56,6 +56,29 @@ HRESULT dx10State::Apply()
 	StateManager.SetBlendState(m_pBlendState);
 	StateManager.SetAlphaRef(m_uiAlphaRef);
 
+	// ???
+	if (this == 0)
+	{
+		return E_FAIL;
+	}
+
+	// ???
+#pragma message(Reminder("why samplers contains a trash?"))
+
+	if (m_VSSamplers.size() > 16)
+	{
+		Msg("! dx10State::Apply():  m_VSSamplers is corrupted");
+		//return S_OK;
+	}
+	
+	if (m_PSSamplers.size() > 16)
+	{
+		Msg("! dx10State::Apply():  m_PSSamplers is corrupted");
+		//return S_OK;
+	}
+
+	//Msg("samplers: %d", m_VSSamplers.size());
+
 	//SSManager.GSApplySamplers(m_GSSamplers);
 	SSManager.VSApplySamplers(m_VSSamplers);
 	SSManager.PSApplySamplers(m_PSSamplers);
@@ -84,10 +107,12 @@ void dx10State::Release()
 
 void dx10State::InitSamplers( tSamplerHArray& SamplerArray, SimulatorStates& state_code, int iBaseSamplerIndex)
 {
+	SamplerArray.clear();
+
 	D3D11_SAMPLER_DESC descArray[D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT];
 	bool SamplerUsed[D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT];
 
-	for (int i=0; i<D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT; ++i)
+	for (int i = 0; i < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT; ++i)
 	{
 		SamplerUsed[i] = false;
 		dx10StateUtils::ResetDescription(descArray[i]);
@@ -96,16 +121,16 @@ void dx10State::InitSamplers( tSamplerHArray& SamplerArray, SimulatorStates& sta
 	state_code.UpdateDesc(descArray, SamplerUsed, iBaseSamplerIndex);
 
 	int iMaxSampler = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1;
-	for ( ;iMaxSampler>-1; --iMaxSampler)
+	for (; iMaxSampler > -1; --iMaxSampler)
 	{
 		if (SamplerUsed[iMaxSampler])
 			break;
 	}
 
-	if (iMaxSampler>-1)
+	if (iMaxSampler > -1)
 	{
-		SamplerArray.reserve(iMaxSampler+1);
-		for ( int i=0; i<=iMaxSampler; ++i )
+		SamplerArray.reserve(iMaxSampler + 1);
+		for (int i = 0; i <= iMaxSampler; ++i)
 		{
 			if (SamplerUsed[i])
 				SamplerArray.push_back(SSManager.GetState(descArray[i]));

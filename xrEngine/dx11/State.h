@@ -24,13 +24,13 @@ public:
 	void	UpdateAlphaRef( UINT Ref ) { m_uiAlphaRef = Ref; }
 
 //	User restricted interface
-private:
+//private:
 	typedef	dx10SamplerStateCache::HArray tSamplerHArray;
 
-private:
+//private:
 	static void InitSamplers( tSamplerHArray& SamplerArray, SimulatorStates& state_code, int iBaseSamplerIndex);
 
-private:
+//private:
 	//	All states are supposed to live along all application lifetime
 	ID3D11RasterizerState*		m_pRasterizerState;		//	Weak link
 	ID3D11DepthStencilState*	m_pDepthStencilState;	//	Weak link

@@ -297,6 +297,8 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 {
 	Device.Statistic->RenderDUMP.Begin();
 
+	//Msg("samplers proprity: %d", _priority);
+
 	// **************************************************** NORMAL
 	// Perform sorting based on ScreenSpaceArea
 	// Sorting by SSA and changes minimizations
@@ -332,10 +334,29 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					states.ssa = 0;
 					states.getANY_P(nrmStates);
 					std::sort(nrmStates.begin(), nrmStates.end(), cmp_states_nrm);
+
+					// debug
+					if (0)
+					{
+						Msg("normal states: %d", nrmStates.size());
+						for (u32 state_id = 0; state_id < nrmStates.size(); state_id++)
+						{
+							mapNormalStates::TNode* Nstate = nrmStates[state_id];
+							dx10State* s = Nstate->key;
+							Msg("     vs:%d, ps:%d", s->m_VSSamplers.size(), s->m_PSSamplers.size());
+						}
+					}
+
 					for (u32 state_id = 0; state_id < nrmStates.size(); state_id++)
 					{
 						mapNormalStates::TNode* Nstate = nrmStates[state_id];
 						RCache.set_States(Nstate->key);
+
+						//FlushLog();
+						
+						// ?
+						//if (Nstate->key->m_VSSamplers.size() > 16)
+						//	continue;
 
 						mapNormalTextures& tex = Nstate->val;
 						tex.ssa = 0;
@@ -408,6 +429,19 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool _clear)
 					states.ssa = 0;
 					states.getANY_P(matStates);
 					std::sort(matStates.begin(), matStates.end(), cmp_states_mat);
+
+					// debug
+					if (0)
+					{
+						Msg("matrix states: %d", nrmStates.size());
+						for (u32 state_id = 0; state_id < matStates.size(); state_id++)
+						{
+							mapMatrixStates::TNode* Nstate = matStates[state_id];
+							dx10State* s = Nstate->key;
+							Msg("     vs:%d, ps:%d", s->m_VSSamplers.size(), s->m_PSSamplers.size());
+						}
+					}
+
 					for (u32 state_id = 0; state_id < matStates.size(); state_id++)
 					{
 						mapMatrixStates::TNode* Nstate = matStates[state_id];

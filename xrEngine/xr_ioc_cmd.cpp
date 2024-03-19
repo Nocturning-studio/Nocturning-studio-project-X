@@ -758,6 +758,11 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_render_dynamics", &psDeviceFlags, rsDrawDynamic);
 #endif
 
+	CMD4(CCC_Float, "r_dtex_range", &r_dtex_range, 5, 175);
+	CMD3(CCC_Mask, "rs_detail", &psDeviceFlags, rsDetails);
+	CMD3(CCC_Mask, "rs_render_statics", &psDeviceFlags, rsDrawStatic);
+	CMD3(CCC_Mask, "rs_render_dynamics", &psDeviceFlags, rsDrawDynamic);
+
 	// Render device states
 
 	CMD3(CCC_Mask, "rs_v_sync", &psDeviceFlags, rsVSync);

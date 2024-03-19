@@ -51,8 +51,20 @@ IGame_Level::~IGame_Level()
 
 	CCameraManager::ResetPP();
 
-#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
-	Console->Execute("vid_restart");
+	Sound->set_geometry_occ(NULL);
+	Sound->set_handler(NULL);
+
+	if (Device.Resources)
+		Device.Resources->_DumpMemoryUsage();
+
+	u32 m_base = 0, c_base = 0, m_lmaps = 0, c_lmaps = 0;
+	if (Device.Resources)
+		Device.Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
+
+	Msg("* [ D3D ]: textures[%d K]", (m_base + m_lmaps) / 1024);
+
+	//#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
+//	Console->Execute("vid_restart");
 }
 
 void IGame_Level::net_Stop()

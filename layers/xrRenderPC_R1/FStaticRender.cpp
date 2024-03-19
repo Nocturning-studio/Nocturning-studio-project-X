@@ -27,10 +27,10 @@ ShaderElement* CRender::rimp_select_sh_dynamic(IRender_Visual* pVisual, float cd
 		return (RImplementation.L_Projector->shadowing() ? pVisual->shader->E[SE_R1_NORMAL_HQ]
 														 : pVisual->shader->E[SE_R1_NORMAL_LQ])
 			._get();
-	case PHASE_POINT:
-		return pVisual->shader->E[SE_R1_LPOINT]._get();
-	case PHASE_SPOT:
-		return pVisual->shader->E[SE_R1_LSPOT]._get();
+	//case PHASE_POINT:
+	//	return pVisual->shader->E[SE_R1_LPOINT]._get();
+	//case PHASE_SPOT:
+	//	return pVisual->shader->E[SE_R1_LSPOT]._get();
 	default:
 		NODEFAULT;
 	}
@@ -47,10 +47,10 @@ ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdi
 		return (((_sqrt(cdist_sq) - pVisual->vis.sphere.R) < 44) ? pVisual->shader->E[SE_R1_NORMAL_HQ]
 																 : pVisual->shader->E[SE_R1_NORMAL_LQ])
 			._get();
-	case PHASE_POINT:
-		return pVisual->shader->E[SE_R1_LPOINT]._get();
-	case PHASE_SPOT:
-		return pVisual->shader->E[SE_R1_LSPOT]._get();
+	//case PHASE_POINT:
+	//	return pVisual->shader->E[SE_R1_LPOINT]._get();
+	//case PHASE_SPOT:
+	//	return pVisual->shader->E[SE_R1_LSPOT]._get();
 	default:
 		NODEFAULT;
 	}
@@ -100,6 +100,8 @@ void CRender::update_options()
 extern XRCORE_API u32 build_id;
 void CRender::create()
 {
+	m_bFirstFrameAfterReset = true;
+
 	xrRender_console_apply_conditions();
 
 	L_DB = 0;
@@ -167,6 +169,9 @@ void CRender::reset_end()
 	Target = xr_new<CRenderTarget>();
 	if (L_Projector)
 		L_Projector->invalidate();
+	// Set this flag true to skip the first render frame,
+	// that some data is not ready in the first frame (for example device camera position)
+	m_bFirstFrameAfterReset = true;
 }
 
 void CRender::OnFrame()
@@ -403,15 +408,13 @@ void CRender::apply_object(IRenderable* O)
 		return;
 	if (PHASE_NORMAL == phase && O->renderable_ROS())
 	{
-		CROS_impl& LT = *((CROS_impl*)O->renderable.pROS);
-		VERIFY(dynamic_cast<CObject*>(O) || dynamic_cast<CPS_Instance*>(O));
-		VERIFY(dynamic_cast<CROS_impl*>(O->renderable.pROS));
-		float o_hemi = 0.5f * LT.get_hemi();
-		float o_sun = 0.5f * LT.get_sun();
-		RCache.set_c(c_ldynamic_props, o_sun, o_sun, o_sun, o_hemi);
-		// shadowing
-		if ((LT.shadow_recv_frame == Device.dwFrame) && O->renderable_ShadowReceive())
-			RImplementation.L_Projector->setup(LT.shadow_recv_slot);
+#pragma message(Reminder("fix LT is trash"))
+		//CROS_impl& LT = *((CROS_impl*)O->renderable_ROS());
+		//float o_hemi = 0.5f * LT.get_hemi();
+		//float o_sun = 0.5f * LT.get_sun();
+		//RCache.set_c(c_ldynamic_props, o_sun, o_sun, o_sun, o_hemi);
+		//if ((LT.shadow_recv_frame == Device.dwFrame) && O->renderable_ShadowReceive())
+		//	RImplementation.L_Projector->setup(LT.shadow_recv_slot);
 	}
 }
 
@@ -457,6 +460,9 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 
 void CRender::Calculate()
 {
+	//Msg("mapNormal[0]: %d", mapNormal[0].size());
+	//Msg("mapNormal[1]: %d", mapNormal[1].size());
+	
 	Device.Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
@@ -741,6 +747,12 @@ void CRender::RenderMenu()
 extern u32 g_r;
 void CRender::Render()
 {
+	if (m_bFirstFrameAfterReset)
+	{
+		m_bFirstFrameAfterReset = false;
+		return;
+	}
+
 	if (g_menu)
 	{
 		RenderMenu();
@@ -766,7 +778,7 @@ void CRender::Render()
 	r_dsgraph_render_hud(); // hud
 	r_dsgraph_render_graph(0); // normal level
 	//r_dsgraph_render_lods(true, false); // lods - FB
-	r_dsgraph_render_lods(true, true); // lods - FB
+	//r_dsgraph_render_lods(true, true); // lods - FB
 
 	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
 	g_pGamePersistent->Environment().RenderClouds(); // clouds
@@ -802,7 +814,7 @@ void CRender::Render()
 	lstLODgroups.clear();
 	mapLOD.clear();
 
-	r_dsgraph_render_graph(1);			// normal level, secondary priority
+	r_dsgraph_render_graph(1); // normal level, secondary priority
 
 	PortalTraverser.fade_render();		// faded-portals
 

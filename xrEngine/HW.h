@@ -49,6 +49,7 @@ class ENGINE_API CHW
 	void DestroyDevice();
 
 	void CreateRenderTarget();
+	void DestroyRenderTarget();
 
 	void Reset(HWND hw);
 

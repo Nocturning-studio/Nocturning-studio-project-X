@@ -155,6 +155,7 @@ class pred_fb
 
 void CHOM::Render_DB(CFrustum& base)
 {
+	/*
 	// Query DB
 	xrc.frustum_options(0);
 	xrc.frustum_query(m_pModel, base);
@@ -178,6 +179,91 @@ void CHOM::Render_DB(CFrustum& base)
 							 0.0f,		1.0f};
 	m_xform.mul(m_viewport, Device.mFullTransform);
 	m_xform_01.mul(m_viewport_01, Device.mFullTransform);
+
+	// Build frustum with near plane only
+	CFrustum clip;
+	clip.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_NEAR);
+	sPoly src, dst;
+	u32 _frame = Device.dwFrame;
+#ifdef DEBUG
+	tris_in_frame = xrc.r_count();
+	tris_in_frame_visible = 0;
+#endif
+
+	// Perfrom selection, sorting, culling
+	for (; it != end; it++)
+	{
+		// Control skipping
+		occTri& T = m_pTris[it->id];
+		u32 next = _frame + ::Random.randI(3, 10);
+
+		// Test for good occluder - should be improved :)
+		if (!(T.flags || (T.plane.classify(COP) > 0)))
+		{
+			T.skip = next;
+			continue;
+		}
+
+		// Access to triangle vertices
+		CDB::TRI& t = m_pModel->get_tris()[it->id];
+		Fvector* v = m_pModel->get_verts();
+		src.clear();
+		dst.clear();
+		src.push_back(v[t.verts[0]]);
+		src.push_back(v[t.verts[1]]);
+		src.push_back(v[t.verts[2]]);
+		sPoly* P = clip.ClipPoly(src, dst);
+		if (0 == P)
+		{
+			T.skip = next;
+			continue;
+		}
+
+		// XForm and Rasterize
+#ifdef DEBUG
+		tris_in_frame_visible++;
+#endif
+		u32 pixels = 0;
+		int limit = int(P->size()) - 1;
+		for (int v = 1; v < limit; v++)
+		{
+			m_xform.transform(T.raster[0], (*P)[0]);
+			m_xform.transform(T.raster[1], (*P)[v + 0]);
+			m_xform.transform(T.raster[2], (*P)[v + 1]);
+			pixels += Raster.rasterize(&T);
+		}
+		if (0 == pixels)
+		{
+			T.skip = next;
+			continue;
+		}
+	}
+	*/
+
+	// Update projection matrices on every frame to ensure valid HOM culling
+	float view_dim = occ_dim_0;
+	Fmatrix m_viewport = {view_dim / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, -view_dim / 2.f,		  0.0f,
+						  0.0f,			  0.0f, 0.0f, 1.0f, 0.0f, view_dim / 2.f + 0 + 0, view_dim / 2.f + 0 + 0,
+						  0.0f,			  1.0f};
+	Fmatrix m_viewport_01 = {1.f / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, -1.f / 2.f,		   0.0f,
+							 0.0f,		0.0f, 0.0f, 1.0f, 0.0f, 1.f / 2.f + 0 + 0, 1.f / 2.f + 0 + 0,
+							 0.0f,		1.0f};
+	m_xform.mul(m_viewport, Device.mFullTransform);
+	m_xform_01.mul(m_viewport_01, Device.mFullTransform);
+
+	// Query DB
+	xrc.frustum_options(0);
+	xrc.frustum_query(m_pModel, base);
+	if (0 == xrc.r_count())
+		return;
+
+	// Prepare
+	CDB::RESULT* it = xrc.r_begin();
+	CDB::RESULT* end = xrc.r_end();
+
+	Fvector COP = Device.vCameraPosition;
+	end = std::remove_if(it, end, pred_fb(m_pTris));
+	std::sort(it, end, pred_fb(m_pTris, COP));
 
 	// Build frustum with near plane only
 	CFrustum clip;

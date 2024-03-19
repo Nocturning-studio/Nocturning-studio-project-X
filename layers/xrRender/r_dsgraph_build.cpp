@@ -291,6 +291,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static(IRender_Visual* pVisual)
 #endif
 	mapNormalCS::TNode* Ncs = Nps->val.insert(pass.constants._get());
 	mapNormalStates::TNode* Nstate = Ncs->val.insert(pass.state->state);
+	//Msg("samplers: %d", pass.state->state->m_VSSamplers.size());
 	mapNormalTextures::TNode* Ntex = Nstate->val.insert(pass.T._get());
 	mapNormalItems& items = Ntex->val;
 	_NormalItem item = {SSA, pVisual};
@@ -611,6 +612,7 @@ void CRender::add_Static(IRender_Visual* pVisual, u32 planes)
 	VIS = View->testSAABB(vis.sphere.P, vis.sphere.R, vis.box.data(), planes);
 	if (fcvNone == VIS)
 		return;
+
 	if (!HOM.visible(vis))
 		return;
 
@@ -632,8 +634,8 @@ void CRender::add_Static(IRender_Visual* pVisual, u32 planes)
 				for (xr_vector<IRender_Visual*>::iterator pit = I._children_related.begin();
 					 pit != I._children_related.end(); pit++)
 					add_Dynamic(*pit, planes);
-				for (xr_vector<IRender_Visual*>::iterator pit = I._children_free.begin(); pit != I._children_free.end();
-					 pit++)
+				for (xr_vector<IRender_Visual*>::iterator pit = I._children_free.begin();
+					 pit != I._children_free.end(); pit++)
 					add_Dynamic(*pit, planes);
 			}
 			else
@@ -643,8 +645,8 @@ void CRender::add_Static(IRender_Visual* pVisual, u32 planes)
 				for (xr_vector<IRender_Visual*>::iterator pit = I._children_related.begin();
 					 pit != I._children_related.end(); pit++)
 					add_leafs_Dynamic(*pit);
-				for (xr_vector<IRender_Visual*>::iterator pit = I._children_free.begin(); pit != I._children_free.end();
-					 pit++)
+				for (xr_vector<IRender_Visual*>::iterator pit = I._children_free.begin();
+					 pit != I._children_free.end(); pit++)
 					add_leafs_Dynamic(*pit);
 			}
 		}
@@ -699,7 +701,11 @@ void CRender::add_Static(IRender_Visual* pVisual, u32 planes)
 			N->val.ssa = ssa;
 			N->val.pVisual = pVisual;
 		}
+#if RENDER != R_R1
+		if (ssa > r_ssaLOD_B || phase == PHASE_SMAP)
+#else
 		if (ssa > r_ssaLOD_B)
+#endif
 		{
 			// Add all children, perform tests
 			I = pV->children.begin();
