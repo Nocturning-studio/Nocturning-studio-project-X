@@ -3,7 +3,7 @@
 #include "fixedmap.h"
 
 #ifndef USE_MEMORY_MONITOR
-#define USE_DOUG_LEA_ALLOCATOR_FOR_RENDER
+//#define USE_DOUG_LEA_ALLOCATOR_FOR_RENDER
 #endif // USE_MEMORY_MONITOR
 
 #ifdef USE_DOUG_LEA_ALLOCATOR_FOR_RENDER
@@ -216,7 +216,9 @@ struct doug_lea_allocator_wrapper
 
 #define render_alloc doug_lea_alloc
 typedef doug_lea_allocator_wrapper render_allocator;
-
+#else
+#define render_alloc xalloc
+typedef xr_allocator render_allocator;
 #endif // USE_DOUG_LEA_ALLOCATOR_FOR_RENDER
 
 // #define	USE_RESOURCE_DEBUGGER

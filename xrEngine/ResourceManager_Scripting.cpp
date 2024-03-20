@@ -375,7 +375,7 @@ void LuaError(lua_State* L)
 
 #ifndef PURE_ALLOC
 //#	ifndef USE_MEMORY_MONITOR
-#define USE_DL_ALLOCATOR
+//#define USE_DL_ALLOCATOR
 //#	endif // USE_MEMORY_MONITOR
 #endif // PURE_ALLOC
 
