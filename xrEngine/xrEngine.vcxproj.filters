@@ -157,6 +157,9 @@
     <Filter Include="Render\DX11">
       <UniqueIdentifier>{702f32cf-d5be-4988-8910-2c3b79d28ffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator\dllmalloc">
+      <UniqueIdentifier>{7a5db675-c732-4f0b-8d58-d39a5c050ecf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -597,6 +600,12 @@
     <ClInclude Include="dx11\R_Backend_LOD.h">
       <Filter>Render\DX11</Filter>
     </ClInclude>
+    <ClInclude Include="doug_lea_allocator.h">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="ptmalloc3\malloc-2.8.3.h">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator\dllmalloc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1036,6 +1045,15 @@
     </ClCompile>
     <ClCompile Include="dx11\R_Backend_LOD.cpp">
       <Filter>Render\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="doug_lea_allocator.cpp">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="ptmalloc3\malloc.c">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator\dllmalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="ptmalloc3\sysdeps\win32\win32.c">
+      <Filter>Render\Execution &amp; 3D\Shaders\ShaderManager\doug_lea_memory_allocator\dllmalloc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

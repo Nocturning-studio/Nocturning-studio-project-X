@@ -375,7 +375,7 @@ void LuaError(lua_State* L)
 
 #ifndef PURE_ALLOC
 //#	ifndef USE_MEMORY_MONITOR
-//#define USE_DL_ALLOCATOR
+#define USE_DL_ALLOCATOR
 //#	endif // USE_MEMORY_MONITOR
 #endif // PURE_ALLOC
 
@@ -398,15 +398,15 @@ static void* lua_alloc(void* ud, void* ptr, size_t osize, size_t nsize)
 }
 #else // USE_DL_ALLOCATOR
 
+#include "..\layers\xrRender\r_dsgraph_types.h"
 #ifdef USE_ARENA_ALLOCATOR
 static const u32 s_arena_size = 8 * 1024 * 1024;
 static char s_fake_array[s_arena_size];
 doug_lea_allocator g_render_lua_allocator(s_fake_array, s_arena_size, "render:lua");
 #else  // #ifdef USE_ARENA_ALLOCATOR
-#include "doug_lea_memory_allocator.h"
-doug_lea_allocator g_render_lua_allocator(0, 0, "render:lua");
+//#include "doug_lea_memory_allocator.h"
+ENGINE_API doug_lea_allocator g_render_lua_allocator(NULL, 0, "render:lua");
 #endif // #ifdef USE_ARENA_ALLOCATOR
-#include "..\layers\xrRender\r_dsgraph_types.h"
 
 static void* lua_alloc(void* ud, void* ptr, size_t osize, size_t nsize)
 {

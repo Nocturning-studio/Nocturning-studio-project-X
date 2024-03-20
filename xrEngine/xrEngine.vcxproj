@@ -2164,6 +2164,7 @@
     <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="device.h" />
+    <ClInclude Include="doug_lea_allocator.h" />
     <ClInclude Include="doug_lea_memory_allocator.h" />
     <ClInclude Include="DrawUtils.h" />
     <ClInclude Include="du_box.h" />
@@ -2231,6 +2232,7 @@
     <ClInclude Include="Properties.h" />
     <ClInclude Include="psystem.h" />
     <ClInclude Include="PS_instance.h" />
+    <ClInclude Include="ptmalloc3\malloc-2.8.3.h" />
     <ClInclude Include="pure.h" />
     <ClInclude Include="pure_relcase.h" />
     <ClInclude Include="Rain.h" />
@@ -2314,6 +2316,7 @@
     <ClCompile Include="Device_Misc.cpp" />
     <ClCompile Include="Device_overdraw.cpp" />
     <ClCompile Include="Device_wndproc.cpp" />
+    <ClCompile Include="doug_lea_allocator.cpp" />
     <ClCompile Include="doug_lea_memory_allocator.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dedicated|Win32'">
       </PrecompiledHeader>
@@ -2393,6 +2396,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Advanced|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|Win32'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_All_To_All|x64'">Level2</WarningLevel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NOOPT|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="du_box.cpp" />
     <ClCompile Include="du_cone.cpp" />
@@ -2473,6 +2477,12 @@
     <ClCompile Include="ParticleCustom.cpp" />
     <ClCompile Include="perlin.cpp" />
     <ClCompile Include="PS_instance.cpp" />
+    <ClCompile Include="ptmalloc3\malloc.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NOOPT|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ptmalloc3\sysdeps\win32\win32.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NOOPT|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="pure.cpp" />
     <ClCompile Include="pure_relcase.cpp" />
     <ClCompile Include="Rain.cpp" />
