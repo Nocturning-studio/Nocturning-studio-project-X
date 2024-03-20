@@ -11,6 +11,8 @@
 #include "..\xrEngine\environment.h"
 #endif
 
+#include "../../xrEngine/dx11/BufferUtils.h"
+
 const int quant = 16384;
 const int c_hdr = 10;
 const int c_size = 4;
@@ -37,8 +39,13 @@ short QC(float v)
 
 void CDetailManager::hw_Load()
 {
+	// max vs_4_0 vertex shader constant buffer element slots
+	u32 registers = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+	u32 size_consts = 3;
+
 	// Analyze batch-size
-	hw_BatchSize = (u32(HW.Caps.geometry.dwRegisters) - c_hdr) / c_size;
+	//hw_BatchSize = (u32(HW.Caps.geometry.dwRegisters) - c_hdr) / c_size;
+	hw_BatchSize = (registers - c_hdr - size_consts) / c_size;
 	clamp(hw_BatchSize, (u32)0, (u32)64);
 	Msg("* [DETAILS] VertexConsts(%d), Batch(%d)", u32(HW.Caps.geometry.dwRegisters), hw_BatchSize);
 
@@ -58,7 +65,7 @@ void CDetailManager::hw_Load()
 	u32 dwUsage = D3DUSAGE_WRITEONLY;
 
 	// Create VB/IB
-#pragma message(Reminder("fix details"))
+//#pragma message(Reminder("fix details"))
 	//R_CHK(HW.pDevice->CreateVertexBuffer(dwVerts * vSize, dwUsage, 0, D3DPOOL_MANAGED, &hw_VB, 0));
 	//R_CHK(HW.pDevice->CreateIndexBuffer(dwIndices * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &hw_IB, 0));
 	Msg("* [DETAILS] Batch(%d), VB(%dK), IB(%dK)", hw_BatchSize, (dwVerts * vSize) / 1024, (dwIndices * 2) / 1024);
@@ -66,7 +73,10 @@ void CDetailManager::hw_Load()
 	// Fill VB
 	{
 		vertHW* pV;
-		R_CHK(hw_VB->Lock(0, 0, (void**)&pV, 0));
+		//R_CHK(hw_VB->Lock(0, 0, (void**)&pV, 0));
+		vertHW* pVOriginal;
+		pVOriginal = xr_alloc<vertHW>(dwVerts);
+		pV = pVOriginal;		
 		for (o = 0; o < objects.size(); o++)
 		{
 			CDetail& D = *objects[o];
@@ -87,13 +97,19 @@ void CDetailManager::hw_Load()
 				}
 			}
 		}
-		R_CHK(hw_VB->Unlock());
+		//R_CHK(hw_VB->Unlock());
+		R_CHK(dx10BufferUtils::CreateVertexBuffer(&hw_VB, pVOriginal, dwVerts * vSize));
+		//HW.stats_manager.increment_stats_vb(hw_VB);
+		xr_free(pVOriginal);
 	}
 
 	// Fill IB
 	{
 		u16* pI;
-		R_CHK(hw_IB->Lock(0, 0, (void**)(&pI), 0));
+		//R_CHK(hw_IB->Lock(0, 0, (void**)(&pI), 0));
+		u16* pIOriginal;
+		pIOriginal = xr_alloc<u16>(dwIndices);
+		pI = pIOriginal;
 		for (o = 0; o < objects.size(); o++)
 		{
 			CDetail& D = *objects[o];
@@ -105,25 +121,28 @@ void CDetailManager::hw_Load()
 				offset = u16(offset + u16(D.number_vertices));
 			}
 		}
-		R_CHK(hw_IB->Unlock());
+		//R_CHK(hw_IB->Unlock());
+		R_CHK(dx10BufferUtils::CreateIndexBuffer(&hw_IB, pIOriginal, dwIndices * 2));
+		//HW.stats_manager.increment_stats_ib(hw_IB);
+		xr_free(pIOriginal);
 	}
 
 	// Create shader to access constant storage
 	ref_shader S;
 	S.create("details\\set");
-	R_constant_table& T0 = *(S->E[0]->passes[0]->constants);
-	R_constant_table& T1 = *(S->E[1]->passes[0]->constants);
-	hwc_consts = T0.get("consts");
-	hwc_wave = T0.get("wave");
-	hwc_wind = T0.get("dir2D");
-	hwc_array = T0.get("array");
-	hwc_s_consts = T1.get("consts");
-	hwc_s_xform = T1.get("xform");
-	hwc_s_array = T1.get("array");
+	//R_constant_table& T0 = *(S->E[0]->passes[0]->constants);
+	//R_constant_table& T1 = *(S->E[1]->passes[0]->constants);
+	//hwc_consts = T0.get("consts");
+	//hwc_wave = T0.get("wave");
+	//hwc_wind = T0.get("dir2D");
+	//hwc_array = T0.get("array");
+	//hwc_s_consts = T1.get("consts");
+	//hwc_s_xform = T1.get("xform");
+	//hwc_s_array = T1.get("array");
 
 	// Declare geometry
-#pragma message(Reminder("fix details"))
-	//hw_Geom.create(dwDecl_Details, hw_VB, hw_IB);
+//#pragma message(Reminder("fix details"))
+	hw_Geom.create(dwDecl_Details, hw_VB, hw_IB);
 }
 
 void CDetailManager::hw_Unload()
@@ -147,27 +166,50 @@ void CDetailManager::hw_Render()
 	RCache.set_Geometry(hw_Geom);
 
 	// Wave0
+	//float scale = 1.f / float(quant);
+	//Fvector4 wave;
+	//wave.set(1.f / 5.f, 1.f / 7.f, 1.f / 3.f, Device.fTimeGlobal * swing_current.speed);
+	//RCache.set_c(&*hwc_consts, scale, scale, ps_r_Detail_l_aniso, ps_r_Detail_l_ambient); // consts
+	//RCache.set_c(&*hwc_wave, wave.div(PI_MUL_2));											// wave
+	//RCache.set_c(&*hwc_wind, dir1);															// wind-dir
+	//hw_Render_dump(&*hwc_array, 1, 0, c_hdr);
+	//
+	//// Wave1
+	//wave.set(1.f / 3.f, 1.f / 7.f, 1.f / 5.f, Device.fTimeGlobal * swing_current.speed);
+	//RCache.set_c(&*hwc_wave, wave.div(PI_MUL_2)); // wave
+	//RCache.set_c(&*hwc_wind, dir2);				  // wind-dir
+	//hw_Render_dump(&*hwc_array, 2, 0, c_hdr);
+	//
+	//// Still
+	//RCache.set_c(&*hwc_s_consts, scale, scale, scale, 1.f);
+	//RCache.set_c(&*hwc_s_xform, Device.mFullTransform);
+	//hw_Render_dump(&*hwc_s_array, 0, 1, c_hdr);
+
+	// Wave0
 	float scale = 1.f / float(quant);
 	Fvector4 wave;
+	Fvector4 consts;
+	consts.set(scale, scale, ps_r_Detail_l_aniso, ps_r_Detail_l_aniso);
 	wave.set(1.f / 5.f, 1.f / 7.f, 1.f / 3.f, Device.fTimeGlobal * swing_current.speed);
-	RCache.set_c(&*hwc_consts, scale, scale, ps_r_Detail_l_aniso, ps_r_Detail_l_ambient); // consts
-	RCache.set_c(&*hwc_wave, wave.div(PI_MUL_2));											// wave
-	RCache.set_c(&*hwc_wind, dir1);															// wind-dir
-	hw_Render_dump(&*hwc_array, 1, 0, c_hdr);
+	hw_Render_dump(consts, wave.div(PI_MUL_2), dir1, 1, 0);
 
 	// Wave1
 	wave.set(1.f / 3.f, 1.f / 7.f, 1.f / 5.f, Device.fTimeGlobal * swing_current.speed);
-	RCache.set_c(&*hwc_wave, wave.div(PI_MUL_2)); // wave
-	RCache.set_c(&*hwc_wind, dir2);				  // wind-dir
-	hw_Render_dump(&*hwc_array, 2, 0, c_hdr);
+	hw_Render_dump(consts, wave.div(PI_MUL_2), dir2, 2, 0);
 
 	// Still
-	RCache.set_c(&*hwc_s_consts, scale, scale, scale, 1.f);
-	RCache.set_c(&*hwc_s_xform, Device.mFullTransform);
-	hw_Render_dump(&*hwc_s_array, 0, 1, c_hdr);
+	consts.set(scale, scale, scale, 1.f);
+	hw_Render_dump(consts, wave.div(PI_MUL_2), dir2, 0, 1);
 }
-void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id, u32 c_offset)
+//void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id, u32 c_offset)
+void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id)
 {
+	//static shared_str strConsts("consts");
+	static shared_str strConsts("det_consts");
+	static shared_str strWave("det_wave");
+	static shared_str strDir2D("det_dir2D");
+	static shared_str strArray("det_array");
+
 	Device.Statistic->RenderDUMP_DT_Count = 0;
 
 	// Matrices and offsets
@@ -193,9 +235,25 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 			// Setup matrices + colors (and flush it as nesessary)
 			RCache.set_Element(Object.shader->E[lod_id]);
 			RImplementation.apply_lmaterial();
-			u32 c_base = x_array->vs.index;
-#pragma message(Reminder("fix details"))
+
+			//	This could be cached in the corresponding consatant buffer
+			//	as it is done for DX9
+			RCache.set_c(strConsts, consts);
+			RCache.set_c(strWave, wave);
+			RCache.set_c(strDir2D, wind);
+			// RCache.set_c(strXForm, Device.mFullTransform);
+
+			//u32 c_base = x_array->vs.index;
+//#pragma message(Reminder("fix details"))
 			//Fvector4* c_storage = RCache.get_ConstantCache_Vertex().get_array_f().access(c_base);
+			Fvector4* c_storage = 0;
+			//	Map constants to memory directly
+			{
+				void* pVData;
+				RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, &pVData, 0, 0);
+				c_storage = (Fvector4*)pVData;
+			}
+			R_ASSERT(c_storage);
 
 			u32 dwBatch = 0;
 
@@ -214,10 +272,13 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 					// Build matrix ( 3x4 matrix, last row - color )
 					float scale = Instance.scale_calculated;
 					Fmatrix& M = Instance.mRotY;
-#pragma message(Reminder("fix details"))
-					//c_storage[base + 0].set(M._11 * scale, M._21 * scale, M._31 * scale, M._41);
-					//c_storage[base + 1].set(M._12 * scale, M._22 * scale, M._32 * scale, M._42);
-					//c_storage[base + 2].set(M._13 * scale, M._23 * scale, M._33 * scale, M._43);
+//#pragma message(Reminder("fix details"))
+					// RCache.set_ca(&*constArray, base+0, M._11*scale,	M._21*scale,	M._31*scale,	M._41	);
+					// RCache.set_ca(&*constArray, base+1, M._12*scale,	M._22*scale,	M._32*scale,	M._42	);
+					// RCache.set_ca(&*constArray, base+2, M._13*scale,	M._23*scale,	M._33*scale,	M._43	);
+					c_storage[base + 0].set(M._11 * scale, M._21 * scale, M._31 * scale, M._41);
+					c_storage[base + 1].set(M._12 * scale, M._22 * scale, M._32 * scale, M._42);
+					c_storage[base + 2].set(M._13 * scale, M._23 * scale, M._33 * scale, M._43);
 
 					// Build color
 #if RENDER == R_R1
@@ -226,7 +287,7 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 					//					C.mad					(c_lmap,Instance.c_rgb);
 					C.mad(c_hemi, Instance.c_hemi);
 					C.mad(c_sun, Instance.c_sun);
-					//c_storage[base + 3].set(C.x, C.y, C.z, 1.f);
+					c_storage[base + 3].set(C.x, C.y, C.z, 1.f);
 #else
 					// R2 only needs hemisphere
 					float h = Instance.c_hemi;
@@ -240,14 +301,23 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 						Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 						u32 dwCNT_verts = dwBatch * Object.number_vertices;
 						u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-#pragma message(Reminder("fix details"))
+//#pragma message(Reminder("fix details"))
 						//RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
 						//RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-						//RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
+						RCache.set_CullMode(D3D11_CULL_NONE);
+						RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 						RCache.stat.r.s_details.add(dwCNT_verts);
 
 						// restart
 						dwBatch = 0;
+
+						//	DX10: Remap constants to memory directly (just in case anything goes wrong)
+						{
+							void* pVData;
+							RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, &pVData, 0, 0);
+							c_storage = (Fvector4*)pVData;
+						}
+						VERIFY(c_storage);
 					}
 				}
 			}
@@ -257,10 +327,11 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 				Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 				u32 dwCNT_verts = dwBatch * Object.number_vertices;
 				u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-#pragma message(Reminder("fix details"))
+//#pragma message(Reminder("fix details"))
 				//RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
 				//RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-				//RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
+				RCache.set_CullMode(D3D11_CULL_NONE);
+				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 				RCache.stat.r.s_details.add(dwCNT_verts);
 			}
 			// Clean up
@@ -269,4 +340,7 @@ void CDetailManager::hw_Render_dump(ref_constant x_array, u32 var_id, u32 lod_id
 		vOffset += hw_BatchSize * Object.number_vertices;
 		iOffset += hw_BatchSize * Object.number_indices;
 	}
+
+	// ?
+	RCache.set_CullMode(D3D11_CULL_BACK);
 }

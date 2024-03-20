@@ -69,7 +69,7 @@ CDetailManager::CDetailManager()
 {
 	dtFS = 0;
 	dtSlots = 0;
-	soft_Geom = 0;
+	//soft_Geom = 0;
 	hw_Geom = 0;
 	hw_BatchSize = 0;
 	hw_VB = 0;
@@ -136,10 +136,10 @@ void CDetailManager::Load()
 	bwdithermap(2, dither);
 
 	// Hardware specific optimizations
-	if (UseVS())
+	//if (UseVS())
 		hw_Load();
-	else
-		soft_Load();
+	//else
+	//	soft_Load();
 
 	// swing desc
 	// normal
@@ -158,10 +158,10 @@ void CDetailManager::Load()
 #endif
 void CDetailManager::Unload()
 {
-	if (UseVS())
+	//if (UseVS())
 		hw_Unload();
-	else
-		soft_Unload();
+	//else
+	//	soft_Unload();
 
 	for (DetailIt it = objects.begin(); it != objects.end(); it++)
 	{
@@ -307,10 +307,10 @@ void CDetailManager::Render()
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_xform_world(Fidentity);
-	if (UseVS())
+	//if (UseVS())
 		hw_Render();
-	else
-		soft_Render();
+	//else
+	//	soft_Render();
 	RCache.set_CullMode(CULL_CCW);
 	Device.Statistic->RenderDUMP_DT_Render.End();
 	m_frame_rendered = Device.dwFrame;
@@ -319,7 +319,7 @@ void CDetailManager::Render()
 void __stdcall CDetailManager::MT_CALC()
 {
 #ifndef _EDITOR
-	//if (0 == RImplementation.Details)
+	if (0 == RImplementation.Details)
 		return; // possibly deleted
 	if (0 == dtFS)
 		return;

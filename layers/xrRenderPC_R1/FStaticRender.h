@@ -85,7 +85,7 @@ class CRender : public R_dsgraph_structure
 	CLightProjector* L_Projector;
 	CGlowManager* L_Glows;
 	CWallmarksEngine* Wallmarks;
-	//CDetailManager* Details;
+	CDetailManager* Details;
 	CModelPool* Models;
 
 	CRenderTarget* Target; // Render-target

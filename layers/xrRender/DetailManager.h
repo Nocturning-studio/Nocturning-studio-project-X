@@ -147,27 +147,30 @@ class CDetailManager
 	}
 
 	// Software processor
-	ref_geom soft_Geom;
-	void soft_Load();
-	void soft_Unload();
-	void soft_Render();
+	//ref_geom soft_Geom;
+	//void soft_Load();
+	//void soft_Unload();
+	//void soft_Render();
 
 	// Hardware processor
 	ref_geom hw_Geom;
 	u32 hw_BatchSize;
-	IDirect3DVertexBuffer9* hw_VB;
-	IDirect3DIndexBuffer9* hw_IB;
-	ref_constant hwc_consts;
-	ref_constant hwc_wave;
-	ref_constant hwc_wind;
-	ref_constant hwc_array;
-	ref_constant hwc_s_consts;
-	ref_constant hwc_s_xform;
-	ref_constant hwc_s_array;
+	//IDirect3DVertexBuffer9* hw_VB;
+	//IDirect3DIndexBuffer9* hw_IB;
+	ID3D11Buffer* hw_VB;
+	ID3D11Buffer* hw_IB;
+	//ref_constant hwc_consts;
+	//ref_constant hwc_wave;
+	//ref_constant hwc_wind;
+	//ref_constant hwc_array;
+	//ref_constant hwc_s_consts;
+	//ref_constant hwc_s_xform;
+	//ref_constant hwc_s_array;
 	void hw_Load();
 	void hw_Unload();
 	void hw_Render();
-	void hw_Render_dump(ref_constant array, u32 var_id, u32 lod_id, u32 c_base);
+	//void hw_Render_dump(ref_constant array, u32 var_id, u32 lod_id, u32 c_base);
+	void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id);
 
   public:
 	// get unpacked slot

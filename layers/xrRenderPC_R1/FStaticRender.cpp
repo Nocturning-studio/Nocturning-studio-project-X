@@ -181,8 +181,8 @@ void CRender::OnFrame()
 	if (ps_render_flags.test(RFLAG_EXP_MT_CALC))
 	{
 		// MT-details (@front)
-		//Device.seqParallel.insert(Device.seqParallel.begin(),
-		//						  fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+		Device.seqParallel.insert(Device.seqParallel.begin(),
+								  fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 
 		// MT-HOM (@front)
 		Device.seqParallel.insert(Device.seqParallel.begin(), fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
@@ -779,6 +779,9 @@ void CRender::Render()
 	r_dsgraph_render_graph(0); // normal level
 	//r_dsgraph_render_lods(true, false); // lods - FB
 	//r_dsgraph_render_lods(true, true); // lods - FB
+
+	if (Details)
+		Details->Render();							 // grass / details
 
 	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
 	g_pGamePersistent->Environment().RenderClouds(); // clouds

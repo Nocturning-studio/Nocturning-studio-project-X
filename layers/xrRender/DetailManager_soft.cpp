@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "detailmanager.h"
-
+/*
 const u32 vs_size = 3000;
 
 void CDetailManager::soft_Load()
@@ -149,7 +149,7 @@ void CDetailManager::soft_Render()
 		_vis.clear_not_free();
 	}
 }
-
+*/
 /*
 //.
 				VERIFY(sizeof(CDetail::fvfVertexOut)==soft_Geom->vb_stride);
