@@ -27,10 +27,10 @@ ShaderElement* CRender::rimp_select_sh_dynamic(IRender_Visual* pVisual, float cd
 		return (RImplementation.L_Projector->shadowing() ? pVisual->shader->E[SE_R1_NORMAL_HQ]
 														 : pVisual->shader->E[SE_R1_NORMAL_LQ])
 			._get();
-	//case PHASE_POINT:
-	//	return pVisual->shader->E[SE_R1_LPOINT]._get();
-	//case PHASE_SPOT:
-	//	return pVisual->shader->E[SE_R1_LSPOT]._get();
+	case PHASE_POINT:
+		return pVisual->shader->E[SE_R1_LPOINT]._get();
+	case PHASE_SPOT:
+		return pVisual->shader->E[SE_R1_LSPOT]._get();
 	default:
 		NODEFAULT;
 	}
@@ -47,10 +47,10 @@ ShaderElement* CRender::rimp_select_sh_static(IRender_Visual* pVisual, float cdi
 		return (((_sqrt(cdist_sq) - pVisual->vis.sphere.R) < 44) ? pVisual->shader->E[SE_R1_NORMAL_HQ]
 																 : pVisual->shader->E[SE_R1_NORMAL_LQ])
 			._get();
-	//case PHASE_POINT:
-	//	return pVisual->shader->E[SE_R1_LPOINT]._get();
-	//case PHASE_SPOT:
-	//	return pVisual->shader->E[SE_R1_LSPOT]._get();
+	case PHASE_POINT:
+		return pVisual->shader->E[SE_R1_LPOINT]._get();
+	case PHASE_SPOT:
+		return pVisual->shader->E[SE_R1_LSPOT]._get();
 	default:
 		NODEFAULT;
 	}
@@ -477,6 +477,9 @@ void CRender::Calculate()
 
 	Device.Statistic->RenderCALC.Begin();
 
+	// priority 0, 1, wmarks
+	//r_pmask(true, true);
+
 	// Transfer to global space to avoid deep pointer access
 	IRender_Target* T = getTarget();
 	float fov_factor = _sqr(90.f / Device.fFOV);
@@ -603,7 +606,7 @@ void CRender::Calculate()
 							// It may be an glow
 							CGlow* glow = dynamic_cast<CGlow*>(spatial);
 							VERIFY(glow);
-							//L_Glows->add(glow);
+							L_Glows->add(glow);
 						}
 						else
 						{
@@ -799,8 +802,6 @@ void CRender::Render()
 
 	r_dsgraph_render_hud(); // hud
 	r_dsgraph_render_graph(0); // normal level
-	//r_dsgraph_render_lods(true, false); // lods - FB
-	//r_dsgraph_render_lods(true, true); // lods - FB
 
 	if (Details)
 		Details->Render();							 // grass / details
@@ -814,7 +815,7 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	//L_Dynamic->render(); // addititional light sources
+	L_Dynamic->render(); // addititional light sources
 
 	//if (Wallmarks)
 	//{
@@ -835,9 +836,9 @@ void CRender::Render()
 
 	r_dsgraph_render_lods(false, true); // lods - FB
 
-	lstLODs.clear();
-	lstLODgroups.clear();
-	mapLOD.clear();
+	//lstLODs.clear();
+	//lstLODgroups.clear();
+	//mapLOD.clear();
 
 	r_dsgraph_render_graph(1); // normal level, secondary priority
 
@@ -845,8 +846,8 @@ void CRender::Render()
 
 	r_dsgraph_render_sorted();			// strict-sorted geoms
 
-	//if (L_Glows)
-	//	L_Glows->Render(); // glows
+	if (L_Glows)
+		L_Glows->Render(); // glows
 
 	g_pGamePersistent->Environment().RenderFlares(); // lens-flares
 	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
