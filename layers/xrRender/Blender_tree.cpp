@@ -107,14 +107,14 @@ void CBlender_Tree::Compile(CBlender_Compile& C)
 	case SE_R1_LPOINT:
 		C.r_Pass((oNotAnTree.value) ? "tree_s_point" : "tree_w_point", "add_point", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler("s_base", C.L_textures[0]);
-		C.r_Sampler_clf("s_lmap", TEX_POINT_ATT);
+		C.r_Sampler_clf("s_lmap_l", TEX_POINT_ATT);
 		C.r_Sampler_clf("s_att", TEX_POINT_ATT);
 		C.r_End();
 		break;
 	case SE_R1_LSPOT:
 		C.r_Pass((oNotAnTree.value) ? "tree_s_spot" : "tree_w_spot", "add_spot", FALSE, TRUE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		C.r_Sampler("s_base", C.L_textures[0]);
-		C.r_Sampler_clf("s_lmap", "internal\\internal_light_att", true);
+		C.r_Sampler_clf("s_lmap_l", "internal\\internal_light_att", true);
 		C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
 		C.r_End();
 		break;
