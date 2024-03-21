@@ -155,8 +155,21 @@ void CRender::destroy()
 	r_dsgraph_destroy();
 }
 
+extern u32 reset_frame;
+extern bool detail_opt_changed;
 void CRender::reset_begin()
 {
+	reset_frame = Device.dwFrame;
+
+	// AVO: let's reload details while changed details options on vid_restart
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r_Detail_density != ps_current_detail_density)) ||
+		detail_opt_changed)
+	{
+		detail_opt_changed = false;
+		Details->Unload();
+		xr_delete(Details);
+	}
+
 	xr_delete(Target);
 	//HWOCC.occq_destroy			();
 }
@@ -169,6 +182,15 @@ void CRender::reset_end()
 	Target = xr_new<CRenderTarget>();
 	if (L_Projector)
 		L_Projector->invalidate();
+
+	// AVO: let's reload details while changed details options on vid_restart
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r_Detail_density != ps_current_detail_density)))
+	{
+		Details = xr_new<CDetailManager>();
+		Details->Load();
+	}
+	//-AVO
+
 	// Set this flag true to skip the first render frame,
 	// that some data is not ready in the first frame (for example device camera position)
 	m_bFirstFrameAfterReset = true;

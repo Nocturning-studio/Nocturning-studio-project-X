@@ -135,6 +135,20 @@ float ps_r_Detail_l_ambient = 0.9f;
 float ps_r_Detail_l_aniso = 0.25f;
 float ps_r_Detail_density = 0.3f;
 
+int ps_r__detail_radius = 49;
+u32 dm_size = 24;
+u32 dm_cache1_line = 12;  // dm_size*2/dm_cache1_count
+u32 dm_cache_line = 49;	  // dm_size+1+dm_size
+u32 dm_cache_size = 2401; // dm_cache_line*dm_cache_line
+float dm_fade = 47.5;	  // float(2*dm_size)-.5f;
+u32 dm_current_size = 24;
+u32 dm_current_cache1_line = 12;  // dm_current_size*2/dm_cache1_count
+u32 dm_current_cache_line = 49;	  // dm_current_size+1+dm_current_size
+u32 dm_current_cache_size = 2401; // dm_current_cache_line*dm_current_cache_line
+float dm_current_fade = 47.5;	  // float(2*dm_current_size)-.5f;
+float ps_current_detail_density = 0.6;
+float ps_current_detail_scale = 1.f;
+
 float ps_r_Tree_w_rot = 10.0f;
 float ps_r_Tree_w_speed = 1.00f;
 float ps_r_Tree_w_amp = 0.005f;
@@ -485,6 +499,43 @@ class CCC_EffPreset : public CCC_Token
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////
+class CCC_detail_radius : public CCC_Integer
+{
+  public:
+	void apply()
+	{
+		dm_current_size = iFloor((float)ps_r__detail_radius / 4) * 2;
+		dm_current_cache1_line = dm_current_size * 2 / 4; // assuming cache1_count = 4
+		dm_current_cache_line = dm_current_size + 1 + dm_current_size;
+		dm_current_cache_size = dm_current_cache_line * dm_current_cache_line;
+		dm_current_fade = float(2 * dm_current_size) - .5f;
+	}
+	CCC_detail_radius(LPCSTR N, int* V, int _min = 0, int _max = 999) : CCC_Integer(N, V, _min, _max){};
+	virtual void Execute(LPCSTR args)
+	{
+		CCC_Integer::Execute(args);
+		apply();
+	}
+	virtual void Status(TStatus& S)
+	{
+		CCC_Integer::Status(S);
+	}
+};
+bool detail_opt_changed = false;
+class CCC_detail_opt : public CCC_Mask
+{
+  public:
+	CCC_detail_opt(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M)
+	{
+	}
+	void Execute(LPCSTR args)
+	{
+		CCC_Mask::Execute(args);
+		detail_opt_changed = true;
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////////
 #if RENDER == R_R2
 ///////////////////////////////////////////////////////////////////////////////////
 #include "r_pixel_calculator.h"
@@ -673,10 +724,15 @@ void xrRender_initconsole()
 
 	CMD4(CCC_Float, "r_geometry_lod", &ps_r_LOD, 0.1f, 1.2f);
 
-	CMD4(CCC_Float, "r_detail_density", &ps_r_Detail_density, .2f, 0.6f);
+	//CMD4(CCC_Float, "r_detail_density", &ps_r_Detail_density, .2f, 0.6f);
 
 	CMD4(CCC_Float, "r_detail_l_ambient", &ps_r_Detail_l_ambient, .5f, .95f);
 	CMD4(CCC_Float, "r_detail_l_aniso", &ps_r_Detail_l_aniso, .1f, .5f);
+
+	CMD4(CCC_Float, "r_detail_density", &ps_current_detail_density, 0.1f, 1.0f);
+	CMD4(CCC_Float, "r_detail_scale", &ps_current_detail_scale, 0.2f, 3.0f);
+	CMD4(CCC_detail_radius, "r_detail_radius", &ps_r__detail_radius, 32, 256);
+	CMD3(CCC_Mask, "r_detail_dx11_opt", &ps_render_flags, RFLAG_DETAILS_DX11_OPT);
 
 	CMD4(CCC_Float, "r_d_tree_w_amp", &ps_r_Tree_w_amp, .001f, 1.f);
 	CMD4(CCC_Float, "r_d_tree_w_rot", &ps_r_Tree_w_rot, .01f, 100.f);

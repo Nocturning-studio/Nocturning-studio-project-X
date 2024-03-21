@@ -17,15 +17,35 @@ const int dm_max_decompress = 14;
 const int dm_max_decompress = 7;
 #endif
 
-const int dm_size = 24;
-const int dm_cache1_count = 4;							  //
-const int dm_cache1_line = dm_size * 2 / dm_cache1_count; //! dm_size*2 must be div dm_cache1_count
+//const int dm_size = 24;
+//const int dm_cache1_count = 4;							  //
+//const int dm_cache1_line = dm_size * 2 / dm_cache1_count; //! dm_size*2 must be div dm_cache1_count
+//const int dm_max_objects = 64;
+//const int dm_obj_in_slot = 4;
+//const int dm_cache_line = dm_size + 1 + dm_size;
+//const int dm_cache_size = dm_cache_line * dm_cache_line;
+//const float dm_fade = float(2 * dm_size) - .5f;
+//const float dm_slot_size = DETAIL_SLOT_SIZE;
+
+const int dm_cache1_count = 4; //
 const int dm_max_objects = 64;
 const int dm_obj_in_slot = 4;
-const int dm_cache_line = dm_size + 1 + dm_size;
-const int dm_cache_size = dm_cache_line * dm_cache_line;
-const float dm_fade = float(2 * dm_size) - .5f;
+
 const float dm_slot_size = DETAIL_SLOT_SIZE;
+
+const u32 dm_max_cache_size = 65535 * 4; // assuming max dm_size = 256
+extern u32 dm_size;
+extern u32 dm_cache1_line;
+extern u32 dm_cache_line;
+extern u32 dm_cache_size;
+extern float dm_fade;
+extern u32 dm_current_size;		   //				= iFloor((float)ps_r__detail_radius/4)*2;				//!
+extern u32 dm_current_cache1_line; //		= dm_current_size*2/dm_cache1_count;		//! dm_current_size*2 must be div
+								   //dm_cache1_count
+extern u32 dm_current_cache_line;  //		= dm_current_size+1+dm_current_size;
+extern u32 dm_current_cache_size;  //		= dm_current_cache_line*dm_current_cache_line;
+extern float dm_current_fade;	   //				= float(2*dm_current_size)-.5f;
+extern float ps_current_detail_density;
 
 class CDetailManager
 {
@@ -124,10 +144,15 @@ class CDetailManager
 #ifndef _EDITOR
 	xrXRC xrc;
 #endif
-	CacheSlot1 cache_level1[dm_cache1_line][dm_cache1_line];
-	Slot* cache[dm_cache_line][dm_cache_line]; // grid-cache itself
-	svector<Slot*, dm_cache_size> cache_task;  // non-unpacked slots
-	Slot cache_pool[dm_cache_size];			   // just memory for slots
+	// CacheSlot1 						cache_level1[dm_cache1_line][dm_cache1_line];
+	// Slot*							cache		[dm_cache_line][dm_cache_line];	// grid-cache itself
+	// svector<Slot*,dm_cache_size>	cache_task;									// non-unpacked slots
+	// Slot							cache_pool	[dm_cache_size];				// just memory for slots
+	CacheSlot1** cache_level1;
+	Slot*** cache;								  // grid-cache itself
+	svector<Slot*, dm_max_cache_size> cache_task; // non-unpacked slots
+	Slot* cache_pool;							  // just memory for slots
+
 	int cache_cx;
 	int cache_cz;
 

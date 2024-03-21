@@ -39,15 +39,22 @@ short QC(float v)
 
 void CDetailManager::hw_Load()
 {
-	// max vs_4_0 vertex shader constant buffer element slots
-	u32 registers = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+	// DX9 max vs_3_0 constant slots
+	// (256 - 13) / 4 = 60 elements with 1 draw call
+	u32 registers = 256;
+
+	// max vs_4_0 vertex shader constant buffer element slots = 4096
+	// (4096 - 13) / 4 = 1020 elements with 1 draw call
+	if (ps_render_flags.test(RFLAG_DETAILS_DX11_OPT))
+		registers = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+
 	u32 size_consts = 3;
 
 	// Analyze batch-size
 	//hw_BatchSize = (u32(HW.Caps.geometry.dwRegisters) - c_hdr) / c_size;
 	hw_BatchSize = (registers - c_hdr - size_consts) / c_size;
-	clamp(hw_BatchSize, (u32)0, (u32)64);
-	Msg("* [DETAILS] VertexConsts(%d), Batch(%d)", u32(HW.Caps.geometry.dwRegisters), hw_BatchSize);
+	//clamp(hw_BatchSize, (u32)0, (u32)64);
+	Msg("* [DETAILS] VertexConsts(%d), Batch(%d)", registers, hw_BatchSize);
 
 	// Pre-process objects
 	u32 dwVerts = 0;
@@ -335,7 +342,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 				RCache.stat.r.s_details.add(dwCNT_verts);
 			}
 			// Clean up
-			vis.clear_not_free();
+			//vis.clear_not_free();
 		}
 		vOffset += hw_BatchSize * Object.number_vertices;
 		iOffset += hw_BatchSize * Object.number_indices;

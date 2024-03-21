@@ -74,10 +74,54 @@ CDetailManager::CDetailManager()
 	hw_BatchSize = 0;
 	hw_VB = 0;
 	hw_IB = 0;
+
+	// KD: variable detail radius
+	dm_size = dm_current_size;
+	dm_cache_line = dm_current_cache_line;
+	dm_cache1_line = dm_current_cache1_line;
+	dm_cache_size = dm_current_cache_size;
+	dm_fade = dm_current_fade;
+	ps_r_Detail_density = ps_current_detail_density;
+	cache_level1 = (CacheSlot1**)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1*));
+	for (u32 i = 0; i < dm_cache1_line; ++i)
+	{
+		cache_level1[i] = (CacheSlot1*)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1));
+		for (u32 j = 0; j < dm_cache1_line; ++j)
+			new (&(cache_level1[i][j])) CacheSlot1();
+	}
+
+	cache = (Slot***)Memory.mem_alloc(dm_cache_line * sizeof(Slot**));
+	for (u32 i = 0; i < dm_cache_line; ++i)
+		cache[i] = (Slot**)Memory.mem_alloc(dm_cache_line * sizeof(Slot*));
+
+	cache_pool = (Slot*)Memory.mem_alloc(dm_cache_size * sizeof(Slot));
+	for (u32 i = 0; i < dm_cache_size; ++i)
+		new (&(cache_pool[i])) Slot();
 }
 
 CDetailManager::~CDetailManager()
 {
+	if (dtFS)
+	{
+		FS.r_close(dtFS);
+		dtFS = NULL;
+	}
+
+	for (u32 i = 0; i < dm_cache_size; ++i)
+		cache_pool[i].~Slot();
+	Memory.mem_free(cache_pool);
+
+	for (u32 i = 0; i < dm_cache_line; ++i)
+		Memory.mem_free(cache[i]);
+	Memory.mem_free(cache);
+
+	for (u32 i = 0; i < dm_cache1_line; ++i)
+	{
+		for (u32 j = 0; j < dm_cache1_line; ++j)
+			cache_level1[i][j].~CacheSlot1();
+		Memory.mem_free(cache_level1[i]);
+	}
+	Memory.mem_free(cache_level1);
 }
 /*
  */
@@ -179,10 +223,34 @@ extern ECORE_API float r_ssaDISCARD;
 
 void CDetailManager::UpdateVisibleM()
 {
-	Fvector EYE = Device.vCameraPosition;
+	// Clean up
+	// for (vis_list& vec : m_visibles)
+	//	for (xr_vector<SlotItemVec*>& vis : vec)
+	//		vis.clear_not_free();
+
+	vis_list& list = m_visibles[0];
+	for (u32 i = 0; i < 3; ++i)
+		for (u32 j = 0; j < m_visibles[i].size(); ++j)
+			m_visibles[i][j].clear_not_free();
+
+	/*Fvector		EYE = RDEVICE.vCameraPosition_saved;
+
+	CFrustum	View;
+	View.CreateFromMatrix		(RDEVICE.mFullTransform_saved, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+
+	CFrustum	View_old;
+	Fmatrix		Viewm_old = RDEVICE.mFullTransform;
+	View_old.CreateFromMatrix		(Viewm_old, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+
+	float fade_limit			= dm_fade;	fade_limit=fade_limit*fade_limit;
+	float fade_start			= 1.f;		fade_start=fade_start*fade_start;
+	float fade_range			= fade_limit-fade_start;
+	float		r_ssaCHEAP		= 16*r_ssaDISCARD;*/
+
+	Fvector EYE = Device.vCameraPosition_saved;
 
 	CFrustum View;
-	View.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+	View.CreateFromMatrix(Device.mFullTransform_saved, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 
 	float fade_limit = dm_fade;
 	fade_limit = fade_limit * fade_limit;
@@ -200,20 +268,32 @@ void CDetailManager::UpdateVisibleM()
 		{
 			CacheSlot1& MS = cache_level1[_mz][_mx];
 			if (MS.empty)
+			{
 				continue;
+			}
 			u32 mask = 0xff;
 			u32 res = View.testSAABB(MS.vis.sphere.P, MS.vis.sphere.R, MS.vis.box.data(), mask);
 			if (fcvNone == res)
+			{
 				continue; // invisible-view frustum
+			}
 			// test slots
-			for (int _i = 0; _i < dm_cache1_count * dm_cache1_count; _i++)
+
+			u32 dwCC = dm_cache1_count * dm_cache1_count;
+
+			for (u32 _i = 0; _i < dwCC; _i++)
 			{
 				Slot* PS = *MS.slots[_i];
 				Slot& S = *PS;
 
+				//				if ( ( _i + 1 ) < dwCC );
+				//					_mm_prefetch( (char *) *MS.slots[ _i + 1 ]  , _MM_HINT_T1 );
+
 				// if slot empty - continue
 				if (S.empty)
+				{
 					continue;
+				}
 
 				// if upper test = fcvPartial - test inner slots
 				if (fcvPartial == res)
@@ -221,11 +301,15 @@ void CDetailManager::UpdateVisibleM()
 					u32 _mask = mask;
 					u32 _res = View.testSAABB(S.vis.sphere.P, S.vis.sphere.R, S.vis.box.data(), _mask);
 					if (fcvNone == _res)
+					{
 						continue; // invisible-view frustum
+					}
 				}
 #ifndef _EDITOR
 				if (!RImplementation.HOM.visible(S.vis))
+				{
 					continue; // invisible-occlusion
+				}
 #endif
 				// Add to visibility structures
 				if (Device.dwFrame > S.frame)
@@ -256,10 +340,17 @@ void CDetailManager::UpdateVisibleM()
 						for (; siIT != siEND; siIT++)
 						{
 							SlotItem& Item = *(*siIT);
-							float scale = Item.scale_calculated = Item.scale * alpha_i;
-							float ssa = scale * scale * Rq_drcp;
+							// float   scale			= Item.scale_calculated	= Item.scale*alpha_i;
+							// float	ssa				= scale*scale*Rq_drcp;
+							//float scale = ps_no_scale_on_fade ? (Item.scale_calculated = Item.scale)
+							//								  : (Item.scale_calculated = Item.scale * alpha_i);
+							Item.scale_calculated = Item.scale * alpha_i;
+							//float ssa = ps_no_scale_on_fade ? scale : scale * scale * Rq_drcp;
+							float ssa = Item.scale_calculated * Item.scale_calculated * Rq_drcp;
 							if (ssa < r_ssaDISCARD)
+							{
 								continue;
+							}
 							u32 vis_id = 0;
 							if (ssa > r_ssaCHEAP)
 								vis_id = Item.vis_ID;
@@ -276,11 +367,17 @@ void CDetailManager::UpdateVisibleM()
 					if (sp.id == DetailSlot::ID_Empty)
 						continue;
 					if (!sp.r_items[0].empty())
+					{
 						m_visibles[0][sp.id].push_back(&sp.r_items[0]);
+					}
 					if (!sp.r_items[1].empty())
+					{
 						m_visibles[1][sp.id].push_back(&sp.r_items[1]);
+					}
 					if (!sp.r_items[2].empty())
+					{
 						m_visibles[2][sp.id].push_back(&sp.r_items[2]);
+					}
 				}
 			}
 		}
@@ -316,22 +413,26 @@ void CDetailManager::Render()
 	m_frame_rendered = Device.dwFrame;
 }
 
+u32 reset_frame = 0;
 void __stdcall CDetailManager::MT_CALC()
 {
-#ifndef _EDITOR
-	if (0 == RImplementation.Details)
+	if (reset_frame == Device.dwFrame)
+		return;
+	if (!RImplementation.Details)
 		return; // possibly deleted
-	if (0 == dtFS)
+	if (!dtFS)
 		return;
 	if (!psDeviceFlags.is(rsDetails))
 		return;
-#endif
+	if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive())
+		return;
 
 	MT.Enter();
 	if (m_frame_calc != Device.dwFrame)
 		if ((m_frame_rendered + 1) == Device.dwFrame) // already rendered
 		{
-			Fvector EYE = Device.vCameraPosition;
+			Fvector EYE = Device.vCameraPosition_saved;
+
 			int s_x = iFloor(EYE.x / dm_slot_size + .5f);
 			int s_z = iFloor(EYE.z / dm_slot_size + .5f);
 
