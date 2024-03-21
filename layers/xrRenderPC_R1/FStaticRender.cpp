@@ -458,11 +458,23 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 	return d1 < d2;
 }
 
+extern bool ENGINE_API g_menu;
 void CRender::Calculate()
 {
-	//Msg("mapNormal[0]: %d", mapNormal[0].size());
-	//Msg("mapNormal[1]: %d", mapNormal[1].size());
-	
+	//Msg("--------------------------------------");
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	Msg("- mapNormal[%d]: %d", i, mapNormal[i].size());
+	//}
+	//Msg("- mapSorted: %d", mapSorted.size());
+	//Msg("- mapHUD: %d", mapHUD.size());
+	//Msg("- mapLOD: %d", mapLOD.size());
+	//Msg("- mapDistort: %d", mapDistort.size());
+
+	// if we in the menu do not render objects and lights!!!
+	if (g_menu)
+		return;
+
 	Device.Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
@@ -683,9 +695,18 @@ void CRender::rmNormal()
 	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
-extern bool ENGINE_API g_menu;
 void CRender::RenderMenu()
 {
+	//Msg("--------------------------------------");
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	Msg("- mapNormal[%d]: %d", i, mapNormal[i].size());
+	//}
+	//Msg("- mapSorted: %d", mapSorted.size());
+	//Msg("- mapHUD: %d", mapHUD.size());
+	//Msg("- mapLOD: %d", mapLOD.size());
+	//Msg("- mapDistort: %d", mapDistort.size());
+
 	R_ASSERT(Target->RT->pRT);
 	R_ASSERT(Target->RT_distort->pRT);
 
@@ -711,6 +732,7 @@ void CRender::RenderMenu()
 		RCache.set_RT(Target->RT_distort->pRT);
 		HW.pContext->ClearRenderTargetView(Target->RT_distort->pRT, ColorRGBA);
 		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
+		mapDistort.clear();// clear distort map
 	}
 
 	// Actual Display
@@ -831,6 +853,9 @@ void CRender::Render()
 
 	// Postprocess, if necessary
 	//Target->End();
+
+	
+	mapDistort.clear(); // clear distort map
 
 	if (L_Projector)
 		L_Projector->finalize();
