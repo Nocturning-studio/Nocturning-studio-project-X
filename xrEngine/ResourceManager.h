@@ -193,6 +193,7 @@ class ENGINE_API CResourceManager
 	}
 	void DeferredUpload();
 	void DeferredUnload();
+	void DeferredUnloadLevelTextures(LPCSTR level_name);
 	void Evict();
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();
