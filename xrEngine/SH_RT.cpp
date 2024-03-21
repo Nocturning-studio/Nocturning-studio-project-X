@@ -85,13 +85,15 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 _bind_flags, u32 
 		desc.SampleDesc.Quality = UINT(D3D11_STANDARD_MULTISAMPLE_PATTERN);
 
 	// Create Texture2D
-	CHK_DX(HW.pDevice11->CreateTexture2D(&desc, NULL, &pSurface));
+	HW.pDevice11->CreateTexture2D(&desc, NULL, &pSurface);
+	R_ASSERT(pSurface);
 	//HW.stats_manager.increment_stats_rtarget(pSurface);
 
 	// Create rendertarget view
 	if (bind_flags & fRT)
 	{
-		CHK_DX(HW.pDevice11->CreateRenderTargetView(pSurface, NULL, &pRT));
+		HW.pDevice11->CreateRenderTargetView(pSurface, NULL, &pRT);
+		R_ASSERT(pRT);
 	}
 
 	// Create depth stencil view
@@ -109,7 +111,8 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 _bind_flags, u32 
 			depthstencil.Texture2DMS.UnusedField_NothingToDefine = 0;
 		}
 
-		CHK_DX(HW.pDevice11->CreateDepthStencilView(pSurface, &depthstencil, &pZRT));
+		HW.pDevice11->CreateDepthStencilView(pSurface, &depthstencil, &pZRT);
+		R_ASSERT(pZRT);
 	}
 
 	// Create unordered acces view
@@ -121,7 +124,8 @@ void CRT::create(LPCSTR name, u32 w, u32 h, DXGI_FORMAT f, u32 _bind_flags, u32 
 		unorderedacces.Buffer.FirstElement = 0;
 		unorderedacces.Buffer.NumElements = dwWidth * dwHeight;
 
-		CHK_DX(HW.pDevice11->CreateUnorderedAccessView(pSurface, &unorderedacces, &pUAView));
+		HW.pDevice11->CreateUnorderedAccessView(pSurface, &unorderedacces, &pUAView);
+		R_ASSERT(pUAView);
 	}
 
 	pTexture = Device.Resources->_CreateTexture(name);

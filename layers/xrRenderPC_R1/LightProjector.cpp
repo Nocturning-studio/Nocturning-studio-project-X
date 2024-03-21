@@ -12,7 +12,6 @@
 const float P_distance = 50; // switch distance between LOW-q light and HIGH-q light
 const float P_cam_dist = 200;
 const float P_cam_range = 7.f;
-const D3DFORMAT P_rtf = D3DFMT_A8R8G8B8;
 const float P_blur_kernel = .5f;
 const int time_min = 30 * 1000;
 const int time_max = 90 * 1000;
@@ -31,10 +30,11 @@ CLightProjector::CLightProjector()
 {
 	current = 0;
 	RT = 0;
+	ZB = 0;
 
 	//
-#pragma message(Reminder("fix light projectors"))
-	//RT.create("$user$projector", P_rt_size, P_rt_size, P_rtf);
+	RT.create("$user$projector", P_rt_size, P_rt_size, (DXGI_FORMAT)HW.Caps.fTarget, fRT | fSR);
+	ZB.create("$user$projector_depth", P_rt_size, P_rt_size, (DXGI_FORMAT)HW.Caps.fDepth, fDS | fSR);
 
 	// ref-str for faster const-search
 	c_xform = "m_plmap_xform";
@@ -49,6 +49,7 @@ CLightProjector::~CLightProjector()
 {
 	Device.seqAppActivate.Remove(this);
 	RT.destroy();
+	ZB.destroy();
 }
 
 void CLightProjector::set_object(IRenderable* O)
@@ -180,10 +181,10 @@ void CLightProjector::calculate()
 
 	// Begin
 	Device.Statistic->RenderDUMP_Pcalc.Begin();
-#pragma message(Reminder("fix light projectors"))
-	//RCache.set_RT(RT->pRT);
-	//RCache.set_ZB(RImplementation.Target->pTempZB);
+	RCache.set_RT(RT->pRT);
+	RCache.set_ZB(ZB->pZRT);
 	//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_ZBUFFER | (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0), 0, 1, 0));
+	RImplementation.Target->ClearZB(ZB->pZRT, D3DCLEAR_ZBUFFER);
 	RCache.set_xform_world(Fidentity);
 
 	// reallocate/reassociate structures + perform all the work
@@ -284,15 +285,16 @@ void CLightProjector::calculate()
 		// Select slot, set viewport
 		int s_x = c_it % P_o_line;
 		int s_y = c_it / P_o_line;
-		D3DVIEWPORT9 VP = {s_x * P_o_size, s_y * P_o_size, P_o_size, P_o_size, 0, 1};
-#pragma message(Reminder("fix light projectors"))
+		//D3DVIEWPORT9 VP = {s_x * P_o_size, s_y * P_o_size, P_o_size, P_o_size, 0, 1};
 		//CHK_DX(HW.pDevice->SetViewport(&VP));
+		D3D11_VIEWPORT VP = {s_x * P_o_size, s_y * P_o_size, P_o_size, P_o_size, 0, 1};
+		HW.pContext->RSSetViewports(1, &VP);
 
 		// Clear color to ambience
 		Fvector& cap = LT->get_approximate();
-#pragma message(Reminder("fix light projectors"))
 		//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET,
 			//					 color_rgba_f(cap.x, cap.y, cap.z, (cap.x + cap.y + cap.z) / 4.f), 1, 0));
+		RImplementation.Target->ClearRT(RT->pRT);
 
 		// calculate uv-gen matrix and clamper
 		Fmatrix mCombine;

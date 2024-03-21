@@ -102,7 +102,8 @@ void CTexture::surface_set(ID3D11Resource* surf)
 				break;
 			}
 
-			CHK_DX(HW.pDevice11->CreateShaderResourceView(pSurface, &ViewDesc, &m_pSRView));
+			HW.pDevice11->CreateShaderResourceView(pSurface, &ViewDesc, &m_pSRView);
+			R_ASSERT(m_pSRView);
 		}
 		else
 			CHK_DX(HW.pDevice11->CreateShaderResourceView(pSurface, NULL, &m_pSRView));
