@@ -287,6 +287,10 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 					c_storage[base + 1].set(M._12 * scale, M._22 * scale, M._32 * scale, M._42);
 					c_storage[base + 2].set(M._13 * scale, M._23 * scale, M._33 * scale, M._43);
 
+					float dist = Device.vCameraPosition.distance_to((*_iI)->mRotY.c);
+					//if (dist > 15)
+					//	continue;
+
 					// Build color
 #if RENDER == R_R1
 					Fvector C;
