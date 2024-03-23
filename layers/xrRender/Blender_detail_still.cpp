@@ -55,8 +55,8 @@ void CBlender_Detail_Still::Compile(CBlender_Compile& C)
 		break;
 	case SE_R1_LSPOT:
 		break;
-	//case SE_R1_LMODELS:
-	//	break;
+	case SE_R1_LMODELS:
+		break;
 	}
 
 }

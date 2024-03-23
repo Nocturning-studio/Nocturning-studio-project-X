@@ -118,12 +118,12 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 			C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
 			C.r_End();
 			break;
-		//case SE_R1_LMODELS:
-		//	C.r_Pass("impl_l", "impl_l", FALSE);
-		//	C.r_Sampler("s_base", C.L_textures[0]);
-		//	C.r_Sampler("s_lmap", C.L_textures[1]);
-		//	C.r_End();
-		//	break;
+		case SE_R1_LMODELS:
+			C.r_Pass("impl_l", "impl_l", FALSE);
+			C.r_Sampler("s_base", C.L_textures[0]);
+			C.r_Sampler("s_lmap", C.L_textures[1]);
+			C.r_End();
+			break;
 		}
 
 }

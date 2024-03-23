@@ -108,13 +108,13 @@ void CBlender_default_aref::Compile(CBlender_Compile& C)
 			C.r_End();
 		}
 		break;
-	//case SE_R1_LMODELS:
-	//	C.r_Pass("lmap_l", "lmap_l", FALSE);
-	//	C.r_Sampler("s_base", C.L_textures[0]);
-	//	C.r_Sampler("s_lmap", C.L_textures[1]);
-	//	C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
-	//	C.r_End();
-	//	break;
+	case SE_R1_LMODELS:
+		C.r_Pass("lmap_l", "lmap_l", FALSE);
+		C.r_Sampler("s_base", C.L_textures[0]);
+		C.r_Sampler("s_lmap", C.L_textures[1]);
+		C.r_Sampler_clf("s_hemi", *C.L_textures[2]);
+		C.r_End();
+		break;
 	}
 
 }

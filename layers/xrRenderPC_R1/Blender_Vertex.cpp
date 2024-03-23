@@ -71,11 +71,11 @@ void CBlender_Vertex::Compile(CBlender_Compile& C)
 			C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
 			C.r_End();
 			break;
-		//case SE_R1_LMODELS:
-		//	// Lighting only
-		//	C.r_Pass("vert_l", "vert_l", FALSE);
-		//	C.r_Sampler("s_base", C.L_textures[0]);
-		//	C.r_End();
-		//	break;
+		case SE_R1_LMODELS:
+			// Lighting only
+			C.r_Pass("vert_l", "vert_l", FALSE);
+			C.r_Sampler("s_base", C.L_textures[0]);
+			C.r_End();
+			break;
 		}
 }
