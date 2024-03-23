@@ -443,8 +443,11 @@ void CHW::CreateDevice(HWND m_hWnd)
 									  GPU | D3DCREATE_MULTITHREADED, //. ? locks at present
 									  &P, &pDevice);*/
 
-	UINT createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
-	
+	UINT createDeviceFlags = 0;
+#if defined RELEASE_NOOPT || defined DEBUG
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
 	HRESULT R;
 	D3D_FEATURE_LEVEL levels[] = {
 		D3D_FEATURE_LEVEL_11_0,
