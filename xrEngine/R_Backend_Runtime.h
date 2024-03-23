@@ -407,7 +407,8 @@ IC void CBackend::set_Scissor(Irect* R)
 	if (R)
 	{
 		// CHK_DX		(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE,TRUE));
-		StateManager.EnableScissoring();
+		StateManager.EnableScissoring(TRUE);
+		StateManager.OverrideScissoring(TRUE, TRUE);
 		RECT* clip = (RECT*)R;
 		HW.pContext->RSSetScissorRects(1, clip);
 	}
@@ -415,6 +416,7 @@ IC void CBackend::set_Scissor(Irect* R)
 	{
 		// CHK_DX		(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE,FALSE));
 		StateManager.EnableScissoring(FALSE);
+		StateManager.OverrideScissoring(FALSE, FALSE);
 		HW.pContext->RSSetScissorRects(0, 0);
 	}
 }
