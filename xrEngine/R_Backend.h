@@ -74,6 +74,8 @@ class ENGINE_API CBackend
 	_IndexStream Index;
 	ID3D11Buffer* QuadIB;
 	ID3D11Buffer* old_QuadIB;
+	ID3D11Buffer* TriangleFanIB;
+	ID3D11Buffer* old_TriangleFanIB;
 	ID3D11Buffer* CuboidIB;
 	R_xforms xforms;
 	R_hemi hemi;
@@ -425,6 +427,7 @@ class ENGINE_API CBackend
 	// Device create / destroy / frame signaling
 	void RestoreQuadIBData(); // Igor: is used to test bug with rain, particles corruption
 	void CreateQuadIB();
+	void CreateTriangleFanIB();
 	void OnFrameBegin();
 	void OnFrameEnd();
 	void OnDeviceCreate();

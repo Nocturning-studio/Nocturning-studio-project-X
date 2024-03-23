@@ -21,8 +21,10 @@ void CResourceManager::reset_begin()
 
 	// destroy DStreams
 	RCache.old_QuadIB = RCache.QuadIB;
+	RCache.old_TriangleFanIB = RCache.TriangleFanIB;
 	//HW.stats_manager.decrement_stats_ib(RCache.QuadIB);
 	_RELEASE(RCache.QuadIB);
+	_RELEASE(RCache.TriangleFanIB);
 
 	RCache.Index.reset_begin();
 	RCache.Vertex.reset_begin();
@@ -41,6 +43,7 @@ void CResourceManager::reset_end()
 	RCache.Index.reset_end();
 	Evict();
 	RCache.CreateQuadIB();
+	RCache.CreateTriangleFanIB();
 
 	// remark geom's which point to dynamic VB/IB
 	{
@@ -60,6 +63,10 @@ void CResourceManager::reset_end()
 			else if (_G->ib == RCache.old_QuadIB)
 			{
 				_G->ib = RCache.QuadIB;
+			}
+			else if (_G->ib == RCache.old_TriangleFanIB)
+			{
+				_G->ib = RCache.TriangleFanIB;
 			}
 		}
 	}

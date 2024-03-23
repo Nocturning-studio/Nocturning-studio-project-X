@@ -275,7 +275,7 @@ IC D3D_PRIMITIVE_TOPOLOGY TranslateTopology(D3DPRIMITIVETYPE T)
 		D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,	  //	D3DPT_LINESTRIP = 3,
 		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,  //	D3DPT_TRIANGLELIST = 4,
 		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, //	D3DPT_TRIANGLESTRIP = 5,
-		D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,	  //	D3DPT_TRIANGLEFAN = 6,
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,  //	D3DPT_TRIANGLEFAN = 6,
 	};
 
 	VERIFY(T < sizeof(translateTable) / sizeof(translateTable[0]));
@@ -299,6 +299,7 @@ IC u32 GetIndexCount(D3DPRIMITIVETYPE T, u32 iPrimitiveCount)
 	case D3DPT_LINESTRIP:
 		return iPrimitiveCount + 1;
 	case D3DPT_TRIANGLELIST:
+	case D3DPT_TRIANGLEFAN:
 		return iPrimitiveCount * 3;
 	case D3DPT_TRIANGLESTRIP:
 		return iPrimitiveCount + 2;
@@ -366,7 +367,7 @@ IC void CBackend::Render(D3DPRIMITIVETYPE T, u32 startV, u32 PC)
 {
 	//	TODO: DX10: Remove triangle fan usage from the engine
 	if (T == D3DPT_TRIANGLEFAN)
-		return;
+		R_ASSERT("! Can't draw not indexed trianglefan, please use the TriangleFanIB index buffer and DrawIndexed method");
 
 	// VERIFY(vs);
 	// HW.pDevice->VSSetShader(vs);

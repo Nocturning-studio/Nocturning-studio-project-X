@@ -59,10 +59,38 @@ void CBackend::CreateQuadIB()
 	//HW.stats_manager.increment_stats_ib(QuadIB);
 }
 
+void CBackend::CreateTriangleFanIB()
+{
+	static const u32 max_vertices = 16;
+
+	u16 data[max_vertices * 3];
+
+	for (int i = 0; i < max_vertices; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			data[i * 3 + j] = j ? j + i : 0;
+		}
+	}
+
+	D3D11_BUFFER_DESC desc;
+	desc.ByteWidth = sizeof(data);
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subData;
+	subData.pSysMem = data;
+
+	R_CHK(HW.pDevice11->CreateBuffer(&desc, &subData, &TriangleFanIB));
+}
+
 // Device dependance
 void CBackend::OnDeviceCreate()
 {
 	CreateQuadIB();
+	CreateTriangleFanIB();
 
 	// streams
 	Vertex.Create();
