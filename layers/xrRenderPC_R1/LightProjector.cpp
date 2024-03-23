@@ -184,7 +184,7 @@ void CLightProjector::calculate()
 	RCache.set_RT(RT->pRT);
 	RCache.set_ZB(ZB->pZRT);
 	//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_ZBUFFER | (HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0), 0, 1, 0));
-	RImplementation.Target->ClearZB(ZB->pZRT, D3DCLEAR_ZBUFFER);
+	RImplementation.Target->ClearZB(ZB->pZRT, D3D11_CLEAR_DEPTH);
 	RCache.set_xform_world(Fidentity);
 
 	// reallocate/reassociate structures + perform all the work
@@ -294,7 +294,8 @@ void CLightProjector::calculate()
 		Fvector& cap = LT->get_approximate();
 		//CHK_DX(HW.pDevice->Clear(0, 0, D3DCLEAR_TARGET,
 			//					 color_rgba_f(cap.x, cap.y, cap.z, (cap.x + cap.y + cap.z) / 4.f), 1, 0));
-		RImplementation.Target->ClearRT(RT->pRT);
+		//RImplementation.Target->ClearRT(RT->pRT);
+#pragma message(Reminder("implement properly target cleaning"))
 
 		// calculate uv-gen matrix and clamper
 		Fmatrix mCombine;
