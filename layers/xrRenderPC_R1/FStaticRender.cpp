@@ -408,16 +408,16 @@ void CRender::set_Object(IRenderable* O)
 	}
 	if (PHASE_NORMAL == phase)
 	{
-		if (L_Shadows)
-			L_Shadows->set_object(O);
+		//if (L_Shadows)
+		//	L_Shadows->set_object(O);
 
 		if (L_Projector)
 			L_Projector->set_object(O);
 	}
 	else
 	{
-		if (L_Shadows)
-			L_Shadows->set_object(0);
+		//if (L_Shadows)
+		//	L_Shadows->set_object(0);
 
 		if (L_Projector)
 			L_Projector->set_object(0);
@@ -809,82 +809,18 @@ void CRender::Render()
 	g_r = 1;
 
 	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT, 0, 0, 0, HW.pBaseZB);
-	Target->ClearRT(HW.pBaseRT);
+	//Target->ClearRT(HW.pBaseRT);
 	Target->ClearZB(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
-
 	RCache.set_CullMode(D3D11_CULL_BACK);
 	RCache.set_Z(TRUE);
 	RCache.set_Stencil(FALSE);
 
 	rmNormal();
 
-	phase = PHASE_NORMAL;
-
-	r_dsgraph_render_hud(); // hud
-	r_dsgraph_render_graph(0); // normal level
-
-	if (Details)
-		Details->Render();							 // grass / details
-
-	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
-	g_pGamePersistent->Environment().RenderClouds(); // clouds
-
-	r_pmask(true, false); // disable priority "1"
-
-	o.vis_intersect = TRUE;
-
-	HOM.Disable();
-
-	L_Dynamic->render(); // addititional light sources
-
-	//if (Wallmarks)
-	//{
-	//	g_r = 0;
-	//	Wallmarks->Render(); // wallmarks has priority as normal geometry
-	//}
-
-	HOM.Enable();
-
-	o.vis_intersect = FALSE;
-
-	phase = PHASE_NORMAL;
-
-	r_pmask(true, true); // enable priority "0" and "1"
-
-	//if (L_Shadows)
-	//	L_Shadows->render();			// ... and shadows
-
-	r_dsgraph_render_lods(false, true); // lods - FB
-
-	//lstLODs.clear();
-	//lstLODgroups.clear();
-	//mapLOD.clear();
-
-	r_dsgraph_render_graph(1); // normal level, secondary priority
-
-	PortalTraverser.fade_render();		// faded-portals
-
-	r_dsgraph_render_sorted();			// strict-sorted geoms
-
-	if (L_Glows)
-		L_Glows->Render(); // glows
-
-	g_pGamePersistent->Environment().RenderFlares(); // lens-flares
-	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
-
-	// Postprocess, if necessary
-	//Target->End();
-
-	
-	mapDistort.clear(); // clear distort map
-
-	if (L_Projector)
-		L_Projector->finalize();
-
-	/*g_r = 1;
+	g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();
 	// Begin
-	Target->Begin();
+	//Target->Begin();
 	o.vis_intersect = FALSE;
 	phase = PHASE_NORMAL;
 	r_dsgraph_render_hud();	   // hud
@@ -892,7 +828,7 @@ void CRender::Render()
 	r_dsgraph_render_graph(0); // normal level
 	if (Details)
 		Details->Render();				// grass / details
-	r_dsgraph_render_lods(true, false); // lods - FB
+	//r_dsgraph_render_lods(true, false); // lods - FB
 	Target->DisableAlphaMSAA();
 
 	g_pGamePersistent->Environment().RenderSky();	 // sky / sun
@@ -911,8 +847,8 @@ void CRender::Render()
 	o.vis_intersect = FALSE;
 	phase = PHASE_NORMAL;
 	r_pmask(true, true); // enable priority "0" and "1"
-	if (L_Shadows)
-		L_Shadows->render();			// ... and shadows
+	//if (L_Shadows)
+	//	L_Shadows->render();			// ... and shadows
 	r_dsgraph_render_lods(false, true); // lods - FB
 	r_dsgraph_render_graph(1);			// normal level, secondary priority
 	PortalTraverser.fade_render();		// faded-portals
@@ -924,12 +860,13 @@ void CRender::Render()
 	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
 
 	// Postprocess, if necessary
-	Target->End();
+	//Target->End();
+
 	if (L_Projector)
 		L_Projector->finalize();
 
 	// HUD
-	Device.Statistic->RenderDUMP.End();*/
+	Device.Statistic->RenderDUMP.End();
 }
 
 void CRender::ApplyBlur4(FVF::TL4uv* pv, u32 w, u32 h, float k)
