@@ -6,7 +6,7 @@ ref_geom hGeom_fan = NULL;
 
 void CreateUIGeom()
 {
-	hGeom_fan.create(FVF::F_TL, RCache.Vertex.Buffer(), 0);
+	hGeom_fan.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.TriangleFanIB);
 }
 
 void DestroyUIGeom()
@@ -136,8 +136,10 @@ void CUIStaticItem::Render(float angle)
 	std::ptrdiff_t p_cnt = pv - start_pv;
 	RCache.Vertex.Unlock(u32(p_cnt), hGeom_fan.stride());
 	RCache.set_Geometry(hGeom_fan);
-	if (p_cnt > 2)
-		RCache.Render(D3DPT_TRIANGLEFAN, vOffset, u32(p_cnt - 2));
+	u32 primitives = p_cnt - 2;
+	u32 vertices = p_cnt;
+	if (primitives > 0)
+		RCache.Render(D3DPT_TRIANGLEFAN, vOffset, 0, vertices, 0, primitives);
 #pragma message(Reminder("xrGame fix alpharef"))
 	//	if (alpha_ref != -1)
 	//	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
