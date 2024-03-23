@@ -52,10 +52,29 @@ BOOL CRenderTarget::Create()
 #pragma message(Reminder("FIX SCREENSHOTS"))
 		//D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
 		//R_CHK(HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth, Device.dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
+
+		D3D11_TEXTURE2D_DESC desc;
+		memset(&desc, 0, sizeof(desc));
+		desc.Width = Device.dwWidth;
+		desc.Height = Device.dwHeight;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Format = (DXGI_FORMAT)HW.Caps.fTarget;
+		desc.Usage = D3D11_USAGE_STAGING;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+		R_CHK(HW.pDevice11->CreateTexture2D(&desc, NULL, &tex_screenshot_normal));
+
 		//R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave, NULL));
 		//R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
-	}
 
+		desc.Width = 128;
+		desc.Height = 128;
+		desc.Format = DXGI_FORMAT_BC1_UNORM;
+		R_CHK(HW.pDevice11->CreateTexture2D(&desc, NULL, &tex_screenshot_gamesave));
+	}
+	
 	// Bufferts
 	//RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
 	//RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
@@ -101,6 +120,8 @@ CRenderTarget::~CRenderTarget()
 	g_menu.destroy();
 	RT_distort.destroy();
 	RT.destroy();
+	_RELEASE(tex_screenshot_normal);
+	_RELEASE(tex_screenshot_gamesave);
 	//ZB.destroy();
 	//if (RImplementation.o.aa_type == MSAA)
 	//{

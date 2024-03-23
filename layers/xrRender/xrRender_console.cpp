@@ -735,6 +735,8 @@ void xrRender_initconsole()
 	CMD4(CCC_detail_radius, "r_detail_radius", &ps_r__detail_radius, 32, 256);
 	CMD3(CCC_detail_opt, "r_detail_dx11_opt", &ps_render_flags, RFLAG_DETAILS_DX11_OPT);
 
+	CMD3(CCC_Mask, "r_png_screenshots", &ps_render_flags, RFLAG_PNG_SCREENSHOTS);
+
 	CMD4(CCC_Float, "r_d_tree_w_amp", &ps_r_Tree_w_amp, .001f, 1.f);
 	CMD4(CCC_Float, "r_d_tree_w_rot", &ps_r_Tree_w_rot, .01f, 100.f);
 	CMD4(CCC_Float, "r_d_tree_w_speed", &ps_r_Tree_w_speed, 1.0f, 10.f);

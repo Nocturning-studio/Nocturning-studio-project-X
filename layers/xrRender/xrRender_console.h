@@ -70,6 +70,7 @@ enum
 	RFLAG_SEPIA = (1 << 3),
 	RFLAG_CHROMATIC_ABBERATION = (1 << 4),
 	RFLAG_DETAILS_DX11_OPT = (1 << 5),
+	RFLAG_PNG_SCREENSHOTS = (1 << 6),
 };
 
 /*-------------------------------------------------------------------------------*/
