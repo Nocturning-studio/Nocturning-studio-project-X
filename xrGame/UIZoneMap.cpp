@@ -33,7 +33,7 @@ void CUIZoneMap::Init()
 	bool xml_result = uiXml.Init(CONFIG_PATH, UI_PATH, "zone_map.xml");
 	R_ASSERT3(xml_result, "xml file not found", "zone_map.xml");
 
-	// load map backgroundwwwwwwwwwwwww
+	// load map background
 	CUIXmlInit xml_init;
 	xml_init.InitStatic(uiXml, "minimap:background", 0, &m_background);
 
@@ -50,6 +50,10 @@ void CUIZoneMap::Init()
 	m_activeMap = xr_new<CUIMiniMap>();
 	m_clipFrame.AttachChild(m_activeMap);
 	m_activeMap->SetAutoDelete(true);
+
+	u32 alpha = uiXml.ReadAttribInt("minimap:level_frame", 0, "alpha");
+	u32 color = color_rgba(255, 255, 255, alpha);
+	m_activeMap->SetColor(color);
 
 	m_activeMap->EnableHeading(true);
 	xml_init.InitStatic(uiXml, "minimap:compass", 0, &m_compass);
