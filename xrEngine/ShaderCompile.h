@@ -199,7 +199,7 @@ HRESULT CResourceManager::CompileShader(
 	T*&				result)
 {
 	string_path cache_dest;
-	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache_dx11\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
+	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
 	// TODO: fix shader log name
@@ -253,13 +253,13 @@ HRESULT CResourceManager::CompileShader(
 #endif
 		{
 			ID3DBlob* pDisasm = 0;
-			u32 flags = 0;
+			u32 flags = D3D_DISASM_ENABLE_COLOR_CODE;
 #if defined DEBUG || defined RELEASE_NOOPT
 			flags |= D3D_DISASM_DISABLE_DEBUG_INFO | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING;
 #endif
 			D3DDisassemble(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), flags, "", &pDisasm);
 			string_path disasm_dest;
-			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.txt", 
+			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.html", 
 				::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 			if (pDisasm)
 			{
