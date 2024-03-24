@@ -735,7 +735,7 @@ void CRender::RenderMenu()
 
 	// render menu
 	// RCache.set_RT(HW.pBaseRT);
-	RCache.set_ZB(0);
+	//RCache.set_ZB(0);
 
 	rmNormal();
 
@@ -744,23 +744,27 @@ void CRender::RenderMenu()
 	//RCache.set_ColorWriteEnable();
 
 	// menu
-	RCache.set_RT(Target->RT->pRT);
+	//RCache.set_RT(Target->RT->pRT);
+	Target->SetRT(Target->RT);
 	g_pGamePersistent->OnRenderPPUI_main(); // PP-UI
 
 	// Distort
 	{
-		static const float ColorRGBA[4] = {127.0f / 255.0f, 127.0f / 255.0f, 0.0f, 127.0f / 255.0f};
+		//static const float ColorRGBA[4] = {127.0f / 255.0f, 127.0f / 255.0f, 0.0f, 127.0f / 255.0f};
 		// Target->u_setrt(Target->rt_Generic_1, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
 		// HW.pContext->ClearRenderTargetView(Target->rt_Generic_1->pRT, ColorRGBA);
-		RCache.set_RT(Target->RT_distort->pRT);
-		HW.pContext->ClearRenderTargetView(Target->RT_distort->pRT, ColorRGBA);
+		//RCache.set_RT(Target->RT_distort->pRT);
+		//HW.pContext->ClearRenderTargetView(Target->RT_distort->pRT, ColorRGBA);
+		Target->SetRT(Target->RT_distort);
+		Target->ClearRT(Target->RT_distort, 0.5f, 0.5f);
 		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
 		mapDistort.clear();// clear distort map
 	}
 
 	// Actual Display
 	// Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-	RCache.set_RT(HW.pBaseRT);
+	//RCache.set_RT(HW.pBaseRT);
+	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT);
 	RCache.set_Shader(Target->s_menu);
 	RCache.set_Geometry(Target->g_menu);
 
@@ -804,23 +808,11 @@ void CRender::Render()
 		return;
 	}
 
-#pragma message(Reminder("fix render render"))
-
-	g_r = 1;
-
-	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT, 0, 0, 0, HW.pBaseZB);
-	//Target->ClearRT(HW.pBaseRT);
-	Target->ClearZB(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
-	RCache.set_CullMode(D3D11_CULL_BACK);
-	RCache.set_Z(TRUE);
-	RCache.set_Stencil(FALSE);
-
-	rmNormal();
-
 	g_r = 1;
 	Device.Statistic->RenderDUMP.Begin();
 	// Begin
-	//Target->Begin();
+	Target->Begin();
+	rmNormal();
 	o.vis_intersect = FALSE;
 	phase = PHASE_NORMAL;
 	r_dsgraph_render_hud();	   // hud
@@ -860,7 +852,7 @@ void CRender::Render()
 	g_pGamePersistent->Environment().RenderLast();		 // rain/thunder-bolts
 
 	// Postprocess, if necessary
-	//Target->End();
+	Target->End();
 
 	if (L_Projector)
 		L_Projector->finalize();

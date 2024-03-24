@@ -49,7 +49,6 @@ BOOL CRenderTarget::Create()
 
 	// SCREENSHOT
 	{
-#pragma message(Reminder("FIX SCREENSHOTS"))
 		//D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
 		//R_CHK(HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth, Device.dwHeight, format, D3DPOOL_SYSTEMMEM, &surf_screenshot_normal, NULL));
 
@@ -79,7 +78,7 @@ BOOL CRenderTarget::Create()
 	//RT.create(RTname, rtWidth, rtHeight, HW.Caps.fTarget);
 	//RT_distort.create(RTname_distort, rtWidth, rtHeight, HW.Caps.fTarget);
 	RT.create(RTname, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, fSR | fRT);
-	RT_distort.create(RTname_distort, rtWidth, rtHeight, (DXGI_FORMAT)HW.Caps.fTarget, fSR | fRT);
+	RT_distort.create(RTname_distort, rtWidth, rtHeight, DXGI_FORMAT_R8G8_UNORM, fSR | fRT); // .uv format
 
 	//ZB.create("$user$depth", rtWidth, rtHeight, HW.Caps.fDepth);
 	
@@ -97,7 +96,7 @@ BOOL CRenderTarget::Create()
 	//R_CHK(HW.pDevice->CreateDepthStencilSurface(512, 512, HW.Caps.fDepth, D3DMULTISAMPLE_NONE, 0, TRUE, &pTempZB, NULL));
 
 	// Shaders and stream
-	s_postprocess.create("postprocess");
+	//s_postprocess.create("postprocess");
 	s_postprocess_D.create("postprocess_d");
 	g_postprocess.create(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_SPECULAR | D3DFVF_TEX3, RCache.Vertex.Buffer(),
 						 RCache.QuadIB);
@@ -114,7 +113,7 @@ CRenderTarget::~CRenderTarget()
 {
 	//_RELEASE(pTempZB);
 	s_postprocess_D.destroy();
-	s_postprocess.destroy();
+	//s_postprocess.destroy();
 	g_postprocess.destroy();
 	s_menu.destroy();
 	g_menu.destroy();
@@ -263,14 +262,11 @@ void CRenderTarget::Begin()
 	//	RCache.set_ZB(ZB->pRT);
 	//}
 
-#pragma message(Reminder("FIX pBaseRT/ZB setup in backend"))
-	RCache.set_RT(HW.pBaseRT);
-	RCache.set_ZB(HW.pBaseZB);
+	SetRT(RT, 0, 0, 0, HW.pBaseZB, true);
 
-	curWidth = rtWidth;
-	curHeight = rtHeight;
+	RCache.set_CullMode(D3D11_CULL_BACK);
 
-	Device.Clear();
+	//Device.Clear();
 }
 
 struct TL_2c3uv
@@ -292,30 +288,24 @@ struct TL_2c3uv
 
 void CRenderTarget::End()
 {
-#pragma message(Reminder("FIX POSTPROCESS"))
+	//bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
+	//
+	//BOOL bDistort = TRUE;
+	//if ((0 == RImplementation.mapDistort.size()) && !_menu_pp)
+	//	bDistort = FALSE;
+	//
+	//if (bDistort)
+	//	phase_distortion();
 
-	RImplementation.mapDistort.clear();
-	return;
-	//----------------------------
-
-	if (g_pGamePersistent)
-		g_pGamePersistent->OnRenderPPUI_main();
-
-	BOOL bDistort = TRUE;
-
-	bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
-
-	if ((0 == RImplementation.mapDistort.size()) && !_menu_pp)
-		bDistort = FALSE;
-
-	if (bDistort)
-		phase_distortion();
+	// render distort
+	phase_distortion();
 
 	// combination/postprocess
-	RCache.set_RT(HW.pBaseRT);
-	RCache.set_ZB(HW.pBaseZB);
-	curWidth = Device.dwWidth;
-	curHeight = Device.dwHeight;
+	//RCache.set_RT(HW.pBaseRT);
+	//RCache.set_ZB(HW.pBaseZB);
+	//curWidth = Device.dwWidth;
+	//curHeight = Device.dwHeight;
+	SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT);
 
 #pragma message(Reminder("FIX MSAA RESOLVE"))
 	//if (RImplementation.o.aa_type == MSAA)
@@ -352,17 +342,20 @@ void CRenderTarget::End()
 	pv++;
 	RCache.Vertex.Unlock(4, g_postprocess.stride());
 
-	if (_menu_pp)
-	{
-		RCache.set_Shader(s_menu);
-	}
-	else
-	{
-		if (bDistort)
-			RCache.set_Shader(s_postprocess_D);
-		else
-			RCache.set_Shader(s_postprocess);
-	}
+	//if (_menu_pp)
+	//{
+	//	RCache.set_Shader(s_menu);
+	//}
+	//else
+	//{
+	//	if (bDistort)
+	//		RCache.set_Shader(s_postprocess_D);
+	//	else
+	//		RCache.set_Shader(s_postprocess);
+	//}
+	
+	// Set shader
+	RCache.set_Shader(s_postprocess_D);
 
 	// Actual rendering
 	static shared_str s_brightness = "c_brightness";
@@ -385,20 +378,22 @@ void CRenderTarget::End()
 
 void CRenderTarget::phase_distortion()
 {
-#pragma message(Reminder("FIX DISTORT"))
-	RImplementation.mapDistort.clear();
-
 	//RCache.set_RT(RT_distort->pRT);
 	//RCache.set_ZB(ZB->pRT);
 	//RCache.set_CullMode(CULL_CCW);
 	//RCache.set_ColorWriteEnable();
 	//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 127, 127), 1.0f, 0L));
-	//
-	//if (g_pGameLevel && g_pGamePersistent && !g_pGamePersistent->OnRenderPPUI_query())
-	//	RImplementation.r_dsgraph_render_distort();
-	//else
-	//	RImplementation.mapDistort.clear();
-	//
-	//if (g_pGamePersistent)
-	//	g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
+
+	SetRT(RT_distort);
+	ClearRT(RT_distort, 0.5f, 0.5f);
+	RCache.set_CullMode(D3D11_CULL_BACK);
+	RCache.set_ColorWriteEnable();
+	
+	if (g_pGameLevel && g_pGamePersistent && !g_pGamePersistent->OnRenderPPUI_query())
+		RImplementation.r_dsgraph_render_distort();
+	else
+		RImplementation.mapDistort.clear();
+	
+	if (g_pGamePersistent)
+		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
 }

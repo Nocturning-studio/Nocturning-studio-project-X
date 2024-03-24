@@ -14,7 +14,7 @@ class CRenderTarget : public IRender_Target
 	ref_rt RT_distort;
 	//ref_rt ZB;
 
-	ref_shader s_postprocess;
+	//ref_shader s_postprocess;
 	ref_shader s_postprocess_D;
 	ref_geom g_postprocess;
 
@@ -76,7 +76,8 @@ class CRenderTarget : public IRender_Target
 	void Begin();
 	void End();
 
-	IC void SetRT(const ref_rt& rt0 = 0, const ref_rt& rt1 = 0, const ref_rt& rt2 = 0, const ref_rt& rt3 = 0, ID3D11DepthStencilView* zb = 0)
+	IC void SetRT(const ref_rt& rt0 = 0, const ref_rt& rt1 = 0, const ref_rt& rt2 = 0, const ref_rt& rt3 = 0, 
+		ID3D11DepthStencilView* zb = 0, bool clearZB = false)
 	{
 		if (rt0)
 		{
@@ -91,10 +92,13 @@ class CRenderTarget : public IRender_Target
 		rts[3] = rt3 ? rt3->pRT : 0;
 
 		HW.pContext->OMSetRenderTargets(4, rts, zb);
+
+		if (clearZB)
+			ClearZB(zb, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 	}
 	
 	IC void SetRT(u32 w, u32 h, ID3D11RenderTargetView* rt0, ID3D11RenderTargetView* rt1 = 0, ID3D11RenderTargetView* rt2 = 0, 
-		ID3D11RenderTargetView* rt3 = 0, ID3D11DepthStencilView* zb = 0)
+		ID3D11RenderTargetView* rt3 = 0, ID3D11DepthStencilView* zb = 0, bool clearZB = false)
 	{
 		curWidth = w;
 		curHeight = h;
@@ -106,6 +110,9 @@ class CRenderTarget : public IRender_Target
 		rts[3] = rt3;
 
 		HW.pContext->OMSetRenderTargets(4, rts, zb);
+
+		if (clearZB)
+			ClearZB(zb, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 	}
 
 	IC void ClearRT(const ref_rt& rt0, float r = 0, float g = 0, float b = 0, float a = 0)
