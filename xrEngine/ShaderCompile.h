@@ -259,7 +259,7 @@ HRESULT CResourceManager::CompileShader(
 #endif
 			D3DDisassemble(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), flags, "", &pDisasm);
 			string_path disasm_dest;
-			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm_dx11\\%s%s.%s\\%s.txt", 
+			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.txt", 
 				::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 			if (pDisasm)
 			{
