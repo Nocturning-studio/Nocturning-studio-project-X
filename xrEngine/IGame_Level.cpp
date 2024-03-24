@@ -64,9 +64,6 @@ IGame_Level::~IGame_Level()
 		Device.Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
 
 	Msg("* [ D3D ]: textures[%d K]", (m_base + m_lmaps) / 1024);
-
-	//#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
-//	Console->Execute("vid_restart");
 }
 
 void IGame_Level::net_Stop()

@@ -153,14 +153,12 @@ bool CLevel::net_start_client5()
 		// Textures
 		if (!g_dedicated_server)
 		{
-#pragma message(Reminder("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене"))
 			g_pGamePersistent->LoadTitle("st_loading_textures");
 			//Device.Resources->DeferredUnload();
 			Device.Resources->DeferredLoad(FALSE);
 			Device.Resources->DeferredUpload();
 			pHUD->Load();
 			LL_CheckTextures();
-			Console->Execute("vid_restart");
 		}
 	}
 	return true;
