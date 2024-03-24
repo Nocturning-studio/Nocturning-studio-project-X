@@ -22,8 +22,8 @@ extern bool shared_str_initialized;
 static BOOL bException = TRUE;
 #define USE_BUG_TRAP
 #else
-#define USE_OWN_ERROR_MESSAGE_WINDOW
-#define USE_BUG_TRAP
+//#define USE_OWN_ERROR_MESSAGE_WINDOW
+//#define USE_BUG_TRAP
 #define DEBUG_INVOKE __asm int 3
 static BOOL bException = FALSE;
 #endif
@@ -48,7 +48,7 @@ static BOOL bException = FALSE;
 #include <new.h>	// for _set_new_mode
 #include <signal.h> // for signals
 
-#if 0 // def DEBUG
+#if 1 // def DEBUG
 #define USE_OWN_ERROR_MESSAGE_WINDOW
 #else // DEBUG
 #define USE_OWN_MINI_DUMP
