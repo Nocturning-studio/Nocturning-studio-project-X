@@ -199,7 +199,7 @@ HRESULT CResourceManager::CompileShader(
 	T*&				result)
 {
 	string_path cache_dest;
-	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
+	sprintf_s(cache_dest, sizeof cache_dest, "shaders_cache_dx11\\%s%s.%s\\%s", ::Render->getShaderPath(), name, ext, macros.get_name().c_str());
 	FS.update_path(cache_dest, "$app_data_root$", cache_dest);
 
 	// TODO: fix shader log name
@@ -217,9 +217,11 @@ HRESULT CResourceManager::CompileShader(
 	D3D_SHADER_MACRO* _macros = (D3D_SHADER_MACRO*)&macros.get_macros()[0];
 	
 	//u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL0 | D3DCOMPILE_SKIP_OPTIMIZATION
-		| D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
-	
+	u32 flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#if defined DEBUG || defined RELEASE_NOOPT
+	flags |= D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_DEBUG;
+#endif
+
 	HRESULT _result = D3DCompile(src, size, name_ext, _macros, 
 		&Includer, entry, target, flags, 0, &pShaderBuf, &pErrorBuf);
 	
@@ -252,16 +254,23 @@ HRESULT CResourceManager::CompileShader(
 
 		if (disasm)
 		{
-#pragma message(Reminder("fix shader disasseble"))
-			//ID3DXBuffer* pDisasm = 0;
-			//D3DXDisassembleShader((DWORD*)pShaderBuf->GetBufferPointer(), TRUE, 0, &pDisasm);
-			//string_path disasm_dest;
-			//sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm\\%s%s.%s\\%s.html", 
-			//	::Render->getShaderPath(), name, ext, macros.get_name().c_str());
-			//IWriter* W = FS.w_open("$app_data_root$", disasm_dest);
-			//W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
-			//FS.w_close(W);
-			//_RELEASE(pDisasm);
+			ID3DBlob* pDisasm = 0;
+			// D3DXDisassembleShader((DWORD*)pShaderBuf->GetBufferPointer(), TRUE, 0, &pDisasm);
+			u32 flags = 0;
+#if defined DEBUG || defined RELEASE_NOOPT
+			flags |= D3D_DISASM_DISABLE_DEBUG_INFO | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING;
+#endif
+			D3DDisassemble(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), flags, "", &pDisasm);
+			string_path disasm_dest;
+			sprintf_s(disasm_dest, sizeof disasm_dest, "shaders_disasm_dx11\\%s%s.%s\\%s.txt", 
+				::Render->getShaderPath(), name, ext, macros.get_name().c_str());
+			if (pDisasm)
+			{
+				IWriter* W = FS.w_open("$app_data_root$", disasm_dest);
+				W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
+				FS.w_close(W);
+				_RELEASE(pDisasm);
+			}
 		}
 
 		g_shader_compiled = true;
