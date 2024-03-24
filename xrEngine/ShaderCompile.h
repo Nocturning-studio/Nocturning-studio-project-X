@@ -248,14 +248,11 @@ HRESULT CResourceManager::CompileShader(
 
 #ifdef MASTER_GOLD
 		bool disasm = strstr(Core.Params, "-disasm") ? true : false;
-#else
-		bool disasm = true;
-#endif
 
 		if (disasm)
+#endif
 		{
 			ID3DBlob* pDisasm = 0;
-			// D3DXDisassembleShader((DWORD*)pShaderBuf->GetBufferPointer(), TRUE, 0, &pDisasm);
 			u32 flags = 0;
 #if defined DEBUG || defined RELEASE_NOOPT
 			flags |= D3D_DISASM_DISABLE_DEBUG_INFO | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING;
@@ -282,7 +279,7 @@ HRESULT CResourceManager::CompileShader(
 
 		std::string message = std::string(pErrorBuf ? (char*)pErrorBuf->GetBufferPointer() : "");
 
-		std::string error = make_string("!Can't compile shader %s\nfile: %s.%s, target: %s\n", code, name, ext, target);
+		std::string error = make_string("! Can't compile shader %s\nfile: %s.%s, target: %s\n", code, name, ext, target);
 		error += message;
 
 		Log(error.c_str());
