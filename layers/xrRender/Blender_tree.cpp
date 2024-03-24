@@ -118,12 +118,12 @@ void CBlender_Tree::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf("s_att", TEX_SPOT_ATT);
 		C.r_End();
 		break;
-	case SE_R1_LMODELS:
-		//	Don't use lighting from flora - strange visual results
-		C.r_Pass		("tree_wave","vert_l",FALSE);
-		C.r_Sampler		("s_base",C.L_textures[0]);
-		C.r_End			();
-		break;
+	//case SE_R1_LMODELS:
+	//	//	Don't use lighting from flora - strange visual results
+	//	C.r_Pass		("tree_s","tree_l",FALSE);
+	//	C.r_Sampler		("s_base",C.L_textures[0]);
+	//	C.r_End			();
+	//	break;
 	}
 }
 #else
