@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 
-#include "device.h"
+#include "../device.h"
 #include "ConstantBuffer.h"
 //#include "Device.h"
 
-#include "ResourceManager.h"
+#include "../ResourceManager.h"
 #include "BufferUtils.h"
 //#include "../xrRender/dxRenderDeviceRender.h"
 dx10ConstantBuffer::~dx10ConstantBuffer()
