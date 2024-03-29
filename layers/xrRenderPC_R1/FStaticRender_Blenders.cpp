@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "blenderdefault.h"
+#include "blender_default.h"
 #include "blender_default_aref.h"
 #include "blender_vertex.h"
 #include "blender_vertex_aref.h"
@@ -15,7 +15,7 @@
 #include "blender_blur.h"
 #include "blender_model.h"
 #include "..\xrRender\blender_model_ebb.h"
-#include "..\xrRender\blender_detail_still.h"
+#include "..\xrRender\blender_detail.h"
 #include "..\xrRender\blender_tree.h"
 #include "..\xrRender\blender_particle.h"
 
@@ -54,7 +54,7 @@ IBlender* CRender::blender_create(CLASS_ID cls)
 	case B_MODEL_EbB:
 		return xr_new<CBlender_Model_EbB>();
 	case B_DETAIL:
-		return xr_new<CBlender_Detail_Still>();
+		return xr_new<CBlender_Detail>();
 	case B_TREE:
 		return xr_new<CBlender_Tree>();
 	case B_PARTICLE:

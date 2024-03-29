@@ -1,39 +1,39 @@
-// Blender_Vertex_aref.cpp: implementation of the CBlender_Detail_Still class.
+// Blender_Vertex_aref.cpp: implementation of the CBlender_Detail class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "Blender_Detail_still.h"
+#include "Blender_detail.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBlender_Detail_Still::CBlender_Detail_Still()
+CBlender_Detail::CBlender_Detail()
 {
 	description.CLS = B_DETAIL;
 	description.version = 0;
 }
 
-CBlender_Detail_Still::~CBlender_Detail_Still()
+CBlender_Detail::~CBlender_Detail()
 {
 }
 
-void CBlender_Detail_Still::Save(IWriter& fs)
+void CBlender_Detail::Save(IWriter& fs)
 {
 	IBlender::Save(fs);
 	xrPWRITE_PROP(fs, "Alpha-blend", xrPID_BOOL, oBlend);
 }
 
-void CBlender_Detail_Still::Load(IReader& fs, u16 version)
+void CBlender_Detail::Load(IReader& fs, u16 version)
 {
 	IBlender::Load(fs, version);
 	xrPREAD_PROP(fs, xrPID_BOOL, oBlend);
 }
 
 #if RENDER == R_R1
-void CBlender_Detail_Still::Compile(CBlender_Compile& C)
+void CBlender_Detail::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 
@@ -65,7 +65,7 @@ void CBlender_Detail_Still::Compile(CBlender_Compile& C)
 // R2
 //////////////////////////////////////////////////////////////////////////
 #include "shader_name_generator.h"
-void CBlender_Detail_Still::Compile(CBlender_Compile& C)
+void CBlender_Detail::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile(C);
 

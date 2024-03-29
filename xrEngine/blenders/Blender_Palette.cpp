@@ -60,6 +60,7 @@ void IBlender::CreatePalette(xr_vector<IBlender*>& palette)
 	std::sort(palette.begin(), palette.end(), p_sort);
 }
 
+#pragma todo("Deathman to Deathman: Блендеры для редактора, важно. Необходимо починить")
 #ifndef _EDITOR
 // Engine
 #include "..\render.h"
@@ -74,7 +75,7 @@ void IBlender::Destroy(IBlender*& B)
 #else
 
 // Editor
-#include "../xrRender_R1/blenderdefault.h"
+#include "../xrRender_R1/blender_default.h"
 #include "../xrRender_R1/blender_default_aref.h"
 #include "../xrRender_R1/blender_vertex.h"
 #include "../xrRender_R1/blender_vertex_aref.h"
@@ -92,7 +93,7 @@ void IBlender::Destroy(IBlender*& B)
 #include "../xrRender_R1/blender_blur.h"
 #include "../xrRender_R1/blender_model.h"
 #include "blender_model_ebb.h"
-#include "blender_detail_still.h"
+#include "Blender_detail.h"
 #include "blender_tree.h"
 #include "blender_particle.h"
 
@@ -135,7 +136,7 @@ IBlender* IBlender::Create(CLASS_ID cls)
 	case B_MODEL_EbB:
 		return xr_new<CBlender_Model_EbB>();
 	case B_DETAIL:
-		return xr_new<CBlender_Detail_Still>();
+		return xr_new<CBlender_Detail>();
 	case B_TREE:
 		return xr_new<CBlender_Tree>();
 	case B_PARTICLE:

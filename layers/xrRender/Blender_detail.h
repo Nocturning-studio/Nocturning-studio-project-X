@@ -6,7 +6,7 @@
 #define AFX_BLENDER_VERTEX_AREF_H__07141B30_A968_407E_86F8_D12702FE0B9B__INCLUDED_2
 #pragma once
 
-class CBlender_Detail_Still : public IBlender
+class CBlender_Detail : public IBlender
 {
   public:
 	xrP_BOOL oBlend;
@@ -26,8 +26,8 @@ class CBlender_Detail_Still : public IBlender
 
 	virtual void Compile(CBlender_Compile& C);
 
-	CBlender_Detail_Still();
-	virtual ~CBlender_Detail_Still();
+	CBlender_Detail();
+	virtual ~CBlender_Detail();
 };
 
 #endif // !defined(AFX_BLENDER_VERTEX_AREF_H__07141B30_A968_407E_86F8_D12702FE0B9B__INCLUDED_2)
