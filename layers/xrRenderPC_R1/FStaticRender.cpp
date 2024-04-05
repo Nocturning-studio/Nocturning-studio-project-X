@@ -370,6 +370,7 @@ void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::
 	if (T->suppress_wm)
 		return;
 	VERIFY2(_valid(P) && _valid(s) && T && verts && (s > EPS_L), "Invalid static wallmark params");
+#pragma todo("Deathman to All: Рассмотреть этот закомментированный код");
 	//Wallmarks->AddStaticWallmark(T, verts, P, &*S, s);
 }
 
@@ -380,11 +381,13 @@ void CRender::clear_static_wallmarks()
 
 void CRender::add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
 {
+#pragma todo("Deathman to All: Рассмотреть этот закомментированный код")
 	//Wallmarks->AddSkeletonWallmark(wm);
 }
 void CRender::add_SkeletonWallmark(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start,
 								   const Fvector& dir, float size)
 {
+#pragma todo("Deathman to All: Рассмотреть этот закомментированный код")
 	//Wallmarks->AddSkeletonWallmark(xf, obj, sh, start, dir, size);
 }
 void CRender::add_Occluder(Fbox2& bb_screenspace)
@@ -478,6 +481,7 @@ ICF bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 	return d1 < d2;
 }
 
+#pragma todo("Deathman to All: Вынести этот и прочий код в отдельный файл кода, разбить на функции\методы")
 extern bool ENGINE_API g_menu;
 void CRender::Calculate()
 {
