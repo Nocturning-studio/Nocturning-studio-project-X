@@ -797,6 +797,7 @@ void CRender::RenderMenu()
 	g_menu = false;
 }
 
+#pragma todo("Deathman to All: Вынести этот и прочий код в отдельный файл кода, разбить на функции\методы")
 extern u32 g_r;
 void CRender::Render()
 {
