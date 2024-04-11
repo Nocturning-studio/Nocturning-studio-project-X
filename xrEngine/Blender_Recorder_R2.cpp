@@ -162,7 +162,7 @@ void CBlender_Compile::i_dx10Filter_Mag(u32 s, u32 f)
 	RS.SetSAMP(s, D3DSAMP_MAGFILTER, f);
 }
 
-void CBlender_Compile::i_dx10FilterAnizo(u32 s, BOOL value)
+void CBlender_Compile::i_dx10FilterAniso(u32 s, BOOL value)
 {
 	VERIFY(s != u32(-1));
 	RS.SetSAMP(s, XRDX10SAMP_ANISOTROPICFILTER, value);
@@ -222,7 +222,7 @@ u32 CBlender_Compile::r_dx10Sampler(LPCSTR ResourceName)
 	if (0 == xr_strcmp(ResourceName, "smp_base"))
 	{
 		i_dx10Address(stage, D3DTADDRESS_WRAP);
-		i_dx10FilterAnizo(stage, TRUE);
+		i_dx10FilterAniso(stage, TRUE);
 		// i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_LINEAR);
 	}
 

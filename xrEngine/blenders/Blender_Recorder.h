@@ -117,7 +117,7 @@ class ENGINE_API CBlender_Compile
 	void i_dx10Filter_Min(u32 s, u32 f);
 	void i_dx10Filter_Mip(u32 s, u32 f);
 	void i_dx10Filter_Mag(u32 s, u32 f);
-	void i_dx10FilterAnizo(u32 s, BOOL value);
+	void i_dx10FilterAniso(u32 s, BOOL value);
 	void i_dx10Filter(u32 s, u32 _min, u32 _mip, u32 _mag);
 	void i_dx10BorderColor(u32 s, u32 color);
 
