@@ -22,10 +22,10 @@
 #endif
 
 #pragma warning(disable : 4995)
-#include <d3d11.h>
-#include <d3dx11.h>
-#include "d3d11shader.h"
-#include <d3d9.h>
+#include <DXSDK/d3d11.h>
+#include <DXSDK/d3dx11.h>
+#include "DXSDK/d3d11shader.h"
+#include <DXSDK/d3d9.h>
 #include <DPlay\dplay8.h>
 #pragma warning(default : 4995)
 

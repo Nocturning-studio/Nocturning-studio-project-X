@@ -3,7 +3,7 @@
 
 #include "xrdebug.h"
 
-#include <dxerr.h>
+#include <DXSDK/dxerr.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4995)

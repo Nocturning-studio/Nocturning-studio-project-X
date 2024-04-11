@@ -1,5 +1,5 @@
 #pragma once
-#include "d3dx9.h"
+#include "DXSDK/d3dx9.h"
 
 class ENGINE_API CShaderMacros
 {

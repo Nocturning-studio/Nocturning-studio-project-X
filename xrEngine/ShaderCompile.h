@@ -2,8 +2,8 @@
 
 #include "ShaderMacros.h"
 
-#include "d3dcompiler.h"
-#include <DxErr.h>
+#include "DXSDK/d3dcompiler.h"
+#include <DXSDK/DxErr.h>
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxerr.lib")
 
