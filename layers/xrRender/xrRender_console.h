@@ -142,6 +142,8 @@ extern ECORE_API u32 ps_r2_sun_quality;
 extern ECORE_API float ps_r2_sun_tsm_bias;		   // 0.0001f
 extern ECORE_API float ps_r2_sun_depth_far_scale;  // 1.00001f
 extern ECORE_API float ps_r2_sun_depth_far_bias;   // -0.0001f
+extern ECORE_API float ps_r2_sun_depth_middle_scale; // 1.00001f
+extern ECORE_API float ps_r2_sun_depth_middle_bias;	 // -0.0001f
 extern ECORE_API float ps_r2_sun_depth_near_scale; // 1.00001f
 extern ECORE_API float ps_r2_sun_depth_near_bias;  // -0.0001f
 extern ECORE_API float ps_r2_sun_lumscale;		   // 0.5f
