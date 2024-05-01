@@ -124,14 +124,11 @@ void CEnvDescriptor::load(CEnvironment& environment, CInifile& config)
 	hemi_color = config.r_fvector4(m_identifier.c_str(), "hemisphere_color");
 	sun_color = config.r_fvector3(m_identifier.c_str(), "sun_color");
 
-	if (config.line_exist(m_identifier.c_str(), "sun_dir"))
-		sun_dir.setHP(deg2rad(config.r_fvector2(m_identifier.c_str(), "sun_dir").y),
-					  deg2rad(config.r_fvector2(m_identifier.c_str(), "sun_dir").x));
-	else
-		sun_dir.setHP(deg2rad(config.r_float(m_identifier.c_str(), "sun_altitude")),
-					  deg2rad(config.r_float(m_identifier.c_str(), "sun_longitude")));
-	R_ASSERT(_valid(sun_dir));
-	VERIFY2(sun_dir.y < 0, "Invalid sun direction settings while loading");
+	sun_dir.setHP(deg2rad(config.r_float(m_identifier.c_str(), "sun_altitude")),
+				  deg2rad(config.r_float(m_identifier.c_str(), "sun_longitude")));
+
+	if (!_valid(sun_dir) || !(sun_dir.y < 0))
+		Msg("Invalid sun direction settings while loading");
 
 	lens_flare_id = environment.eff_LensFlare->AppendDef(environment, environment.m_suns_config,
 														 config.r_string(m_identifier.c_str(), "sun"));
