@@ -83,16 +83,16 @@ static class cl_parallax : public R_constant_setup
 	}
 } binder_parallax;
 //////////////////////////////////////////////////////////////////////////
-static class cl_sun_far : public R_constant_setup
+/* static class cl_sun_far : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
 		float fValue = ps_r2_sun_far;
 		RCache.set_c(C, fValue, fValue, fValue, 0);
 	}
-} binder_sun_far;
+} binder_sun_far;*/
 //////////////////////////////////////////////////////////////////////////
-static class cl_sun_dir : public R_constant_setup
+/* static class cl_sun_dir : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
@@ -104,16 +104,16 @@ static class cl_sun_dir : public R_constant_setup
 
 		RCache.set_c(C, L_dir.x, L_dir.y, L_dir.z, 0);
 	}
-} binder_sun_dir;
+} binder_sun_dir;*/
 //////////////////////////////////////////////////////////////////////////
-static class cl_sun_color : public R_constant_setup
+/* static class cl_sun_color : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
 		light* sun = (light*)RImplementation.Lights.sun_adapted._get();
 		RCache.set_c(C, sun->color.r, sun->color.g, sun->color.b, 0);
 	}
-} binder_sun_color;
+} binder_sun_color;*/
 //////////////////////////////////////////////////////////////////////////
 static class cl_hdr_params : public R_constant_setup
 {
@@ -287,9 +287,9 @@ void CRender::create()
 
 	// constants
 	::Device.Resources->RegisterConstantSetup("parallax_heigt", &binder_parallax);
-	::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
-	::Device.Resources->RegisterConstantSetup("sun_dir", &binder_sun_dir);
-	::Device.Resources->RegisterConstantSetup("sun_color", &binder_sun_color);
+	//::Device.Resources->RegisterConstantSetup("sun_far", &binder_sun_far);
+	//::Device.Resources->RegisterConstantSetup("sun_dir", &binder_sun_dir);
+	//::Device.Resources->RegisterConstantSetup("sun_color", &binder_sun_color);
 	::Device.Resources->RegisterConstantSetup("hdr_params", &binder_hdr_params);
 
 	c_lmaterial = "L_material";
