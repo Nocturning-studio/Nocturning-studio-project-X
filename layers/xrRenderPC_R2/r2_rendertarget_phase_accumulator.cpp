@@ -6,7 +6,8 @@ void CRenderTarget::phase_accumulator()
 	// Targets
 	if (dwAccumulatorClearMark == Device.dwFrame)
 	{
-		u_setrt(rt_Diffuse_Accumulator, rt_Specular_Accumulator, NULL, rt_ZB->pRT);
+		//u_setrt(rt_Diffuse_Accumulator, rt_Specular_Accumulator, NULL, rt_ZB->pRT);
+		SetRT(rt_Diffuse_Accumulator, rt_Specular_Accumulator, 0, 0, rt_ZB->pZRT, false, false);
 	}
 	else
 	{
@@ -14,10 +15,13 @@ void CRenderTarget::phase_accumulator()
 		dwAccumulatorClearMark = Device.dwFrame;
 
 		// clear
-		u_setrt(rt_Diffuse_Accumulator, rt_Specular_Accumulator, NULL, rt_ZB->pRT);
+		//u_setrt(rt_Diffuse_Accumulator, rt_Specular_Accumulator, NULL, rt_ZB->pRT);
+		SetRT(rt_Diffuse_Accumulator, rt_Specular_Accumulator, 0, 0, rt_ZB->pZRT, false, false);
 		dwLightMarkerID = 5;					// start from 5, increment in 2 units
-		u32 clr4clear = color_rgba(0, 0, 0, 0); // 0x00
-		CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L));
+		//u32 clr4clear = color_rgba(0, 0, 0, 0); // 0x00
+		//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L));
+		ClearRT(rt_Diffuse_Accumulator);
+		ClearRT(rt_Specular_Accumulator);
 
 		/*
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
@@ -39,7 +43,7 @@ void CRenderTarget::phase_accumulator()
 		*/
 	}
 }
-
+/*
 void CRenderTarget::phase_vol_accumulator()
 {
 	if (!m_bHasActiveVolumetric)
@@ -57,3 +61,4 @@ void CRenderTarget::phase_vol_accumulator()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_ColorWriteEnable();
 }
+*/

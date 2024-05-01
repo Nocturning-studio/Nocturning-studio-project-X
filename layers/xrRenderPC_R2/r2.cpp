@@ -11,6 +11,7 @@
 #include "../xrEngine\r_constants.h"
 
 #pragma comment(lib, "d3dx9.lib")
+#pragma comment(lib, "d3dx11.lib")
 //////////////////////////////////////////////////////////////////////////
 CRender RImplementation;
 //////////////////////////////////////////////////////////////////////////
@@ -304,8 +305,9 @@ void CRender::create()
 	// rmNormal					();
 	marker = 0;
 	ZeroMemory(q_sync_point, sizeof(q_sync_point));
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
+#pragma message(Reminder("Fix sync points"))
+	//for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+	//	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
 
 	xrRender_apply_tf();
 	::PortalTraverser.initialize();
@@ -354,8 +356,9 @@ void CRender::reset_begin()
 
 void CRender::reset_end()
 {
-	for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
-		R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
+#pragma message(Reminder("Fix sync points"))
+	//for (u32 i = 0; i < HW.Caps.iGPUNum; ++i)
+	//	R_CHK(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT, &q_sync_point[i]));
 	HWOCC.occq_create(occq_size);
 
 	update_options();
@@ -493,17 +496,19 @@ D3DVERTEXELEMENT9* CRender::getVB_Format(int id, BOOL _alt)
 		return nDC[id].begin();
 	}
 }
+
+#pragma mssage(Reminder("Fix VB/IB D3D9 --> D3D11 pointer conversion"))
 IDirect3DVertexBuffer9* CRender::getVB(int id, BOOL _alt)
 {
 	if (_alt)
 	{
 		VERIFY(id < int(xVB.size()));
-		return xVB[id];
+		return (IDirect3DVertexBuffer9*)xVB[id];
 	}
 	else
 	{
 		VERIFY(id < int(nVB.size()));
-		return nVB[id];
+		return (IDirect3DVertexBuffer9*)nVB[id];
 	}
 }
 IDirect3DIndexBuffer9* CRender::getIB(int id, BOOL _alt)
@@ -511,12 +516,12 @@ IDirect3DIndexBuffer9* CRender::getIB(int id, BOOL _alt)
 	if (_alt)
 	{
 		VERIFY(id < int(xIB.size()));
-		return xIB[id];
+		return (IDirect3DIndexBuffer9*)xIB[id];
 	}
 	else
 	{
 		VERIFY(id < int(nIB.size()));
-		return nIB[id];
+		return (IDirect3DIndexBuffer9*)nIB[id];
 	}
 }
 FSlideWindowItem* CRender::getSWI(int id)
@@ -597,21 +602,28 @@ void CRender::set_Object(IRenderable* O)
 void CRender::rmNear()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 0.02f};
-	CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0, 0.02f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void CRender::rmFar()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0.99999f, 1.f};
-	CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0.99999f, 1.f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void CRender::rmNormal()
 {
 	IRender_Target* T = getTarget();
-	D3DVIEWPORT9 VP = {0, 0, T->get_width(), T->get_height(), 0, 1.f};
-	CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {0, 0, (float)T->get_width(), (float)T->get_height(), 0, 1.f};
+
+	HW.pContext->RSSetViewports(1, &VP);
+	// CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern u32 ps_r2_bump_mode;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void fix_texture_name(LPSTR fn);
+void fix_texture_name2(LPSTR fn);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPCSTR VertexShaderName,
 						  LPCSTR PixelShaderName, BOOL bUseAlpha)
@@ -37,7 +37,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	strcpy_s(AlbedoTexture, sizeof(AlbedoTexture), *C.L_textures[0]);
 
 	// Add extension to texture  and chek for null
-	fix_texture_name(AlbedoTexture);
+	fix_texture_name2(AlbedoTexture);
 
 	// Check bump existing
 	ref_texture refAlbedoTexture;
@@ -129,12 +129,12 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
 
 	// Create lightmapped shader if need
-	C.sh_macro(bUseLightMap, "USE_LIGHTMAP", "1");
+	C.macros.add(bUseLightMap, "USE_LIGHTMAP", "1");
 
 	// Create shader with alpha testing if need
-	C.sh_macro(bUseAlpha, "USE_ALPHA_TEST", "1");
+	C.macros.add(bUseAlpha, "USE_ALPHA_TEST", "1");
 
-	C.sh_macro(bUseBump, "USE_BUMP", "1");
+	C.macros.add(bUseBump, "USE_BUMP", "1");
 
 	// Create shader with normal mapping or displacement if need
 	int BumpType = 0;
@@ -142,24 +142,24 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	{
 		if (ps_r2_bump_mode == 1 || !bUseBump)
 			BumpType = 1; // normal
-		else if (ps_r2_bump_mode == 2 || !C.bSteepParallax)
+		else if (ps_r2_bump_mode == 2 || !C.bUseSteepParallax)
 			BumpType = 2; // parallax
-		else if (ps_r2_bump_mode == 3 && C.bSteepParallax)
+		else if (ps_r2_bump_mode == 3 && C.bUseSteepParallax)
 			BumpType = 3; // steep parallax
 		else 
 			BumpType = 2; // parallax
 	}
 
-	C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
-	C.sh_macro(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
-	C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
+	C.macros.add(BumpType == 1, "USE_NORMAL_MAPPING", "1");
+	C.macros.add(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
+	C.macros.add(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
 
 	// Create shader with deatil texture if need
-	C.sh_macro(bUseDetail, "USE_TDETAIL", "1");
+	C.macros.add(bUseDetail, "USE_TDETAIL", "1");
 
-	C.sh_macro(bUseDetailBump, "USE_DETAIL_BUMP", "1");
+	C.macros.add(bUseDetailBump, "USE_DETAIL_BUMP", "1");
 
-	C.sh_macro(bUseBakedAO, "USE_BAKED_AO", "1");
+	C.macros.add(bUseBakedAO, "USE_BAKED_AO", "1");
 
 	// Create shader pass
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);

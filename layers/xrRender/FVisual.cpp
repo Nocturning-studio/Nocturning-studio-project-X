@@ -82,7 +82,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			m_fast->vCount = def().r_u32();
 
 			VERIFY(NULL == m_fast->p_rm_Vertices);
-			m_fast->p_rm_Vertices = RImplementation.getVB(ID, true);
+			m_fast->p_rm_Vertices = (ID3D11Buffer*)RImplementation.getVB(ID, true);
 			m_fast->p_rm_Vertices->AddRef();
 			fmt = RImplementation.getVB_Format(ID, true);
 
@@ -93,7 +93,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			m_fast->dwPrimitives = iCount / 3;
 
 			VERIFY(NULL == m_fast->p_rm_Indices);
-			m_fast->p_rm_Indices = RImplementation.getIB(ID, true);
+			m_fast->p_rm_Indices = (ID3D11Buffer*)RImplementation.getIB(ID, true);
 			m_fast->p_rm_Indices->AddRef();
 
 			// geom

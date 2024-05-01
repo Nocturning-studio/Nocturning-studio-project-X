@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::phase_combine_volumetric()
+/* void CRenderTarget::phase_combine_volumetric()
 {
 	u32 Offset = 0;
 	Fvector2 p0, p1;
@@ -89,5 +89,5 @@ void CRenderTarget::phase_combine_volumetric()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 	RCache.set_ColorWriteEnable();
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

@@ -119,7 +119,7 @@ void CRender::render_lights(light_Package& LP)
 				if (bSpecial)
 				{
 					L->X.S.transluent = TRUE;
-					Target->phase_smap_spot_tsh(L);
+					//Target->phase_smap_spot_tsh(L);
 					r_dsgraph_render_graph(1); // normal level, secondary priority
 					r_dsgraph_render_sorted(); // strict-sorted geoms
 				}

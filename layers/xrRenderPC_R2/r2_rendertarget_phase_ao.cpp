@@ -6,7 +6,8 @@
 #include "r2_rendertarget.h"
 #include "Blender_ambient_occlusion.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::phase_ao()
+#pragma message(Reminder("Fix SSAO"))
+/* void CRenderTarget::phase_ao()
 {
 	u32 Offset = 0;
 
@@ -64,5 +65,5 @@ void CRenderTarget::phase_ao()
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		}
 	}
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

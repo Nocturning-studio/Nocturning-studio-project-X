@@ -3,6 +3,8 @@
 #include "..\xrEngine\igame_persistent.h"
 #include "..\xrEngine\environment.h"
 
+#pragma message(Reminder("Fix bloom"))
+
 #pragma pack(push, 4)
 struct v_build_bloom
 {
@@ -64,7 +66,7 @@ void CalcGauss_wave(Fvector4& w0,		   // weight
 	w0.add(t0);
 	w1.add(t1);
 }
-
+/*
 void CRenderTarget::phase_bloom()
 {
 	float BloomResolutionMultiplier = 0.0f;
@@ -93,7 +95,8 @@ void CRenderTarget::phase_bloom()
 	// Clear	- don't clear - it's stupid here :)
 	// Stencil	- disable
 	// Misc		- draw everything (no culling)
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+	StateManager.SetDepthEnable(TRUE);
 
 	// Transfer into Bloom1
 	{
@@ -370,4 +373,4 @@ void CRenderTarget::phase_bloom()
 		// Draw
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
-}
+}*/

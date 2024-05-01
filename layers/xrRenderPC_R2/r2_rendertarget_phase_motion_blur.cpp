@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::motion_blur_phase_combine()
+#pragma message(Reminder("Fix motion blur"))
+/* void CRenderTarget::motion_blur_phase_combine()
 {
 	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
@@ -99,5 +100,5 @@ void CRenderTarget::phase_motion_blur()
 {
 	motion_blur_phase_combine();
 	motion_blur_phase_save_frame();
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

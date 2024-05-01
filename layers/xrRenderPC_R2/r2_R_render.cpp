@@ -159,19 +159,23 @@ void CRender::render_menu()
 
 	// Main Render
 	{
-		Target->u_setrt(Target->rt_Generic_0, 0, 0, Target->rt_ZB->pRT); // LDR RT
+		//Target->u_setrt(Target->rt_Generic_0, 0, 0, Target->rt_ZB->pRT); // LDR RT
+		Target->SetRT(Target->rt_Generic_0, 0, 0, 0, Target->rt_ZB->pZRT, false, false);
 		g_pGamePersistent->OnRenderPPUI_main();					 // PP-UI
 	}
 
 	// Distort
 	{
-		Target->u_setrt(Target->rt_Distortion_Mask, 0, 0, Target->rt_ZB->pRT); // Now RT is a distortion mask
-		CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
+		//Target->u_setrt(Target->rt_Distortion_Mask, 0, 0, Target->rt_ZB->pRT); // Now RT is a distortion mask
+		Target->SetRT(Target->rt_Distortion_Mask, 0, 0, 0, Target->rt_ZB->pZRT, false, false);
+		//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
+		Target->ClearRT(Target->rt_Distortion_Mask, 0.5f, 0.5f, 0.5f, 0.5f);
 		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
 	}
 
 	// Actual Display
-	Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, Target->rt_ZB->pRT);
+	//Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, Target->rt_ZB->pRT);
+	Target->SetRT(Device.dwWidth, Device.dwHeight, HW.pBaseRT, 0, 0, 0, 0, false, false);
 	RCache.set_Shader(Target->s_menu);
 	RCache.set_Geometry(Target->g_menu);
 
@@ -431,12 +435,12 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	if (ps_r2_ao)
-	{
-		Device.Statistic->RenderCALC_AO.Begin();
-		Target->phase_ao();
-		Device.Statistic->RenderCALC_AO.End();
-	}
+	//if (ps_r2_ao)
+	//{
+	//	Device.Statistic->RenderCALC_AO.Begin();
+	//	Target->phase_ao();
+	//	Device.Statistic->RenderCALC_AO.End();
+	//}
 
 	// Postprocess
 	Device.Statistic->RenderCALC_POSTPROCESS.Begin();

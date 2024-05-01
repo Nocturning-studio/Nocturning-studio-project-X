@@ -561,7 +561,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <IncludeInUnityFile>true</IncludeInUnityFile>
+      <IncludeInUnityFile>false</IncludeInUnityFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

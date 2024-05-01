@@ -19,15 +19,18 @@ void CRenderTarget::phase_combine()
 	}
 
 	// low/hi RTs
-	u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT);
+	//u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT);
+	SetRT(rt_Generic_0);
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
 	// draw skybox
 	RCache.set_ColorWriteEnable();
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
+	StateManager.SetDepthEnable(FALSE);
 	g_pGamePersistent->Environment().RenderSky();
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+	StateManager.SetDepthEnable(TRUE);
 
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00); // stencil should be >= 1
 	if (RImplementation.o.nvstencil)
@@ -85,8 +88,8 @@ void CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine_VP->vb_stride);
 
 		// Setup textures
-		IDirect3DBaseTexture9* e0 = _menu_pp ? 0 : envdesc->sky_r_textures_env[0].second->surface_get();
-		IDirect3DBaseTexture9* e1 = _menu_pp ? 0 : envdesc->sky_r_textures_env[1].second->surface_get();
+		ID3D11Resource* e0 = _menu_pp ? 0 : envdesc->sky_r_textures_env[0].second->surface_get();
+		ID3D11Resource* e1 = _menu_pp ? 0 : envdesc->sky_r_textures_env[1].second->surface_get();
 		t_envmap_0->surface_set(e0);
 		_RELEASE(e0);
 		t_envmap_1->surface_set(e1);
@@ -120,9 +123,11 @@ void CRenderTarget::phase_combine()
 #endif
 	{
 		if (RImplementation.o.gbuffer_opt_mode <= 1)
-			u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, rt_ZB->pRT); // LDR RT
+			// u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, rt_ZB->pRT); // LDR RT
+			SetRT(rt_Generic_0, rt_GBuffer_Position, 0, 0, rt_ZB->pZRT, 0, 0);
 		else
-			u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT); // LDR RT
+			//u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT); // LDR RT
+			SetRT(rt_Generic_0, 0, 0, 0, rt_ZB->pZRT, 0, 0);
 
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_Stencil(FALSE);
@@ -136,13 +141,14 @@ void CRenderTarget::phase_combine()
 
 	//	Igor: for volumetric lights
 	//	combine light volume here
-	if (m_bHasActiveVolumetric)
-		phase_combine_volumetric();
+	//if (m_bHasActiveVolumetric)
+	//	phase_combine_volumetric();
 
 	// Perform blooming filter and distortion if needed
 	RCache.set_Stencil(FALSE);
 
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
+	StateManager.SetDepthEnable(TRUE);
 
 	// Distortion filter
 	phase_create_distortion_mask();
@@ -156,32 +162,32 @@ void CRenderTarget::phase_combine()
 	{
 		if (ps_r2_debug_render == 0)
 		{
-			if (ps_r2_aa)
-				phase_antialiasing();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
-				phase_contrast_adaptive_sharpening();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
-				phase_bloom();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
-				phase_depth_of_field();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
-				phase_barrel_blur();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
-				phase_autoexposure();
+			//if (ps_r2_aa)
+			//	phase_antialiasing();
+			//
+			//if (ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
+			//	phase_contrast_adaptive_sharpening();
+			//
+			//if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
+			//	phase_bloom();
+			//
+			//if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
+			//	phase_depth_of_field();
+			//
+			//if (ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
+			//	phase_barrel_blur();
+			//
+			//if (ps_r2_postprocess_flags.test(R2FLAG_AUTOEXPOSURE))
+			//	phase_autoexposure();
 
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
 				g_pGamePersistent->Environment().RenderFlares();
 
-			if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
-				phase_motion_blur();
+			//if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+			//	phase_motion_blur();
 		}
 
-		draw_overlays();
+		//draw_overlays();
 
 		phase_pp();
 	}

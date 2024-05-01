@@ -23,7 +23,7 @@ float CRenderTarget::hclip(float v, float dim)
 {
 	return 2.f * v / dim - 1.f;
 }
-
+/*
 void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb)
 {
 	VERIFY(_1);
@@ -58,7 +58,7 @@ void CRenderTarget::u_setrt(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurfac
 	RCache.set_ZB(zb);
 	//	RImplementation.rmNormal				();
 }
-
+*/
 void CRenderTarget::u_stencil_optimize(BOOL common_stencil)
 {
 	VERIFY(RImplementation.o.nvstencil);
@@ -244,60 +244,61 @@ CRenderTarget::CRenderTarget()
 
 	// SCREENSHOT
 	{
-		D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
-		R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM,
-													  &surf_screenshot_normal, NULL));
-		R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave,
-										NULL));
-		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
+		//D3DFORMAT format = psDeviceFlags.test(rsFullscreen) ? D3DFMT_A8R8G8B8 : HW.Caps.fTarget;
+		//R_CHK(HW.pDevice->CreateOffscreenPlainSurface(dwWidth, dwHeight, format, D3DPOOL_SYSTEMMEM,
+		//											  &surf_screenshot_normal, NULL));
+		//R_CHK(HW.pDevice->CreateTexture(128, 128, 1, NULL, D3DFMT_DXT1, D3DPOOL_SYSTEMMEM, &tex_screenshot_gamesave,
+		//								NULL));
+		//R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
 	// check if we can optimize G-Buffer
 	{
-		switch (RImplementation.o.gbuffer_opt_mode)
-		{
-		case 2:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'));
-			break;
-		case 3:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'));
-			break;
-		default:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, HW.Caps.fDepth);
-		}
+		//switch (RImplementation.o.gbuffer_opt_mode)
+		//{
+		//case 2:
+		//	rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'));
+		//	break;
+		//case 3:
+		//	rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'));
+		//	break;
+		//default:
+		//	rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, HW.Caps.fDepth);
+		//}
+		rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, DXGI_FORMAT_D24_UNORM_S8_UINT, fDS | fSR);
 
 		if (RImplementation.o.gbuffer_opt_mode > 0)
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
+			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
+			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, fRT | fSR);
 		}
 		else
 		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
+			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, fRT | fSR);
+			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, fRT | fSR);
 		}
 	}
 
 	//	NORMAL
 	{
-		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
-		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, DXGI_FORMAT_R10G10B10A2_UINT, fRT | fSR);
+		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, DXGI_FORMAT_R10G10B10A2_UINT, fRT | fSR);
 
-		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, DXGI_FORMAT_R10G10B10A2_UINT, fRT | fSR);
 
-		rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_R8G8B8);
+		rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
 
 		if (ps_r2_rt_format == 1)
 		{
-			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_R8G8B8);
+			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
 		}
 		else
 		{
-			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, fRT | fSR);
+			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, DXGI_FORMAT_R10G10B10A2_UNORM, fRT | fSR);
 		}
 	}
 
@@ -307,9 +308,9 @@ CRenderTarget::CRenderTarget()
 	// DIRECT (spot)
 
 	u32 size = RImplementation.o.smapsize;
-	rt_smap_depth.create(r2_RT_smap_depth, size, size, D3DFMT_D24X8);
-	rt_smap_surf.create(r2_RT_smap_surf, size, size, D3DFMT_R5G6B5);
-	rt_smap_ZB = NULL;
+	rt_smap_depth.create(r2_RT_smap_depth, size, size, DXGI_FORMAT_D32_FLOAT, fDS | fSR);
+	//rt_smap_surf.create(r2_RT_smap_surf, size, size, D3DFMT_R5G6B5);
+	//rt_smap_ZB = NULL;
 	s_accum_mask.create(b_accum_mask, "r2\\accum_mask");
 	s_accum_direct_cascade.create(b_accum_direct_cascade, "r2\\accum_direct_cascade");
 	s_accum_direct_volumetric_cascade.create("accumulating_light_stage_volumetric_sun_cascade");
@@ -331,11 +332,11 @@ CRenderTarget::CRenderTarget()
 	}
 
 	// BLOOM
-	D3DFORMAT fmt;
+	DXGI_FORMAT fmt;
 	if (ps_r2_rt_format == 1 || ps_r2_bloom_quality <= 2)
-		fmt = D3DFMT_A8R8G8B8;
+		fmt = DXGI_FORMAT_R8G8B8A8_UNORM;
 	else
-		fmt = D3DFMT_A2R10G10B10;
+		fmt = DXGI_FORMAT_R10G10B10A2_UNORM;
 
 	float BloomResolutionMultiplier = 0.0f;
 
@@ -361,23 +362,23 @@ CRenderTarget::CRenderTarget()
 	u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) |
 					 D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4) |
 					 D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6) | D3DFVF_TEXCOORDSIZE4(7);
-	rt_Bloom_1.create(r2_RT_bloom1, w, h, fmt);
-	rt_Bloom_2.create(r2_RT_bloom2, w, h, fmt);
+	rt_Bloom_1.create(r2_RT_bloom1, w, h, fmt, fSR | fRT);
+	rt_Bloom_2.create(r2_RT_bloom2, w, h, fmt, fSR | fRT);
 	g_bloom_build.create(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
 	g_bloom_filter.create(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
 	s_bloom.create(b_bloom, "r2\\bloom");
 
 	// AO
 	// Create rendertarget
-	rt_ao.create(r2_RT_ao, dwWidth, dwHeight, D3DFMT_L8);
+	rt_ao.create(r2_RT_ao, dwWidth, dwHeight, DXGI_FORMAT_R8_UNORM, fRT | fSR);
 
 	// Create shader resource
 	s_ambient_occlusion.create(b_ambient_occlusion, "r2\\ambient_occlusion");
 
 	// autoexposure
 	{
-		rt_LUM_64.create(r2_RT_autoexposure_t64, 64, 64, D3DFMT_A8R8G8B8);
-		rt_LUM_8.create(r2_RT_autoexposure_t8, 8, 8, D3DFMT_A8R8G8B8);
+		rt_LUM_64.create(r2_RT_autoexposure_t64, 64, 64, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
+		rt_LUM_8.create(r2_RT_autoexposure_t8, 8, 8, DXGI_FORMAT_R8G8B8A8_UNORM, fRT | fSR);
 		s_autoexposure.create(b_autoexposure, "r2\\autoexposure");
 		f_autoexposure_adapt = 0.5f;
 
@@ -389,9 +390,10 @@ CRenderTarget::CRenderTarget()
 		{
 			string256 name;
 			sprintf(name, "%s_%d", r2_RT_autoexposure_pool, it);
-			rt_LUM_pool[it].create(name, 1, 1, D3DFMT_R16F);
-			u_setrt(rt_LUM_pool[it], 0, 0, 0);
-			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L));
+			rt_LUM_pool[it].create(name, 1, 1, DXGI_FORMAT_R16_UNORM, fSR | fRT);
+			//u_setrt(rt_LUM_pool[it], 0, 0, 0);
+			//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L));
+			ClearRT(rt_LUM_pool[it], 0.5f, 0.5f, 0.5f, 0.5f);
 		}
 	}
 
@@ -429,22 +431,45 @@ CRenderTarget::CRenderTarget()
 	{
 		// Build material(s)
 		{
+			//	Create immutable texture.
+			//	So we need to init data _before_ the creation.
 			// Surface
-			R_CHK(D3DXCreateVolumeTexture(HW.pDevice, TEX_material_LdotN, TEX_material_LdotH, 4, 1, 0, D3DFMT_A8L8,
-										  D3DPOOL_MANAGED, &t_material_surf));
-			t_material = Device.Resources->_CreateTexture(r2_material);
-			t_material->surface_set(t_material_surf);
+			// R_CHK
+			// (D3DXCreateVolumeTexture(HW.pDevice,TEX_material_LdotN,TEX_material_LdotH,4,1,0,D3DFMT_A8L8,D3DPOOL_MANAGED,&t_material_surf));
+			// t_material					= dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_material);
+			// t_material->surface_set		(t_material_surf);
+			//	Use DXGI_FORMAT_R8G8_UNORM
+
+			u16 tempData[TEX_material_LdotN * TEX_material_LdotH * 4];
+
+			D3D11_TEXTURE3D_DESC desc;
+			desc.Width = TEX_material_LdotN;
+			desc.Height = TEX_material_LdotH;
+			desc.Depth = 4;
+			desc.MipLevels = 1;
+			desc.Format = DXGI_FORMAT_R8G8_UNORM;
+			desc.Usage = D3D11_USAGE_IMMUTABLE;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.CPUAccessFlags = 0;
+			desc.MiscFlags = 0;
+
+			D3D11_SUBRESOURCE_DATA subData;
+
+			subData.pSysMem = tempData;
+			subData.SysMemPitch = desc.Width * 2;
+			subData.SysMemSlicePitch = desc.Height * subData.SysMemPitch;
 
 			// Fill it (addr: x=dot(L,N),y=dot(L,H))
-			D3DLOCKED_BOX R;
-			R_CHK(t_material_surf->LockBox(0, &R, 0, 0));
+			// D3DLOCKED_BOX				R;
+			// R_CHK						(t_material_surf->LockBox	(0,&R,0,0));
 			for (u32 slice = 0; slice < 4; slice++)
 			{
 				for (u32 y = 0; y < TEX_material_LdotH; y++)
 				{
 					for (u32 x = 0; x < TEX_material_LdotN; x++)
 					{
-						u16* p = (u16*)(LPBYTE(R.pBits) + slice * R.SlicePitch + y * R.RowPitch + x * 2);
+						u16* p = (u16*)(LPBYTE(subData.pSysMem) + slice * subData.SysMemSlicePitch +
+										y * subData.SysMemPitch + x * 2);
 						float ld = float(x) / float(TEX_material_LdotN - 1);
 						float ls = float(y) / float(TEX_material_LdotH - 1) + EPS_S;
 						ls *= powf(ld, 1 / 32.f);
@@ -490,7 +515,16 @@ CRenderTarget::CRenderTarget()
 					}
 				}
 			}
-			R_CHK(t_material_surf->UnlockBox(0));
+			// R_CHK		(t_material_surf->UnlockBox	(0));
+
+			R_CHK(HW.pDevice11->CreateTexture3D(&desc, &subData, &t_material_surf));
+			t_material = Device.Resources->_CreateTexture(r2_material);
+			t_material->surface_set(t_material_surf);
+			// R_CHK
+			// (D3DXCreateVolumeTexture(HW.pDevice,TEX_material_LdotN,TEX_material_LdotH,4,1,0,D3DFMT_A8L8,D3DPOOL_MANAGED,&t_material_surf));
+			// t_material					= dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_material);
+			// t_material->surface_set		(t_material_surf);
+
 			// #ifdef DEBUG
 			// R_CHK	(D3DXSaveTextureToFile	("x:\\r2_material.dds",D3DXIFF_DDS,t_material_surf,0));
 			// #endif
@@ -500,35 +534,86 @@ CRenderTarget::CRenderTarget()
 		if (1)
 		{
 			// Surfaces
-			D3DLOCKED_RECT R[TEX_jitter_count];
-			for (int it = 0; it < TEX_jitter_count; it++)
+			// D3DLOCKED_RECT				R[TEX_jitter_count];
+
+			// for (int it=0; it<TEX_jitter_count; it++)
+			//{
+			//	string_path					name;
+			//	xr_sprintf						(name,"%s%d",r2_jitter,it);
+			//	R_CHK	(D3DXCreateTexture
+			//(HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_Q8W8V8U8,D3DPOOL_MANAGED,&t_noise_surf[it])); 	t_noise[it]
+			//= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name); 	t_noise[it]->surface_set
+			//(t_noise_surf[it]); 	R_CHK						(t_noise_surf[it]->LockRect	(0,&R[it],0,0));
+			// }
+			//	Use DXGI_FORMAT_R8G8B8A8_SNORM
+
+			static const int sampleSize = 4;
+			u32 tempData[TEX_jitter_count][TEX_jitter * TEX_jitter];
+
+			D3D11_TEXTURE2D_DESC desc;
+			desc.Width = TEX_jitter;
+			desc.Height = TEX_jitter;
+			desc.MipLevels = 1;
+			desc.ArraySize = 1;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+			desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
+			// desc.Usage = D3D11_USAGE_IMMUTABLE;
+			desc.Usage = D3D11_USAGE_DEFAULT;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.CPUAccessFlags = 0;
+			desc.MiscFlags = 0;
+
+			D3D11_SUBRESOURCE_DATA subData[TEX_jitter_count];
+
+			for (int it = 0; it < TEX_jitter_count - 1; it++)
 			{
-				string_path name;
-				sprintf(name, "%s%d", r2_jitter, it);
-				R_CHK(D3DXCreateTexture(HW.pDevice, TEX_jitter, TEX_jitter, 1, 0, D3DFMT_Q8W8V8U8, D3DPOOL_MANAGED,
-										&t_noise_surf[it]));
-				t_noise[it] = Device.Resources->_CreateTexture(name);
-				t_noise[it]->surface_set(t_noise_surf[it]);
-				R_CHK(t_noise_surf[it]->LockRect(0, &R[it], 0, 0));
+				subData[it].pSysMem = tempData[it];
+				subData[it].SysMemPitch = desc.Width * sampleSize;
 			}
 
 			// Fill it,
+			//for (u32 y = 0; y < TEX_jitter; y++)
+			//{
+			//	for (u32 x = 0; x < TEX_jitter; x++)
+			//	{
+			//		DWORD data[TEX_jitter_count];
+			//		generate_jitter(data, TEX_jitter_count);
+			//		for (u32 it = 0; it < TEX_jitter_count; it++)
+			//		{
+			//			u32* p = (u32*)(LPBYTE(R[it].pBits) + y * R[it].Pitch + x * 4);
+			//			*p = data[it];
+			//		}
+			//	}
+			//}
 			for (u32 y = 0; y < TEX_jitter; y++)
 			{
 				for (u32 x = 0; x < TEX_jitter; x++)
 				{
-					DWORD data[TEX_jitter_count];
-					generate_jitter(data, TEX_jitter_count);
-					for (u32 it = 0; it < TEX_jitter_count; it++)
+					DWORD data[TEX_jitter_count - 1];
+					generate_jitter(data, TEX_jitter_count - 1);
+					for (u32 it = 0; it < TEX_jitter_count - 1; it++)
 					{
-						u32* p = (u32*)(LPBYTE(R[it].pBits) + y * R[it].Pitch + x * 4);
+						u32* p = (u32*)(LPBYTE(subData[it].pSysMem) + y * subData[it].SysMemPitch + x * 4);
 						*p = data[it];
 					}
 				}
 			}
-			for (int it = 0; it < TEX_jitter_count; it++)
+
+			// for (int it=0; it<TEX_jitter_count; it++)	{
+			//	R_CHK						(t_noise_surf[it]->UnlockRect(0));
+			// }
+
+			for (int it = 0; it < TEX_jitter_count - 1; it++)
 			{
-				R_CHK(t_noise_surf[it]->UnlockRect(0));
+				string_path name;
+				sprintf_s(name, "%s%d", r2_jitter, it);
+				// R_CHK	(D3DXCreateTexture
+				// (HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_Q8W8V8U8,D3DPOOL_MANAGED,&t_noise_surf[it]));
+				R_CHK(HW.pDevice11->CreateTexture2D(&desc, &subData[it], &t_noise_surf[it]));
+				t_noise[it] = Device.Resources->_CreateTexture(name);
+				t_noise[it]->surface_set(t_noise_surf[it]);
+				// R_CHK						(t_noise_surf[it]->LockRect	(0,&R[it],0,0));
 			}
 		}
 	}
@@ -578,11 +663,11 @@ CRenderTarget::~CRenderTarget()
 	t_envmap_0.destroy();
 	t_envmap_1.destroy();
 
-	_RELEASE(rt_smap_ZB);
+	//_RELEASE(rt_smap_ZB);
 
-	_RELEASE(surf_screenshot_normal);
-	_RELEASE(surf_screenshot_gamesave);
-	_RELEASE(tex_screenshot_gamesave);
+	//_RELEASE(surf_screenshot_normal);
+	//_RELEASE(surf_screenshot_gamesave);
+	//_RELEASE(tex_screenshot_gamesave);
 
 	// Jitter
 	for (int it = 0; it < TEX_jitter_count; it++)
@@ -659,7 +744,7 @@ void CRenderTarget::increment_light_marker()
 	if (dwLightMarkerID > 255)
 		reset_light_marker(true);
 }
-
+/*
 bool CRenderTarget::need_to_render_sunshafts()
 {
 	if (!ps_r2_sun_shafts)
@@ -675,3 +760,4 @@ bool CRenderTarget::need_to_render_sunshafts()
 
 	return true;
 }
+*/

@@ -57,6 +57,7 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	if (!Device.b_is_Ready)
 		return;
 
+#if RENDER==R_R1
 	//if (psDeviceFlags.test(rsFullscreen))
 	//	R_CHK(HW.pDevice->GetFrontBufferData(NULL, Target->surf_screenshot_normal));
 	//else
@@ -451,4 +452,7 @@ void CRender::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 	}
 	break;
 	}*/
+#else
+#pragma message(Reminder("Implement R2 screenshots"))
+#endif
 }

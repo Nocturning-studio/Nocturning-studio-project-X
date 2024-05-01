@@ -2,6 +2,8 @@
 #include "r_pixel_calculator.h"
 #define rt_dimensions 1024
 
+#pragma message(Reminder("Fix r_pixel_calculator"))
+/*
 void r_pixel_calculator::begin()
 {
 	rt.create("$user$test", rt_dimensions, rt_dimensions, HW.Caps.fTarget);
@@ -89,3 +91,4 @@ void r_pixel_calculator ::run()
 	}
 	end();
 }
+*/

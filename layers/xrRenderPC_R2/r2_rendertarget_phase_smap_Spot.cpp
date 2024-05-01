@@ -12,10 +12,12 @@ void CRenderTarget::phase_smap_spot_clear()
 void CRenderTarget::phase_smap_spot(light* L)
 {
 	// Targets + viewport
-	u_setrt(rt_smap_surf, NULL, NULL, rt_smap_depth->pRT);
+	//u_setrt(rt_smap_surf, NULL, NULL, rt_smap_depth->pRT);
+	SetRT(0, 0, 0, 0, rt_smap_depth->pZRT, true, false);
 
-	D3DVIEWPORT9 VP = {L->X.S.posX, L->X.S.posY, L->X.S.size, L->X.S.size, 0, 1};
-	CHK_DX(HW.pDevice->SetViewport(&VP));
+	D3D11_VIEWPORT VP = {L->X.S.posX, L->X.S.posY, L->X.S.size, L->X.S.size, 0, 1};
+	//CHK_DX(HW.pDevice->SetViewport(&VP));
+	CHK_DX(HW.pContext->RSSetViewports(1, &VP));
 
 	// Misc	- draw only front-faces
 	RCache.set_CullMode(CULL_CCW);
@@ -24,9 +26,9 @@ void CRenderTarget::phase_smap_spot(light* L)
 #pragma todo("can optimize for multi-lights covering more than say 50%...")
 
 	RCache.set_ColorWriteEnable(FALSE);
-	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0L));
+	//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0L));
 }
-
+/*
 void CRenderTarget::phase_smap_spot_tsh(light* L)
 {
 	VERIFY(RImplementation.o.Tshadows);
@@ -72,3 +74,4 @@ void CRenderTarget::phase_smap_spot_tsh(light* L)
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 }
+*/

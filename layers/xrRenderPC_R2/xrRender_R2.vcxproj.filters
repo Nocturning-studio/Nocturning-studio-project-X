@@ -213,9 +213,6 @@
     <ClInclude Include="..\xrRender\WallmarksEngine.h">
       <Filter>Wallmarks</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRender\Blender_detail_still.h">
-      <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\Blender_Lm(EbB).h">
       <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
     </ClInclude>
@@ -348,6 +345,9 @@
     <ClInclude Include="Blender_ambient_occlusion.h">
       <Filter>Blenders\Postprocess stage\Ambient occlusion</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRender\Blender_detail.h">
+      <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -457,9 +457,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\WallmarksEngine.cpp">
       <Filter>Wallmarks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRender\Blender_detail_still.cpp">
-      <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Blender_Lm(EbB).cpp">
       <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
@@ -688,6 +685,9 @@
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ao.cpp">
       <Filter>Rendertargets\Render stages\Ambient occlusion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\Blender_detail.cpp">
+      <Filter>Blenders\GBuffer stage\R1%255cR2 Blenders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

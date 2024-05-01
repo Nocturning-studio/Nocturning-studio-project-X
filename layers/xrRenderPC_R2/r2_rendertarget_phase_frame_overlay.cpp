@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::photo_grid()
+#pragma message(Reminder("Fix overlay"))
+/* void CRenderTarget::photo_grid()
 {
 	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
@@ -148,5 +149,5 @@ void CRenderTarget::draw_overlays()
 	if (ps_r2_overlay_flags.test(R2FLAG_WATERMARK))
 #endif
 		watermark();
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

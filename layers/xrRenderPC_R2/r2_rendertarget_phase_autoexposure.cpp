@@ -17,7 +17,8 @@ struct v_filter_autoexposure
 };
 #pragma pack(pop)
 
-void CRenderTarget::phase_autoexposure()
+#pragma message(Reminder("Fix autoexposure (+tonemappng)"))
+/* void CRenderTarget::phase_autoexposure()
 {
 	u32 Offset = 0;
 	float eps = EPS_S;
@@ -210,3 +211,4 @@ void CRenderTarget::phase_autoexposure()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 }
+*/

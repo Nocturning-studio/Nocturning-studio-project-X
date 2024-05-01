@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::depth_of_field_pass_poisson_filter()
+#pragma message(Reminder("Fix DoF"))
+/* void CRenderTarget::depth_of_field_pass_poisson_filter()
 {
 	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
@@ -121,5 +122,5 @@ void CRenderTarget::phase_depth_of_field()
 			depth_of_field_pass_separated_filter();
 		}
 	}
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

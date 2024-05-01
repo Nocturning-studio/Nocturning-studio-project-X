@@ -188,7 +188,7 @@ void CRender::level_Unload()
 	//	pApp->LoadEnd();
 	b_loaded = FALSE;
 }
-
+#include "../../xrEngine/dx11/BufferUtils.h"
 void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 {
 	R_ASSERT2(base_fs, "Could not load geometry. File not found.");
@@ -196,8 +196,8 @@ void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 	u32 dwUsage = D3DUSAGE_WRITEONLY;
 
 	xr_vector<VertexDeclarator>& _DC = _alternative ? xDC : nDC;
-	xr_vector<IDirect3DVertexBuffer9*>& _VB = _alternative ? xVB : nVB;
-	xr_vector<IDirect3DIndexBuffer9*>& _IB = _alternative ? xIB : nIB;
+	xr_vector<ID3D11Buffer*>& _VB = _alternative ? xVB : nVB;
+	xr_vector<ID3D11Buffer*>& _IB = _alternative ? xIB : nIB;
 
 	// Vertex buffers
 	{
@@ -226,12 +226,18 @@ void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 			Msg("* [Loading VB] %d verts, %d Kb", vCount, (vCount * vSize) / 1024);
 
 			// Create and fill
-			BYTE* pData = 0;
-			R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vSize, dwUsage, 0, D3DPOOL_MANAGED, &_VB[i], 0));
-			R_CHK(_VB[i]->Lock(0, 0, (void**)&pData, 0));
-			//			CopyMemory			(pData,fs().pointer(),vCount*vSize);
+			//BYTE* pData = 0;
+			//R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vSize, dwUsage, 0, D3DPOOL_MANAGED, &_VB[i], 0));
+			//R_CHK(_VB[i]->Lock(0, 0, (void**)&pData, 0));
+			////			CopyMemory			(pData,fs().pointer(),vCount*vSize);
+			//fs->r(pData, vCount * vSize);
+			//_VB[i]->Unlock();
+			//	TODO: DX10: Check fragmentation.
+			//	Check if buffer is less then 2048 kb
+			BYTE* pData = xr_alloc<BYTE>(vCount * vSize);
 			fs->r(pData, vCount * vSize);
-			_VB[i]->Unlock();
+			dx10BufferUtils::CreateVertexBuffer(&_VB[i], pData, vCount * vSize);
+			xr_free(pData);
 
 			//			fs->advance			(vCount*vSize);
 		}
@@ -249,13 +255,19 @@ void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 			Msg("* [Loading IB] %d indices, %d Kb", iCount, (iCount * 2) / 1024);
 
 			// Create and fill
-			BYTE* pData = 0;
-			R_CHK(HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &_IB[i], 0));
-			R_CHK(_IB[i]->Lock(0, 0, (void**)&pData, 0));
-			//			CopyMemory			(pData,fs().pointer(),iCount*2);
-			fs->r(pData, iCount * 2);
-			_IB[i]->Unlock();
+			//BYTE* pData = 0;
+			//R_CHK(HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &_IB[i], 0));
+			//R_CHK(_IB[i]->Lock(0, 0, (void**)&pData, 0));
+			////			CopyMemory			(pData,fs().pointer(),iCount*2);
+			//fs->r(pData, iCount * 2);
+			//_IB[i]->Unlock();
 
+			//	TODO: DX10: Check fragmentation.
+			//	Check if buffer is less then 2048 kb
+			BYTE* pData = xr_alloc<BYTE>(iCount * 2);
+			fs->r(pData, iCount * 2);
+			dx10BufferUtils::CreateIndexBuffer(&_IB[i], pData, iCount * 2);
+			xr_free(pData);
 			//			fs().advance		(iCount*2);
 		}
 		fs->close();

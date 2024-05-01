@@ -6,7 +6,8 @@
 #include "stdafx.h"
 #include "r2_rendertarget.h"
 ///////////////////////////////////////////////////////////////////////////////////
-void CRenderTarget::phase_antialiasing()
+#pragma message(Reminder("Fix antialiasing"))
+/* void CRenderTarget::phase_antialiasing()
 {
 	u32 Offset = 0;
 
@@ -54,5 +55,5 @@ void CRenderTarget::phase_antialiasing()
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		break;
 	}
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////

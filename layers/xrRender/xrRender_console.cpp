@@ -550,8 +550,9 @@ class CCC_BuildSSA : public IConsole_Command
 	};
 	virtual void Execute(LPCSTR args)
 	{
-		r_pixel_calculator c;
-		c.run();
+#pragma message(Reminder("Fix r_pixel_calculator (Build SSA)"))
+		//r_pixel_calculator c;
+		//c.run();
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////

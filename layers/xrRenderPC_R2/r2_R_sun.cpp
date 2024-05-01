@@ -945,16 +945,16 @@ void CRender::init_cacades()
 
 void CRender::render_sun_cascades()
 {
-	bool b_need_to_render_sunshafts = RImplementation.Target->need_to_render_sunshafts();
+	//bool b_need_to_render_sunshafts = RImplementation.Target->need_to_render_sunshafts();
 	bool last_cascade_chain_mode = m_sun_cascades.back().reset_chain;
-	if (b_need_to_render_sunshafts)
-		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = true;
+	//if (b_need_to_render_sunshafts)
+	//	m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = true;
 
 	for (u32 i = 0; i < m_sun_cascades.size(); ++i)
 		render_sun_cascade(i);
 
-	if (b_need_to_render_sunshafts)
-		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = last_cascade_chain_mode;
+	//if (b_need_to_render_sunshafts)
+	//	m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = last_cascade_chain_mode;
 }
 
 void CRender::render_sun_cascade(u32 cascade_ind)
@@ -1223,7 +1223,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			if (bSpecial || (cascade_ind < m_sun_cascades.size() - 1))
 			{
 				sun->X.D.transluent = TRUE;
-				Target->phase_smap_direct_tsh(sun, SE_SUN_FAR);
+				//Target->phase_smap_direct_tsh(sun, SE_SUN_FAR);
 				r_dsgraph_render_graph(1); // normal level, secondary priority
 				r_dsgraph_render_sorted(); // strict-sorted geoms
 			}

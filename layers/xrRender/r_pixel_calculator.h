@@ -4,7 +4,7 @@ struct r_aabb_ssa
 {
 	u8 ssa[6];
 };
-
+/*
 class r_pixel_calculator
 {
 	ref_rt rt;
@@ -17,3 +17,4 @@ class r_pixel_calculator
 
 	void run();
 };
+*/

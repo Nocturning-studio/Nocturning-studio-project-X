@@ -24,7 +24,7 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_UNSHADOWED: // unshadowed
-		C.sh_macro("USE_LIGHT_MAPPING", "1");
+		C.macros.add("USE_LIGHT_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_spot", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
@@ -33,9 +33,9 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_NORMAL: // normal
-		C.sh_macro("USE_SHADOW_MAPPING", "1");
-		C.sh_macro("USE_LIGHT_MAPPING", "1");
-		C.sh_macro("USE_LIGHT_MAP_XFORM", "1");
+		C.macros.add("USE_SHADOW_MAPPING", "1");
+		C.macros.add("USE_LIGHT_MAPPING", "1");
+		C.macros.add("USE_LIGHT_MAP_XFORM", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_spot", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
@@ -46,8 +46,8 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_FULLSIZE: // normal-fullsize
-		C.sh_macro("USE_SHADOW_MAPPING", "1");
-		C.sh_macro("USE_LIGHT_MAPPING", "1");
+		C.macros.add("USE_SHADOW_MAPPING", "1");
+		C.macros.add("USE_LIGHT_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_spot", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);
@@ -58,8 +58,8 @@ void CBlender_accum_spot::Compile(CBlender_Compile& C)
 		C.r_End();
 		break;
 	case SE_L_TRANSLUENT: // shadowed + transluency
-		C.sh_macro("USE_SHADOW_MAPPING", "1");
-		C.sh_macro("USE_LIGHT_MAPPING", "1");
+		C.macros.add("USE_SHADOW_MAPPING", "1");
+		C.macros.add("USE_LIGHT_MAPPING", "1");
 		C.r_Pass("accumulating_light_stage_volume", "accumulating_light_stage_spot", false, FALSE, FALSE, TRUE, D3DBLEND_ONE, D3DBLEND_ONE);
 		gbuffer(C);
 		C.r_Sampler_clw("s_material", r2_material);

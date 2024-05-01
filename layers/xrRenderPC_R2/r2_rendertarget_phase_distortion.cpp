@@ -8,17 +8,19 @@
 ///////////////////////////////////////////////////////////////////////////////////
 void CRenderTarget::phase_create_distortion_mask()
 {
-	u_setrt(rt_Distortion_Mask, 0, 0, rt_ZB->pRT); // Now RT is a distortion mask
+	//u_setrt(rt_Distortion_Mask, 0, 0, rt_ZB->pRT); // Now RT is a distortion mask
+	SetRT(rt_Distortion_Mask, 0, 0, 0, rt_ZB->pZRT, true, false);
 	RCache.set_CullMode(CULL_CCW);
 	RCache.set_Stencil(FALSE);
 	RCache.set_ColorWriteEnable();
-	CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
+	//CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
 	RImplementation.r_dsgraph_render_distort();
 }
 
 void CRenderTarget::phase_distortion()
 {
-	u_setrt(rt_Generic_0, NULL, NULL, NULL);
+	//u_setrt(rt_Generic_0, NULL, NULL, NULL);
+	SetRT(rt_Generic_0);
 
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
