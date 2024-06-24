@@ -246,9 +246,6 @@ class CRenderTarget : public IRender_Target
 
 	void phase_contrast_adaptive_sharpening();
 
-	void photo_grid();
-	void cinema_borders();
-	void watermark();
 	void draw_overlays();
 
 	void phase_antialiasing();
