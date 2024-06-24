@@ -162,7 +162,7 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 	IBlender::Compile(C);
 	// codepath is the same, only the shaders differ
 	// ***only pixel shaders differ***
-	extern u32 ps_r2_bump_mode;
+	extern u32 ps_r2_material_quality;
 	string256 mask;
 	int BumpType = 0;
 
@@ -171,11 +171,11 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case SE_R2_NORMAL_HQ: // deffer
-		if (ps_r2_bump_mode == 1)
+		if (ps_r2_material_quality == 1)
 			BumpType = 1; // normal
-		else if (ps_r2_bump_mode == 2)
+		else if (ps_r2_material_quality == 2 || ps_r2_material_quality == 3)
 			BumpType = 2; // parallax
-		else if (ps_r2_bump_mode == 3)
+		else if (ps_r2_material_quality == 4)
 			BumpType = 3; // steep parallax
 
 		C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");

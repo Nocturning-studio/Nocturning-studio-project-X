@@ -443,12 +443,9 @@ void CRender::Render()
 
 	HOM.Disable();
 
-	if (ps_r2_ao)
-	{
-		Device.Statistic->RenderCALC_AO.Begin();
-		Target->phase_ao();
-		Device.Statistic->RenderCALC_AO.End();
-	}
+	Device.Statistic->RenderCALC_AO.Begin();
+	Target->phase_ao();
+	Device.Statistic->RenderCALC_AO.End();
 
 	// Postprocess
 	Device.Statistic->RenderCALC_POSTPROCESS.Begin();

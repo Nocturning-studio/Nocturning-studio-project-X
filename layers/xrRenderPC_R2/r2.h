@@ -69,7 +69,7 @@ class CRender : public R_dsgraph_structure
 	string32 c_aa_type;
 	string32 c_fxaa_quality;
 	string32 c_bloom_quality;
-	string32 c_bump_quality;
+	string32 c_material_quality;
 	string32 c_shadow_filter;
 	string32 c_gbuffer_opt_mode;
 

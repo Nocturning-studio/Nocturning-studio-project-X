@@ -53,22 +53,15 @@ Flags32 ps_r2_ls_flags = {};
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32 ps_r2_ao = 2;
-xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssao", 1}, {"st_opt_ssao_plus", 2}, {"st_opt_hbao_plus", 3}, {0, 0}};
-
 u32 ps_r2_ao_quality = 2;
 xr_token ao_quality_token[] = {
-	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
+	{"st_opt_low", 1}, {"st_opt_high", 2}, {0, 0}};
 
 u32 ps_r2_bloom_quality = 2;
 xr_token bloom_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
-u32 ps_r2_sun_quality = 1;
-xr_token sun_quality_token[] = {{"st_opt_low", 1},	   {"st_opt_medium", 2}, {"st_opt_high", 3},
-								{"st_opt_extreme", 4}, {"st_opt_ultra", 5},	 {0, 0}};
-
-u32 ps_r2_shadow_filtering = 1;
+u32 ps_r2_shadow_filtering = 2;
 xr_token shadow_filter_token[] = {
 	{"st_opt_disable", 0}, {"st_opt_min", 1}, {"st_opt_mid", 2}, {"st_opt_max", 3}, {0, 0}};
 
@@ -76,24 +69,11 @@ u32 ps_r2_sun_shafts = 2;
 xr_token qsun_shafts_token[] = {
 	{"st_opt_disabled", 0}, {"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {0, 0}};
 
-u32 ps_r2_bump_mode = 2;
-xr_token bump_mode_token[] = {
-	{"st_opt_normal_mapping", 1}, {"st_opt_parallax_mapping", 2}, {"st_opt_parallax_occlusion_mapping", 3}, {0, 0}};
-
-u32 ps_r2_bump_quality = 1;
-xr_token bump_quality_token[] = {
-	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
+u32 ps_r2_material_quality = 1;
+xr_token material_quality_token[] = {{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
 u32 ps_r2_dof_quality = 2;
 xr_token dof_quality_token[] = {
-	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
-
-u32 ps_r2_mblur_quality = 2;
-xr_token mblur_quality_token[] = {
-	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
-
-u32 ps_r2_fog_quality = 2;
-xr_token fog_quality_token[] = {
 	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
 
 u32 ps_r2_debug_render = 0;
@@ -109,7 +89,7 @@ xr_token debug_render_token[] = {{"disabled", 0},
 								 {"real_time_ao", 9},
 								 {0, 0}};
 
-u32 ps_r2_rt_format = 0;
+u32 ps_r2_rt_format = 2;
 xr_token ps_rt_format[] = {{"st_opt_rgba_32", 1}, {"st_opt_rgba_64", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
@@ -711,7 +691,6 @@ void xrRender_initconsole()
 	// R2/R2a/R2.5-specific commands
 	CMD3(CCC_Mask, "r2_soft_water", &ps_r2_postprocess_flags, R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
-	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
 
 	CMD3(CCC_Mask, "r2_anti_aliasing", &ps_r2_postprocess_flags, R2FLAG_ANTI_ALIASING);
 	CMD3(CCC_Mask, "r2_anti_aliasing_alpha_test", &ps_r2_postprocess_flags, R2FLAG_ANTI_ALIASING_ALPHA_TEST);
@@ -719,7 +698,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_fxaa_treshold", &ps_r2_fxaa_edge_treshold, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_fxaa_treshold_min", &ps_r2_fxaa_edge_treshold_min, 0.0f, 1.0f);
 
-	CMD3(CCC_Token, "r2_ao_type", &ps_r2_ao, ao_token);
 	CMD3(CCC_Token, "r2_ao_quality", &ps_r2_ao_quality, ao_quality_token);
 
 	CMD3(CCC_Mask, "r2_autoexposure", &ps_r2_postprocess_flags, R2FLAG_AUTOEXPOSURE);
@@ -739,7 +717,6 @@ void xrRender_initconsole()
 
 	CMD3(CCC_Mask, "r2_mblur_enabled", &ps_r2_postprocess_flags, R2FLAG_MBLUR);
 	CMD4(CCC_Float, "r2_mblur_power", &ps_r2_mblur, 0.0f, 1.0f);
-	CMD3(CCC_Token, "r2_mblur_quality", &ps_r2_mblur_quality, mblur_quality_token);
 
 	tw_min.set(-10000, -10000, 0);
 	tw_max.set(10000, 10000, 10000);
@@ -763,7 +740,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_watermark", &ps_r2_overlay_flags, R2FLAG_WATERMARK);
 
 	CMD3(CCC_Token, "r2_sun_shafts", &ps_r2_sun_shafts, qsun_shafts_token);
-	CMD3(CCC_Token, "r2_sun_quality", &ps_r2_sun_quality, sun_quality_token);
 	CMD3(CCC_Token, "r2_shadow_filtering", &ps_r2_shadow_filtering, shadow_filter_token);
 	CMD3(CCC_Mask, "r2_sun", &ps_r2_lighting_flags, R2FLAG_SUN);
 	CMD3(CCC_Mask, "r2_sun_details", &ps_r2_lighting_flags, R2FLAG_SUN_DETAILS);
@@ -791,8 +767,7 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_dhemi_scale", &ps_r2_dhemi_scale, .5f, 3.f);
 	CMD4(CCC_Float, "r2_dhemi_smooth", &ps_r2_lt_smooth, 0.f, 10.f);
 
-	CMD3(CCC_Token, "r2_bump_mode", &ps_r2_bump_mode, bump_mode_token);
-	CMD3(CCC_Token, "r2_bump_quality", &ps_r2_bump_quality, bump_quality_token);
+	CMD3(CCC_Token, "r2_material_quality", &ps_r2_material_quality, material_quality_token);
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
 
 	CMD3(CCC_Token, "r2_debug_render", &ps_r2_debug_render, debug_render_token);

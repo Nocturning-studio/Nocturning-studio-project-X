@@ -125,7 +125,6 @@ extern ECORE_API float ps_r2_fxaa_edge_treshold;
 extern ECORE_API float ps_r2_fxaa_edge_treshold_min;
 
 extern ECORE_API float ps_r2_mblur; // .5f
-extern ECORE_API u32 ps_r2_mblur_quality;
 
 extern ECORE_API Fvector3 ps_r2_dof;		  //	x - min (0), y - focus (1.4), z - max (100)
 extern ECORE_API float ps_r2_dof_sky;		  //	distance to sky
@@ -138,7 +137,6 @@ extern ECORE_API float ps_r2_ls_squality;	 // 1.0f
 
 extern ECORE_API float ps_r2_sun_near; // 10.0f
 extern ECORE_API float ps_r2_sun_far;
-extern ECORE_API u32 ps_r2_sun_quality;
 extern ECORE_API float ps_r2_sun_tsm_bias;		   // 0.0001f
 extern ECORE_API float ps_r2_sun_depth_far_scale;  // 1.00001f
 extern ECORE_API float ps_r2_sun_depth_far_bias;   // -0.0001f
@@ -160,18 +158,14 @@ extern ECORE_API int ps_r2_dhemi_count;	  // 5
 
 extern ECORE_API float ps_r2_slight_fade; // 1.f
 
-extern ECORE_API u32 ps_r2_ao;
 extern ECORE_API u32 ps_r2_ao_quality;
 
 extern ECORE_API u32 ps_r2_debug_render;
 
 extern ECORE_API float ps_r2_df_parallax_h;
-extern ECORE_API u32 ps_r2_bump_mode;
-extern ECORE_API u32 ps_r2_bump_quality;
+extern ECORE_API u32 ps_r2_material_quality;
 
 extern ECORE_API u32 ps_r2_aa_transluency;
-
-extern ECORE_API u32 ps_r2_fog_quality;
 
 extern ECORE_API u32 ps_r2_rt_format;
 

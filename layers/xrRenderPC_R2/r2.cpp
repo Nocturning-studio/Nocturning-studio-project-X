@@ -160,7 +160,6 @@ void CRender::update_options()
 	o.nvstencil = (HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40);
 	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);
 
-	o.use_ssao = ps_r2_ao > 0;
 	o.use_soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
 	o.use_soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
 
@@ -205,7 +204,7 @@ void CRender::update_options()
 	sprintf(c_vignette, "%d", ps_vignette_mode);
 	sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
 	sprintf(c_shadow_filter, "%d", ps_r2_shadow_filtering);
-	sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
+	sprintf(c_material_quality, "%d", ps_r2_material_quality);
 	sprintf(c_ao_quality, "%d", ps_r2_ao_quality);
 }
 
@@ -241,11 +240,9 @@ CShaderMacros CRender::FetchShaderMacros()
 
 	macros.add("BLOOM_QUALITY", c_bloom_quality);
 
-	macros.add("BUMP_QUALITY", c_bump_quality);
+	macros.add("MATERIAL_QUALITY", c_material_quality);
 
 	macros.add("GBUFFER_OPT_MODE", c_gbuffer_opt_mode);
-
-	macros.add(o.use_ssao, "AO_ENABLED", "1");
 
 	macros.add(o.use_soft_water, "USE_SOFT_WATER", "1");
 

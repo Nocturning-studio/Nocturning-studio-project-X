@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "shader_name_generator.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-extern u32 ps_r2_bump_mode;
+extern u32 ps_r2_material_quality;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void fix_texture_name(LPSTR fn);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,11 +140,11 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	int BumpType = 0;
 	if (bIsHightQualityGeometry)
 	{
-		if (ps_r2_bump_mode == 1 || !bUseBump)
+		if (ps_r2_material_quality == 1 || !bUseBump)
 			BumpType = 1; // normal
-		else if (ps_r2_bump_mode == 2 || !C.bSteepParallax)
+		else if (ps_r2_material_quality == 2 || !C.bSteepParallax)
 			BumpType = 2; // parallax
-		else if (ps_r2_bump_mode == 3 && C.bSteepParallax)
+		else if ((ps_r2_material_quality == 3 || ps_r2_material_quality == 4) && C.bSteepParallax)
 			BumpType = 3; // steep parallax
 		else 
 			BumpType = 2; // parallax

@@ -40,8 +40,7 @@ void CRenderTarget::phase_ao()
 
 	u_setrt(rt_ao, NULL, NULL, NULL);
 
-	// switch ssao mode
-	if (ps_r2_ao == 1)
+	if (ps_r2_ao_quality == 1)
 	{
 		for (u32 i = 0; i < s_ambient_occlusion->E[SE_AO_SSAO]->passes.size(); i++)
 		{
@@ -49,15 +48,7 @@ void CRenderTarget::phase_ao()
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		}
 	}
-	else if (ps_r2_ao == 2)
-	{
-		for (u32 i = 0; i < s_ambient_occlusion->E[SE_AO_SSAO_PLUS]->passes.size(); i++)
-		{
-			RCache.set_Element(s_ambient_occlusion->E[SE_AO_SSAO_PLUS], i);
-			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-		}
-	}
-	else if (ps_r2_ao == 3)
+	else if (ps_r2_ao_quality == 2)
 	{
 		for (u32 i = 0; i < s_ambient_occlusion->E[SE_AO_HBAO_PLUS]->passes.size(); i++)
 		{
