@@ -53,16 +53,6 @@ Flags32 ps_r2_ls_flags = {};
 /*-------------------------------------------------------------------------------*/
 // R2a/R2/R2.5 specific tokens
 /*-------------------------------------------------------------------------------*/
-u32 ps_r2_aa = 1;
-xr_token aa_token[] = {{"st_opt_disabled", 0}, {"st_opt_rgaa", 1}, {"st_opt_dlaa", 2}, {"st_opt_fxaa", 3}, {0, 0}};
-
-u32 ps_r2_aa_quality = 2;
-xr_token aa_quality_token[] = {
-	{"st_opt_low", 1}, {"st_opt_medium", 2}, {"st_opt_high", 3}, {"st_opt_ultra", 4}, {0, 0}};
-
-u32 ps_r2_aa_transluency = 1;
-xr_token aa_transluency_token[] = {{"st_opt_disabled", 0}, {"st_opt_fxaa", 1}, {0, 0}};
-
 u32 ps_r2_ao = 2;
 xr_token ao_token[] = {{"st_opt_disabled", 0}, {"st_opt_ssao", 1}, {"st_opt_ssao_plus", 2}, {"st_opt_hbao_plus", 3}, {0, 0}};
 
@@ -312,11 +302,11 @@ class CCC_tf_Aniso : public CCC_Integer
 		if (0 == HW.pDevice)
 			return;
 		int val = *value;
-		clamp(val, 1, 16);
+		clamp(val, 2, 16);
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, val));
 	}
-	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 1, 16){};
+	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 2, 16){};
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Integer::Execute(args);
@@ -723,9 +713,8 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask, "r2_soft_particles", &ps_r2_postprocess_flags, R2FLAG_SOFT_PARTICLES);
 	CMD3(CCC_Token, "r2_fog_quality", &ps_r2_fog_quality, fog_quality_token);
 
-	CMD3(CCC_Token, "r2_aa_type", &ps_r2_aa, aa_token);
-	CMD3(CCC_Token, "r2_aa_quality", &ps_r2_aa_quality, aa_quality_token);
-	CMD3(CCC_Token, "r2_aa_transluency", &ps_r2_aa_transluency, aa_transluency_token);
+	CMD3(CCC_Mask, "r2_anti_aliasing", &ps_r2_postprocess_flags, R2FLAG_ANTI_ALIASING);
+	CMD3(CCC_Mask, "r2_anti_aliasing_alpha_test", &ps_r2_postprocess_flags, R2FLAG_ANTI_ALIASING_ALPHA_TEST);
 	CMD4(CCC_Float, "r2_fxaa_subpix", &ps_r2_fxaa_subpix, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_fxaa_treshold", &ps_r2_fxaa_edge_treshold, 0.0f, 1.0f);
 	CMD4(CCC_Float, "r2_fxaa_treshold_min", &ps_r2_fxaa_edge_treshold_min, 0.0f, 1.0f);

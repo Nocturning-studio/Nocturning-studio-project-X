@@ -156,7 +156,7 @@ void CRenderTarget::phase_combine()
 	{
 		if (ps_r2_debug_render == 0)
 		{
-			if (ps_r2_aa)
+			if (ps_r2_postprocess_flags.test(R2FLAG_ANTI_ALIASING))
 				phase_antialiasing();
 
 			if (ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))

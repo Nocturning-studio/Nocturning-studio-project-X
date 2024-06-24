@@ -40,20 +40,7 @@ void CRenderTarget::phase_antialiasing()
 
 	u_setrt(rt_Generic_0, NULL, NULL, NULL);
 
-	switch (ps_r2_aa)
-	{
-	case 1:
-		RCache.set_Element(s_antialiasing->E[0]);
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-		break;
-	case 2:
-		RCache.set_Element(s_antialiasing->E[1]);
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-		break;
-	case 3:
-		RCache.set_Element(s_antialiasing->E[2]);
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-		break;
-	}
+	RCache.set_Element(s_antialiasing->E[0]);
+	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 ///////////////////////////////////////////////////////////////////////////////////

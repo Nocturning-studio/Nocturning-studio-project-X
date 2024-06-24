@@ -130,7 +130,6 @@ void CheckHWSupporting()
 	R_ASSERT2(HW.Caps.raster.dwInstructions >= 512, 
 		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Instructions count less than 512)"));
 
-
 	R_ASSERT2(HW.Caps.raster.dwMRT_count >= 3,
 		make_string("Your graphics accelerator don`t meet minimal mod system requirements (Multiple render targets)"));
 
@@ -164,7 +163,6 @@ void CRender::update_options()
 	o.use_ssao = ps_r2_ao > 0;
 	o.use_soft_water = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
 	o.use_soft_particles = ps_r2_postprocess_flags.test(R2FLAG_SOFT_PARTICLES);
-	o.use_atest_aa = ps_r2_aa_transluency > 0;
 
 	bool intz = HW.support((D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	bool rawz = HW.support((D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
@@ -205,8 +203,6 @@ void CRender::update_options()
 	sprintf(c_smapsize, "%d", o.smapsize);
 	sprintf(c_debugview, "%d", ps_r2_debug_render);
 	sprintf(c_vignette, "%d", ps_vignette_mode);
-	sprintf(c_aa_type, "%d", ps_r2_aa);
-	sprintf(c_fxaa_quality, "%d", ps_r2_aa_quality);
 	sprintf(c_bloom_quality, "%d", ps_r2_bloom_quality);
 	sprintf(c_shadow_filter, "%d", ps_r2_shadow_filtering);
 	sprintf(c_bump_quality, "%d", ps_r2_bump_quality);
@@ -255,11 +251,7 @@ CShaderMacros CRender::FetchShaderMacros()
 
 	macros.add(o.use_soft_particles, "USE_SOFT_PARTICLES", "1");
 
-	macros.add(o.use_atest_aa, "ALPHA_TEST_AA", "1");
-
-	macros.add("AA_TYPE", c_aa_type);
-
-	macros.add("AA_QUALITY", c_fxaa_quality);
+	macros.add(ps_render_flags.test(R2FLAG_ANTI_ALIASING_ALPHA_TEST), "ALPHA_TEST_AA", "1");
 
 	macros.add("AO_QUALITY", c_ao_quality);
 
