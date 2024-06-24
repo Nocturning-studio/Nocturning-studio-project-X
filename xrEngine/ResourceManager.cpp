@@ -437,6 +437,38 @@ void CResourceManager::DeferredUnload()
 }
 #endif // MT_TEXTURES
 
+void CResourceManager::DeferredUnloadLevelTextures(LPCSTR level_name)
+{
+	if (!Device.b_is_Ready)
+		return;
+
+	Msg("Unload level textures: %s", level_name);
+
+	LPCSTR templates[] = {
+		"build_details",
+		"terrain\\",
+		"level_lods",
+		"lmap#",
+	};
+
+	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+	{
+		LPCSTR name = t->second->cName.c_str();
+
+		for (int i = 0; i < sizeof(templates) / sizeof(LPCSTR); i++)
+		{
+			const char* first = strstr(name, templates[i]);
+			const char* test = name;
+
+			if (first == test)
+			{
+				t->second->Unload();
+				break;
+			}
+		}
+	}
+}
+
 #ifdef _EDITOR
 void CResourceManager::ED_UpdateTextures(AStringVec* names)
 {

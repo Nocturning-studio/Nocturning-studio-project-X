@@ -118,9 +118,6 @@ void CRender::level_Unload()
 	// Begin
 	//	pApp->LoadBegin();
 
-	g_pGamePersistent->LoadTitle("st_unloading_textures");
-	Device.Resources->DeferredUnload();
-
 	u32 I;
 
 	// HOM

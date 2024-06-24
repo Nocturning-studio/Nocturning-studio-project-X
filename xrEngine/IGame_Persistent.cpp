@@ -144,7 +144,6 @@ void IGame_Persistent::OnGameEnd()
 #ifndef _EDITOR
 	ObjectPool.clear();
 	Render->models_Clear(TRUE);
-	Device.Resources->DeferredUnload();
 #endif
 }
 
