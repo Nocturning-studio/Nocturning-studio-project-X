@@ -1,4 +1,4 @@
-п»ї// TextureManager.cpp: implementation of the CResourceManager class.
+// TextureManager.cpp: implementation of the CResourceManager class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -269,14 +269,14 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-//#define MT_TEXTURES - Deathman: РќРµ СЌС„С„РµРєС‚РёРІРЅРѕ РїСЂРё СЂР°Р±РѕС‚Рµ СЃ Р¶РµСЃС‚РєРёРјРё РґРёСЃРєР°РјРё - РјС‹ РѕРіСЂР°РЅРёС‡РµРЅС‹ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ С‡С‚РµРЅРёСЏ. РњС‹ РЅРµ
-//РјРѕР¶РµРј РіСЂСѓР·РёС‚СЊ С‚РµРєСЃС‚СѓСЂС‹ С‡РµС‚С‹СЂСЊРјСЏ РїРѕС‚РѕРєР°РјРё, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РѕРЅРё РІСЃРµ С‚СѓРїРѕ Р¶РґСѓС‚
+//#define MT_TEXTURES - Deathman: Не эффективно при работе с жесткими дисками - мы ограничены возможностью чтения. Мы не
+//можем грузить текстуры четырьмя потоками, потому что они все тупо ждут
 
 #ifdef MT_TEXTURES
-// Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ РЅРµСЃРєРѕР»СЊРєРёРјРё РїРѕС‚РѕРєР°РјРё.
-// РЎРїР°СЃРёР±Рѕ Morrey РёР· РїСЂРѕРµРєС‚Р° РєРѕС‚РѕСЂРѕРіРѕ СЏ РІР·СЏР» С„СѓРЅРєС†РёСЋ,
-//	Maks0 Р·Р° РїРµСЂРµРґРµР»РєСѓ РїРѕРґ РѕРїСЂРµРґРµР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СЏРґРµСЂ РїСЂРѕС†РµСЃСЃРѕСЂР° Рё
-//	РёСЃРїРѕР»СЊР·РІР°РЅРёСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ С‡РёСЃР»Р° РїРѕС‚РѕРєРѕРІ Рё VAX, РєРѕС‚РѕСЂС‹Р№ РґРѕРґРµР»Р°Р» С„СѓРЅРєС†РёСЋ
+// Загрузка текстур несколькими потоками.
+// Спасибо Morrey из проекта которого я взял функцию,
+//	Maks0 за переделку под определение количества ядер процессора и
+//	использвания соответствующего числа потоков и VAX, который доделал функцию
 
 #include <thread>
 xr_vector<CTexture*> tex_to_load;
@@ -436,38 +436,6 @@ void CResourceManager::DeferredUnload()
 	Msg("* Phase time: %d ms", timer.GetElapsed_ms());
 }
 #endif // MT_TEXTURES
-
-void CResourceManager::DeferredUnloadLevelTextures(LPCSTR level_name)
-{
-	if (!Device.b_is_Ready)
-		return;
-
-	Msg("Unload level textures: %s", level_name);
-
-	LPCSTR templates[] = {
-		"build_details",
-		"terrain\\",
-		"level_lods",
-		"lmap#",
-	};
-
-	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-	{
-		LPCSTR name = t->second->cName.c_str();
-
-		for (int i = 0; i < sizeof(templates) / sizeof(LPCSTR); i++)
-		{
-			const char* first = strstr(name, templates[i]);
-			const char* test = name;
-
-			if (first == test)
-			{
-				t->second->Unload();
-				break;
-			}
-		}
-	}
-}
 
 #ifdef _EDITOR
 void CResourceManager::ED_UpdateTextures(AStringVec* names)

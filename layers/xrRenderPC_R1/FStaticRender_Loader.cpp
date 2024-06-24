@@ -104,6 +104,8 @@ void CRender::level_Unload()
 	if (!b_loaded)
 		return;
 
+	Device.Resources->DeferredUnload();
+
 	u32 I;
 
 	// HOM

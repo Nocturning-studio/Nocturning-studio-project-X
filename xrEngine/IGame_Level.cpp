@@ -31,8 +31,6 @@ IGame_Level::~IGame_Level()
 	if (strstr(Core.Params, "-nes_texture_storing"))
 		Device.Resources->StoreNecessaryTextures();
 
-	Device.Resources->DeferredUnloadLevelTextures(pLevel->fname());
-
 	xr_delete(pLevel);
 
 	// Render-level unload
@@ -52,6 +50,9 @@ IGame_Level::~IGame_Level()
 	Device.seqFrame.Remove(this);
 
 	CCameraManager::ResetPP();
+
+#pragma todo("Deathman to all: Лютейший кастыль с принудительной перезагрузкой всех текстур и последующей перезагрузкой рендера чтобы lmap и детали с прошлого уровня не применялись к новому при смене")
+	Console->Execute("vid_restart");
 }
 
 void IGame_Level::net_Stop()
