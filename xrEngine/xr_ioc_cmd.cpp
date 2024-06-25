@@ -765,7 +765,7 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
 	CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
 	CMD3(CCC_Mask, "rs_stats", &psDeviceFlags, rsStatistic);
-	CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.4f, 1.5f);
+	CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.7f, 1.5f);
 
 #ifdef DEBUG
 	CMD3(CCC_Mask, "rs_cam_pos", &psDeviceFlags, rsCameraPos);
@@ -781,7 +781,7 @@ void CCC_Register()
 	//	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
 
 	// Texture manager
-	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 0, 4);
+	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 1, 4);
 	CMD4(CCC_Integer, "net_dedicated_sleep", &psNET_DedicatedSleep, 0, 64);
 
 	// General video control

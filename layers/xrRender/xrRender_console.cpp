@@ -89,7 +89,7 @@ xr_token debug_render_token[] = {{"disabled", 0},
 								 {"real_time_ao", 9},
 								 {0, 0}};
 
-u32 ps_r2_rt_format = 2;
+u32 ps_r2_rt_format = 1;
 xr_token ps_rt_format[] = {{"st_opt_rgba_32", 1}, {"st_opt_rgba_64", 2}, {0, 0}};
 
 /*-------------------------------------------------------------------------------*/
@@ -152,7 +152,7 @@ float ps_r2_ssaLOD_A = 48.f;
 float ps_r2_ssaLOD_B = 32.f;
 float ps_r2_detalization_distance = 75.f;
 
-float ps_r2_tf_Mipbias = 0.0f;
+float ps_r2_tf_Mipbias = -0.5f;
 
 float ps_r2_df_parallax_h = 0.02f;
 
@@ -184,13 +184,13 @@ float ps_r2_ls_squality = 1.0f;
 
 float ps_r2_sun_tsm_bias = -0.05f;
 float ps_r2_sun_near = 12.f;
-float ps_r2_sun_far = 150.f;
+float ps_r2_sun_far = 200.f;
 float ps_r2_sun_depth_far_scale = 1.00000f;
-float ps_r2_sun_depth_far_bias = -0.003f;
-float ps_r2_sun_depth_middle_scale = 1.00001f;
-float ps_r2_sun_depth_middle_bias = -0.00015f;
-float ps_r2_sun_depth_near_scale = 1.00001f;
-float ps_r2_sun_depth_near_bias = -0.00009f;
+float ps_r2_sun_depth_far_bias = -0.00085f;
+float ps_r2_sun_depth_middle_scale = 1.0000f;
+float ps_r2_sun_depth_middle_bias = -0.0003f;
+float ps_r2_sun_depth_near_scale = 1.0000f;
+float ps_r2_sun_depth_near_bias = -0.0001f;
 float ps_r2_sun_lumscale = 1.0f;
 float ps_r2_sun_lumscale_hemi = 1.0f;
 float ps_r2_sun_lumscale_amb = 1.0f;

@@ -149,13 +149,7 @@ void CheckHWSupporting()
 // update with vid_restart
 void CRender::update_options()
 {
-	o.smapsize = 2560;
-
-	//o.sun_depth_near_bias = -0.0001f;
-	//o.sun_depth_near_scale = 1.0f;
-
-	//o.sun_depth_far_bias = -0.001f;
-	//o.sun_depth_far_scale = 1.0f;
+	o.smapsize = 1536;
 
 	o.nvstencil = (HW.Caps.id_vendor == 0x10DE) && (HW.Caps.id_device >= 0x40);
 	o.nvdbt = HW.support((D3DFORMAT)MAKEFOURCC('N', 'V', 'D', 'B'), D3DRTYPE_SURFACE, 0);

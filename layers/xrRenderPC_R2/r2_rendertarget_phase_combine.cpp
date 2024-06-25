@@ -156,17 +156,20 @@ void CRenderTarget::phase_combine()
 	{
 		if (ps_r2_debug_render == 0)
 		{
-			if (ps_r2_postprocess_flags.test(R2FLAG_ANTI_ALIASING))
-				phase_antialiasing();
-
 			if (ps_r2_postprocess_flags.test(R2FLAG_CONTRAST_ADAPTIVE_SHARPENING))
 				phase_contrast_adaptive_sharpening();
 
-			if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
-				phase_bloom();
+			if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
+				phase_motion_blur();
 
 			if (ps_r2_postprocess_flags.test(R2FLAG_DOF))
 				phase_depth_of_field();
+
+			if (ps_r2_postprocess_flags.test(R2FLAG_ANTI_ALIASING))
+				phase_antialiasing();
+
+			if (ps_r2_postprocess_flags.test(R2FLAG_BLOOM))
+				phase_bloom();
 
 			if (ps_r2_postprocess_flags.test(R2FLAG_BARREL_BLUR))
 				phase_barrel_blur();
@@ -176,9 +179,6 @@ void CRenderTarget::phase_combine()
 
 			if (ps_render_flags.test(RFLAG_LENS_FLARES))
 				g_pGamePersistent->Environment().RenderFlares();
-
-			if (ps_r2_postprocess_flags.test(R2FLAG_MBLUR))
-				phase_motion_blur();
 		}
 
 		draw_overlays();

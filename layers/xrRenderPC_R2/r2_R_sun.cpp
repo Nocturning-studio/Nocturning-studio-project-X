@@ -782,67 +782,22 @@ void CRender::init_cacades()
 {
 	float fBias = -0.0000025f;
 	float size = MAP_SIZE_START;
-	u32 cascade_count = 19;
+	u32 cascade_count = 4;
 
 	m_sun_cascades.resize(cascade_count);
 
 	m_sun_cascades[0].reset_chain = true;
-	m_sun_cascades[0].size = 1;
+	m_sun_cascades[0].size = 15;
 	m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
-	m_sun_cascades[1].size = 2;
+	m_sun_cascades[1].size = 30;
 	m_sun_cascades[1].bias = m_sun_cascades[1].size * fBias;
 
-	m_sun_cascades[2].size = 3;
+	m_sun_cascades[2].size = 60;
 	m_sun_cascades[2].bias = m_sun_cascades[2].size * fBias;
 
-	m_sun_cascades[3].size = 4;
+	m_sun_cascades[3].size = ps_r2_sun_far;
 	m_sun_cascades[3].bias = m_sun_cascades[3].size * fBias;
-
-	m_sun_cascades[4].size = 5;
-	m_sun_cascades[4].bias = m_sun_cascades[4].size * fBias;
-
-	m_sun_cascades[5].size = 7;
-	m_sun_cascades[5].bias = m_sun_cascades[5].size * fBias;
-
-	m_sun_cascades[6].size = 9;
-	m_sun_cascades[6].bias = m_sun_cascades[6].size * fBias;
-
-	m_sun_cascades[7].size = 12;
-	m_sun_cascades[7].bias = m_sun_cascades[7].size * fBias;
-
-	m_sun_cascades[8].size = 15;
-	m_sun_cascades[8].bias = m_sun_cascades[8].size * fBias;
-
-	m_sun_cascades[9].size = 18;
-	m_sun_cascades[9].bias = m_sun_cascades[9].size * fBias;
-
-	m_sun_cascades[10].size = 22;
-	m_sun_cascades[10].bias = m_sun_cascades[10].size * fBias;
-
-	m_sun_cascades[11].size = 26;
-	m_sun_cascades[11].bias = m_sun_cascades[11].size * fBias;
-
-	m_sun_cascades[12].size = 30;
-	m_sun_cascades[12].bias = m_sun_cascades[12].size * fBias;
-
-	m_sun_cascades[13].size = 35;
-	m_sun_cascades[13].bias = m_sun_cascades[13].size * fBias;
-
-	m_sun_cascades[14].size = 45;
-	m_sun_cascades[14].bias = m_sun_cascades[14].size * fBias;
-
-	m_sun_cascades[15].size = 55;
-	m_sun_cascades[15].bias = m_sun_cascades[15].size * fBias;
-
-	m_sun_cascades[16].size = 70;
-	m_sun_cascades[16].bias = m_sun_cascades[16].size * fBias;
-
-	m_sun_cascades[17].size = 90;
-	m_sun_cascades[17].bias = m_sun_cascades[17].size * fBias;
-
-	m_sun_cascades[18].size = ps_r2_sun_far;
-	m_sun_cascades[18].bias = m_sun_cascades[18].size * fBias;
 
 	// 	for( u32 i = 0; i < cascade_count; ++i )
 	// 	{
