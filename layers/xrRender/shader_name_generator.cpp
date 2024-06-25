@@ -152,7 +152,7 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
 	C.sh_macro(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
-	C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
+	C.sh_macro(BumpType == 3, "USE_PARALLAX_OCCLUSION_MAPPING", "1");
 
 	// Create shader with deatil texture if need
 	C.sh_macro(bUseDetail, "USE_TDETAIL", "1");

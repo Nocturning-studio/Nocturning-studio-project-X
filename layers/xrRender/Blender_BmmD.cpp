@@ -180,7 +180,7 @@ void CBlender_BmmD::Compile(CBlender_Compile& C)
 
 		C.sh_macro(BumpType == 1, "USE_NORMAL_MAPPING", "1");
 		C.sh_macro(BumpType == 2, "USE_PARALLAX_MAPPING", "1");
-		C.sh_macro(BumpType == 3, "USE_STEEP_PARALLAX_MAPPING", "1");
+		C.sh_macro(BumpType == 3, "USE_PARALLAX_OCCLUSION_MAPPING", "1");
 
 		C.r_Pass("gbuffer_stage_terrain", "gbuffer_stage_terrain", TRUE);
 
