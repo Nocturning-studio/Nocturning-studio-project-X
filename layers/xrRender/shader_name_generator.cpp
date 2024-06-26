@@ -30,7 +30,6 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	// Other textures
 	string_path HemisphereLightMapTexture;
 	string_path LightMapTexture;
-	string_path BakedAOTexture;
 
 	string_path Dummy = {0};
 
@@ -117,22 +116,38 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 		}
 	}
 
-	// Get BakedAO texture
-	bool bUseBakedAO = false;
-	strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), AlbedoTexture);
-	strconcat(sizeof(BakedAOTexture), BakedAOTexture, BakedAOTexture, "_ao");
-	if (FS.exist(Dummy, "$game_textures$", BakedAOTexture, ".dds"))
-		bUseBakedAO = true;
-
-	// Starting generate shader name
-	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, "gbuffer_stage_", PixelShaderName);
-	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
-
 	// Create lightmapped shader if need
 	C.sh_macro(bUseLightMap, "USE_LIGHTMAP", "1");
 
 	// Create shader with alpha testing if need
 	C.sh_macro(bUseAlpha, "USE_ALPHA_TEST", "1");
+
+	// Get BakedAO texture
+	string_path BakedAOTexture;
+	bool bUseBakedAO = false;
+	strcpy_s(BakedAOTexture, sizeof(BakedAOTexture), AlbedoTexture);
+	strconcat(sizeof(BakedAOTexture), BakedAOTexture, BakedAOTexture, "_ao");
+	if (FS.exist(Dummy, "$game_textures$", BakedAOTexture, ".dds"))
+		bUseBakedAO = true;
+	C.sh_macro(bUseBakedAO, "USE_BAKED_AO", "1");
+
+	// Get normal texture
+	string_path CustomNormalTexture;
+	bool bUseCustomNormal = false;
+	strcpy_s(CustomNormalTexture, sizeof(CustomNormalTexture), AlbedoTexture);
+	strconcat(sizeof(CustomNormalTexture), CustomNormalTexture, CustomNormalTexture, "_normal");
+	if (FS.exist(Dummy, "$game_textures$", CustomNormalTexture, ".dds"))
+		bUseCustomNormal = true;
+	C.sh_macro(bUseCustomNormal, "USE_CUSTOM_NORMAL", "1");
+
+	// Get roughness texture
+	string_path CustomRoughnessTexture;
+	bool bUseCustomRoughness = false;
+	strcpy_s(CustomRoughnessTexture, sizeof(CustomRoughnessTexture), AlbedoTexture);
+	strconcat(sizeof(CustomRoughnessTexture), CustomRoughnessTexture, CustomRoughnessTexture, "_normal");
+	if (FS.exist(Dummy, "$game_textures$", CustomRoughnessTexture, ".dds"))
+		bUseCustomRoughness = true;
+	C.sh_macro(bUseCustomRoughness, "USE_CUSTOM_ROUGHNESS", "1");
 
 	C.sh_macro(bUseBump, "USE_BUMP", "1");
 
@@ -159,9 +174,9 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 
 	C.sh_macro(bUseDetailBump, "USE_DETAIL_BUMP", "1");
 
-	C.sh_macro(bUseBakedAO, "USE_BAKED_AO", "1");
-
 	// Create shader pass
+	strconcat(sizeof(NewPixelShaderName), NewPixelShaderName, "gbuffer_stage_", PixelShaderName);
+	strconcat(sizeof(NewVertexShaderName), NewVertexShaderName, "gbuffer_stage_", VertexShaderName);
 	C.r_Pass(NewVertexShaderName, NewPixelShaderName, FALSE);
 
 	C.r_Sampler("s_base", AlbedoTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_POINT, D3DTEXF_ANISOTROPIC);
@@ -169,6 +184,17 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	if (bUseBakedAO)
 	{
 		C.r_Sampler("s_baked_ao", BakedAOTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	}
+
+	if (bUseCustomNormal)
+	{
+		C.r_Sampler("s_custom_normal", CustomNormalTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC, D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	}
+
+	if (bUseCustomRoughness)
+	{
+		C.r_Sampler("s_custom_roughness", CustomRoughnessTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
+					D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 	}
 
 	if (bUseBump)
