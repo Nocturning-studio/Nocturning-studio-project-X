@@ -144,10 +144,19 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	string_path CustomRoughnessTexture;
 	bool bUseCustomRoughness = false;
 	strcpy_s(CustomRoughnessTexture, sizeof(CustomRoughnessTexture), AlbedoTexture);
-	strconcat(sizeof(CustomRoughnessTexture), CustomRoughnessTexture, CustomRoughnessTexture, "_normal");
+	strconcat(sizeof(CustomRoughnessTexture), CustomRoughnessTexture, CustomRoughnessTexture, "_roughness");
 	if (FS.exist(Dummy, "$game_textures$", CustomRoughnessTexture, ".dds"))
 		bUseCustomRoughness = true;
 	C.sh_macro(bUseCustomRoughness, "USE_CUSTOM_ROUGHNESS", "1");
+
+	// Get metallness texture
+	string_path CustomMetallnessTexture;
+	bool bUseCustomMetallness = false;
+	strcpy_s(CustomMetallnessTexture, sizeof(CustomMetallnessTexture), AlbedoTexture);
+	strconcat(sizeof(CustomMetallnessTexture), CustomMetallnessTexture, CustomMetallnessTexture, "_metallness");
+	if (FS.exist(Dummy, "$game_textures$", CustomMetallnessTexture, ".dds"))
+		bUseCustomMetallness = true;
+	C.sh_macro(bUseCustomMetallness, "USE_CUSTOM_METALLNESS", "1");
 
 	C.sh_macro(bUseBump, "USE_BUMP", "1");
 
@@ -194,6 +203,12 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	if (bUseCustomRoughness)
 	{
 		C.r_Sampler("s_custom_roughness", CustomRoughnessTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
+					D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	}
+
+	if (bUseCustomMetallness)
+	{
+		C.r_Sampler("s_custom_metallness", CustomMetallnessTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
 					D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 	}
 
