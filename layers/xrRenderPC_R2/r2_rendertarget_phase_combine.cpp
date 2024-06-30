@@ -119,10 +119,7 @@ void CRenderTarget::phase_combine()
 	if(ps_r2_debug_render == 0)
 #endif
 	{
-		if (RImplementation.o.gbuffer_opt_mode <= 1)
-			u_setrt(rt_Generic_0, rt_GBuffer_Position, 0, rt_ZB->pRT); // LDR RT
-		else
-			u_setrt(rt_Generic_0, 0, 0, rt_ZB->pRT); // LDR RT
+		u_setrt(rt_Generic_0, rt_GBuffer_2, 0, rt_ZB->pRT); // LDR RT
 
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_Stencil(FALSE);

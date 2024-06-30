@@ -252,53 +252,26 @@ CRenderTarget::CRenderTarget()
 		R_CHK(tex_screenshot_gamesave->GetSurfaceLevel(0, &surf_screenshot_gamesave));
 	}
 
-	// check if we can optimize G-Buffer
-	{
-		switch (RImplementation.o.gbuffer_opt_mode)
-		{
-		case 2:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'));
-			break;
-		case 3:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, (D3DFORMAT)MAKEFOURCC('R', 'A', 'W', 'Z'));
-			break;
-		default:
-			rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, HW.Caps.fDepth);
-		}
+	rt_ZB.create(r2_RT_ZB, dwWidth, dwHeight, HW.Caps.fDepth);
 
-		if (RImplementation.o.gbuffer_opt_mode > 0)
-		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-		}
-		else
-		{
-			rt_GBuffer_Albedo.create(r2_RT_GBuffer_Albedo, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_GBuffer_Normal.create(r2_RT_GBuffer_Normal, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_GBuffer_Position.create(r2_RT_GBuffer_Position, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-		}
+	// G-Buffer
+	{
+		rt_GBuffer_1.create(r2_RT_GBuffer_1, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
+		rt_GBuffer_2.create(r2_RT_GBuffer_2, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_GBuffer_3.create(r2_RT_GBuffer_3, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
 	}
 
 	//	NORMAL
 	{
-		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
-		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+		rt_Diffuse_Accumulator.create(r2_RT_Diffuse_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_Specular_Accumulator.create(r2_RT_Specular_Accumulator, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 
-		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
+		rt_Distortion_Mask.create(r2_RT_distortion_mask, dwWidth, dwHeight, D3DFMT_G16R16);
 
 		rt_Generic_2.create(r2_RT_generic2, dwWidth, dwHeight, D3DFMT_R8G8B8);
 
-		if (ps_r2_rt_format == 1)
-		{
-			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A8R8G8B8);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_R8G8B8);
-		}
-		else
-		{
-			rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
-			rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A2R10G10B10);
-		}
+		rt_Generic_0.create(r2_RT_generic0, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
+		rt_Motion_Blur_Saved_Frame.create(r2_RT_mblur_saved_frame, dwWidth, dwHeight, D3DFMT_A16B16G16R16F);
 	}
 
 	// OCCLUSION

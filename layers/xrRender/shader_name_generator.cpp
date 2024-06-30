@@ -158,6 +158,15 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 		bUseCustomMetallness = true;
 	C.sh_macro(bUseCustomMetallness, "USE_CUSTOM_METALLNESS", "1");
 
+	// Get metallness texture
+	string_path CustomSubsurfaceTexture;
+	bool bUseCustomSubsurface = false;
+	strcpy_s(CustomSubsurfaceTexture, sizeof(CustomSubsurfaceTexture), AlbedoTexture);
+	strconcat(sizeof(CustomSubsurfaceTexture), CustomSubsurfaceTexture, CustomSubsurfaceTexture, "_subsurface");
+	if (FS.exist(Dummy, "$game_textures$", CustomSubsurfaceTexture, ".dds"))
+		bUseCustomSubsurface = true;
+	C.sh_macro(bUseCustomSubsurface, "USE_CUSTOM_SUBSURFACE", "1");
+
 	C.sh_macro(bUseBump, "USE_BUMP", "1");
 
 	// Create shader with normal mapping or displacement if need
@@ -209,6 +218,12 @@ void generate_shader_name(CBlender_Compile& C, bool bIsHightQualityGeometry, LPC
 	if (bUseCustomMetallness)
 	{
 		C.r_Sampler("s_custom_metallness", CustomMetallnessTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
+					D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
+	}
+
+	if (bUseCustomSubsurface)
+	{
+		C.r_Sampler("s_custom_subsurface", CustomSubsurfaceTexture, false, D3DTADDRESS_WRAP, D3DTEXF_ANISOTROPIC,
 					D3DTEXF_LINEAR, D3DTEXF_ANISOTROPIC);
 	}
 

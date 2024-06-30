@@ -49,9 +49,9 @@ class CRenderTarget : public IRender_Target
 	ref_rt rt_ZB;
 
 	// Geometry Buffer
-	ref_rt rt_GBuffer_Position;
-	ref_rt rt_GBuffer_Normal;
-	ref_rt rt_GBuffer_Albedo;
+	ref_rt rt_GBuffer_1;
+	ref_rt rt_GBuffer_2;
+	ref_rt rt_GBuffer_3;
 
 	// Accumulation Buffer
 	ref_rt rt_Diffuse_Accumulator;

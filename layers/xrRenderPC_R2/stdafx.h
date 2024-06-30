@@ -41,8 +41,7 @@ IC	void	jitter(CBlender_Compile& C)
 
 IC	void	gbuffer(CBlender_Compile& C)
 {
-	C.r_Sampler_rtf("s_gbuffer_position", r2_RT_GBuffer_Position);
-	C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-	C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
-	C.r_Sampler_rtf("s_zb", r2_RT_ZB);
+	C.r_Sampler_rtf("s_gbuffer_1", r2_RT_GBuffer_1);
+	C.r_Sampler_rtf("s_gbuffer_2", r2_RT_GBuffer_2);
+	C.r_Sampler_rtf("s_gbuffer_3", r2_RT_GBuffer_3);
 }

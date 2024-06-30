@@ -339,8 +339,8 @@ _DDS_CUBE: {
 	dwWidth = IMG.Width;
 	dwHeight = IMG.Height;
 	fmt = IMG.Format;
-	ret_msize = calc_texture_size(img_loaded_lod, mip_cnt, img_size);
 	mip_cnt = pTextureCUBE->GetLevelCount();
+	ret_msize = calc_texture_size(img_loaded_lod, mip_cnt, img_size);
 	return pTextureCUBE;
 }
 _DDS_2D: {

@@ -4,9 +4,9 @@
 #define r2_RT_ZB "$user$zb"
 
 // Geometry Buffer
-#define r2_RT_GBuffer_Position "$user$gbuffer_position"
-#define r2_RT_GBuffer_Normal "$user$gbuffer_normal"
-#define r2_RT_GBuffer_Albedo "$user$gbuffer_albedo"
+#define r2_RT_GBuffer_1 "$user$gbuffer_1"
+#define r2_RT_GBuffer_2 "$user$gbuffer_2"
+#define r2_RT_GBuffer_3 "$user$gbuffer_3"
 
 // Light Accumulating
 #define r2_RT_Diffuse_Accumulator "$user$accumulator_diffuse"

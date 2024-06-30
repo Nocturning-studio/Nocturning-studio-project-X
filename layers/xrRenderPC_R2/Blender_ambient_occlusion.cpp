@@ -26,10 +26,7 @@ void CBlender_ambient_occlusion::Compile(CBlender_Compile& C)
 	case SE_AO_SSAO:
 		// raw ao
 		C.r_Pass("null", "ambient_occlusion_stage_pass_ssao", FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_rtf("s_zb", r2_RT_ZB);
+		gbuffer(C);
 		C.r_End();
 
 		// filer
@@ -40,10 +37,7 @@ void CBlender_ambient_occlusion::Compile(CBlender_Compile& C)
 	case SE_AO_HBAO_PLUS:
 		// raw ao
 		C.r_Pass("null", "ambient_occlusion_stage_pass_hbao_plus", FALSE, FALSE, FALSE);
-		C.r_Sampler_clf("s_gbuffer_position", r2_RT_GBuffer_Position);
-		C.r_Sampler_rtf("s_gbuffer_normal", r2_RT_GBuffer_Normal);
-		C.r_Sampler_rtf("s_gbuffer_albedo", r2_RT_GBuffer_Albedo);
-		C.r_Sampler_rtf("s_zb", r2_RT_ZB);
+		gbuffer(C);
 		C.r_End();
 
 		// filer
