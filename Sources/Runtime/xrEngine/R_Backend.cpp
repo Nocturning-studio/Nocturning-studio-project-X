@@ -4,7 +4,7 @@
 #include "R_Backend.h"
 #include "ResourceManager.h"
 #include "xr_IOconsole.h"
-#include <ppl.h>
+#include <SDL3/SDL.h>
 
 ENGINE_API extern int psAnisotropic;
 
@@ -23,35 +23,61 @@ static void free_vid_mode_list()
     }
 }
 
-struct _uniq_mode
+static void fill_vid_mode_list()
 {
-    LPCSTR _val;
-    _uniq_mode(LPCSTR v) : _val(v) {}
-    bool operator()(LPCSTR _other) { return !xr_stricmp(_val, _other); }
-};
-
-static void fill_vid_mode_list(xrRHI::IRenderBackend* RHI)
-{
-    if (!RHI) return;
     if (vid_mode_token != NULL) return;
 
-    std::vector<std::pair<u32, u32>> resolutions;
-    RHI->GetAvailableResolutions(RHI->GetBackBufferFormat(), resolutions);
+    xr_vector<std::pair<u32, u32>> resolutions;
 
-    if (resolutions.empty())
+    // Собираем все режимы со всех дисплеев
+    int display_count = 0;
+    SDL_DisplayID* displays = SDL_GetDisplays(&display_count);
+    if (displays && display_count > 0)
     {
-        RECT rect;
-        GetClientRect(GetDesktopWindow(), &rect);
-        resolutions.emplace_back(rect.right - rect.left, rect.bottom - rect.top);
+        for (int d = 0; d < display_count; ++d)
+        {
+            int mode_count = 0;
+            SDL_DisplayMode** modes = SDL_GetFullscreenDisplayModes(displays[d], &mode_count);
+            if (!modes) continue;
+
+            for (int m = 0; m < mode_count; ++m)
+            {
+                const SDL_DisplayMode* mode = modes[m];
+                if (!mode) continue;
+                resolutions.emplace_back((u32)mode->w, (u32)mode->h);
+            }
+
+            SDL_free(modes);
+        }
+        SDL_free(displays);
     }
 
+    // Fallback: текущий desktop-режим основного дисплея
+    if (resolutions.empty())
+    {
+        SDL_DisplayID primary = SDL_GetPrimaryDisplay();
+        const SDL_DisplayMode* dm = SDL_GetDesktopDisplayMode(primary);
+        if (dm)
+            resolutions.emplace_back((u32)dm->w, (u32)dm->h);
+    }
+
+    // Сортируем по возрастанию (ширина, затем высота)
+    std::sort(resolutions.begin(), resolutions.end(),
+        [](const std::pair<u32, u32>& a, const std::pair<u32, u32>& b)
+        {
+            return a.first != b.first ? a.first < b.first : a.second < b.second;
+        });
+
+    // Убираем дубликаты
+    resolutions.erase(std::unique(resolutions.begin(), resolutions.end()), resolutions.end());
+
+    // Формируем токены
     xr_vector<LPCSTR> _tmp;
+    _tmp.reserve(resolutions.size());
     for (const auto& res : resolutions)
     {
         string32 str;
         sprintf_s(str, sizeof(str), "%dx%d", res.first, res.second);
-        if (std::find_if(_tmp.begin(), _tmp.end(), _uniq_mode(str)) != _tmp.end())
-            continue;
         _tmp.push_back(xr_strdup(str));
     }
 
@@ -59,6 +85,7 @@ static void fill_vid_mode_list(xrRHI::IRenderBackend* RHI)
     vid_mode_token = xr_alloc<xr_token>(_cnt);
     vid_mode_token[_cnt - 1].id = -1;
     vid_mode_token[_cnt - 1].name = NULL;
+
     for (u32 i = 0; i < _tmp.size(); ++i)
     {
         vid_mode_token[i].id = i;
@@ -191,7 +218,7 @@ void CRenderBackend::Create(HWND m_hWnd)
     SetForegroundWindow(m_hWnd);
 #endif
 
-    fill_vid_mode_list(m_pRHI);
+    fill_vid_mode_list();
 
     Msg("* RHI backend initialized successfully.");
 }

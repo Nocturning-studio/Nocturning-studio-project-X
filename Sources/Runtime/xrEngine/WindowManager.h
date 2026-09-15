@@ -8,7 +8,7 @@ public:
     CWindowManager();
     ~CWindowManager();
 
-    void Initialize(bool use_sdl3);
+    void Initialize();
     void Destroy();
     void Apply();               // применить накопленные параметры
     void Reset() { Apply(); }   // совместимость
@@ -27,7 +27,7 @@ public:
     void SetWindowed(bool bWindowed) { m_bWindowed = bWindowed; }
     void SetRefreshRate(u32 rate) { m_RefreshRate = rate; }
     void SetResolution(ivec2 res) { SetResolution((u32)res.x, (u32)res.y); }
-    void SetResolution(u32 w, u32 h);
+    void SetResolution(u32 w, u32 h) { m_width = w; m_height = h; }
     void UpdateSize(u32 w, u32 h) { SetResolution(w, h); }   // для обратной совместимости
 
     void CenterWindow();
@@ -45,37 +45,7 @@ private:
     bool      m_bInitialized;
     pcstr     m_WindowTitle;
 
-    // Стиль окна (borderless)
-    DWORD GetStyleWin32() const { return WS_POPUP | WS_VISIBLE; }
-
-    // Внутренние хелперы
-    void RegisterWindowClassWin32();
-    void CreateGameWindowWin32();
-    void UpdateWindowAttributesWin32();
-
-    // Центрирование: вычисляет координаты относительно рабочей области монитора
-    void ComputeCenteredPositionWin32(HMONITOR hMonitor, int winW, int winH, int& outX, int& outY);
-    // Сохраняет текущую позицию окна (только если окно существует и не полноэкранное)
-    void SaveWindowPositionWin32();
-    // Устанавливает стиль и расширенный стиль, затем заставляет систему пересчитать неклиентскую область
-    void ApplyWindowStyleWin32(DWORD exStyle = 0);
-
-    static LRESULT CALLBACK WndProcWin32(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    bool m_bUseSDL3;
-
     SDL_Window* m_pSdlWindow;
 
-    void InitializeWin32();
-    void InitializeSDL3();
-    void DestroyWin32();
-    void DestroySDL3();
-    void ApplyWin32();
-    void ApplySDL3();
-    bool ProcessMessagesWin32();
-    bool ProcessMessagesSDL3();
-    void SetResolutionWin32(u32 w, u32 h);
-    void SetResolutionSDL3(u32 w, u32 h);
-    void CenterWindowWin32();
-    void CenterWindowSDL3();
+    void InitializeWindow();
 };
