@@ -12,6 +12,8 @@ static const float SPECULAR_INTENSITY_SCALE = 0.7;
 static const float MAX_SPECULAR_CONTRIBUTION = 0.4;
 static const float DIFFUSE_GI_BOOST = 1.1;
 
+uniform sampler2D s_brdf_lut;
+
 struct IBLResult
 {
     float3 IndirectDiffuse;
