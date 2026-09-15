@@ -14,7 +14,7 @@ uniform float4 image_resolution; // xy = res, zw = 1/res
 // НАСТРОЙКИ
 #define SAMPLES 8
 #define SSAO_RADIUS 1.75f
-#define SSAO_INTENSITY 12.0f
+#define SSAO_INTENSITY 8.0f
 #define SSAO_BIAS 0.05f
 #define SSAO_MAX_DIST 100.0f
 
